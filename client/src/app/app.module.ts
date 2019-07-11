@@ -3,6 +3,11 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SidebarComponent } from './modules/shared/component/sidebar/sidebar.component';
+import { HeaderComponent } from './modules/shell/component/header/header.component';
+import { ShellModule } from './modules/shell/shell.module';
+import { SharedModule } from './modules/shared/shared.module';
+import { SuiModule } from 'ng2-semantic-ui';
 
 @NgModule({
   declarations: [
@@ -10,7 +15,10 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    SuiModule,
+    ShellModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]
