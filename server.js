@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const app = express()
 const port = 3050
 
@@ -11,6 +12,9 @@ app.use(function(req, res, next) {
     next();
   });
 
+  app.use(express.static(path.join(__dirname, 'client/dist/')));
+  
+
 app.get('/initialdata', (req, res) => {
     // get initial data from the data base
     neo4j.getData().then(response => {
@@ -20,7 +24,6 @@ app.get('/initialdata', (req, res) => {
         res.sendStatus(500);
     });
 });
-
 app.listen(port, () => {
     neo4j.initiate();
     console.log(`vis app server listening on port ${port}!`);
