@@ -1,7 +1,7 @@
 # network-visualizer
 This is the client side of network visualizer for neo4J.
 
-#INSTALLATION
+# INSTALLATION
 
 1. Clone the repository and checkout to development-client branch
 2. Make sure you have neo4J installed or data hosted on sandbox and it should be running
