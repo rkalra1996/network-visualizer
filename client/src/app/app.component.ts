@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'network-visualizer';
+  public clickedEvent: String;
+
+  childEventClicked(event: String) {
+    console.log("app",event);
+    this.clickedEvent = event;
+  }
 }
