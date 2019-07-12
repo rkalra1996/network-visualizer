@@ -31,6 +31,111 @@ var initiate = () => {
     session = neo4Jdriver.session();
 }
 
+var getMetaData = () => {
+    let queryForNodes = 'match (p) -[r]-> (q) return count(p), p.Name';
+    let queryForRelationships = 'match (p) -[r]-> (q) return count(r), r.Name';
+    let dataToReturn = {
+        Nodes: {},
+        Relationships: {}
+    }
+    return runQuery(queryForNodes)
+    .then(result => {
+        let final = processMetaData({result, type: 'node'});
+            dataToReturn.Nodes = final;
+            // now ge the meta data of relationship
+            return runQuery(queryForRelationships)
+    })
+    .then(relationshipResult => {
+        let final = processMetaData({result: relationshipResult, type: 'relationship'});
+        dataToReturn.Relationships = final;
+        neo4Jdriver.close();
+        return new Promise((res,rej) => {
+            if (dataToReturn.constructor !== Object) {
+                rej('Nothing recieved on processing the metaData');
+            }
+            else {
+                //send data back
+                res(dataToReturn);
+            }
+        });
+    })
+    .catch(err => {
+        console.log('an error occured while retrieving metadata for nodes', err);
+        neo4Jdriver.close();
+    });
+}
+
+function processMetaData(dataToProcess) {
+    if (dataToProcess.constructor === Object) {
+        //data is an object
+        if (dataToProcess.hasOwnProperty('result') && dataToProcess.hasOwnProperty('type')) {
+            if (dataToProcess.type === 'node') {
+                // process node
+                let NodeData = dataToProcess.result;
+                if (NodeData.hasOwnProperty('records')) {
+                    if (NodeData.records.length > 0) {
+                        let DATA = NodeData.records.map(node => {
+                            return node._fields[1];
+                        });
+                        // add total count
+                        let finalDATA = {
+                                count: DATA.length,
+                                data: DATA
+                        }
+                        console.log('Total nodes returned are ', finalDATA);
+                        return finalDATA;
+                    }
+                    else {
+                        // empty records
+                        return null;
+                    }
+                }
+                else {
+                    // no records key found inside the data object , it should be there as the neo4J returns it
+                    return null;
+                }
+
+
+
+            }
+            if (dataToProcess.type === 'relationship') {
+                // process relationships
+                let relationshipData = dataToProcess.result;
+                if (relationshipData.hasOwnProperty('records')) {
+                    if (relationshipData.records.length > 0) {
+                        let DATA = relationshipData.records.map(relationship => {
+                            return relationship._fields[1];
+                        });
+                        // add total count
+                        let finalDATA = {
+                                count: DATA.length,
+                                data: DATA
+                        }
+                        console.log('Total nodes returned are ', finalDATA);
+                        return finalDATA;
+                    }
+                    else {
+                        // empty records
+                        return null;
+                    }
+                }
+                else {
+                    // no records key found inside the data object , it should be there as the neo4J returns it
+                    return null;
+                }
+            }
+        }
+        else {
+            //invalid format of data provided
+            return null;
+        }
+    }
+    else {
+        //entered data is not an object
+        return null;
+    }
+}
+
 var getData = (query) => {
     if(!query || query.length <= 0) {
         query = neoConfig.initial_query
@@ -58,5 +163,6 @@ var getData = (query) => {
 
 module.exports = {
     initiate,
-    getData
+    getData,
+    getMetaData
 }
