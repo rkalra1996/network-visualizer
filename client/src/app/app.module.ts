@@ -8,6 +8,7 @@ import { HeaderComponent } from './modules/shell/component/header/header.compone
 import { ShellModule } from './modules/shell/shell.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { SuiModule } from 'ng2-semantic-ui';
+import { CoreModule } from './modules/core/core.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { SuiModule } from 'ng2-semantic-ui';
     AppRoutingModule,
     SuiModule,
     ShellModule,
-    SharedModule
+    SharedModule,
+    CoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]

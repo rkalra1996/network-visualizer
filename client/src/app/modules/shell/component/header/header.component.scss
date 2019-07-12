@@ -1,5 +1,5 @@
 .navbar-default {
-    background: #565656;
+    background: #fff;
     border-width: 0;
     margin-bottom: 0 !important;
     height: 102px;
@@ -29,15 +29,14 @@
 
 .navbar-brand {
     height: auto;
-    padding: 27px 15px;
     -webkit-transition: padding 0.3s;
     transition: padding 0.3s;
 }
 
 .navbar-brand img {
     height: 80px;
-    width: 200px;
-    margin-top: -20px;
+    width: 180px;
+    margin-left: -300px;
     -webkit-transition: height 0.3s;
     transition: height 0.3s;
 }
@@ -49,7 +48,7 @@
     letter-spacing: 1px;
     padding-left: 20px;
     padding-right: 20px;
-    color: #fff;
+    color: #565656;
     -webkit-transition: color 0.3s, background-color 0.3s, padding 0.3s;
     transition: color 0.3s, background-color 0.3s, padding 0.3s;
 }
