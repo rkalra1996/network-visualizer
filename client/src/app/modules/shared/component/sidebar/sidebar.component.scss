@@ -7,7 +7,7 @@
 }
 
 .sidebar {
-    background: #565656;
+    background: #C0C0C0;
     width: 100%;
     height: 100%;
     position: relative;
@@ -15,8 +15,8 @@
 
 .side {
     float: left;
-    padding-right: 20px;
     min-width: 320px;
+    min-height: 140px;
 }
 
 .dr-menu {
@@ -87,12 +87,12 @@
     transition: all 0.2s ease;
 }
 
-span.fas.fa-globe-asia {
-    margin-left: 1em;
+span.fas {
+    margin-left: 2em;
 }
 
-span.fas.fa-code-branch {
-    margin-left: 1em;
+span.fa {
+    margin-left: 2em;
 }
 
 .dr-menu.dr-menu-open>div .dr-label {
@@ -176,7 +176,7 @@ span.fas.fa-code-branch {
 .dr-menu ul li a {
     display: inline-block;
     padding: 0 20px;
-    color: #565656;
+    color: #C0C0C0;
 }
 
 .dr-menu ul li a:hover {
@@ -195,42 +195,38 @@ span.fas.fa-code-branch {
     -webkit-font-smoothing: antialiased;
 }
 
-.dr-menu ul .dr-icon:before {
-    margin-right: 15px;
-}
-
-.dr-icon-bullhorn:before {
-    content: "\e000";
-}
-
-.dr-icon-camera:before {
-    content: "\e002";
-}
-
-.dr-icon-heart:before {
-    content: "\e003";
-}
-
-.dr-icon-settings:before {
-    content: "\e004";
-}
-
-.dr-icon-switch:before {
-    content: "\e005";
-}
-
-.dr-icon-download:before {
-    content: "\e006";
-}
-
-.dr-icon-user:before {
-    content: "\e001";
-}
-
-.dr-icon-menu:before {
-    content: "\e007";
-}
-
 .ui.multiple.dropdown {
-    padding: .22619048em 0em .22619048em .35714286em;
+    padding: .22619048em 0em .22619048em 0em;
+}
+
+.search-btn {
+    position: relative;
+    width: 300px;
+    height: 50px;
+}
+
+.search-graph {
+    background: #C0C0C0;
+    border: 2px solid #fff;
+    color: #fff;
+    margin-top: 100px;
+    margin-left: 50px;
+}
+
+.dropdown.icon {
+    padding-right: 20px !important;
+}
+
+.sidebar-header h2 {
+    margin-left: 20px;
+}
+
+.divider {
+    width: 100%;
+    color: #fff;
+}
+
+.hr {
+    color: #fff;
+    width: 100%;
 }

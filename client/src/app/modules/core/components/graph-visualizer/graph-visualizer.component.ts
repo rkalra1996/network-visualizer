@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 
 import {GraphDataService} from './../../services/graph-data-service/graph-data.service';
 import {Network, DataSet, Node, Edge, IdType} from 'vis';
+ import * as _ from 'lodash';
 
 declare var vis: any;
 @Component({
@@ -10,8 +11,9 @@ declare var vis: any;
   styleUrls: ['./graph-visualizer.component.scss']
 })
 export class GraphVisualizerComponent implements OnInit {
-
+  @Input() event: String;
   public graphData = {};
+  public network : any;
   private graphOptions = {
       physics: false,
       edges: {
@@ -43,19 +45,52 @@ export class GraphVisualizerComponent implements OnInit {
       console.log('recieved data from graph service', result);
       // set data for vis
       if (result.hasOwnProperty('seperateNodes')) {
-        this.graphData['nodes'] = result['seperateNodes'];
+        this.graphData['nodes'] = new DataSet(result['seperateNodes']);
       }
       if (result.hasOwnProperty('seperateEdges')) {
-        this.graphData['edges'] = result['seperateEdges'];
+        this.graphData['edges'] = new DataSet(result['seperateEdges']);
       }
       console.log('graphData :', this.graphData);
       // display data
       const container = document.getElementById('graphViewer');
-      let network = new Network(container, this.graphData, this.graphOptions);
+      this.network = new Network(container, this.graphData, this.graphOptions);
     }, err => {
       console.error('An error occured while retrieving initial graph data', err);
       this.graphData = {};
     });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+  console.log("graph",this.event);
+  this.changeNodeColor();
+  }
+  changeNodeColor(){
+    let previousData = _.cloneDeep(this.graphData); 
+    if(!!this.graphData["nodes"]){
+      var temgraph = this.graphData["nodes"].map(node=>{
+        if(this.event==node.type[0] && node.type[0]=="Organisation"){
+          node["color"]="#FFC0CB";
+        }else if(this.event==node.type[0] && node.type[0]=="Department"){
+          node["color"]="#FFCC99";
+        }else if(this.event==node.type[0] && node.type[0]=="Person"){
+          node["color"]="#C5E3B0";
+        }else{
+          return node;
+        }
+        return node;
+      })
+      previousData.nodes.clear();
+      previousData.nodes = new DataSet(_.cloneDeep(temgraph));
+      this.graphData = previousData;
+      this.reinitializeGraph();
+      console.log(this.graphData)
+    }
+  
+    }
+
+    reinitializeGraph() {
+      const container = document.getElementById('graphViewer');
+      this.network.setData(this.graphData);
+    }
+   
 }
