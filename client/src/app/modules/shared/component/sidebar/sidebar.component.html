@@ -1,44 +1,53 @@
-<div class="side">
-    <nav class="dr-menu">
-        <div class="dr-trigger"><span class="dr-icon dr-icon-menu"></span><a class="dr-label">Organization</a></div>
-    </nav>
-</div>
-<!------------------Org---------------------->
-<div id="multiselect">
-    <sui-multi-select [(ngModel)]="selected" [options]="options" [maxSelected]="5" icon="list" #org>
+<div class="sidebar">
+    <div class="side">
+        <nav class="dr-menu">
+            <div class="dr-trigger"><span class="fas fa-globe-asia"></span><a class="dr-label">Organization</a></div>
+        </nav>
+
+        <!------------------Org---------------------->
+
+        <sui-multi-select [(ngModel)]="orgSelected" [options]="orgOptions" [maxSelected]="5" icon="list" #organization>
+            <div class="ui icon search input">
+                <i class="search icon"></i>
+                <input suiSelectSearch type="text" placeholder="Search organizations...">
+            </div>
+            <div class="divider"></div>
+            <div class="header">
+                <i class="list icon"></i> Options
+            </div>
+            <div class="scrolling menu">
+                <sui-select-option *ngFor="let o of organization.filteredOptions" [value]="o"></sui-select-option>
+            </div>
+        </sui-multi-select>
+
+    </div>
+    <!------------------Org---------------------->
+    <div class="side">
+        <nav class="dr-menu">
+            <div class="dr-trigger"><span class="fas fa-code-branch"></span><a class="dr-label">Relation</a></div>
+        </nav>
+    </div>
+    <!------------------Relation---------------------->
+
+    <sui-multi-select [(ngModel)]="selectedRelation" [options]="relationOptions" [maxSelected]="5" icon="list" #relation>
         <div class="ui icon search input">
             <i class="search icon"></i>
-            <input suiSelectSearch type="text" placeholder="Search options...">
+            <input suiSelectSearch type="text" placeholder="Search relations...">
         </div>
         <div class="divider"></div>
         <div class="header">
             <i class="list icon"></i> Options
         </div>
         <div class="scrolling menu">
-            <sui-select-option *ngFor="let o of filteredOptions" [value]="o"></sui-select-option>
+            <sui-select-option *ngFor="let o of relation.filteredOptions" [value]="o"></sui-select-option>
         </div>
     </sui-multi-select>
+
+    <!------------------Relation---------------------->
+
+    <!------------------Search---------------------->
+
+    <!------------------Search---------------------->
+
+
 </div>
-<!------------------Org---------------------->
-<div class="side">
-    <nav class="dr-menu">
-        <div class="dr-trigger"><span class="dr-icon dr-icon-menu"></span><a class="dr-label">Relation</a></div>
-    </nav>
-</div>
-<!------------------Relation---------------------->
-<div id="multiselect">
-    <sui-multi-select [(ngModel)]="selected" [options]="options" [maxSelected]="5" icon="list" #org>
-        <div class="ui icon search input">
-            <i class="search icon"></i>
-            <input suiSelectSearch type="text" placeholder="Search options...">
-        </div>
-        <div class="divider"></div>
-        <div class="header">
-            <i class="list icon"></i> Options
-        </div>
-        <div class="scrolling menu">
-            <sui-select-option *ngFor="let o of filteredOptions" [value]="o"></sui-select-option>
-        </div>
-    </sui-multi-select>
-</div>
-<!------------------Relation---------------------->
