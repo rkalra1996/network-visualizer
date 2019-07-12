@@ -24,7 +24,6 @@
         "font-awesome": "^4.7.0",
         "ng2-semantic-ui": "^0.9.7",
         "rxjs": "~6.3.3",
-        "semantic-ui": "^2.4.2",
         "tslib": "^1.9.0",
         "zone.js": "~0.8.26"
     },
