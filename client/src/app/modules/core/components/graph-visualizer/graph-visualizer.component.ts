@@ -25,11 +25,11 @@ export class GraphVisualizerComponent implements OnInit {
       nodes: {
           shape: 'dot',
           scaling: {
-              customScalingFunction: function (min,max,total,value) {
-                  return value/total;
+              customScalingFunction: (min,max,total,value) => {
+                  return value / total;
               },
-              min:5,
-              max:150
+              min: 5,
+              max: 150
           }
       }
   };

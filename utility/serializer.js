@@ -65,7 +65,7 @@ function processNodes(nodeArray) {
                 let preprocessedNode = node;
                 preprocessedNode = {
                     properties: node.properties || null,
-                    type: node.type || null,
+                    type: node.labels || null,
                     id: node.identity.low,
                     label: node.properties.Name || 'No Name',
                     font: {align: 'middle'},
