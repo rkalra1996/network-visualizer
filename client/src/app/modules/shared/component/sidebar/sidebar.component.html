@@ -1,49 +1,44 @@
-<div class="ui multiple dropdown">
-    <input type="hidden" name="filters">
-    <i class="filter icon"></i>
-    <span class="text">Filter Posts</span>
-    <div class="menu">
+<div class="side">
+    <nav class="dr-menu">
+        <div class="dr-trigger"><span class="dr-icon dr-icon-menu"></span><a class="dr-label">Organization</a></div>
+    </nav>
+</div>
+<!------------------Org---------------------->
+<div id="multiselect">
+    <sui-multi-select [(ngModel)]="selected" [options]="options" [maxSelected]="5" icon="list" #org>
         <div class="ui icon search input">
             <i class="search icon"></i>
-            <input type="text" placeholder="Search tags...">
+            <input suiSelectSearch type="text" placeholder="Search options...">
         </div>
         <div class="divider"></div>
         <div class="header">
-            <i class="tags icon"></i> Tag Label
+            <i class="list icon"></i> Options
         </div>
         <div class="scrolling menu">
-            <div class="item" data-value="important">
-                <div class="ui red empty circular label"></div>
-                Important
-            </div>
-            <div class="item" data-value="announcement">
-                <div class="ui blue empty circular label"></div>
-                Announcement
-            </div>
-            <div class="item" data-value="cannotfix">
-                <div class="ui black empty circular label"></div>
-                Cannot Fix
-            </div>
-            <div class="item" data-value="news">
-                <div class="ui purple empty circular label"></div>
-                News
-            </div>
-            <div class="item" data-value="enhancement">
-                <div class="ui orange empty circular label"></div>
-                Enhancement
-            </div>
-            <div class="item" data-value="off-topic">
-                <div class="ui yellow empty circular label"></div>
-                Off Topic
-            </div>
-            <div class="item" data-value="interesting">
-                <div class="ui pink empty circular label"></div>
-                Interesting
-            </div>
-            <div class="item" data-value="discussion">
-                <div class="ui green empty circular label"></div>
-                Discussion
-            </div>
+            <sui-select-option *ngFor="let o of filteredOptions" [value]="o"></sui-select-option>
         </div>
-    </div>
+    </sui-multi-select>
 </div>
+<!------------------Org---------------------->
+<div class="side">
+    <nav class="dr-menu">
+        <div class="dr-trigger"><span class="dr-icon dr-icon-menu"></span><a class="dr-label">Relation</a></div>
+    </nav>
+</div>
+<!------------------Relation---------------------->
+<div id="multiselect">
+    <sui-multi-select [(ngModel)]="selected" [options]="options" [maxSelected]="5" icon="list" #org>
+        <div class="ui icon search input">
+            <i class="search icon"></i>
+            <input suiSelectSearch type="text" placeholder="Search options...">
+        </div>
+        <div class="divider"></div>
+        <div class="header">
+            <i class="list icon"></i> Options
+        </div>
+        <div class="scrolling menu">
+            <sui-select-option *ngFor="let o of filteredOptions" [value]="o"></sui-select-option>
+        </div>
+    </sui-multi-select>
+</div>
+<!------------------Relation---------------------->
