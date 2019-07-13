@@ -1,11 +1,11 @@
 <div class="sidebar">
     <div class="sidebar-header dr-menu">
-        <h2 class="dr-label">Network Element</h2>
+        <h2 class="dr-label">Network Elements</h2>
     </div>
     <!------------------Org---------------------->
     <div class="side">
         <nav class="dr-menu">
-            <div class="dr-trigger"><span class="fas fa-globe-asia"></span><a class="dr-label" (click)="networkElementClick('Organisation')">Organization</a>
+            <div class="dr-trigger"><span class="fas fa-globe-asia"></span><a class="dr-label" (click)="networkElementClick('Organisation')">Organisation</a>
                 <sui-multi-select [(ngModel)]="selectedOrg" [options]="orgOptions" [maxSelected]="5" #organization>
                     <div class="ui icon search input">
                         <i class="search icon"></i>
@@ -68,7 +68,7 @@
     <!------------------Relationship type---------------------->
     <div class="side">
         <nav class="dr-menu">
-            <div class="dr-trigger"><span class="fas fa-code-branch"></span><a class="dr-label" (click)="networkElementClick('Relationship')">Relationship</a>
+            <div class="dr-trigger"><span class="fas fa-code-branch"></span><a class="dr-label" (click)="networkElementClick('Relationship')">Relationships</a>
                 <sui-multi-select [(ngModel)]="selectedRelation" [options]="relationOptions" [maxSelected]="5" #relation>
                     <div class="ui icon search input">
                         <i class="search icon"></i>

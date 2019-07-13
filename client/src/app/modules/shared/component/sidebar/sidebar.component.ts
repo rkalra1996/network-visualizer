@@ -19,12 +19,16 @@ export class SidebarComponent implements OnInit {
   
   
   ngOnInit() {
-    this.orgOptions=['ss'];
+    this.getGraph();
     }
    networkElementClick(element){
    if(element){
       this.eventClicked.emit(element);
      }
+   }
+   getGraph(){
+     
+
    }
    
    searchGraph(){
