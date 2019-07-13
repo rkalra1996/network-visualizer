@@ -1,3 +1,64 @@
 <div class="wrapper">
-  This is sidebar
+  <div class="logo">
+    <img src="./../../../../../assets/societal-logo.png"/>
+  </div>
+  <hr>
+  <div class="sidebarBody p-0">
+    <div class="sidebarBodyTitle">
+      <p>Network Elements</p>
+    </div>
+    <div class="sidebarElements">
+        <div class="item">
+            <span class="fas fa-globe-asia"></span><a class="item-text" (click)="networkElementClick('Organisation')">Organizations</a>
+            <span class="fas fa-chevron-right" 
+            (click)="rotateObj.Organisation.rotate = !rotateObj.Organisation.rotate; panelOpenOne = !panelOpenOne"  
+            [ngClass]="{'rotate': rotateObj?.Organisation.rotate, 'no-rotate': !rotateObj?.Organisation.rotate}"
+            ></span>
+            <sui-accordion class="styled fluid">
+              <sui-accordion-panel [(isOpen)]="panelOpenOne" [isDisabled]="true">
+                  <div content>
+                    <sui-multi-select [(ngModel)]="selectedRelation" [options]="relationOptions" [maxSelected]="5" #person>
+                      <div class="ui icon search input">
+                          <i class="search icon"></i>
+                          <input suiSelectSearch type="text" placeholder="Search relations...">
+                      </div>
+                      <div class="divider"></div>
+                      <div class="header">
+                          <i class="list icon"></i> Options
+                      </div>
+                      <div class="scrolling menu">
+                          <sui-select-option *ngFor="let o of person.filteredOptions" [value]="o"></sui-select-option>
+                      </div>
+                  </sui-multi-select>
+                  </div>
+              </sui-accordion-panel>
+          </sui-accordion>
+
+            <!-- <sui-multi-select [(ngModel)]="selectedRelation" [options]="relationOptions" [maxSelected]="5" #person>
+              <div class="ui icon search input">
+                  <i class="search icon"></i>
+                  <input suiSelectSearch type="text" placeholder="Search relations...">
+              </div>
+              <div class="divider"></div>
+              <div class="header">
+                  <i class="list icon"></i> Options
+              </div>
+              <div class="scrolling menu">
+                  <sui-select-option *ngFor="let o of person.filteredOptions" [value]="o"></sui-select-option>
+              </div>
+          </sui-multi-select> -->
+        </div>
+        <div class="item">
+            <span class="fa fa-linode"></span><a class="item-text" (click)="networkElementClick('Department'); highlight($event,'click-orange')">Departments</a>
+            <span class="fas fa-chevron-right" (click)="rotateObj.Department.rotate = !rotateObj.Department.rotate" [ngClass]="{'rotate': rotateObj?.Department.rotate, 'no-rotate': !rotateObj?.Department.rotate}"></span>
+        </div>
+        <div class="item">
+            <span class="fa fa-user-o"></span><a class="item-text" (click)="networkElementClick('Person'); highlight($event,'click-green')">Person</a>
+            <span class="fas fa-chevron-right" (click)="rotateObj.Person.rotate = !rotateObj.Person.rotate" [ngClass]="{'rotate': rotateObj?.Person.rotate, 'no-rotate': !rotateObj?.Person.rotate}"></span>
+        </div>
+    </div>
+    <div class="sidebarBodyTitle">
+        <p>Relationships</p>
+      </div>
+  </div>
 </div>

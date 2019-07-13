@@ -7,6 +7,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardSidebarComponent implements OnInit {
 
+  public rotateObj = {
+    Organisation : {
+      rotate : false,
+      color : 'pink'
+    },
+    Department : {
+      rotate: false,
+      color : 'orange'
+    },
+    Person : {
+      rotate: false,
+      color: 'green'
+    }
+  }
   constructor() { }
 
   ngOnInit() {
