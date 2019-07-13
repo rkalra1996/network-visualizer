@@ -31,7 +31,6 @@
         background: #5f5f5f;
         color: white;
         font-weight: 100;
-        cursor: pointer;
         box-shadow: 2px 7px 18px 1px rgba(95,95,95,0.76);
         border-radius: 5px;
         transition: 1s;
@@ -51,6 +50,11 @@
     span {
         margin-right: 20px;
     }
+}
+
+.hoverable:hover {
+    font-size: 18px;
+    transition: 0.5s;
 }
 
 .item, .item span {
@@ -87,4 +91,8 @@
 
 .show {
     display: block;
+}
+
+.ui.teal.left.pointing.label {
+    background: #5f5f5f !important;
 }

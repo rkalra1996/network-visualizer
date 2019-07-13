@@ -1,3 +1,33 @@
+.container-fluid {
+    border-bottom: 1px solid grey;
+}
+
 .headerWrapper {
     height: 10vh;
+}
+
+.right-toobar {
+    height: 100%;
+    float: right;
+    width: 30%;
+}
+
+.login-button {
+    border-radius: 20px;
+    font-size: 14px;
+    line-height: 2;
+    min-width: 90px;
+    float: right;
+    background: #5f5f5f;
+    border: none;
+    text-decoration: none;
+}
+
+.login-button:active:focus {
+    background: #5f5f5e;
+}
+
+.login-button:hover {
+    box-shadow: 2px 7px 18px 1px rgba(95,95,95,0.76);
+    transition: 0.7s;
 }

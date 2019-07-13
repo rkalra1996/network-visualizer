@@ -26,9 +26,6 @@ export class DashboardSidebarComponent implements OnInit {
 
   ngOnInit() {
     this.orgOptions=["org 1","org 2","org 3","org 4","org 5","org 6"];
-    new SlimSelect({
-      select: '#multiple'
-    });
   }
 
 }
