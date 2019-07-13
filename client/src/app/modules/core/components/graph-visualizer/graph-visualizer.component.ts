@@ -68,13 +68,10 @@ export class GraphVisualizerComponent implements OnInit {
     let previousData = _.cloneDeep(this.graphData); 
     if(!!this.graphData["nodes"]){
       var temgraph = this.graphData["nodes"].map(node=>{
-        if(this.event==node.type[0] && node.type[0]=="Organisation"){
-          node["color"]="#FFC0CB";
-        }else if(this.event==node.type[0] && node.type[0]=="Department"){
+        if(this.event==node.type[0]){
           node["color"]="#FFCC99";
-        }else if(this.event==node.type[0] && node.type[0]=="Person"){
-          node["color"]="#C5E3B0";
         }else{
+          node["color"]="#95BFF8";
           return node;
         }
         return node;

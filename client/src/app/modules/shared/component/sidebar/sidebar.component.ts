@@ -7,22 +7,27 @@ import { SuiMultiSelect } from 'ng2-semantic-ui/dist';
 })
 export class SidebarComponent implements OnInit {
   @Output() eventClicked = new EventEmitter<string>();
-  orgOptions=[];
-  relationOptions=[];
+  orgOptions: Array<string> = [];
+  relationOptions: Array<string> = [];
+  departmentOptions: Array<string> = [];
+  personOptions: Array<string> = [];
+  selectedOrg: Array<string> =[];
+  selectedRelation: Array<string> =[];
+  selectedDepartment: Array<string> =[];
+  selectedPerson: Array<string> =[];
   constructor() { }
   
   
   ngOnInit() {
-    this.orgOptions=["org 1","org 2","org 3","org 4","org 5","org 6"];
-    this.relationOptions=["Rel 1","Rel 2","Rel 3","Rel 4","Rel 5","Rel 6"];
+    this.orgOptions=['ss'];
     }
    networkElementClick(element){
-     console.log("clicked",element);
-     if(element){
+   if(element){
       this.eventClicked.emit(element);
      }
    }
+   
    searchGraph(){
-
+    console.log('s',this.selectedOrg);
    }
 }
