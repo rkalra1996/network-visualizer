@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import SlimSelect from 'slim-select'
 @Component({
   selector: 'app-dashboard-sidebar',
   templateUrl: './dashboard-sidebar.component.html',
@@ -21,9 +21,14 @@ export class DashboardSidebarComponent implements OnInit {
       color: 'green'
     }
   }
+  orgOptions: string[];
   constructor() { }
 
   ngOnInit() {
+    this.orgOptions=["org 1","org 2","org 3","org 4","org 5","org 6"];
+    new SlimSelect({
+      select: '#multiple'
+    });
   }
 
 }

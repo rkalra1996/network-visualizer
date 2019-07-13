@@ -7,12 +7,15 @@ import { GraphVisualizerComponent } from './components/graph-visualizer/graph-vi
 import { DashboardSidebarComponent } from './components/dashboard-sidebar/dashboard-sidebar.component';
 import { DashboardHeaderComponent } from './components/dashboard-header/dashboard-header.component';
 
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
+
 import {SuiSelectModule, SuiModule} from 'ng2-semantic-ui';
 
 @NgModule({
   declarations: [MainComponent, GraphVisualizerComponent, DashboardSidebarComponent, DashboardHeaderComponent],
   imports: [
     CommonModule,
+    AngularMultiSelectModule,
 FormsModule,
     SuiSelectModule, SuiModule,
     DashboardRoutingModule
