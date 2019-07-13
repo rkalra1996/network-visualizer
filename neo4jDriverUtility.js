@@ -32,8 +32,8 @@ var initiate = () => {
 }
 
 var getMetaData = () => {
-    let queryForNodes = 'match (p) -[r]-> (q) return count(p), p.Name';
-    let queryForRelationships = 'match (p) -[r]-> (q) return count(r), r.Name';
+    let queryForNodes = 'match (p) -[r]-> (q) return count(p), p';
+    let queryForRelationships = 'match (p) -[r]-> (q) return count(r), r';
     let dataToReturn = {
         Nodes: {},
         Relationships: {}
