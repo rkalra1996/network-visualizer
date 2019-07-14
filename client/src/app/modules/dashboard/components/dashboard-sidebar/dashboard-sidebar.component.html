@@ -9,7 +9,7 @@
     </div>
     <div class="sidebarElements">
         <div class="item">
-            <span class="fas fa-globe-asia"></span><a class="item-text hoverable" (click)="networkElementClick('Organisation')">Organizations</a>
+            <span class="fas fa-globe-asia"></span><a class="item-text hoverable" (click)="networkElementClick('Organisation')" data-tooltip="Total" data-position="right center">Organizations</a>
             <span class="fas fa-chevron-right" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" 
             (click)="rotateObj.Organisation.rotate = !rotateObj.Organisation.rotate; panelOpenOne = !panelOpenOne"  
             [ngClass]="{'rotate': rotateObj?.Organisation.rotate, 'no-rotate': !rotateObj?.Organisation.rotate}"
@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="item">
-            <span class="fa fa-linode"></span><a class="item-text hoverable" (click)="networkElementClick('Department'); highlight($event,'click-orange')">Departments</a>
+            <span class="fa fa-linode"></span><a class="item-text hoverable" (click)="networkElementClick('Department'); highlight($event,'click-orange')"data-tooltip="Total" data-position="right center">Departments</a>
             <span class="fas fa-chevron-right" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2"  (click)="rotateObj.Department.rotate = !rotateObj.Department.rotate" [ngClass]="{'rotate': rotateObj?.Department.rotate, 'no-rotate': !rotateObj?.Department.rotate}"></span>
             <div class="collapse" id="collapseExample2">
               <sui-multi-select [(ngModel)]="selectedRelation" [options]="orgOptions" [maxSelected]="5" #organisation>
@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="item">
-            <span class="fa fa-user-o"></span><a class="item-text hoverable" (click)="networkElementClick('Person'); highlight($event,'click-green')">Person</a>
+            <span class="fa fa-user-o"></span><a class="item-text hoverable" (click)="networkElementClick('Person'); highlight($event,'click-green')"data-tooltip="Total" data-position="right center">Person</a>
             <span class="fas fa-chevron-right"data-toggle="collapse" href="#collapseExample3" role="button" aria-expanded="false" aria-controls="collapseExample3"  (click)="rotateObj.Person.rotate = !rotateObj.Person.rotate" [ngClass]="{'rotate': rotateObj?.Person.rotate, 'no-rotate': !rotateObj?.Person.rotate}"></span>
             <div class="collapse" id="collapseExample3">
               <sui-multi-select [(ngModel)]="selectedRelation" [options]="orgOptions" [maxSelected]="5" #organisation>
@@ -58,7 +58,7 @@
         </div>
     </div>
     <div class="sidebarBodyTitle">
-        <p>Relationships</p>
+        <p data-tooltip="Total" data-position="right center">Relationships</p>
       </div>
       <div class="sidebarElements">
         <div class="item">
