@@ -41,7 +41,6 @@ export class DashboardSidebarComponent implements OnInit {
 
   ngOnInit() {
     this.getGraph();
-    this.orgCount=this.orgOptions.length;
   }
   networkElementClick(element){
     if(element){
@@ -77,33 +76,104 @@ export class DashboardSidebarComponent implements OnInit {
     onlyUnique(value, index, self) { 
       return self.indexOf(value) === index;
   }
+
     searchGraph(){
       this.selectedGraph=[];
       this.searchGraphData=[];
       this.selectedRelationship=[];
-     this.selectedGraph.push({type:"Organisation",value:this.selectedOrg});
-     this.selectedGraph.push({type:"Department",value:this.selectedDepartment});
-     this.selectedGraph.push({type:"Person",value:this.selectedPerson});
+      if(this.selectedOrg.length>0){
+        this.selectedGraph.push({type:"Organisation",value:this.selectedOrg});
+      }
+     if(this.selectedDepartment.length>0){
+      this.selectedGraph.push({type:"Department",value:this.selectedDepartment});
+     }
+     if(this.selectedPerson.length>0){
+      this.selectedGraph.push({type:"Person",value:this.selectedPerson});
+     }
      this.selectedRelation.filter(rel=>{
        this.selectedRelationship.push({type:rel,value:[]});
      });
      this.searchGraphData.push({nodes:this.selectedGraph,edges:this.selectedRelationship})
-     console.log('or',this.searchGraphData);
+     //console.log('or',this.searchGraphData);
     }
-    searchElement(){
-      console.log('init',this.graphInitData);
-      this.graphInitData['seperateEdges'].filter(edge=>{
-        let temArray=[];
-        let temType;
-        this.relationOptions.filter(rel=>{
-          if(rel === edge.label){
-            temArray.push(edge.from);
-            temArray.push(edge.to);
+
+    // Method gives new edgesArray with related node ids
+    getRelatedNodeIdArrayFromEdges(selectedNodeId){
+      console.log('rel',this.relationOptions);
+      // this.relationOptions.filter(rel=>{
+      //   let temArray=[];
+      // this.graphInitData[0]['seperateEdges'].filter(edge=>{
+        
+      //   if(rel === edge.label){
+      //       temArray.push(edge.from);
+      //       temArray.push(edge.to);
+      //     }          
+      //   });
+      //   temArray = temArray.filter(this.onlyUnique);
+      //   this.edgesNewObject.push({type:rel,nodeid:temArray});        
+      //  });
+      let temArray=[];
+      this.graphInitData[0]['seperateEdges'].filter(edge=>{
+        if(selectedNodeId === edge.from){
+          temArray.push(edge.to);
+        }else if(selectedNodeId === edge.to){
+          temArray.push(edge.from);
+        }
+      });
+      temArray = temArray.filter(this.onlyUnique);
+      return temArray;
+    }
+
+    // Method gives selected node id
+    getSelectedNodeId(nodeName){
+      let temId;
+      this.graphInitData[0]['seperateNodes'].filter(node=>{
+        if(nodeName === node.label){
+          temId = node.id;
+        }
+      });
+      return temId;
+    }
+
+    // Get all node id related with selected node id
+    getAllRelatedNodeId(selectedNodeId){
+      let allNodeId = [];
+      let present = false;
+      this.edgesNewObject.filter(edge=>{
+        edge['nodeid'].filter(nodeid=>{
+          if(nodeid === selectedNodeId){
+            present = true;
           }
         });
-        temArray = temArray.filter(this.onlyUnique);
-        this.edgesNewObject.push({type:edge.label,nodeid:temArray});
-        console.log('new',this.edgesNewObject);
+        if(present){
+          edge['nodeid'].filter(nodeid=>{
+          allNodeId.push(nodeid);
+          });
+          present=false;
+          }
+        });
+        allNodeId=allNodeId.filter(this.onlyUnique);
+        console.log('all',allNodeId);
+        return allNodeId;
+    }
+
+    searchElement(){
+      let selectedNodeId=this.getSelectedNodeId("Wipro");
+      console.log('id',selectedNodeId);
+      let temNewRelatedNodeId = this.getRelatedNodeIdArrayFromEdges(selectedNodeId);
+      console.log('new',temNewRelatedNodeId);
+      //let temallRealtedNodeId = this.getAllRelatedNodeId(selectedNodeId);
+      temNewRelatedNodeId.filter(id=>{
+        this.graphInitData[0]['seperateNodes'].filter(node=>{
+        if(id === node.id && node.type[0] === 'Department'){
+          this.departmentOptions = node.lable;
+          //console.log('match',id, node.type[0], node.label);
+        }else if(id === node.id && node.type[0] === 'Person'){
+          this.personOptions = node.label;
+          //console.log('match2',id, node.type[0], node.label);
+          }
+        });
       });
+      
     }
 }
