@@ -82,7 +82,6 @@ function processMetaData(dataToProcess) {
                                 count: DATA.length,
                                 data: DATA
                         }
-                        console.log('Total nodes returned are ', finalDATA);
                         return finalDATA;
                     }
                     else {
@@ -94,10 +93,10 @@ function processMetaData(dataToProcess) {
                     // no records key found inside the data object , it should be there as the neo4J returns it
                     return null;
                 }
-
-
-
             }
+
+
+
             if (dataToProcess.type === 'relationship') {
                 // process relationships
                 let relationshipData = dataToProcess.result;
@@ -161,8 +160,134 @@ var getData = (query) => {
     });
 }
 
+function createProperString(data) {
+    return data.map(d => `'${d}'`).join(',');
+
+}
+
+function runQueryWithTypes(dataObj) {
+    // check if the object is empty---> return error if it is
+    if (dataObj.constructor === Object) {
+        if (dataObj.length === 1) {
+            dataObj.nodes[0].value = createProperString(dataObj.nodes[0].value);
+            let queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r]->(q) where p.Name IN [${dataObj.nodes[0].value}] return p,q,r`;
+            console.log('query for 1 node type is ', queryStatement);
+            return runQuery(queryStatement).then(result => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+                return new Promise((resolve,reject) => {
+                    resolve(serializedData);
+                });
+            }).catch(err => {
+                console.log('An error occured while runnning the query', err);
+                return new Promise((resolve,reject) => {
+                    reject('API : get/data | ERROR : Error encountered while reading from database');
+                });
+            });
+        }
+        else if (dataObj.length === 2) {
+            dataObj.nodes.forEach(node => {
+                node.value = createProperString(node.value);
+            });
+            let queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r]->(q:${dataObj.nodes[1].type}) 
+            where p.Name IN [${dataObj.nodes[0].value}]
+            and q.Name IN [${dataObj.nodes[1].value}] return p,q,r`;
+            console.log('query is ', queryStatement);
+
+            return runQuery(queryStatement).then(result => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+                return new Promise((resolve,reject) => {
+                    resolve(serializedData);
+                });
+            }).catch(err => {
+                console.log('An error occured while runnning the query', err);
+                return new Promise((resolve,reject) => {
+                    reject('API : get/data | ERROR : Error encountered while reading from database with 2 types');
+                });
+            });
+        }
+        else if (dataObj.length === 3) {
+            dataObj.nodes.forEach(node => {
+                node.value = createProperString(node.value);
+            });
+            let queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r]->(q:${dataObj.nodes[1].type}) <-[s]->(t:${dataObj.nodes[2].type}) 
+            where p.Name IN [${dataObj.nodes[0].value}]
+            and q.Name IN [${dataObj.nodes[1].value}] and t.Name IN [${dataObj.nodes[2].value}] return p,q,r,t,s`;
+            console.log('query is ', queryStatement);
+
+            return runQuery(queryStatement).then(result => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+                return new Promise((resolve,reject) => {
+                    resolve(serializedData);
+                });
+            }).catch(err => {
+                console.log('An error occured while runnning the query', err);
+                return new Promise((resolve,reject) => {
+                    reject('API : get/data | ERROR : Error encountered while reading from database with 3 types');
+                });
+            });
+
+        }
+    } else {
+
+    }
+}
+
+var getGraphData = (req) => {
+    let relationshipTypesArray = [];
+    
+    if (req.body.hasOwnProperty('edges') && req.body.edges.length > 0) {
+        // data for edges / relationships is present, get all the relevant information
+        req.body.edges.filter(edge => {
+            if (edge.hasOwnProperty('type') && edge.type.length > 0) {
+                relationshipTypesArray.push(edge.type);
+                return true;
+            }
+            else {
+                // did not get the type key in the current edge
+                console.log(`API : graph/data | WARNING : The given edge ${JSON.stringify(edge)} has no property type\n`);
+            }
+        });
+        console.log(`Edge types are ${relationshipTypesArray}\n`);
+    }
+    // process nodes and edges in the given format
+    // 1. find all the types of nodes needed for the query
+    if (req.body.hasOwnProperty('nodes') && req.body.nodes.length > 0) {
+        // data for nodes is present, get all the relevant information
+        if (req.body.nodes.length == 1) {
+            return runQueryWithTypes({relation : relationshipTypesArray, nodes: req.body.nodes, length : 1});
+        }
+        else if (req.body.nodes.length == 2) {
+            return runQueryWithTypes({relation: relationshipTypesArray, nodes: req.body.nodes, length : 2})
+        }
+        else if (req.body.nodes.length === 3) {
+            return runQueryWithTypes({relation: relationshipTypesArray, nodes: req.body.nodes, length: 3})
+        }
+    } else {
+        return new Promise((resolve,reject) => {
+            // send back the data 
+            reject('No nodes provided in the body');
+        });
+    }
+}
+
 module.exports = {
     initiate,
     getData,
-    getMetaData
+    getMetaData,
+    getGraphData
 }
+
+
+/**
+ * req.body.nodes.filter(node => {
+            if (node.hasOwnProperty('type') && node.type.length > 0) {
+                 nodeTypesArray[node.type] = undefined;
+                 if (node.hasOwnProperty('value') && node.value.constructor === Array && node.value.length > 0) {
+                    nodeTypesArray[node.type] = node.value;
+                 }
+                 return true;
+            } else {
+                console.log(`API : graph/data | WARNING : The given node ${JSON.stringify(node)} has no property type\n`);
+            }
+        });
+ */
