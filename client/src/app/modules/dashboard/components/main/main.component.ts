@@ -6,10 +6,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
+  public clickedEvent: String;
 
   constructor() { }
 
   ngOnInit() {
+  }
+  
+  childEventClicked(event: String) {
+    this.clickedEvent = event;
   }
 
 }

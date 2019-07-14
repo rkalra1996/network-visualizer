@@ -10,7 +10,6 @@ export class AppComponent {
   public clickedEvent: String;
 
   childEventClicked(event: String) {
-    console.log("app",event);
     this.clickedEvent = event;
   }
 }

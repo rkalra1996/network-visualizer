@@ -13,7 +13,7 @@ import {SuiSelectModule, SuiModule} from 'ng2-semantic-ui';
   declarations: [MainComponent, GraphVisualizerComponent, DashboardSidebarComponent, DashboardHeaderComponent],
   imports: [
     CommonModule,
-FormsModule,
+    FormsModule,
     SuiSelectModule, SuiModule,
     DashboardRoutingModule
   ]
