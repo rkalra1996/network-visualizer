@@ -17,13 +17,23 @@ var Neo4JtoVisFormat = (data) => {
             data = JSON.parse(data);
             data.forEach((dataNode,index) => {
                 // node are at index 0 and 1, edge is at position 2
-                let node1 = dataNode._fields[0];
+                let realNodes = dataNode._fields;
+                realNodes.forEach(someData => {
+                    if (someData.hasOwnProperty('start') && someData.hasOwnProperty('end')) {
+                        // this someData is an edge
+                        seperateEdges.push(someData);
+                    } else {
+                        //it is a node
+                        seperateNodes.push(someData);
+                    }
+                });
+                /* let node1 = dataNode._fields[0];
                 let node2 = dataNode._fields[1];
                 let edge = dataNode._fields[2];
                 // push them seperately
                 seperateNodes.push(node1);
                 seperateNodes.push(node2);
-                seperateEdges.push(edge);
+                seperateEdges.push(edge); */
             });
         }
         catch (e) {
