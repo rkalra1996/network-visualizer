@@ -77,6 +77,9 @@ export class DashboardSidebarComponent implements OnInit {
       return self.indexOf(value) === index;
   }
     searchGraph(){
+      this.selectedGraph=[];
+      this.searchGraphData=[];
+      this.selectedRelationship=[];
      this.selectedGraph.push({type:"Organisation",value:this.selectedOrg});
      this.selectedGraph.push({type:"Department",value:this.selectedDepartment});
      this.selectedGraph.push({type:"Person",value:this.selectedPerson});
@@ -86,6 +89,20 @@ export class DashboardSidebarComponent implements OnInit {
      this.searchGraphData.push({nodes:this.selectedGraph,edges:this.selectedRelationship})
      console.log('or',this.searchGraphData);
     }
-
-   
+    searchElement(){
+      console.log('init',this.graphInitData);
+      this.graphInitData['seperateEdges'].filter(edge=>{
+        let temArray=[];
+        let temType;
+        this.relationOptions.filter(rel=>{
+          if(rel === edge.label){
+            temArray.push(edge.from);
+            temArray.push(edge.to);
+          }
+        });
+        temArray = temArray.filter(this.onlyUnique);
+        this.edgesNewObject.push({type:edge.label,nodeid:temArray});
+        console.log('new',this.edgesNewObject);
+      });
+    }
 }
