@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import SlimSelect from 'slim-select'
 @Component({
   selector: 'app-dashboard-sidebar',
   templateUrl: './dashboard-sidebar.component.html',
