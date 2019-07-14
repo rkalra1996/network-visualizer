@@ -3,6 +3,7 @@ import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import {GraphDataService} from './../../services/graph-data-service/graph-data.service';
 import {Network, DataSet, Node, Edge, IdType} from 'vis';
  import * as _ from 'lodash';
+import { SharedGraphService } from '../../services/shared-graph.service';
 
 declare var vis: any;
 @Component({
@@ -89,5 +90,6 @@ export class GraphVisualizerComponent implements OnInit {
       const container = document.getElementById('graphViewer');
       this.network.setData(this.graphData);
     }
+   
    
 }
