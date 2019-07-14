@@ -168,10 +168,11 @@ function createProperString(data) {
 function runQueryWithTypes(dataObj) {
     // check if the object is empty---> return error if it is
     if (dataObj.constructor === Object) {
+        dataObj.relation = createProperString(dataObj.relation);
         if (dataObj.length === 1) {
             dataObj.nodes[0].value = createProperString(dataObj.nodes[0].value);
             let queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r]->(q) where p.Name IN [${dataObj.nodes[0].value}] return p,q,r`;
-            console.log('query for 1 node type is ', queryStatement);
+            console.log('query for 1 node type is ', queryStsatement);
             return runQuery(queryStatement).then(result => {
                 let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
                 return new Promise((resolve,reject) => {
