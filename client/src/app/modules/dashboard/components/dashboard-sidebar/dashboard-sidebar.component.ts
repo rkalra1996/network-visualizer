@@ -41,6 +41,7 @@ export class DashboardSidebarComponent implements OnInit {
 
   ngOnInit() {
     this.getGraph();
+    this.orgCount=this.orgOptions.length;
   }
   networkElementClick(element){
     if(element){
