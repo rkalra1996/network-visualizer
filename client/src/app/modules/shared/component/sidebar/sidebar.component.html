@@ -6,17 +6,17 @@
     <div class="side">
         <nav class="dr-menu">
             <div class="dr-trigger"><span class="fas fa-globe-asia"></span><a class="dr-label" (click)="networkElementClick('Organisation')">Organisation</a>
-                <sui-multi-select [(ngModel)]="selectedOrg" [options]="orgOptions" [maxSelected]="5" #organization>
+                <sui-multi-select [(ngModel)]="selectedOrg" [options]="orgOptions" [maxSelected]="5" #organisation>
                     <div class="ui icon search input">
                         <i class="search icon"></i>
-                        <input suiSelectSearch type="text" placeholder="Search organizations...">
+                        <input suiSelectSearch type="text" placeholder="Search organisations...">
                     </div>
                     <div class="divider"></div>
                     <div class="header">
                         <i class="list icon"></i> Options
                     </div>
                     <div class="scrolling menu">
-                        <sui-select-option *ngFor="let o of organization.filteredOptions" [value]="o"></sui-select-option>
+                        <sui-select-option *ngFor="let o of organisation.filteredOptions" [value]="o"></sui-select-option>
                     </div>
                 </sui-multi-select>
             </div>
@@ -27,10 +27,10 @@
     <div class="side">
         <nav class="dr-menu">
             <div class="dr-trigger"><span class="fa fa-linode"></span><a class="dr-label" (click)="networkElementClick('Department')">Department</a>
-                <sui-multi-select [(ngModel)]="selectedDepartment" [options]="relationOptions" [maxSelected]="5" #department>
+                <sui-multi-select [(ngModel)]="selectedDepartment" [options]="departmentOptions" [maxSelected]="5" #department>
                     <div class="ui icon search input">
                         <i class="search icon"></i>
-                        <input suiSelectSearch type="text" placeholder="Search relations...">
+                        <input suiSelectSearch type="text" placeholder="Search department...">
                     </div>
                     <div class="divider"></div>
                     <div class="header">
@@ -48,10 +48,10 @@
     <div class="side">
         <nav class="dr-menu">
             <div class="dr-trigger"><span class="fa fa-user-o"></span><a class="dr-label" (click)="networkElementClick('Person')">Person</a>
-                <sui-multi-select [(ngModel)]="selectedPerson" [options]="relationOptions" [maxSelected]="5" #person>
+                <sui-multi-select [(ngModel)]="selectedPerson" [options]="personOptions" [maxSelected]="5" #person>
                     <div class="ui icon search input">
                         <i class="search icon"></i>
-                        <input suiSelectSearch type="text" placeholder="Search relations...">
+                        <input suiSelectSearch type="text" placeholder="Search person...">
                     </div>
                     <div class="divider"></div>
                     <div class="header">
