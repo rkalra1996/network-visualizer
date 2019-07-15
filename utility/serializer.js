@@ -59,6 +59,10 @@ function serializeProperties(propertyObject) {
     if (propertyObject.constructor === Object) {
         let finalString = '';
         _.forOwn(Object.keys(propertyObject), (key)=>{
+            if (propertyObject[key].hasOwnProperty('low')) {
+                // if the key has an integer value then set the low value of it
+                propertyObject[key] = propertyObject[key]['low']
+            }
            finalString += `<strong>${key} :</strong> ${propertyObject[key]} <br>`
         });
         return finalString;
