@@ -158,13 +158,23 @@ function createProperString(data) {
 
 }
 
+function createProperRelationString(data, delimiter='|') {
+    return data.map(s => `:${s}`).join(delimiter);
+}
+
 function runQueryWithTypes(dataObj) {
     // check if the object is empty---> return error if it is
     if (dataObj.constructor === Object) {
-        dataObj.relation = createProperString(dataObj.relation);
+        dataObj.relation = createProperRelationString(dataObj.relation);
         if (dataObj.length === 1) {
             dataObj.nodes[0].value = createProperString(dataObj.nodes[0].value);
-            let queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r]->(q) where p.Name IN [${dataObj.nodes[0].value}] return p,q,r`;
+            let queryStatement = '';
+            if (!!dataObj.relation) {
+                queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r${dataObj.relation}]->(q) where p.Name IN [${dataObj.nodes[0].value}] return p,q,r`;
+            }
+            else {
+                queryStatement = queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r]->(q) where p.Name IN [${dataObj.nodes[0].value}] return p,q,r`;
+            }
             console.log('query for 1 node type is ', queryStatement);
             return runQuery(queryStatement).then(result => {
                 let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
@@ -181,9 +191,15 @@ function runQueryWithTypes(dataObj) {
             dataObj.nodes.forEach(node => {
                 node.value = createProperString(node.value);
             });
-            let queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r]->(q:${dataObj.nodes[1].type}) 
-            where p.Name IN [${dataObj.nodes[0].value}]
-            and q.Name IN [${dataObj.nodes[1].value}] return p,q,r`;
+            let queryStatement = '';
+            if (!!dataObj.relation) {
+                queryStatement = `match (p:${dataObj.nodes[0].type})-[r${dataObj.relation}]-(q:${dataObj.nodes[1].type})
+                where p.Name IN [${dataObj.nodes[0].value}] and q.Name IN [${dataObj.nodes[1].value}] return p,q,r`;
+            } else {
+                queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r]->(q:${dataObj.nodes[1].type}) 
+                where p.Name IN [${dataObj.nodes[0].value}]
+                and q.Name IN [${dataObj.nodes[1].value}] return p,q,r`;
+            }
             console.log('query is ', queryStatement);
 
             return runQuery(queryStatement).then(result => {
@@ -201,9 +217,16 @@ function runQueryWithTypes(dataObj) {
             dataObj.nodes.forEach(node => {
                 node.value = createProperString(node.value);
             });
-            let queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r]->(q:${dataObj.nodes[1].type}) <-[s]->(t:${dataObj.nodes[2].type}) 
-            where p.Name IN [${dataObj.nodes[0].value}]
-            and q.Name IN [${dataObj.nodes[1].value}] and t.Name IN [${dataObj.nodes[2].value}] return p,q,r,t,s`;
+            let queryStatement
+            if (!dataObj.relation) {
+                queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r]->(q:${dataObj.nodes[1].type}) <-[s]->(t:${dataObj.nodes[2].type}) 
+                where p.Name IN [${dataObj.nodes[0].value}]
+                and q.Name IN [${dataObj.nodes[1].value}] and t.Name IN [${dataObj.nodes[2].value}] return p,q,r,t,s`;
+            } else {
+               queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r${dataObj.relation}]->(q:${dataObj.nodes[1].type}) <-[s${dataObj.relation}]->(t:${dataObj.nodes[2].type}) 
+                where p.Name IN [${dataObj.nodes[0].value}]
+                and q.Name IN [${dataObj.nodes[1].value}] and t.Name IN [${dataObj.nodes[2].value}] return p,q,r,t,s`;
+            }
             console.log('query is ', queryStatement);
 
             return runQuery(queryStatement).then(result => {
@@ -219,6 +242,34 @@ function runQueryWithTypes(dataObj) {
             });
 
         }
+
+
+        else {
+            //this will work in case user sends only relationships
+            let queryStatement = '';
+            if (!dataObj.relation) {
+                queryStatement = `match (p) <-[r]->(q) return p,q,r`;
+            } else {
+                queryStatement = `match (p) <-[r${dataObj.relation}]->(q) return p,q,r`;
+            }
+            console.log('query for 0 node type is ', queryStatement);
+    
+            return runQuery(queryStatement).then(result => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+                return new Promise((resolve, reject) => {
+                    resolve(serializedData);
+                });
+            }).catch(err => {
+                console.log('An error occured while runnning the query', err);
+                return new Promise((resolve, reject) => {
+                    reject('API : get/data | ERROR : Error encountered while reading from database with 0 types');
+                });
+            });
+
+        }
+
+
+
     } else {
 
     }
@@ -242,7 +293,7 @@ var getGraphData = (req) => {
     }
     // process nodes and edges in the given format
     // 1. find all the types of nodes needed for the query
-    if (req.body.hasOwnProperty('nodes') && req.body.nodes.length > 0) {
+    if (req.body.hasOwnProperty('nodes') && req.body.nodes.length >= 0) {
         // data for nodes is present, get all the relevant information
         if (req.body.nodes.length == 1) {
             return runQueryWithTypes({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 1 });
@@ -250,6 +301,8 @@ var getGraphData = (req) => {
             return runQueryWithTypes({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 2 })
         } else if (req.body.nodes.length === 3) {
             return runQueryWithTypes({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 3 })
+        } else {
+            return runQueryWithTypes({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 0 })
         }
     } else {
         return new Promise((resolve, reject) => {
