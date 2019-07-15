@@ -14,7 +14,21 @@ export class GraphVisualizerComponent implements OnInit {
 
   @Input() event: String;
   public graphData = {};
-  public network : any;
+  
+  public colorConfig = {
+    defaultColor : {
+      Department : 'rgba(255,0,0,0.7)',
+      Organisation : 'rgba(0,255,0,0.7)',
+      Person : 'rgba(0,0,255,0.7)'
+    },
+    selectedColor : {
+      Department : 'rgba(255,0,0,1)',
+      Organisation : 'rgba(0,255,0,1)',
+      Person : 'rgba(0,0,255,1)'
+    }
+  };
+
+  public network: any;
   private graphOptions = {
       physics: false,
       edges: {
@@ -46,6 +60,8 @@ export class GraphVisualizerComponent implements OnInit {
       console.log('recieved data from graph service', result);
       // set data for vis
       if (result.hasOwnProperty('seperateNodes')) {
+        // add colors to nodes
+        result['seperateNodes'] = this.addColors(result['seperateNodes']);
         this.graphData['nodes'] = new DataSet(result['seperateNodes']);
       }
       if (result.hasOwnProperty('seperateEdges')) {
@@ -62,20 +78,21 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-  console.log("graph",this.event);
+  console.log('graph',this.event);
   this.changeNodeColor();
   }
   changeNodeColor(){
-    if(this.event == "search1" || this.event == "search2"){
+    if(this.event == 'search1' || this.event == 'search2'){
       this.showGraphData();
     }else{
-    let previousData = _.cloneDeep(this.graphData); 
-    if(!!this.graphData["nodes"]){
-      var temgraph = this.graphData["nodes"].map(node=>{
-        if(this.event==node.type[0]){
-          node["color"]="#FFCC99";
+    const previousData = _.cloneDeep(this.graphData);
+    // tslint:disable-next-line: no-string-literal
+    if(!!this.graphData['nodes']){
+      var temgraph = this.graphData['nodes'].map(node=>{
+        if(this.event == node.type[0]){
+          node.color = this.colorConfig.defaultColor[node.type[0]];
         }else{
-          node["color"]="#95BFF8";
+          node.color='#95BFF8';
           return node;
         }
         return node;
@@ -112,5 +129,17 @@ export class GraphVisualizerComponent implements OnInit {
         console.error('An error occured while retrieving initial graph data', err);
         this.graphData = {};
        });
+    }
+
+    addColors(nodeObj) {
+      console.log(nodeObj);
+      nodeObj.forEach(node => {
+        if (node.hasOwnProperty('type') && node.type.length > 0 ) {
+          node['color'] = this.colorConfig.defaultColor[node.type[0]];
+        }
+      });
+      console.log(nodeObj);
+      return nodeObj;
+
     }
 }
