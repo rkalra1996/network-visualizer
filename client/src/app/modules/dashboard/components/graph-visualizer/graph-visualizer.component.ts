@@ -17,14 +17,14 @@ export class GraphVisualizerComponent implements OnInit {
   
   public colorConfig = {
     defaultColor : {
-      Department : 'rgba(255,0,0,0.7)',
-      Organisation : 'rgba(0,255,0,0.7)',
-      Person : 'rgba(0,0,255,0.7)'
+      Department : '#FF7570',
+      Organisation : 'orange',
+      Person : '#6ECE9E'
     },
     selectedColor : {
-      Department : 'rgba(255,0,0,1)',
-      Organisation : 'rgba(0,255,0,1)',
-      Person : 'rgba(0,0,255,1)'
+      Department : '#FF7570',
+      Organisation : 'orange',
+      Person : '#6ECE9E'
     }
   };
 
