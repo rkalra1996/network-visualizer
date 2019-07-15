@@ -11,3 +11,14 @@ This is the client side of network visualizer for neo4J.
 6. Go to client/ and type npm install to install packages
 7. Once done, type 'ng serve' and wait for the build
 8. Your app will be active on port 4200
+
+# Installation and Setup of Neo4j Database
+
+1. Download the Neo4j Database Server (version -> Neo4j Community Edition 3.3.9) from the link below: 
+* https://neo4j.com/download-center/#community
+2. Unzip or Untar the folder.
+3. Download the data of the Neo4j from the link below :
+* https://drive.google.com/file/d/1VXKeDb5lpH5-x1tIcLWHbnkfdn3KucO0/view?usp=sharing
+4. Unzip the folder and paste it in location "neo4j-community-3.3.9/data/databases".
+5. Now open a terminal in the folder "neo4j-community-3.3.9" and run "./bin/neo4j start" (with prefix "sudo" for Linux users) to run the neo4j server.
+6. Open the Neo4j server in the browser at "http://localhost:7474".
