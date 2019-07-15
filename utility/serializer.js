@@ -71,6 +71,9 @@ function serializeProperties(propertyObject) {
 
 function processNodes(nodeArray) {
     let processedNode = [];
+    console.log("done");
+    var x = 5;
+    console.log(x);
     let preprocessedNodeFiltered = [];
     if (nodeArray.length > 0) {
         // serialize edges accordingly
