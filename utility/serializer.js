@@ -83,7 +83,7 @@ function processNodes(nodeArray) {
                     id: node.identity.low,
                     label: node.properties.Name || 'No Name',
                     font: {align: 'middle'},
-                    value: node.properties.Name.length || 30,
+                    value: 30,
                     title: serializeProperties(node.properties),
                 }
                 return preprocessedNode;
