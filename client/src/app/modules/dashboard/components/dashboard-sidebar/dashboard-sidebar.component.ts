@@ -36,6 +36,7 @@ export class DashboardSidebarComponent implements OnInit {
   selectedGraph:{ type: string, value: Array<string> }[] = [];
   public graphData = {};
   count : number = 1;
+  relstatus: boolean = false;
     
   edgesNewObject:{type:string, nodeid: Array<number>}[] = [];
   nodesNewObject:{type:string, nodeid: Array<number>}[] = [];
@@ -176,5 +177,8 @@ export class DashboardSidebarComponent implements OnInit {
       this.selectedDepartment = [];
       this.selectedPerson = [];
       this.eventClicked.emit('reset');
+   }
+   relationclickEvent(){
+    this.relstatus = !this.relstatus;
    }
 }
