@@ -1,17 +1,17 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
-
-import {GraphDataService} from './../../services/graph-data-service/graph-data.service';
+import { Component, OnInit, SimpleChanges, Input } from '@angular/core';
+import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
 import {Network, DataSet, Node, Edge, IdType} from 'vis';
- import * as _ from 'lodash';
-import { SharedGraphService } from '../../services/shared-graph.service';
+import * as _ from 'lodash';
+import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
 
-declare var vis: any;
+
 @Component({
   selector: 'app-graph-visualizer',
   templateUrl: './graph-visualizer.component.html',
   styleUrls: ['./graph-visualizer.component.scss']
 })
 export class GraphVisualizerComponent implements OnInit {
+
   @Input() event: String;
   public graphData = {};
   public network : any;
@@ -35,7 +35,7 @@ export class GraphVisualizerComponent implements OnInit {
       }
   };
 
-  constructor(private graphService: GraphDataService) { }
+  constructor(private graphService: GraphDataService, private sharedGraphService : SharedGraphService) { }
 
   ngOnInit() {
     this.displayInitialGraph();
@@ -66,6 +66,9 @@ export class GraphVisualizerComponent implements OnInit {
   this.changeNodeColor();
   }
   changeNodeColor(){
+    if(this.event == "search1" || this.event == "search2"){
+      this.showGraphData();
+    }else{
     let previousData = _.cloneDeep(this.graphData); 
     if(!!this.graphData["nodes"]){
       var temgraph = this.graphData["nodes"].map(node=>{
@@ -77,19 +80,37 @@ export class GraphVisualizerComponent implements OnInit {
         }
         return node;
       })
-      previousData.nodes.clear();
-      previousData.nodes = new DataSet(_.cloneDeep(temgraph));
-      this.graphData = previousData;
+        previousData.nodes.clear();
+        previousData.nodes = new DataSet(_.cloneDeep(temgraph));
+        this.graphData = previousData;
       this.reinitializeGraph();
       console.log(this.graphData)
     }
-  
+    } 
     }
 
     reinitializeGraph() {
       const container = document.getElementById('graphViewer');
       this.network.setData(this.graphData);
     }
-   
-   
+    showGraphData(){
+      let requestBody = this.sharedGraphService.getGraphData();
+      this.graphService.getSearchData(requestBody).subscribe(result=>{
+        //console.log('recieved data from graph service', result);
+        // set data for vis
+        if (result.hasOwnProperty('seperateNodes')) {
+          this.graphData['nodes'] = new DataSet(result['seperateNodes']);
+        }
+        if (result.hasOwnProperty('seperateEdges')) {
+          this.graphData['edges'] = new DataSet(result['seperateEdges']);
+        }
+        //console.log('graphData :', this.graphData);
+        // display data
+        const container = document.getElementById('graphViewer');
+        this.network = new Network(container, this.graphData, this.graphOptions);
+      }, err => {
+        console.error('An error occured while retrieving initial graph data', err);
+        this.graphData = {};
+       });
+    }
 }

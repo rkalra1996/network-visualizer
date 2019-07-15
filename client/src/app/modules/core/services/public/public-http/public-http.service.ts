@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 import {throwError} from 'rxjs';
 
@@ -20,6 +20,19 @@ export class PublicHttpService {
       return throwError('No url provided');
     }
   }
-  post() {}
+  post(url,body) {
+    const requestUrl = !!url ? url : null;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+       })
+    };
+    if (!!requestUrl) {
+      return this.http.post(requestUrl,body,httpOptions);
+    } else {
+      console.error('No url provided for post request');
+      return throwError('No url provided');
+    }
+  }
   patch() {}
 }
