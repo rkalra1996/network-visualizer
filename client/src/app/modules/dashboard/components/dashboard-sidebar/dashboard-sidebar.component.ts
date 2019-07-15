@@ -32,11 +32,12 @@ export class DashboardSidebarComponent implements OnInit {
   selectedRelation: Array<string> =[];
   selectedDepartment: Array<string> =[];
   selectedPerson: Array<string> =[];
-  selectedRelationship:{ type: string, value: Array<string> }[] = [];
+  selectedRelationship:{ type: string }[] = [];
   selectedGraph:{ type: string, value: Array<string> }[] = [];
   public graphData = {};
   count : number = 1;
   relstatus: boolean = false;
+  preSelectedRel : string;
     
   edgesNewObject:{type:string, nodeid: Array<number>}[] = [];
   nodesNewObject:{type:string, nodeid: Array<number>}[] = [];
@@ -97,7 +98,7 @@ export class DashboardSidebarComponent implements OnInit {
       this.selectedGraph.push({type:"Person",value:this.selectedPerson});
      }
      this.selectedRelation.filter(rel=>{
-       this.selectedRelationship.push({type:rel,value:[]});
+       this.selectedRelationship.push({type:rel});
      });
 
      let requestBody = {nodes:this.selectedGraph,edges:this.selectedRelationship};
@@ -176,9 +177,32 @@ export class DashboardSidebarComponent implements OnInit {
       this.selectedOrg = [];
       this.selectedDepartment = [];
       this.selectedPerson = [];
+      if(this.preSelectedRel){
+        var element = document.getElementById(this.preSelectedRel);
+        element.classList.remove("selected"); 
+       }
       this.eventClicked.emit('reset');
    }
-   relationclickEvent(){
+   relationclickEvent(selectedRelation){
+     if(this.preSelectedRel){
+      var element = document.getElementById(this.preSelectedRel);
+      element.classList.remove("selected"); 
+     }
+    var element = document.getElementById(selectedRelation);
+    element.classList.add("selected");
+    this.selectedRelationship = [];
     this.relstatus = !this.relstatus;
+    this.selectedRelationship.push({type:selectedRelation});
+    let requestBody = {nodes:[],edges:this.selectedRelationship};
+    console.log("re",requestBody);
+    this.sharedGraphData.setGraphData(requestBody);
+    if(this.count === 1){
+      this.eventClicked.emit('search'+this.count);
+      this.count = 2;
+     }else{
+      this.eventClicked.emit('search'+this.count);
+      this.count = 1;
+     }
+    this.preSelectedRel=selectedRelation;
    }
 }

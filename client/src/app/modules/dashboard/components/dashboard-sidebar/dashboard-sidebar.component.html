@@ -79,7 +79,7 @@
                     </div>
                 </sui-multi-select> -->
                 <div class="rel-tabs-container" *ngFor="let r of relationOptions">
-                    <div class="rel-tab" (click)="relationclickEvent()" [ngClass]="relstatus ? 'selected' : 'unselected'">
+                    <div class="rel-tab" (click)="relationclickEvent(r)" id={{r}}>
                         <p>{{r}}</p>
                     </div>
                 </div>

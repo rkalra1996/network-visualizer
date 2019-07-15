@@ -14,7 +14,7 @@ export class GraphDataService {
   constructor(private publicHttp: PublicHttpService) { }
 
   getInitialData() {
-    const url = 'http://localhost:3050/api/initialdata';
+    const url = 'api/initialdata';
     return this.publicHttp.get(url).pipe(map(data => {
       if (!!data) {
         return data;
@@ -24,7 +24,7 @@ export class GraphDataService {
     }));
   }
   getSearchData(body) {
-    const url = 'http://localhost:3050/api/graph/data';
+    const url = 'api/graph/data';
     return this.publicHttp.post(url,body).pipe(map(data => {
       if (!!data) {
         return data;
