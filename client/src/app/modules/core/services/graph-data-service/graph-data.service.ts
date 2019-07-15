@@ -12,7 +12,6 @@ import { HttpHeaders } from '@angular/common/http';
 export class GraphDataService {
 
   constructor(private publicHttp: PublicHttpService) { }
-
   getInitialData() {
     const url = 'api/initialdata';
     return this.publicHttp.get(url).pipe(map(data => {
