@@ -131,17 +131,20 @@ export class DashboardSidebarComponent implements OnInit {
     // Method gives selected node id
     getSelectedNodeId(nodeName){
       let temId;
+      if(this.graphInitData.length>0){
       this.graphInitData[0]['seperateNodes'].filter(node=>{
         if(nodeName === node.label){
           temId = node.id;
         }
       });
       return temId;
+      }
     }
 
     searchElement(){
       let temdep = [];
       let temper = [];
+      if(this.graphInitData.length>0){
       if(this.selectedOrg.length>0){
         this.selectedOrg.filter(org=>{
           let selectedNodeId=this.getSelectedNodeId(org);
@@ -164,4 +167,14 @@ export class DashboardSidebarComponent implements OnInit {
         this.personOptions = temper;
       }
     }
+      
+    }
+
+    resetGraph(){
+      this.getGraph();
+      this.selectedOrg = [];
+      this.selectedDepartment = [];
+      this.selectedPerson = [];
+      this.eventClicked.emit('reset');
+   }
 }

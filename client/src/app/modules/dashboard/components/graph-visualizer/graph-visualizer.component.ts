@@ -84,6 +84,8 @@ export class GraphVisualizerComponent implements OnInit {
   changeNodeColor(){
     if(this.event == 'search1' || this.event == 'search2'){
       this.showGraphData();
+    }else if(this.event == 'reset'){
+      this.displayInitialGraph();
     }else{
     const previousData = _.cloneDeep(this.graphData);
     // tslint:disable-next-line: no-string-literal
@@ -116,6 +118,7 @@ export class GraphVisualizerComponent implements OnInit {
         //console.log('recieved data from graph service', result);
         // set data for vis
         if (result.hasOwnProperty('seperateNodes')) {
+          result['seperateNodes'] = this.addColors(result['seperateNodes']);
           this.graphData['nodes'] = new DataSet(result['seperateNodes']);
         }
         if (result.hasOwnProperty('seperateEdges')) {

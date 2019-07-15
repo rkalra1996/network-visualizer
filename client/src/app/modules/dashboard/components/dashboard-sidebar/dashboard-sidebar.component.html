@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="item">
-                <span class="fa fa-linode"></span><a class="item-text hoverable" (click)="networkElementClick('Department')" [attr.data-tooltip]="departmentOptions.length" data-position="right center">Departments<span class="ele-count">{{departmentOptions.length}}</span></a>
+                <span class="fa fa-linode"></span><a class="item-text hoverable" (click)="networkElementClick('Department')">Departments<span class="ele-count">{{departmentOptions.length}}</span></a>
                 <span class="fas fa-chevron-right" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2" (click)="rotateObj.Department.rotate = !rotateObj.Department.rotate" [ngClass]="{'rotate': rotateObj?.Department.rotate, 'no-rotate': !rotateObj?.Department.rotate}"></span>
                 <div class="collapse" id="collapseExample2">
                     <sui-multi-select [(ngModel)]="selectedDepartment" [options]="departmentOptions" [maxSelected]="15" #department>
@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="item">
-                <span class="fa fa-user-o"></span><a class="item-text hoverable" (click)="networkElementClick('Person')" [attr.data-tooltip]="personOptions.length" data-position="right center">Person<span class="ele-count">{{personOptions.length}}</span></a>
+                <span class="fa fa-user-o"></span><a class="item-text hoverable" (click)="networkElementClick('Person')">Person<span class="ele-count">{{personOptions.length}}</span></a>
                 <span class="fas fa-chevron-right" data-toggle="collapse" href="#collapseExample3" role="button" aria-expanded="false" aria-controls="collapseExample3" (click)="rotateObj.Person.rotate = !rotateObj.Person.rotate" [ngClass]="{'rotate': rotateObj?.Person.rotate, 'no-rotate': !rotateObj?.Person.rotate}"></span>
                 <div class="collapse" id="collapseExample3">
                     <sui-multi-select [(ngModel)]="selectedPerson" [options]="personOptions" [maxSelected]="15" #person>
@@ -54,6 +54,15 @@
                     </sui-multi-select>
                 </div>
             </div>
+        </div>
+        <div class="btn-container">
+            <div class="searchBtnWrapper btn-sidebar">
+                <button class="btn btn-default btn-md searchBtn" (click)="resetGraph()">Reset</button>
+            </div>
+            <div class="searchBtnWrapper btn-sidebar">
+                <button class="btn btn-default btn-md searchBtn" (click)="searchGraph()">Apply</button>
+            </div>
+
         </div>
         <div class="sidebarBodyTitle">
             <p>Relationships</p>
@@ -77,7 +86,5 @@
             </div>
         </div>
     </div>
-    <div class="searchBtnWrapper">
-        <button class="btn btn-default btn-md searchBtn" (click)="searchGraph()">Search</button>
-    </div>
+
 </div>
