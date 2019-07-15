@@ -426,7 +426,7 @@ var GraphDataService = /** @class */ (function () {
         this.publicHttp = publicHttp;
     }
     GraphDataService.prototype.getInitialData = function () {
-        var url = 'http://localhost:3050/api/initialdata';
+        var url = 'api/initialdata';
         return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
             if (!!data) {
                 return data;
@@ -437,7 +437,7 @@ var GraphDataService = /** @class */ (function () {
         }));
     };
     GraphDataService.prototype.getSearchData = function (body) {
-        var url = 'http://localhost:3050/api/graph/data';
+        var url = 'api/graph/data';
         return this.publicHttp.post(url, body).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
             if (!!data) {
                 return data;
