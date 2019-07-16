@@ -318,18 +318,3 @@ module.exports = {
     getMetaData,
     getGraphData
 }
-
-
-/**
- * req.body.nodes.filter(node => {
-            if (node.hasOwnProperty('type') && node.type.length > 0) {
-                 nodeTypesArray[node.type] = undefined;
-                 if (node.hasOwnProperty('value') && node.value.constructor === Array && node.value.length > 0) {
-                    nodeTypesArray[node.type] = node.value;
-                 }
-                 return true;
-            } else {
-                console.log(`API : graph/data | WARNING : The given node ${JSON.stringify(node)} has no property type\n`);
-            }
-        });
- */
