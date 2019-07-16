@@ -1,6 +1,6 @@
 <div class="wrapper">
     <div class="logo">
-        <img src="./../../../../../assets/societal-logo.png" />
+        <img src="assets/societal-logo.png" />
     </div>
     <hr>
     <div class="sidebarBody p-0">
@@ -10,7 +10,7 @@
         <div class="sidebarElements">
             <div class="item">
                 <span class="fas fa-globe-asia"></span><a class="item-text hoverable" (click)="networkElementClick('Organisation')">Organizations<span class="ele-count count-org">{{orgOptions.length}}</span></a>
-                <span class="fas fa-chevron-right" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" (click)="rotateObj.Organisation.rotate = !rotateObj.Organisation.rotate; panelOpenOne = !panelOpenOne"
+                <span class="fas fa-chevron-right" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" (click)="rotateObj.Organisation.rotate = !rotateObj.Organisation.rotate"
                     [ngClass]="{'rotate': rotateObj?.Organisation.rotate, 'no-rotate': !rotateObj?.Organisation.rotate}"></span>
                 <div class="collapse" id="collapseExample">
                     <sui-multi-select [(ngModel)]="selectedOrg" [options]="orgOptions" [maxSelected]="15" (ngModelChange)="searchElement()" #organisation>
