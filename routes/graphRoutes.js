@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const auth_middleware = require('./../middlewares/auth.middleware');
 //setup the neo4J data driver
 const neo4j = require('./../neo4jDriverUtility');
 
@@ -54,20 +55,21 @@ router.post('/graph/data', (req,res) => {
     }
 });
 
-router.post('/search/neo4j',(req,res)=> {
+router.post('/search/neo4j',auth_middleware.searchAuth,(req,res)=> {
     console.log('search api hit');
     if (req.body.constructor === Object) {
         if (Object.keys(req.body).length > 0) {
             if (req.body.hasOwnProperty('query')) {
                 if (req.body.query.length > 0) {
-                    neo4j.searchQuery(req.body)
+                    let rawQuery = !!req.body.raw ? true : false;
+                    neo4j.searchQuery(req.body,rawQuery)
                     .then( response => {
                         console.log('sending back response');
                         res.send(response);
                     })
                     .catch( err => {
                         console.error('err occured while sending back the search query data ', err);
-                        res.sendStatus(500);
+                        res.send(err);
                     });
                 }
                 else {
