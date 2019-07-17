@@ -312,9 +312,27 @@ var getGraphData = (req) => {
     }
 }
 
+var searchQuery = (requestBody) => {
+    // all the cross verification has been done earlier, now it is sure to have a query key
+    let queryToExecute = requestBody.query;
+    return runQuery(queryToExecute).then(result => {
+        let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+        return new Promise((resolve, reject) => {
+            resolve(serializedData);
+        });
+    }).catch(err => {
+        console.log('An error occured while runnning the query', err);
+        return new Promise((resolve, reject) => {
+            reject('API : get/data | ERROR : Error encountered while reading from database with 0 types');
+        });
+    });
+
+}
+
 module.exports = {
     initiate,
     getData,
+    searchQuery,
     getMetaData,
     getGraphData
 }
