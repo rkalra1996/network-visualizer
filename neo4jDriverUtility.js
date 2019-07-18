@@ -338,10 +338,37 @@ var searchQuery = (requestBody, raw=false) => {
 
 }
 
+var getGraphLabels = () => {
+    let query = 'call db.labels()'
+    return runQuery(query)
+    .then(result => {
+        if (result.records.length > 0) {
+            let finalLabels = {
+                labels : []
+            };
+            result.records.forEach(labelRecord => {
+                console.log(labelRecord._fields[0]);
+                finalLabels.labels.push(labelRecord._fields[0]);
+            });
+            return new Promise((resolve, reject) => {
+                resolve(finalLabels);
+            });
+        }
+    })
+    .catch(err => {
+        console.log('API : /graph/labels | Error occured while retreiving labels from database');
+        console.log(err);
+        return new Promise((resolve, reject) => {
+            reject('Server error while retrieving labels from the database');
+        });
+    });
+}
+
 module.exports = {
     initiate,
     getData,
     searchQuery,
     getMetaData,
-    getGraphData
+    getGraphData,
+    getGraphLabels
 }

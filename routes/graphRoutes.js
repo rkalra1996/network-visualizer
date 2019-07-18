@@ -96,4 +96,15 @@ router.post('/search/neo4j',auth_middleware.searchAuth,(req,res)=> {
     }
 });
 
+router.get('/graph/labels', (req,res) => {
+    neo4j.getGraphLabels()
+    .then(result => {
+        res.send(result);
+    })
+    .catch(err => {
+        console.log('err occured while sending back labels data');
+        res.status(500).send(err);
+    })
+})
+
 module.exports = router;
