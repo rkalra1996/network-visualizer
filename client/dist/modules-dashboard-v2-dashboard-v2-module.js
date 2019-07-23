@@ -1,41 +1,5 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["modules-dashboard-v2-dashboard-v2-module"],{
 
-/***/ "./src/app/modules/core/services/shared-graph.service.ts":
-/*!***************************************************************!*\
-  !*** ./src/app/modules/core/services/shared-graph.service.ts ***!
-  \***************************************************************/
-/*! exports provided: SharedGraphService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SharedGraphService", function() { return SharedGraphService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-
-
-var SharedGraphService = /** @class */ (function () {
-    function SharedGraphService() {
-    }
-    SharedGraphService.prototype.setGraphData = function (graphdata) {
-        this.graphData = graphdata;
-    };
-    SharedGraphService.prototype.getGraphData = function () {
-        return this.graphData;
-    };
-    SharedGraphService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root'
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
-    ], SharedGraphService);
-    return SharedGraphService;
-}());
-
-
-
-/***/ }),
-
 /***/ "./src/app/modules/dashboard-v2/components/dashboard-v2-header/dashboard-header.component.html":
 /*!*****************************************************************************************************!*\
   !*** ./src/app/modules/dashboard-v2/components/dashboard-v2-header/dashboard-header.component.html ***!
@@ -643,7 +607,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var routes = [
-    { path: "", redirectTo: "/", pathMatch: "full" },
     { path: "", component: _components_main_v2_main_component__WEBPACK_IMPORTED_MODULE_3__["MainComponent"], data: { title: "dashboard" } }
 ];
 var DashboardV2RoutingModule = /** @class */ (function () {

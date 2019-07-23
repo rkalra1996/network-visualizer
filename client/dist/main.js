@@ -10,7 +10,13 @@
 var map = {
 	"./modules/dashboard-v2/dashboard-v2.module": [
 		"./src/app/modules/dashboard-v2/dashboard-v2.module.ts",
+		"common",
 		"modules-dashboard-v2-dashboard-v2-module"
+	],
+	"./modules/dashboard/dashboard.module": [
+		"./src/app/modules/dashboard/dashboard.module.ts",
+		"common",
+		"modules-dashboard-dashboard-module"
 	]
 };
 function webpackAsyncContext(req) {
@@ -22,7 +28,7 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return __webpack_require__.e(ids[1]).then(function() {
+	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
 		var id = ids[0];
 		return __webpack_require__(id);
 	});
@@ -52,6 +58,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var routes = [
+    {
+        path: "v2",
+        loadChildren: "./modules/dashboard/dashboard.module#DashboardModule"
+    },
     {
         path: "",
         loadChildren: "./modules/dashboard-v2/dashboard-v2.module#DashboardModule"

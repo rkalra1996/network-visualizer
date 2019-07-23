@@ -60,18 +60,23 @@ export class DashboardSidebarComponent implements OnInit {
        let temorg = [];
        let temdep = [];
        let temper = [];
-       data['seperateNodes'].filter(node=>{
-         if(node.type[0] === "Organisation"){
-           temorg.push(node.label);
-         }else if(node.type[0] === "Department"){
-           temdep.push(node.label);
-         }else if(node.type[0] === "Person"){
-           temper.push(node.label);
-         }        
-       });
-       data['seperateEdges'].filter(edge=>{
-           this.relationOptions.push(edge.label);
-         });
+       if(data){
+         if(data['seperateNodes'] && data['seperateEdges']){
+          data['seperateNodes'].filter(node=>{
+            if(node.type[0] === "Organisation"){
+              temorg.push(node.label);
+            }else if(node.type[0] === "Department"){
+              temdep.push(node.label);
+            }else if(node.type[0] === "Person"){
+              temper.push(node.label);
+            }        
+          });
+          data['seperateEdges'].filter(edge=>{
+              this.relationOptions.push(edge.label);
+            });
+          
+         }
+       }
         
        this.relationOptions =this.relationOptions.filter( this.onlyUnique );
        this.orgOptions = temorg;
