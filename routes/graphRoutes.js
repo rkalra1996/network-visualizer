@@ -1,7 +1,7 @@
 const express = require('express');
-const parser = require('body-parser');
 const router = express.Router();
 
+const auth_middleware = require('./../middlewares/auth.middleware');
 //setup the neo4J data driver
 const neo4j = require('./../neo4jDriverUtility');
 
@@ -52,6 +52,47 @@ router.post('/graph/data', (req,res) => {
         // empty object is not allowed
         console.log('empty body recieved in the req');
         res.status(400).send({'error': 'Request Body is required to access the API'});
+    }
+});
+
+router.post('/search/neo4j',auth_middleware.searchAuth,(req,res)=> {
+    console.log('search api hit');
+    if (req.body.constructor === Object) {
+        if (Object.keys(req.body).length > 0) {
+            if (req.body.hasOwnProperty('query')) {
+                if (req.body.query.length > 0) {
+                    let rawQuery = !!req.body.raw ? true : false;
+                    neo4j.searchQuery(req.body,rawQuery)
+                    .then( response => {
+                        console.log('sending back response');
+                        res.send(response);
+                    })
+                    .catch( err => {
+                        console.error('err occured while sending back the search query data ', err);
+                        res.send(err);
+                    });
+                }
+                else {
+                    // empty query key is not entertained
+                    console.error('Error : /search/neo4j | empty query key provided');
+                    res.status(400).send({'error': 'Empty query key is not allowed'})
+                }
+            } else {
+                // cannot query without a query key
+                console.error('Error : /search/neo4j | no query key provided');
+                res.status(400).send({'error': 'query key not provided'});
+            }
+        }
+        else {
+            // empty body is not entertained
+            console.error('Error : /search/neo4j | empty body provided');
+            res.status(400).send({'error': 'Empty body not allowed'});
+        }
+    }
+    else {
+        // type of body should be an object
+        console.error('Error : /search/neo4j | req.body is not an object');
+        res.status(400).send({'error': 'body should be an object with a key query'});
     }
 });
 

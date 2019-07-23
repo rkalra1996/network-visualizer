@@ -312,24 +312,36 @@ var getGraphData = (req) => {
     }
 }
 
+var searchQuery = (requestBody, raw=false) => {
+    // all the cross verification has been done earlier, now it is sure to have a query key
+    let queryToExecute = requestBody.query;
+    return runQuery(queryToExecute).then(result => {
+        let serializedData;
+        if (raw) {
+            console.log('raw request\n');
+        serializedData = result.records;
+        } else {
+            serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+        }
+        return new Promise((resolve, reject) => {
+            resolve(serializedData);
+        });
+    }).catch(err => {
+        console.log('An error occured while runnning the query', err);
+        return new Promise((resolve, reject) => {
+            if (raw) {
+                return resolve({err, message: err.message});
+            }
+            reject('API : get/data | ERROR : Error encountered while reading from database');
+        });
+    });
+
+}
+
 module.exports = {
     initiate,
     getData,
+    searchQuery,
     getMetaData,
     getGraphData
 }
-
-
-/**
- * req.body.nodes.filter(node => {
-            if (node.hasOwnProperty('type') && node.type.length > 0) {
-                 nodeTypesArray[node.type] = undefined;
-                 if (node.hasOwnProperty('value') && node.value.constructor === Array && node.value.length > 0) {
-                    nodeTypesArray[node.type] = node.value;
-                 }
-                 return true;
-            } else {
-                console.log(`API : graph/data | WARNING : The given node ${JSON.stringify(node)} has no property type\n`);
-            }
-        });
- */
