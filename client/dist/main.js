@@ -8,9 +8,9 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./modules/dashboard/dashboard.module": [
-		"./src/app/modules/dashboard/dashboard.module.ts",
-		"modules-dashboard-dashboard-module"
+	"./modules/dashboard-v2/dashboard-v2.module": [
+		"./src/app/modules/dashboard-v2/dashboard-v2.module.ts",
+		"modules-dashboard-v2-dashboard-v2-module"
 	]
 };
 function webpackAsyncContext(req) {
@@ -54,7 +54,7 @@ __webpack_require__.r(__webpack_exports__);
 var routes = [
     {
         path: "",
-        loadChildren: "./modules/dashboard/dashboard.module#DashboardModule"
+        loadChildren: "./modules/dashboard-v2/dashboard-v2.module#DashboardModule"
     }
 ];
 var AppRoutingModule = /** @class */ (function () {
@@ -426,7 +426,8 @@ var GraphDataService = /** @class */ (function () {
         this.publicHttp = publicHttp;
     }
     GraphDataService.prototype.getInitialData = function () {
-        var url = 'api/initialdata';
+        // const url = 'http://localhost:3050/api/initialdata';
+        var url = '/api/initialdata';
         return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
             if (!!data) {
                 return data;
@@ -437,7 +438,299 @@ var GraphDataService = /** @class */ (function () {
         }));
     };
     GraphDataService.prototype.getSearchData = function (body) {
-        var url = 'api/graph/data';
+        // const url = 'http://localhost:3050/api/graph/data';
+        var url = '/api/graph/data';
+        return this.publicHttp.post(url, body).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+            if (!!data) {
+                return data;
+            }
+            else {
+                return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])({});
+            }
+        }));
+    };
+    GraphDataService.prototype.getNodeOptions = function () {
+        // const url = 'https://api.myjson.com/bins/8rogd';
+        // return this.publicHttp.get(url).pipe(map(data => {
+        //   if (!!data) {
+        //     return data;
+        //   } else {
+        //     return of({});
+        //   }
+        // }));
+        var data = {
+            "Name": [
+                "Accenture",
+                "Access Agriculture",
+                "Action For India",
+                "Acumen",
+                "Aditya Birla Group",
+                "Advaith Foundation",
+                "AILSG",
+                "Alan Schwartz",
+                "Amani Institute",
+                "Amazon Public Services",
+                "Amnesty International",
+                "Anahad",
+                "Andrew Ng",
+                "Annalie Killian",
+                "APF",
+                "APPI",
+                "APSSDC",
+                "Arghyam",
+                "Ashoka",
+                "Ashoka University",
+                "ATREE",
+                "Avanti Finance",
+                "Bapu Trust",
+                "BCG",
+                "Benjamin Shuldiner",
+                "Bharat Innovation Fund",
+                "Bhavtosh Vajpayee",
+                "Bill Gates",
+                "Bloomberg (NEF)",
+                "BMGF",
+                "Bosch",
+                "BRAC",
+                "Bridgespan",
+                "British Asian Trust",
+                "Brookings",
+                "C&R",
+                "Cambridge",
+                "Cassia",
+                "Central Square Foundation",
+                "CGD",
+                "Chamath Palihapitiya",
+                "Chandler Foundation",
+                "Chandu Bhave",
+                "Chris Anderson",
+                "Cisco",
+                "Clearly Vision",
+                "Co-Impact",
+                "Code For America",
+                "Columbia",
+                "Cornell",
+                "Dalberg",
+                "Dasra",
+                "Dayle Stevens",
+                "deAsra",
+                "Dell",
+                "Deloitte",
+                "Dept. of Agriculture (AP)",
+                "Deshpande Foundation",
+                "Devex",
+                "DIAL",
+                "Digital Green",
+                "DIKSHA",
+                "Don Norman",
+                "Drucker Forum",
+                "ECF",
+                "ECHO",
+                "Edumentum",
+                "eGovernments",
+                "EkStep",
+                "Equitor",
+                "EY",
+                "FHI360",
+                "Ford Foundation",
+                "Founding Fuel",
+                "FSG",
+                "Fujitsu",
+                "Future State",
+                "Gates Foundation",
+                "GDI",
+                "Genpact",
+                "Girl Effect",
+                "Giving Pledge",
+                "Goonj",
+                "Goradia Foundation",
+                "Grameen",
+                "Greymatters Capital",
+                "Guidestar",
+                "Hank Nun",
+                "Harambee",
+                "Harry Hertz",
+                "Harvard Business School",
+                "Harvard Kennedy School",
+                "Harvard Medical School",
+                "HCG Hospital",
+                "Health Stack",
+                "Heather McGowan",
+                "ICICI",
+                "IDR",
+                "IIHS",
+                "IIITB",
+                "IIMB",
+                "IISC",
+                "IIT-IIT",
+                "IKEA",
+                "ILIMI",
+                "Imago",
+                "In The Field",
+                "Inclusive Ventures",
+                "India Stack",
+                "Indian School of Democracy",
+                "Ingrid Srinath",
+                "Institute For Transformative Tech.",
+                "Institute of Product Leadership",
+                "Intelehealth",
+                "Intuit",
+                "IPI",
+                "ISDM",
+                "Isha Foundation",
+                "iSpirt",
+                "ITC",
+                "John McDermott",
+                "JPAL",
+                "Landesa",
+                "Last Mile Health",
+                "Lean Impact",
+                "Living Farms",
+                "Living Goods",
+                "London Business School",
+                "LV Eyecare",
+                "MAGC",
+                "Make A Difference",
+                "MasterCard",
+                "McKinsey",
+                "Mercy Corps",
+                "MHRD",
+                "Michael Susan Dell Foundation",
+                "Microsoft",
+                "Mindtree",
+                "MIT",
+                "N/Core",
+                "Nasscom Foundation",
+                "National Health Stack",
+                "National Skill Stack",
+                "NCDEX",
+                "New America Foundation",
+                "NIEPA",
+                "NIIT",
+                "Nilekani Philanthropies",
+                "NIMHANS",
+                "NIUA",
+                "NSDC",
+                "NSRCEL",
+                "NULP",
+                "NYU Stern",
+                "Ola",
+                "Ola Foundation",
+                "Omidyar Network",
+                "One Acre Fund",
+                "Open Mobility",
+                "ORF",
+                "PAD",
+                "Pankaj Jalote",
+                "PEI",
+                "PEO",
+                "Phicus",
+                "PIE",
+                "Piramal Foundation",
+                "Pivotal Ventures",
+                "Pratham Books",
+                "Precision Ag Development",
+                "Project Evident",
+                "Project Potential",
+                "PwC",
+                "Raj Shah",
+                "Ram Sewak Sharma",
+                "Rockefeller",
+                "SAMA",
+                "Samagra",
+                "Sameer Dua",
+                "Samhita",
+                "Sangath",
+                "Sangeet Paul Chaudhry",
+                "Santhosh Mathew",
+                "Sara Chamberlain",
+                "Sattva",
+                "Sheroes",
+                "ShikshaLokam",
+                "Skill Stack",
+                "Skoll",
+                "Social Alpha",
+                "Socion",
+                "Societal Platform Team",
+                "SPACS",
+                "SPJIMR",
+                "Stanford PACS / SSIR",
+                "Stefan Dercon",
+                "Strategyzer",
+                "SVP",
+                "Synergos",
+                "Tarento",
+                "Tasvereein",
+                "Tata Trusts",
+                "TechSoup",
+                "Tel Aviv University",
+                "The Banyan",
+                "Thomas Friedman",
+                "Tom Monahan",
+                "TouchKin",
+                "Udhyam",
+                "Ugly Indian",
+                "UMICH / ROSS",
+                "UNDP",
+                "UNICEF",
+                "Unilever",
+                "University of Wisconsin",
+                "Unleash",
+                "UnLtd",
+                "UNSDN",
+                "UNSSC",
+                "Upaya",
+                "Urban Clap",
+                "Vayam",
+                "Venkat Ramaswamy",
+                "Vidhi Legal",
+                "Villgro",
+                "Wadhwani",
+                "Wadhwani AI",
+                "WEF",
+                "White Swan",
+                "WHU",
+                "World Bank"
+            ],
+            "Type": [
+                "Academia",
+                "Consulting",
+                "Government",
+                "Impact Investor",
+                "International Agency",
+                "Media",
+                "NGO/CBO",
+                "People",
+                "Philanthropy",
+                "Platform",
+                "Private Sector",
+                "Research Institute"
+            ],
+            "Represent": [
+                "Capital",
+                "Talent",
+                "Platform",
+                "Reach"
+            ],
+            "Connection": [
+                "Connected"
+            ]
+        };
+        return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])(data);
+    };
+    GraphDataService.prototype.getInitialDataV2 = function () {
+        var url = 'http://localhost:3050/api/initialdatav2';
+        return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+            if (!!data) {
+                return data;
+            }
+            else {
+                return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])({});
+            }
+        }));
+    };
+    GraphDataService.prototype.getSearchDataV2 = function (body) {
+        var url = 'http://localhost:3050/api/graph/datav2';
         return this.publicHttp.post(url, body).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
             if (!!data) {
                 return data;
@@ -589,20 +882,22 @@ var SidebarComponent = /** @class */ (function () {
             var temorg = [];
             var temdep = [];
             var temper = [];
-            data['seperateNodes'].filter(function (node) {
-                if (node.type[0] === "Organisation") {
-                    temorg.push(node.label);
-                }
-                else if (node.type[0] === "Department") {
-                    temdep.push(node.label);
-                }
-                else if (node.type[0] === "Person") {
-                    temper.push(node.label);
-                }
-            });
-            data['seperateEdges'].filter(function (edge) {
-                _this.relationOptions.push(edge.label);
-            });
+            if (data && data['seperateNodes'] && data['seperateEdges']) {
+                data['seperateNodes'].filter(function (node) {
+                    if (node.type[0] === "Organisation") {
+                        temorg.push(node.label);
+                    }
+                    else if (node.type[0] === "Department") {
+                        temdep.push(node.label);
+                    }
+                    else if (node.type[0] === "Person") {
+                        temper.push(node.label);
+                    }
+                });
+                data['seperateEdges'].filter(function (edge) {
+                    _this.relationOptions.push(edge.label);
+                });
+            }
             function onlyUnique(value, index, self) {
                 return self.indexOf(value) === index;
             }
