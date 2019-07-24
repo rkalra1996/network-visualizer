@@ -160,8 +160,13 @@ function createProperString(data) {
 
 }
 
+function createProperStringArray(data) {
+    return data.map(d => `['${d}']`).join(',');
+
+}
+
 function createProperRelationString(data, delimiter = '|') {
-    return data.map(s => `:${s}`).join(delimiter);
+    return data.map(s => `:\`${s}\``).join(delimiter);
 }
 
 function runQueryWithTypes(dataObj) {
@@ -401,15 +406,19 @@ function runQueryWithTypesV2(dataObj) {
     if (dataObj.constructor === Object) {
         dataObj.relation = createProperRelationString(dataObj.relation);
         if (dataObj) {
-            dataObj.nodes[0].value = createProperString(dataObj.nodes[0].value);
-            dataObj.nodes[1].value = createProperString(dataObj.nodes[1].value);
-            dataObj.nodes[2].value = createProperString(dataObj.nodes[2].value);
-            dataObj.nodes[3].value = createProperString(dataObj.nodes[3].value);
+            if (dataObj.nodes.length > 0) {
+                dataObj.nodes[0].value = createProperString(dataObj.nodes[0].value);
+                dataObj.nodes[1].value = createProperStringArray(dataObj.nodes[1].value);
+                dataObj.nodes[2].value = createProperString(dataObj.nodes[2].value);
+                dataObj.nodes[3].value = createProperString(dataObj.nodes[3].value);
+                dataObj.nodes[4].value = createProperString(dataObj.nodes[4].value);
+                dataObj.nodes[5].value = createProperString(dataObj.nodes[5].value);
+            }
             let queryStatement = '';
             if (!!dataObj.relation) {
-                queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r${dataObj.relation}]->(q) where p.Name IN [${dataObj.nodes[0].value}] return p,q,r`;
+                queryStatement = `match (p) <-[r${dataObj.relation}]->(q) return p,q,r`;
             } else {
-                queryStatement = `match (p) where p.Name IN [${dataObj.nodes[0].value}] or p.Type IN [${dataObj.nodes[1].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] return p`;
+                queryStatement = `match (p) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p`;
             }
             console.log('query for 1 node type is ', queryStatement);
             return runQuery(queryStatement).then(result => {
@@ -507,7 +516,26 @@ function runQueryWithTypesV2(dataObj) {
     }
 }
 
+var getGraphLabelData = (query) => {
+    let queryStatement = '';
 
+    queryStatement = `Match(n) RETURN n.Name,n.Connection,n.status,n.Represent,n.Url,n.\`Understanding of SP Thinking\`,labels(n) ORDER BY labels(n)`;
+
+    console.log('query for lable is ', queryStatement);
+
+    return runQuery(queryStatement).then(result => {
+        let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+        return new Promise((resolve, reject) => {
+            resolve(serializedData);
+        });
+    }).catch(err => {
+        console.log('An error occured while runnning the query', err);
+        return new Promise((resolve, reject) => {
+            reject('API : get/data | ERROR : Error encountered while reading labels from database');
+        });
+    });
+
+}
 
 module.exports = {
     initiate,
@@ -516,5 +544,6 @@ module.exports = {
     getMetaData,
     getGraphData,
     getGraphDataV2,
-    getDataV2
+    getDataV2,
+    getGraphLabelData
 }

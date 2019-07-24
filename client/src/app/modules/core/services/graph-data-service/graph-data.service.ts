@@ -34,8 +34,8 @@ export class GraphDataService {
       }
     }));
   }
-  getNodeOptions() : Observable<any> {
-    // const url = 'https://api.myjson.com/bins/8rogd';
+  getNodeLabels() : Observable<any> {
+    // const url = 'http://localhost:3050/api/graph/labeldata';
     // return this.publicHttp.get(url).pipe(map(data => {
     //   if (!!data) {
     //     return data;
@@ -46,8 +46,6 @@ export class GraphDataService {
     let data = {
       "Name": [
         "Accenture",
-        "Access Agriculture",
-        "Action For India",
         "Acumen",
         "Aditya Birla Group",
         "Advaith Foundation",
@@ -297,15 +295,30 @@ export class GraphDataService {
         "Platform",
         "Reach"
       ],
+      "Status":[
+        "Active",
+        "Dormant"
+      ],
+      "Understanding of SP Thinking":[
+        "Defined",
+        "Early",
+        "Mature"
+      ],
       "Connection": [
         "Connected"
+      ],
+      "Relationships": [
+        "Advisory",
+        "Collaborator",
+        "Partner",
+        "Service Provider"
       ]
     }
     return of(data);
   }
   getInitialDataV2() {
-    const url = 'http://localhost:3050/api/initialdatav2';
-    // const url = '/api/initialdatav2';
+  // const url = 'http://localhost:3050/api/initialdatav2';
+    const url = '/api/initialdatav2';
     return this.publicHttp.get(url).pipe(map(data => {
       if (!!data) {
         return data;
@@ -315,8 +328,8 @@ export class GraphDataService {
     }));
   }
   getSearchDataV2(body) {
-    const url = 'http://localhost:3050/api/graph/datav2';
-   // const url = '/api/graph/datav2';
+  //  const url = 'http://localhost:3050/api/graph/datav2';
+    const url = '/api/graph/datav2';
     return this.publicHttp.post(url,body).pipe(map(data => {
       if (!!data) {
         return data;

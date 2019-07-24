@@ -1,5 +1,3 @@
+<app-dashboard-header></app-dashboard-header>
 <app-dashboard-sidebar (eventClicked)="childEventClicked($event)"></app-dashboard-sidebar>
-<div class="content">
-    <app-dashboard-header></app-dashboard-header>
-    <app-graph-visualizer [event]="clickedEvent"></app-graph-visualizer>
-</div>
+<app-graph-visualizer [event]="clickedEvent"></app-graph-visualizer>

@@ -122,6 +122,16 @@ router.post('/graph/datav2', (req, res) => {
         res.status(400).send({ 'error': 'Request Body is required to access the API' });
     }
 });
-
-
+router.get('/graph/labeldata', (req, res) => {
+    console.log('label data');
+    // get initial data from the data base
+    neo4j.getGraphLabelData()
+        .then(response => {
+            res.send(response);
+        })
+        .catch(err => {
+            console.log('err occured while sending back ', err);
+            res.sendStatus(500);
+        });
+});
 module.exports = router;

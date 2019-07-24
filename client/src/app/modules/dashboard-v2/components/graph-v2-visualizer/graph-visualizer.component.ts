@@ -113,9 +113,9 @@ export class GraphVisualizerComponent implements OnInit {
     if(!!this.graphData['nodes']){
       var temgraph = this.graphData['nodes'].map(node=>{
         if(this.event == node.type[0]){
-          node.color = this.colorConfig.defaultColor[node.type[0]];
+         // node.color = this.colorConfig.defaultColor[node.type[0]];
         }else{
-          node.color='#95BFF8';
+         // node.color='#95BFF8';
           return node;
         }
         return node;

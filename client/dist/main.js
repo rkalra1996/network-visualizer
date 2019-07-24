@@ -459,8 +459,8 @@ var GraphDataService = /** @class */ (function () {
             }
         }));
     };
-    GraphDataService.prototype.getNodeOptions = function () {
-        // const url = 'https://api.myjson.com/bins/8rogd';
+    GraphDataService.prototype.getNodeLabels = function () {
+        // const url = 'http://localhost:3050/api/graph/labeldata';
         // return this.publicHttp.get(url).pipe(map(data => {
         //   if (!!data) {
         //     return data;
@@ -471,8 +471,6 @@ var GraphDataService = /** @class */ (function () {
         var data = {
             "Name": [
                 "Accenture",
-                "Access Agriculture",
-                "Action For India",
                 "Acumen",
                 "Aditya Birla Group",
                 "Advaith Foundation",
@@ -722,15 +720,30 @@ var GraphDataService = /** @class */ (function () {
                 "Platform",
                 "Reach"
             ],
+            "Status": [
+                "Active",
+                "Dormant"
+            ],
+            "Understanding of SP Thinking": [
+                "Defined",
+                "Early",
+                "Mature"
+            ],
             "Connection": [
                 "Connected"
+            ],
+            "Relationships": [
+                "Advisory",
+                "Collaborator",
+                "Partner",
+                "Service Provider"
             ]
         };
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])(data);
     };
     GraphDataService.prototype.getInitialDataV2 = function () {
-        var url = 'http://localhost:3050/api/initialdatav2';
-        // const url = '/api/initialdatav2';
+        // const url = 'http://localhost:3050/api/initialdatav2';
+        var url = '/api/initialdatav2';
         return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
             if (!!data) {
                 return data;
@@ -741,8 +754,8 @@ var GraphDataService = /** @class */ (function () {
         }));
     };
     GraphDataService.prototype.getSearchDataV2 = function (body) {
-        var url = 'http://localhost:3050/api/graph/datav2';
-        // const url = '/api/graph/datav2';
+        //  const url = 'http://localhost:3050/api/graph/datav2';
+        var url = '/api/graph/datav2';
         return this.publicHttp.post(url, body).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
             if (!!data) {
                 return data;
