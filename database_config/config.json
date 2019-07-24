@@ -2,7 +2,7 @@
     "url": "bolt://localhost:7687",
     "user": "neo4j",
     "password": "password",
-    "initial_query": "match (p:Organisation) -[r]-> (q) return p,q,r",
-    "initial_query_v2": "match (p:`Network Elements`) return p",
+    "initial_query": "match (p) -[r]-> (q) return p,q,r",
+    "initial_query_v2": "match (p) return p",
     "neo4j_search_token": "DDCE5DBC3AA826EA295F963113B4F"
 }

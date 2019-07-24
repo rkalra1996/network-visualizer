@@ -9,7 +9,7 @@
         "Reviews_Tool": "green",
         "Creates_Processes": "yellow",
         "Provides_Content": "pink",
-        "Updates_Guidelines":"orange",
-        "Consumes_Data":"grey"
+        "Updates_Guidelines": "orange",
+        "Consumes_Data": "grey"
     }
 }

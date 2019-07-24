@@ -17,14 +17,34 @@ export class GraphVisualizerComponent implements OnInit {
   selectedCount;
   public colorConfig = {
     defaultColor : {
-      Department : '#FF7570',
-      Organisation : 'orange',
-      Person : '#6ECE9E'
+    "Academia" : '#ff4444',
+    "Consulting" : '#ffbb33',
+    "Government" : '#00C851',
+    "Impact Investor" : '#33b5e5',
+    "International Agency" : '#CC0000',
+    "Media" : '#FF8800',
+    "NGO/CBO" : '#007E33',
+    "People" : '#0099CC',
+    "Philanthropy" : '#9933CC',
+    "Platform" : '#0d47a1',
+    "Private Sector" : '#2BBBAD',
+    "Research Institute" : '#c51162'
+
     },
     selectedColor : {
-      Department : '#FF7570',
-      Organisation : 'orange',
-      Person : '#6ECE9E'
+      "Academia" : '#ff4444',
+      "Consulting" : '#ffbb33',
+      "Government" : '#00C851',
+      "Impact Investor" : '#33b5e5',
+      "International Agency" : '#CC0000',
+      "Media" : '#FF8800',
+      "NGO/CBO" : '#007E33',
+      "People" : '#0099CC',
+      "Philanthropy" : '#9933CC',
+      "Platform" : '#0d47a1',
+      "Private Sector" : '#2BBBAD',
+      "Research Institute" : '#c51162'
+  
     }
   };
 

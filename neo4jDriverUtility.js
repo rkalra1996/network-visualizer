@@ -409,7 +409,7 @@ function runQueryWithTypesV2(dataObj) {
             if (!!dataObj.relation) {
                 queryStatement = `match (p:${dataObj.nodes[0].type}) <-[r${dataObj.relation}]->(q) where p.Name IN [${dataObj.nodes[0].value}] return p,q,r`;
             } else {
-                queryStatement = queryStatement = `match (p:\`${dataObj.nodes[0].type}\`) where p.Name IN [${dataObj.nodes[0].value}] or p.Type IN [${dataObj.nodes[1].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] return p`;
+                queryStatement = `match (p) where p.Name IN [${dataObj.nodes[0].value}] or p.Type IN [${dataObj.nodes[1].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] return p`;
             }
             console.log('query for 1 node type is ', queryStatement);
             return runQuery(queryStatement).then(result => {
