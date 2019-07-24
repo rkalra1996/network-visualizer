@@ -729,7 +729,8 @@ var GraphDataService = /** @class */ (function () {
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])(data);
     };
     GraphDataService.prototype.getInitialDataV2 = function () {
-        var url = 'http://localhost:3050/api/initialdatav2';
+        // const url = 'http://localhost:3050/api/initialdatav2';
+        var url = '/api/initialdatav2';
         return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
             if (!!data) {
                 return data;
@@ -740,7 +741,8 @@ var GraphDataService = /** @class */ (function () {
         }));
     };
     GraphDataService.prototype.getSearchDataV2 = function (body) {
-        var url = 'http://localhost:3050/api/graph/datav2';
+        // const url = 'http://localhost:3050/api/graph/datav2';
+        var url = '/api/graph/datav2';
         return this.publicHttp.post(url, body).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
             if (!!data) {
                 return data;
