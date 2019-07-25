@@ -692,6 +692,62 @@ var PublicHttpService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.html":
+/*!***************************************************************************************************!*\
+  !*** ./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.html ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"wrapper\">\n    <div class=\"loader\">\n        <img src=\"./../../../../../../assets/bars_loader.svg\">\n      </div>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.scss":
+/*!***************************************************************************************************!*\
+  !*** ./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.scss ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".wrapper {\n  width: 100%;\n  height: 100%;\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  text-align: center;\n  margin: auto;\n  display: table;\n  vertical-align: middle;\n  z-index: 9999; }\n\n.loader {\n  width: 100%;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(255, 255, 255, 0.8);\n  display: flex;\n  align-items: center;\n  align-self: center;\n  justify-content: center; }\n\n.loader img {\n    width: 80px;\n    height: 80px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL3NoYXJlZC9jb21wb25lbnQvZ2xvYmFsLWxvYWRlci9nbG9iYWwtbG9hZGVyL2dsb2JhbC1sb2FkZXIuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxXQUFZO0VBQ1osWUFBYTtFQUNiLGVBQWU7RUFDZixNQUFNO0VBQ04sT0FBTztFQUNQLFFBQVE7RUFDUixTQUFTO0VBQ1Qsa0JBQWtCO0VBQ2xCLFlBQVc7RUFDWCxjQUFjO0VBQ2Qsc0JBQXNCO0VBQ3RCLGFBQWEsRUFBQTs7QUFJakI7RUFDSSxXQUFZO0VBS1osV0FBVztFQUNYLFlBQVk7RUFDWiwwQ0FBMEM7RUFDMUMsYUFBYTtFQUNiLG1CQUFtQjtFQUNuQixrQkFBa0I7RUFDbEIsdUJBQXVCLEVBQUE7O0FBWjNCO0lBR1EsV0FBVztJQUNmLFlBQWEsRUFBQSIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvc2hhcmVkL2NvbXBvbmVudC9nbG9iYWwtbG9hZGVyL2dsb2JhbC1sb2FkZXIvZ2xvYmFsLWxvYWRlci5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi53cmFwcGVyIHtcbiAgICB3aWR0aCA6IDEwMCU7XG4gICAgaGVpZ2h0IDogMTAwJTtcbiAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgdG9wOiAwO1xuICAgIGxlZnQ6IDA7XG4gICAgcmlnaHQ6IDA7XG4gICAgYm90dG9tOiAwO1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICBtYXJnaW46YXV0bztcbiAgICBkaXNwbGF5OiB0YWJsZTtcbiAgICB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlO1xuICAgIHotaW5kZXg6IDk5OTk7XG5cbn1cblxuLmxvYWRlciB7XG4gICAgd2lkdGggOiAxMDAlO1xuICAgIGltZyB7XG4gICAgICAgIHdpZHRoOiA4MHB4O1xuICAgIGhlaWdodCA6IDgwcHg7XG4gICAgfVxuICAgIHdpZHRoOiAxMDAlO1xuICAgIGhlaWdodDogMTAwJTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuOCk7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBhbGlnbi1pdGVtczogY2VudGVyO1xuICAgIGFsaWduLXNlbGY6IGNlbnRlcjtcbiAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbn0iXX0= */"
+
+/***/ }),
+
+/***/ "./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.ts":
+/*!*************************************************************************************************!*\
+  !*** ./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.ts ***!
+  \*************************************************************************************************/
+/*! exports provided: GlobalLoaderComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GlobalLoaderComponent", function() { return GlobalLoaderComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var GlobalLoaderComponent = /** @class */ (function () {
+    function GlobalLoaderComponent() {
+    }
+    GlobalLoaderComponent.prototype.ngOnInit = function () {
+    };
+    GlobalLoaderComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-global-loader',
+            template: __webpack_require__(/*! ./global-loader.component.html */ "./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.html"),
+            styles: [__webpack_require__(/*! ./global-loader.component.scss */ "./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], GlobalLoaderComponent);
+    return GlobalLoaderComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/modules/shared/component/sidebar/sidebar.component.html":
 /*!*************************************************************************!*\
   !*** ./src/app/modules/shared/component/sidebar/sidebar.component.html ***!
@@ -866,6 +922,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ng2_semantic_ui__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ng2-semantic-ui */ "./node_modules/ng2-semantic-ui/dist/public.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _core_core_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../core/core.module */ "./src/app/modules/core/core.module.ts");
+/* harmony import */ var _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./component/global-loader/global-loader/global-loader.component */ "./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.ts");
+
 
 
 
@@ -880,7 +938,8 @@ var SharedModule = /** @class */ (function () {
     SharedModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             declarations: [
-                _component_sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_4__["SidebarComponent"]
+                _component_sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_4__["SidebarComponent"],
+                _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"]
             ],
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
@@ -892,7 +951,8 @@ var SharedModule = /** @class */ (function () {
                 _core_core_module__WEBPACK_IMPORTED_MODULE_7__["CoreModule"]
             ],
             exports: [
-                _component_sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_4__["SidebarComponent"]
+                _component_sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_4__["SidebarComponent"],
+                _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"]
             ]
         })
     ], SharedModule);
