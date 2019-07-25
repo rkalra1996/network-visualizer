@@ -79,6 +79,10 @@ function processNodes(nodeArray) {
         try {
             processedNode = nodeArray.map(node => {
                 let preprocessedNode = node;
+                // if the node has a label key, add it to the properties key also for processing
+                if (node.hasOwnProperty('labels') && node.labels.length > 0) {
+                    node.properties['Type'] = node.labels[0];
+                }
                 preprocessedNode = {
                     properties: node.properties || null,
                     type: node.labels || null,

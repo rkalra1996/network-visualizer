@@ -71,7 +71,7 @@ export class DashboardSidebarComponent implements OnInit {
   selectedConnection: Array<string> = [];
   selectedStatus: Array<string> = [];
   selectedUnderstanding: Array<string> = [];
-  selectedUrl: { type: string }[] = [];
+  selectedUrl: Array<string> = [];
   selectedGraph: { type: string, value: Array<string> }[] = [];
   public graphData = {};
   count: number = 1;
@@ -148,12 +148,28 @@ export class DashboardSidebarComponent implements OnInit {
   searchGraph() {
     if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0) {
       this.selectedGraph = [];
-      this.selectedGraph.push({ type: "Network Elements", value: this.selectedName });
-      this.selectedGraph.push({ type: "Network Elements", value: this.selectedType });
-      this.selectedGraph.push({ type: "Network Elements", value: this.selectedConnection });
-      this.selectedGraph.push({ type: "Network Elements", value: this.selectedRepresent });
-      this.selectedGraph.push({ type: "Network Elements", value: this.selectedStatus });
-      this.selectedGraph.push({ type: "Network Elements", value: this.selectedUnderstanding });
+      if(this.selectedName.length>0){
+        this.selectedGraph.push({ type: "Name", value: this.selectedName });
+      }
+      if(this.selectedType.length>0){
+        this.selectedGraph.push({ type: "Type", value: this.selectedType });
+      }
+      if(this.selectedConnection.length>0){
+        this.selectedGraph.push({ type: "Connection", value: this.selectedConnection });
+      }
+      if(this.selectedRepresent.length>0){
+        this.selectedGraph.push({ type: "Represent", value: this.selectedRepresent });
+      }
+      if(this.selectedStatus.length>0){
+        this.selectedGraph.push({ type: "Status", value: this.selectedStatus });
+      }
+      if(this.selectedUnderstanding.length>0){
+        this.selectedGraph.push({ type: "Understanding of SP Thinking", value: this.selectedUnderstanding });
+      }
+      if(this.selectedUrl.length>0){
+        this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
+      }
+      
       let requestBody = { nodes: this.selectedGraph };
 
       this.sharedGraphData.setGraphData(requestBody);
@@ -289,7 +305,32 @@ export class DashboardSidebarComponent implements OnInit {
       }
 
     }
+  }
+  noderelationSearchGraph(){
+    if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0 && this.selectedRelation.length > 0) {
+      this.selectedRelationship = [];
+      this.selectedRelation.map(rel=>{
+        this.selectedRelationship.push({ type: rel });
+      })
+    }
+    this.selectedGraph = [];
+      this.selectedGraph.push({ type: "Name", value: this.selectedName });
+      this.selectedGraph.push({ type: "Type", value: this.selectedType });
+      this.selectedGraph.push({ type: "Connection", value: this.selectedConnection });
+      this.selectedGraph.push({ type: "Represent", value: this.selectedRepresent });
+      this.selectedGraph.push({ type: "Status", value: this.selectedStatus });
+      this.selectedGraph.push({ type: "Thinking", value: this.selectedUnderstanding });
+      this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
+      let requestBody = { nodes: this.selectedGraph, edges: this.selectedRelationship };
 
+      this.sharedGraphData.setGraphData(requestBody);
+      if (this.count === 1) {
+        this.eventClicked.emit('search' + this.count);
+        this.count = 2;
+      } else {
+        this.eventClicked.emit('search' + this.count);
+        this.count = 1;
+      }
 
   }
 }
