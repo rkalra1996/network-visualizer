@@ -1,6 +1,6 @@
 .graph-container {
     background: #F5F5F5;
-    height: 81%;
+    height: 78vh;
     width: 80%;
     float: right;
 }
@@ -16,4 +16,10 @@
     padding: 1em;
     width: 80%;
     float: right;
+}
+
+@media screen and (max-width: '1100px') {
+    .graph-container, .selected-count {
+        width : 75%;
+    }
 }
