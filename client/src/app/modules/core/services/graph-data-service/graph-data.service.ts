@@ -47,7 +47,7 @@ export class GraphDataService {
       "Name": [
         "Accenture",
         "Acumen",
-        "Aditya Birla Group",
+        "Aditya Birla CSR",
         "Advaith Foundation",
         "AILSG",
         "Alan Schwartz",
