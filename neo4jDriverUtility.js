@@ -416,9 +416,9 @@ function runQueryWithTypesV2(dataObj) {
             }
             let queryStatement = '';
             if (!!dataObj.relation) {
-                queryStatement = `match (p) <-[r${dataObj.relation}]->(q) return p,q,r`;
+                queryStatement = `match (p) <-[r${dataObj.relation}]->(q) return p,q,r limit 149`;
             } else {
-                queryStatement = `match (p)-[r]-(q) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q`;
+                queryStatement = `match (p)-[r]-(q) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 149`;
             }
             console.log('query for 1 node type is ', queryStatement);
             return runQuery(queryStatement).then(result => {
