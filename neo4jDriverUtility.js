@@ -401,24 +401,62 @@ var getGraphDataV2 = (req) => {
     }
 }
 
+
+function createSubQuery(node) {
+    let query = `p.\`${node["type"]}\` in [${node.value}]`;
+    return query;
+}
+
+function joinSubQuery(allSubQuery) {
+    return allSubQuery.join(' and ');
+}
+
 function runQueryWithTypesV2(dataObj) {
     // check if the object is empty---> return error if it is
     if (dataObj.constructor === Object) {
+        let allSubQuery = [];
+        let typeArray = [];
         dataObj.relation = createProperRelationString(dataObj.relation);
         if (dataObj) {
             if (dataObj.nodes.length > 0) {
-                dataObj.nodes[0].value = createProperString(dataObj.nodes[0].value);
-                dataObj.nodes[1].value = createProperStringArray(dataObj.nodes[1].value);
-                dataObj.nodes[2].value = createProperString(dataObj.nodes[2].value);
-                dataObj.nodes[3].value = createProperString(dataObj.nodes[3].value);
-                dataObj.nodes[4].value = createProperString(dataObj.nodes[4].value);
-                dataObj.nodes[5].value = createProperString(dataObj.nodes[5].value);
+                // dataObj.nodes[0].value = createProperString(dataObj.nodes[0].value);
+                // dataObj.nodes[2].value = createProperString(dataObj.nodes[2].value);
+                // dataObj.nodes[3].value = createProperString(dataObj.nodes[3].value);
+                // dataObj.nodes[4].value = createProperString(dataObj.nodes[4].value);
+                // dataObj.nodes[5].value = createProperString(dataObj.nodes[5].value);
+
+                dataObj.nodes.forEach(node => {
+                    if (node["type"] === "Type") {
+                        // node.value = createProperStringArray(node.value);
+                        typeArray = node.value;
+                    } else {
+                        node.value = createProperString(node.value);
+                        allSubQuery.push(createSubQuery(node));
+                    }
+                });
+                if (typeArray.length > 0) {
+                    typeArray = createProperStringArray(typeArray);
+                }
+                if (allSubQuery.length > 0) {
+                    allSubQuery = joinSubQuery(allSubQuery);
+                }
             }
             let queryStatement = '';
-            if (!!dataObj.relation) {
+            if (!!dataObj.relation && dataObj.nodes.length > 0) {
+                queryStatement = `match (p)-[r${dataObj.relation}]-(q) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
+            } else if (!!dataObj.relation) {
                 queryStatement = `match (p) <-[r${dataObj.relation}]->(q) return p,q,r limit 50`;
+            } else if (typeArray.length > 0) {
+                // queryStatement = `match (p)-[r]-(q) where labels(p) In [${dataObj.nodes[1].value}] p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
+                if (allSubQuery.length > 0) {
+
+                    queryStatement = `match (p)-[r]-(q) where labels(p) In [${typeArray}] and ${allSubQuery} return p,r,q limit 50`;
+                } else {
+                    queryStatement = `match (p)-[r]-(q) where labels(p) In [${typeArray}] return p,r,q limit 50`;
+                }
+
             } else {
-                queryStatement = `match (p)-[r]-(q) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
+                queryStatement = `match (p)-[r]-(q) where ${allSubQuery} return p,r,q limit 50`;
             }
             console.log('query for 1 node type is ', queryStatement);
             return runQuery(queryStatement).then(result => {
