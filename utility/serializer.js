@@ -15,7 +15,7 @@ var Neo4JtoVisFormat = (data) => {
         // data is okay now time to serialize it.
         try {
             data = JSON.parse(data);
-            data.forEach((dataNode,index) => {
+            data.forEach((dataNode, index) => {
                 // node are at index 0 and 1, edge is at position 2
                 let realNodes = dataNode._fields;
                 realNodes.forEach(someData => {
@@ -35,8 +35,7 @@ var Neo4JtoVisFormat = (data) => {
                 seperateNodes.push(node2);
                 seperateEdges.push(edge); */
             });
-        }
-        catch (e) {
+        } catch (e) {
             console.error('An error occured while processing the data in the serializer', e);
         }
         // now serialize according to the expected visJS format
@@ -51,23 +50,23 @@ var Neo4JtoVisFormat = (data) => {
             console.error('An error occured while serializing the edges accordingly', e);
         }
         // if there was no error in the processing of data, simply return the new collection
-        return {seperateNodes,seperateEdges};
+        return { seperateNodes, seperateEdges };
     }
 }
 
 function serializeProperties(propertyObject) {
     if (propertyObject.constructor === Object) {
         let finalString = '';
-        _.forOwn(Object.keys(propertyObject), (key)=>{
+        _.forOwn(Object.keys(propertyObject), (key) => {
             if (propertyObject[key].hasOwnProperty('low')) {
                 // if the key has an integer value then set the low value of it
                 propertyObject[key] = propertyObject[key]['low']
             }
-           finalString += `<strong>${key} :</strong> ${propertyObject[key]} <br>`
+            finalString += `<strong>${key} :</strong> ${propertyObject[key]} <br>`
         });
         return finalString;
     } else return null
-   }
+}
 
 function processNodes(nodeArray) {
     let processedNode = [];
@@ -85,7 +84,7 @@ function processNodes(nodeArray) {
                     type: node.labels || null,
                     id: node.identity.low,
                     label: node.properties.Name || 'No Name',
-                    font: {align: 'middle'},
+                    font: { align: 'middle' },
                     value: 30,
                     title: serializeProperties(node.properties),
                 }
@@ -93,14 +92,12 @@ function processNodes(nodeArray) {
             });
             // make them unique
             preprocessedNodeFiltered = _.unionBy(processedNode, 'id');
-        }
-        catch (e) {
+        } catch (e) {
             throw e;
         }
         //if edges are properly processed, simply return them as is
         return preprocessedNodeFiltered;
-    }
-    else {
+    } else {
         return [];
     }
 }
@@ -120,20 +117,18 @@ function processEdges(edgeArray) {
                     identity: edge.identity || null,
                     label: edge.type || 'Name not available',
                     arrows: 'to',
-                    font: {align: 'bottom'},
+                    font: { align: 'bottom' },
                     title: serializeProperties(edge.properties),
                     color: colorManager.getEdgeColors(edge.type)
                 }
                 return preprocessedEdge;
             });
-        }
-        catch (e) {
+        } catch (e) {
             throw e;
         }
         //if edges are properly processed, simply return them as is
         return processedEdge;
-    }
-    else {
+    } else {
         return [];
     }
 }
