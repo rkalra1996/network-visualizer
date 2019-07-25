@@ -63,7 +63,7 @@ export class DashboardSidebarComponent implements OnInit {
   statusOptions: Array<string> = [];
   understandingOptions: Array<string> = [];
   urlOptions: Array<string> = [];
-  selectedRelationship: { type: Array<string> }[] = [];
+  selectedRelationship: { type: string }[] = [];
   selectedName: Array<string> = [];
   selectedRelation: Array<string> = [];
   selectedType: Array<string> = [];
@@ -238,6 +238,7 @@ export class DashboardSidebarComponent implements OnInit {
     this.selectedConnection = [];
     this.selectedUnderstanding = [];
     this.selectedUrl = [];
+    this.selectedRelation = [];
     if (this.preSelectedRel) {
       var element = document.getElementById(this.preSelectedRel);
       element.classList.remove("selected");
@@ -267,5 +268,28 @@ export class DashboardSidebarComponent implements OnInit {
       this.count = 1;
     }
     this.preSelectedRel = selectedRelation;
+  }
+
+  relationSearchGraph(){
+    if (this.selectedRelation.length > 0) {
+      this.selectedRelationship = [];
+      this.selectedRelation.map(rel=>{
+        this.selectedRelationship.push({ type: rel });
+      })
+      
+      let requestBody = { nodes: [], edges: this.selectedRelationship };
+
+      this.sharedGraphData.setGraphData(requestBody);
+      if (this.count === 1) {
+        this.eventClicked.emit('search' + this.count);
+        this.count = 2;
+      } else {
+        this.eventClicked.emit('search' + this.count);
+        this.count = 1;
+      }
+
+    }
+
+
   }
 }

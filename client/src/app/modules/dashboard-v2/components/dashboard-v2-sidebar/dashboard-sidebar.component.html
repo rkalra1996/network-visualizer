@@ -1,7 +1,7 @@
 <div class="wrapper sidebar-wrapper">
     <div class="sidebarBody p-0">
         <div class="sidebarBodyTitle">
-            <p>Network Elements</p>
+            <p>Filter By Attributes</p>
         </div>
         <div class="sidebarElements">
             <div class="item">
@@ -130,11 +130,11 @@
 
         </div>
         <div class="sidebarBodyTitle">
-            <p>Relationships</p>
+            <p>Filter By Relationships</p>
         </div>
         <div class="sidebarElements">
             <div class="item">
-                <!-- <sui-multi-select [(ngModel)]="selectedRelation" [options]="relationOptions" [maxSelected]="5" #relation>
+                <sui-multi-select [(ngModel)]="selectedRelation" [options]="relationOptions" [maxSelected]="5" #relation>
                     <div class="ui icon search input">
                         <i class="search icon"></i>
                         <input suiSelectSearch type="text" placeholder="Search Relationships...">
@@ -142,11 +142,20 @@
                     <div class="scrolling menu">
                         <sui-select-option *ngFor="let o of relation.filteredOptions" [value]="o"></sui-select-option>
                     </div>
-                </sui-multi-select> -->
-                <div class="rel-tabs-container" *ngFor="let r of relationOptions">
+                </sui-multi-select>
+                <!-- <div class="rel-tabs-container" *ngFor="let r of relationOptions">
                     <div class="rel-tab" (click)="relationclickEvent(r)" id={{r}}>
                         <p>{{r}}</p>
                     </div>
+                </div> -->
+                <div class="btn-container d-flex justify-content-around">
+                    <div class="searchBtnWrapper btn-sidebar">
+                        <button class="btn btn-default btn-md searchBtn" (click)="resetGraph()">Reset</button>
+                    </div>
+                    <div class="searchBtnWrapper btn-sidebar">
+                        <button class="btn btn-default btn-md searchBtn" (click)="relationSearchGraph()">Apply</button>
+                    </div>
+
                 </div>
             </div>
         </div>

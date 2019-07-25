@@ -1,7 +1,10 @@
-
-
 .headerWrapper {
     height: 10vh;
+    background: #fff;
+}
+
+.container-fluid {
+    background: #fff;
 }
 
 .rightToolbar {
@@ -104,8 +107,7 @@
 
 .left-logo {
     max-width: 20%;
-    
     img {
-        max-height : 10vh;
+        max-height: 10vh;
     }
 }

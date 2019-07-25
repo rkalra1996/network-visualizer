@@ -47,7 +47,7 @@ export class GraphDataService {
       "Name": [
         "Accenture",
         "Acumen",
-        "Aditya Birla Group",
+        "Aditya Birla CSR",
         "Advaith Foundation",
         "AILSG",
         "Alan Schwartz",
@@ -317,8 +317,8 @@ export class GraphDataService {
     return of(data);
   }
   getInitialDataV2() {
-  // const url = 'http://localhost:3050/api/initialdatav2';
-    const url = '/api/initialdatav2';
+   // const url = 'http://localhost:3050/api/initialdatav2';
+   const url = '/api/initialdatav2';
     return this.publicHttp.get(url).pipe(map(data => {
       if (!!data) {
         return data;

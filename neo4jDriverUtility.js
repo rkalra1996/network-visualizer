@@ -416,9 +416,9 @@ function runQueryWithTypesV2(dataObj) {
             }
             let queryStatement = '';
             if (!!dataObj.relation) {
-                queryStatement = `match (p) <-[r${dataObj.relation}]->(q) return p,q,r`;
+                queryStatement = `match (p) <-[r${dataObj.relation}]->(q) return p,q,r limit 50`;
             } else {
-                queryStatement = `match (p) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p`;
+                queryStatement = `match (p)-[r]-(q) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
             }
             console.log('query for 1 node type is ', queryStatement);
             return runQuery(queryStatement).then(result => {
@@ -540,27 +540,27 @@ var getGraphLabelData = (query) => {
 var getGraphLabels = () => {
     let query = 'call db.labels()'
     return runQuery(query)
-    .then(result => {
-        if (result.records.length > 0) {
-            let finalLabels = {
-                labels : []
-            };
-            result.records.forEach(labelRecord => {
-                console.log(labelRecord._fields[0]);
-                finalLabels.labels.push(labelRecord._fields[0]);
-            });
+        .then(result => {
+            if (result.records.length > 0) {
+                let finalLabels = {
+                    labels: []
+                };
+                result.records.forEach(labelRecord => {
+                    console.log(labelRecord._fields[0]);
+                    finalLabels.labels.push(labelRecord._fields[0]);
+                });
+                return new Promise((resolve, reject) => {
+                    resolve(finalLabels);
+                });
+            }
+        })
+        .catch(err => {
+            console.log('API : /graph/labels | Error occured while retreiving labels from database');
+            console.log(err);
             return new Promise((resolve, reject) => {
-                resolve(finalLabels);
+                reject('Server error while retrieving labels from the database');
             });
-        }
-    })
-    .catch(err => {
-        console.log('API : /graph/labels | Error occured while retreiving labels from database');
-        console.log(err);
-        return new Promise((resolve, reject) => {
-            reject('Server error while retrieving labels from the database');
         });
-    });
 }
 
 module.exports = {
