@@ -6,7 +6,7 @@
         <div class="sidebarElements">
             <div class="item">
                 <span class=""></span><a class="item-text hoverable" (click)="networkElementClick('Name');rotateObj.Name.rotate = !rotateObj.Name.rotate" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"
-                    [ngClass]="{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}">Names<span class="ele-count count-org">{{180}}</span></a>
+                    [ngClass]="{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}">Names<span class="ele-count count-org">{{nameOptions.length}}</span></a>
                 <span class="fas fa-chevron-right" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" (click)="rotateObj.Name.rotate = !rotateObj.Name.rotate" [ngClass]="{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}"></span>
                 <div class="collapse" id="collapseExample">
                     <sui-multi-select [(ngModel)]="selectedName" [options]="nameOptions" [maxSelected]="15" (ngModelChange)="searchElement()" #names>

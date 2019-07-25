@@ -443,7 +443,18 @@ function runQueryWithTypesV2(dataObj) {
             }
             let queryStatement = '';
             if (!!dataObj.relation && dataObj.nodes.length > 0) {
-                queryStatement = `match (p)-[r${dataObj.relation}]-(q) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
+                // queryStatement = `match (p)-[r${dataObj.relation}]-(q) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
+                if (dataObj.nodes.length == 1) {
+                    if (dataObj.nodes[0].type === "Name") {
+                        queryStatement = `match (p)-[r${dataObj.relation}]-(q) where p.Name IN [${dataObj.nodes[0].value}] return p,r,q limit 50`;
+                    } else if (dataObj.nodes[0].type === "Type") {
+                        dataObj.nodes[0].value = createProperStringArray(dataObj.nodes[0].value);
+                        queryStatement = `match (p)-[r${dataObj.relation}]-(q) where labels(p) In [${dataObj.nodes[0].value}] return p,r,q limit 50`;
+                    }
+                } else if (dataObj.nodes.length == 2) {
+                    dataObj.nodes[1].value = createProperStringArray(dataObj.nodes[1].value);
+                    queryStatement = `match (p)-[r${dataObj.relation}]-(q) where labels(p) In [${dataObj.nodes[1].value}] and p.Name IN [${dataObj.nodes[0].value}] return p,r,q limit 50`;
+                }
             } else if (!!dataObj.relation) {
                 queryStatement = `match (p) <-[r${dataObj.relation}]->(q) return p,q,r limit 50`;
             } else if (typeArray.length > 0) {
