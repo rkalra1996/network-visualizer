@@ -5,10 +5,12 @@ import { SidebarComponent } from './component/sidebar/sidebar.component';
 import { SuiSelectModule, SuiModule } from 'ng2-semantic-ui';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';
+import { GlobalLoaderComponent } from './component/global-loader/global-loader/global-loader.component';
 
 @NgModule({
   declarations: [
-    SidebarComponent
+    SidebarComponent,
+    GlobalLoaderComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import { CoreModule } from '../core/core.module';
     CoreModule
   ],
   exports:[
-      SidebarComponent
+      SidebarComponent,
+      GlobalLoaderComponent
     ]
 })
 export class SharedModule { }

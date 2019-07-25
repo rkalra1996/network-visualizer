@@ -8,6 +8,7 @@ import { DashboardSidebarComponent } from './components/dashboard-v2-sidebar/das
 import { DashboardHeaderComponent } from './components/dashboard-v2-header/dashboard-header.component';
 
 import {SuiSelectModule, SuiModule} from 'ng2-semantic-ui';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [MainComponent, GraphVisualizerComponent, DashboardSidebarComponent, DashboardHeaderComponent],
@@ -15,6 +16,7 @@ import {SuiSelectModule, SuiModule} from 'ng2-semantic-ui';
     CommonModule,
     FormsModule,
     SuiSelectModule, SuiModule,
+    SharedModule,
     DashboardV2RoutingModule
   ]
 })

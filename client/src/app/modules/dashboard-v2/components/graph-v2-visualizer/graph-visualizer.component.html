@@ -1,4 +1,4 @@
-<div class="selected-count">Filtered result {{selectedCount}}</div>
+<app-global-loader *ngIf="loader"></app-global-loader>
+<div class="selected-count" *ngIf="!loader">Filtered result {{selectedCount}}</div>
 <div class="graph-container" id="graphViewer">
-
 </div>
