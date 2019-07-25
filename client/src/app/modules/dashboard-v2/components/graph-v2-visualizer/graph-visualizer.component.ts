@@ -14,6 +14,7 @@ export class GraphVisualizerComponent implements OnInit {
 
   @Input() event: String;
   public graphData = {};
+  public loader = true;
   selectedCount;
   public colorConfig = {
     defaultColor : {
@@ -72,6 +73,7 @@ export class GraphVisualizerComponent implements OnInit {
   constructor(private graphService: GraphDataService, private sharedGraphService : SharedGraphService) { }
 
   ngOnInit() {
+    this.loader = true;
     this.displayInitialGraph();
   }
 
@@ -91,9 +93,11 @@ export class GraphVisualizerComponent implements OnInit {
       console.log('graphData :', this.graphData);
       // display data
       const container = document.getElementById('graphViewer');
+      this.loader = false;
       this.network = new Network(container, this.graphData, this.graphOptions);
     }, err => {
       console.error('An error occured while retrieving initial graph data', err);
+      this.loader = true;
       this.graphData = {};
     });
   }
@@ -103,6 +107,7 @@ export class GraphVisualizerComponent implements OnInit {
   this.changeNodeColor();
   }
   changeNodeColor(){
+    this.loader = true;
     if(this.event == 'search1' || this.event == 'search2'){
       this.showGraphData();
     }else if(this.event == 'reset'){
@@ -134,9 +139,10 @@ export class GraphVisualizerComponent implements OnInit {
       this.network.setData(this.graphData);
     }
     showGraphData(){
+      this.loader = true;
       let requestBody = this.sharedGraphService.getGraphData();
       this.graphService.getSearchDataV2(requestBody).subscribe(result=>{
-        //console.log('recieved data from graph service', result);
+        // console.log('recieved data from graph service', result);
         // set data for vis
         if (result.hasOwnProperty('seperateNodes')) {
           result['seperateNodes'] = this.addColors(result['seperateNodes']);
@@ -146,24 +152,26 @@ export class GraphVisualizerComponent implements OnInit {
         if (result.hasOwnProperty('seperateEdges')) {
           this.graphData['edges'] = new DataSet(result['seperateEdges']);
         }
-        //console.log('graphData :', this.graphData);
+        // console.log('graphData :', this.graphData);
         // display data
         const container = document.getElementById('graphViewer');
         this.network = new Network(container, this.graphData, this.graphOptions);
+        this.loader = false;
       }, err => {
         console.error('An error occured while retrieving initial graph data', err);
+        this.loader = true;
         this.graphData = {};
        });
     }
 
     addColors(nodeObj) {
-      console.log(nodeObj);
+      // console.log(nodeObj);
       nodeObj.forEach(node => {
         if (node.hasOwnProperty('type') && node.type.length > 0 ) {
           node['color'] = this.colorConfig.defaultColor[node.type[0]];
         }
       });
-      console.log(nodeObj);
+      // console.log(nodeObj);
       return nodeObj;
 
     }
