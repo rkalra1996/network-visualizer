@@ -89,7 +89,7 @@
             </div>
             <div class="item">
                 <span class=""></span><a class="item-text hoverable" (click)="networkElementClick('Understanding');rotateObj.Understanding.rotate = !rotateObj.Understanding.rotate" data-toggle="collapse" href="#collapseExample6" role="button" aria-expanded="false"
-                    aria-controls="collapseExample6" [ngClass]="{'rotate': rotateObj?.Understanding.rotate, 'no-rotate': !rotateObj?.Understanding.rotate}">Understanding of SP Thinking<span class="ele-count count-person">{{understandingOptions.length}}</span></a>
+                    aria-controls="collapseExample6" [ngClass]="{'rotate': rotateObj?.Understanding.rotate, 'no-rotate': !rotateObj?.Understanding.rotate}">SP Thinking<span class="ele-count count-person">{{understandingOptions.length}}</span></a>
                 <span class="fas fa-chevron-right" data-toggle="collapse" href="#collapseExample6" role="button" aria-expanded="false" aria-controls="collapseExample6" (click)="rotateObj.Understanding.rotate = !rotateObj.Understanding.rotate" [ngClass]="{'rotate': rotateObj?.Understanding.rotate, 'no-rotate': !rotateObj?.Understanding.rotate}"></span>
                 <div class="collapse" id="collapseExample6">
                     <sui-multi-select [(ngModel)]="selectedUnderstanding" [options]="understandingOptions" [maxSelected]="15" #understanding>
@@ -120,7 +120,7 @@
                 </div>
             </div>
         </div>
-        <div class="btn-container">
+        <div class="btn-container d-flex justify-content-around">
             <div class="searchBtnWrapper btn-sidebar">
                 <button class="btn btn-default btn-md searchBtn" (click)="resetGraph()">Reset</button>
             </div>

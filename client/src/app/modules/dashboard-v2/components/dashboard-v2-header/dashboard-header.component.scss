@@ -1,6 +1,4 @@
-.container-fluid {
-    // border-bottom: 1px solid rgba(95, 95, 95, 0.3);
-}
+
 
 .headerWrapper {
     height: 10vh;
@@ -33,7 +31,6 @@
 }
 
 .dropdown {
-    display: inline-block;
     position: relative;
     float: right;
 }
@@ -47,12 +44,6 @@
 
 .dropdown-content:hover {
     display: block;
-    .profilePic {
-        img {
-            width: 80px;
-            height: 80px;
-        }
-    }
 }
 
 .dropdown-content {
@@ -112,5 +103,9 @@
 }
 
 .left-logo {
-    width: 10%;
+    max-width: 20%;
+    
+    img {
+        max-height : 10vh;
+    }
 }
