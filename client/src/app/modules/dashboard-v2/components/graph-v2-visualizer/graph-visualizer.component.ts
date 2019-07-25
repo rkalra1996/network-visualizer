@@ -107,10 +107,10 @@ export class GraphVisualizerComponent implements OnInit {
   this.changeNodeColor();
   }
   changeNodeColor(){
-    this.loader = true;
     if(this.event == 'search1' || this.event == 'search2'){
+      this.loader = true;
       this.showGraphData();
-    }else if(this.event == 'reset'){
+    } else if (this.event === 'reset') {
       this.displayInitialGraph();
     }else{
     const previousData = _.cloneDeep(this.graphData);
