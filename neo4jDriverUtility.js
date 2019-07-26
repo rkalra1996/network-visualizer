@@ -477,8 +477,6 @@ function runQueryWithTypesV2(dataObj) {
                     queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where labels(q) In [${typeArray}] return p,r,q limit ${dataObj.limit}`;
                 }
 
-            } else if (dataObj.limit) {
-                queryStatement = `match (p) -[r]-> (q) return p,q,r limit ${dataObj.limit}`;
             } else {
                 queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where ${allSubQuery} return p,r,q limit ${dataObj.limit}`;
             }
