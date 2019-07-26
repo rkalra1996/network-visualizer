@@ -135,15 +135,15 @@ router.get('/graph/labeldata', (req, res) => {
         });
 });
 
-router.get('/graph/labels', (req,res) => {
+router.get('/graph/labels', (req, res) => {
     neo4j.getGraphLabels()
-    .then(result => {
-        res.send(result);
-    })
-    .catch(err => {
-        console.log('err occured while sending back labels data');
-        res.status(500).send(err);
-    })
+        .then(result => {
+            res.send(result);
+        })
+        .catch(err => {
+            console.log('err occured while sending back labels data');
+            res.status(500).send(err);
+        })
 })
 
 module.exports = router;

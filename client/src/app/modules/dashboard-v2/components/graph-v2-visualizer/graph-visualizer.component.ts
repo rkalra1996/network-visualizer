@@ -16,6 +16,7 @@ export class GraphVisualizerComponent implements OnInit {
   public graphData = {};
   public loader = true;
   selectedCount;
+  public nodeLimit : number = 50;
   public colorConfig = {
     defaultColor : {
     "Academia" : '#ff4444',
@@ -141,6 +142,7 @@ export class GraphVisualizerComponent implements OnInit {
     showGraphData(){
       this.loader = true;
       let requestBody = this.sharedGraphService.getGraphData();
+      requestBody["limit"] = this.nodeLimit;
       this.graphService.getSearchDataV2(requestBody).subscribe(result=>{
         // console.log('recieved data from graph service', result);
         // set data for vis
@@ -174,5 +176,12 @@ export class GraphVisualizerComponent implements OnInit {
       // console.log(nodeObj);
       return nodeObj;
 
+    }
+
+    private limitChange(limit){
+      if(limit){
+        this.nodeLimit = parseInt(limit);
+      }
+      
     }
 }

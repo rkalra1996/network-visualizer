@@ -288,24 +288,25 @@ export class DashboardSidebarComponent implements OnInit {
 
   relationSearchGraph(){
     if (this.selectedRelation.length > 0) {
+      let requestBody;
       this.selectedRelationship = [];
       this.selectedRelation.map(rel=>{
         this.selectedRelationship.push({ type: rel });
       })
-      let temNodes = [];
-      if(this.selectedName.length > 0 || this.selectedType.length > 0){
-        let temnode = [];
-         temnode = this.selectedNodeCheck();
-        temnode.filter(node=>{
-          temNodes.push(node);      
-        })       
-      }
-      let requestBody;
-        if(temNodes.length > 0){
-           requestBody= { nodes: temNodes, edges: this.selectedRelationship };
-        }else{
+      // let temNodes = [];
+      // if(this.selectedName.length > 0 || this.selectedType.length > 0){
+      //   let temnode = [];
+      //    temnode = this.selectedNodeCheck();
+      //   temnode.filter(node=>{
+      //     temNodes.push(node);      
+      //   })       
+      // }
+      // 
+      //   if(temNodes.length > 0){
+      //      requestBody= { nodes: temNodes, edges: this.selectedRelationship };
+      //   }else{
            requestBody= { nodes: [], edges: this.selectedRelationship };
-        }
+        // }
        
       this.sharedGraphData.setGraphData(requestBody);
       if (this.count === 1) {
