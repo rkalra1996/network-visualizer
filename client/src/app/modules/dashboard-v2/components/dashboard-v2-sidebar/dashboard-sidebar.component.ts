@@ -146,6 +146,7 @@ export class DashboardSidebarComponent implements OnInit {
   }
 
   searchGraph() {
+    let requestBody;
     if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0) {
       this.selectedGraph = [];
       if(this.selectedName.length>0){
@@ -169,8 +170,12 @@ export class DashboardSidebarComponent implements OnInit {
       if(this.selectedUrl.length>0){
         this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
       }
-      
-      let requestBody = { nodes: this.selectedGraph };
+      requestBody = { nodes: this.selectedGraph };
+    }else{
+      // if no selected element 
+      requestBody = { };
+    }
+    
 
       this.sharedGraphData.setGraphData(requestBody);
       if (this.count === 1) {
@@ -180,8 +185,6 @@ export class DashboardSidebarComponent implements OnInit {
         this.eventClicked.emit('search' + this.count);
         this.count = 1;
       }
-
-    }
 
   }
 
@@ -286,9 +289,10 @@ export class DashboardSidebarComponent implements OnInit {
     this.preSelectedRel = selectedRelation;
   }
 
+  // return all nodes with selected relation
   relationSearchGraph(){
-    if (this.selectedRelation.length > 0) {
-      let requestBody;
+    let requestBody;
+     if (this.selectedRelation.length > 0) {
       this.selectedRelationship = [];
       this.selectedRelation.map(rel=>{
         this.selectedRelationship.push({ type: rel });
@@ -307,7 +311,10 @@ export class DashboardSidebarComponent implements OnInit {
       //   }else{
            requestBody= { nodes: [], edges: this.selectedRelationship };
         // }
-       
+      } else{
+        // if no selected element 
+        requestBody = { };
+      }
       this.sharedGraphData.setGraphData(requestBody);
       if (this.count === 1) {
         this.eventClicked.emit('search' + this.count);
@@ -317,7 +324,7 @@ export class DashboardSidebarComponent implements OnInit {
         this.count = 1;
       }
 
-    }
+    
   }
 
   // this return selected name and type

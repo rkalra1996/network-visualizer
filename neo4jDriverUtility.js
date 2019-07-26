@@ -393,6 +393,8 @@ var getGraphDataV2 = (req) => {
         } else {
             return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 0, limit: req.body.limit })
         }
+    } else if (req.body.hasOwnProperty('limit')) {
+        return limitBasedInitGraphShow({ limit: req.body.limit });
     } else {
         return new Promise((resolve, reject) => {
             // send back the data 
@@ -412,8 +414,8 @@ function joinSubQuery(allSubQuery) {
 }
 
 function getLimit(limit) {
-    if (limit === 0 && limit === undefined) {
-        return limit = 180;
+    if (!limit || limit === "") {
+        return neoConfig.default_node_limit;
     } else {
         return limit;
     }
@@ -599,29 +601,50 @@ var getGraphLabelData = (query) => {
 }
 
 var getGraphLabels = () => {
-    let query = 'call db.labels()'
-    return runQuery(query)
-        .then(result => {
-            if (result.records.length > 0) {
-                let finalLabels = {
-                    labels: []
-                };
-                result.records.forEach(labelRecord => {
-                    console.log(labelRecord._fields[0]);
-                    finalLabels.labels.push(labelRecord._fields[0]);
-                });
+        let query = 'call db.labels()'
+        return runQuery(query)
+            .then(result => {
+                if (result.records.length > 0) {
+                    let finalLabels = {
+                        labels: []
+                    };
+                    result.records.forEach(labelRecord => {
+                        console.log(labelRecord._fields[0]);
+                        finalLabels.labels.push(labelRecord._fields[0]);
+                    });
+                    return new Promise((resolve, reject) => {
+                        resolve(finalLabels);
+                    });
+                }
+            })
+            .catch(err => {
+                console.log('API : /graph/labels | Error occured while retreiving labels from database');
+                console.log(err);
                 return new Promise((resolve, reject) => {
-                    resolve(finalLabels);
+                    reject('Server error while retrieving labels from the database');
                 });
-            }
-        })
-        .catch(err => {
-            console.log('API : /graph/labels | Error occured while retreiving labels from database');
-            console.log(err);
-            return new Promise((resolve, reject) => {
-                reject('Server error while retrieving labels from the database');
             });
+    }
+    // give initial graph with provided limit
+function limitBasedInitGraphShow(limitObj) {
+    // check for limit empty or undefined
+    limitObj.limit = getLimit(limitObj.limit);
+    let queryStatement = '';
+
+    queryStatement = `match (p) -[r]-> (q) return p,q,r limit ${limitObj.limit}`;
+
+    console.log('query created by graphDataV2 is ', queryStatement);
+    return runQuery(queryStatement).then(result => {
+        let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+        return new Promise((resolve, reject) => {
+            resolve(serializedData);
         });
+    }).catch(err => {
+        console.log('An error occured while runnning the query', err);
+        return new Promise((resolve, reject) => {
+            reject('API : get/data | ERROR : Error encountered while reading from database');
+        });
+    });
 }
 
 module.exports = {

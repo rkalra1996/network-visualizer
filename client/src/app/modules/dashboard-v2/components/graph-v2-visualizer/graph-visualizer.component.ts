@@ -3,7 +3,7 @@ import { GraphDataService } from 'src/app/modules/core/services/graph-data-servi
 import {Network, DataSet, Node, Edge, IdType} from 'vis';
 import * as _ from 'lodash';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
-
+import {IPopup} from "ng2-semantic-ui";
 
 @Component({
   selector: 'app-graph-visualizer',
@@ -14,9 +14,12 @@ export class GraphVisualizerComponent implements OnInit {
 
   @Input() event: String;
   public graphData = {};
+  public errorMessage = '';
   public loader = true;
+  public defaultNodeLimit : number = 149;
   selectedCount;
-  public nodeLimit : number = 150;
+  public nodeLimit : any = 149;
+  public emptyNodeLimit : number = 179;
   public colorConfig = {
     defaultColor : {
     "Academia" : '#ff4444',
@@ -112,6 +115,8 @@ export class GraphVisualizerComponent implements OnInit {
       this.loader = true;
       this.showGraphData();
     } else if (this.event === 'reset') {
+      this.loader = true;
+      this.nodeLimit = this.defaultNodeLimit;
       this.displayInitialGraph();
     }else{
     const previousData = _.cloneDeep(this.graphData);
@@ -142,7 +147,15 @@ export class GraphVisualizerComponent implements OnInit {
     showGraphData(){
       this.loader = true;
       let requestBody = this.sharedGraphService.getGraphData();
-      requestBody["limit"] = this.nodeLimit;
+      // check for node limit
+      if(this.nodeLimit === ""){
+        requestBody["limit"] = this.emptyNodeLimit;
+      }else if(!isNaN(this.nodeLimit)){
+        requestBody["limit"] = this.nodeLimit;
+      }else{
+        requestBody["limit"] = this.defaultNodeLimit;
+      }
+      
       this.graphService.getSearchDataV2(requestBody).subscribe(result=>{
         // console.log('recieved data from graph service', result);
         // set data for vis
@@ -178,10 +191,24 @@ export class GraphVisualizerComponent implements OnInit {
 
     }
 
-    private limitChange(limit){
-      if(limit){
-        this.nodeLimit = parseInt(limit);
+    private limitChange(limit, popup){
+      if(limit === ""){
+        this.errorMessage = 'Only valid numbers allowed'
+        popup.open();
+        window.setTimeout(() => {
+          popup.close();
+        }, 3000)
+        }else if(!isNaN(limit)){
+          this.nodeLimit = parseInt(limit);
+        }else {
+          this.errorMessage = 'Only valid numbers allowed'
+          popup.open();
+          window.setTimeout(() => {
+            popup.close();
+          }, 3000)
+        }
+        
       }
       
-    }
+    
 }

@@ -318,6 +318,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
         return self.indexOf(value) === index;
     };
     DashboardSidebarComponent.prototype.searchGraph = function () {
+        var requestBody;
         if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0) {
             this.selectedGraph = [];
             if (this.selectedName.length > 0) {
@@ -341,16 +342,20 @@ var DashboardSidebarComponent = /** @class */ (function () {
             if (this.selectedUrl.length > 0) {
                 this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
             }
-            var requestBody = { nodes: this.selectedGraph };
-            this.sharedGraphData.setGraphData(requestBody);
-            if (this.count === 1) {
-                this.eventClicked.emit('search' + this.count);
-                this.count = 2;
-            }
-            else {
-                this.eventClicked.emit('search' + this.count);
-                this.count = 1;
-            }
+            requestBody = { nodes: this.selectedGraph };
+        }
+        else {
+            // if no selected element 
+            requestBody = {};
+        }
+        this.sharedGraphData.setGraphData(requestBody);
+        if (this.count === 1) {
+            this.eventClicked.emit('search' + this.count);
+            this.count = 2;
+        }
+        else {
+            this.eventClicked.emit('search' + this.count);
+            this.count = 1;
         }
     };
     // Method gives new edgesArray with related node ids
@@ -450,10 +455,11 @@ var DashboardSidebarComponent = /** @class */ (function () {
         }
         this.preSelectedRel = selectedRelation;
     };
+    // return all nodes with selected relation
     DashboardSidebarComponent.prototype.relationSearchGraph = function () {
         var _this = this;
+        var requestBody;
         if (this.selectedRelation.length > 0) {
-            var requestBody = void 0;
             this.selectedRelationship = [];
             this.selectedRelation.map(function (rel) {
                 _this.selectedRelationship.push({ type: rel });
@@ -472,15 +478,19 @@ var DashboardSidebarComponent = /** @class */ (function () {
             //   }else{
             requestBody = { nodes: [], edges: this.selectedRelationship };
             // }
-            this.sharedGraphData.setGraphData(requestBody);
-            if (this.count === 1) {
-                this.eventClicked.emit('search' + this.count);
-                this.count = 2;
-            }
-            else {
-                this.eventClicked.emit('search' + this.count);
-                this.count = 1;
-            }
+        }
+        else {
+            // if no selected element 
+            requestBody = {};
+        }
+        this.sharedGraphData.setGraphData(requestBody);
+        if (this.count === 1) {
+            this.eventClicked.emit('search' + this.count);
+            this.count = 2;
+        }
+        else {
+            this.eventClicked.emit('search' + this.count);
+            this.count = 1;
         }
     };
     // this return selected name and type
@@ -551,7 +561,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\n<app-color-panel></app-color-panel>\n<div class=\"wrapper-countlimit\" *ngIf=\"!loader\">\n    <div class=\"selected-count\">{{selectedCount}} Elements Found</div>\n    <div class=\"nodeLimit\">\n        <p class=\"nodelimit-head\">Element Limit :</p>\n        <input type=\"text\" [(ngModel)]=nodeLimit (ngModelChange)=\"limitChange(nodeLimit)\">\n    </div>\n</div>\n<div class=\"graph-container\" id=\"graphViewer\">\n</div>"
+module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\n<app-color-panel></app-color-panel>\n<div class=\"wrapper-countlimit\" *ngIf=\"!loader\">\n    <div class=\"selected-count\">{{selectedCount}} Elements Found</div>\n    <div class=\"nodeLimit\">\n        <p class=\"nodelimit-head\">Element Limit :</p>\n        <input type=\"text\" [(ngModel)]=nodeLimit (ngModelChange)=\"limitChange(nodeLimit, popup)\" suiPopup popupText=\"{{errorMessage}}\" popupTrigger=\"manual\" #popup=\"suiPopup\">\n    </div>\n</div>\n<div class=\"graph-container\" id=\"graphViewer\">\n</div>\n<ng-template *ngIf=\"showlimiterror\" let-popup #popupTemplate>\n    <div class=\"header\">Rating</div>\n    <div class=\"content\">\n        <sui-rating class=\"star\" (click)=\"popup.close()\"></sui-rating>\n    </div>\n</ng-template>"
 
 /***/ }),
 
@@ -595,8 +605,11 @@ var GraphVisualizerComponent = /** @class */ (function () {
         this.graphService = graphService;
         this.sharedGraphService = sharedGraphService;
         this.graphData = {};
+        this.errorMessage = '';
         this.loader = true;
-        this.nodeLimit = 150;
+        this.defaultNodeLimit = 149;
+        this.nodeLimit = 149;
+        this.emptyNodeLimit = 179;
         this.colorConfig = {
             defaultColor: {
                 "Academia": '#ff4444',
@@ -687,6 +700,8 @@ var GraphVisualizerComponent = /** @class */ (function () {
             this.showGraphData();
         }
         else if (this.event === 'reset') {
+            this.loader = true;
+            this.nodeLimit = this.defaultNodeLimit;
             this.displayInitialGraph();
         }
         else {
@@ -719,7 +734,16 @@ var GraphVisualizerComponent = /** @class */ (function () {
         var _this = this;
         this.loader = true;
         var requestBody = this.sharedGraphService.getGraphData();
-        requestBody["limit"] = this.nodeLimit;
+        // check for node limit
+        if (this.nodeLimit === "") {
+            requestBody["limit"] = this.emptyNodeLimit;
+        }
+        else if (!isNaN(this.nodeLimit)) {
+            requestBody["limit"] = this.nodeLimit;
+        }
+        else {
+            requestBody["limit"] = this.defaultNodeLimit;
+        }
         this.graphService.getSearchDataV2(requestBody).subscribe(function (result) {
             // console.log('recieved data from graph service', result);
             // set data for vis
@@ -753,9 +777,23 @@ var GraphVisualizerComponent = /** @class */ (function () {
         // console.log(nodeObj);
         return nodeObj;
     };
-    GraphVisualizerComponent.prototype.limitChange = function (limit) {
-        if (limit) {
+    GraphVisualizerComponent.prototype.limitChange = function (limit, popup) {
+        if (limit === "") {
+            this.errorMessage = 'Only valid numbers allowed';
+            popup.open();
+            window.setTimeout(function () {
+                popup.close();
+            }, 3000);
+        }
+        else if (!isNaN(limit)) {
             this.nodeLimit = parseInt(limit);
+        }
+        else {
+            this.errorMessage = 'Only valid numbers allowed';
+            popup.open();
+            window.setTimeout(function () {
+                popup.close();
+            }, 3000);
         }
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
