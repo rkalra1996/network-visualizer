@@ -1,7 +1,7 @@
 {
     "url": "bolt://localhost:7687",
     "user": "neo4j",
-    "password": "password",
+    "password": "neo4j2",
     "initial_query": "match (p) -[r]-> (q) return p,q,r",
     "initial_query_v2": "match (p) -[r]-> (q) return p,q,r limit 149",
     "neo4j_search_token": "DDCE5DBC3AA826EA295F963113B4F"

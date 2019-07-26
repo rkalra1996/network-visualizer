@@ -25,7 +25,7 @@ export class GraphVisualizerComponent implements OnInit {
     "Impact Investor" : '#33b5e5',
     "International Agency" : '#CC0000',
     "Media" : '#FF8800',
-    "NGO/CBO" : '#007E33',
+    "NGO/CBO" : '#007E33',  
     "People" : '#0099CC',
     "Philanthropy" : '#9933CC',
     "Platform" : '#0d47a1',
