@@ -16,7 +16,7 @@ export class GraphVisualizerComponent implements OnInit {
   public graphData = {};
   public loader = true;
   selectedCount;
-  public nodeLimit : number = 50;
+  public nodeLimit : number = 150;
   public colorConfig = {
     defaultColor : {
     "Academia" : '#ff4444',

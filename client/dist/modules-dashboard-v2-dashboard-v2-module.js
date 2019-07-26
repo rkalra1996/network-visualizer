@@ -596,7 +596,7 @@ var GraphVisualizerComponent = /** @class */ (function () {
         this.sharedGraphService = sharedGraphService;
         this.graphData = {};
         this.loader = true;
-        this.nodeLimit = 50;
+        this.nodeLimit = 150;
         this.colorConfig = {
             defaultColor: {
                 "Academia": '#ff4444',

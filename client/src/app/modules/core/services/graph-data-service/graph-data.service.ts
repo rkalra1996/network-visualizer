@@ -201,7 +201,6 @@ export class GraphDataService {
  "Sattva",
  "Skill Stack",
  "Social Alpha",
- "Societal Platform Team",
  "Stanford PACS",
  "Strategyzer",
  "Tarento",
@@ -273,8 +272,8 @@ export class GraphDataService {
     return of(data);
   }
   getInitialDataV2() {
-    const url = 'http://localhost:3050/api/initialdatav2';
-    // const url = '/api/initialdatav2';
+   // const url = 'http://localhost:3050/api/initialdatav2';
+     const url = '/api/initialdatav2';
     return this.publicHttp.get(url).pipe(map(data => {
       if (!!data) {
         return data;
@@ -284,8 +283,8 @@ export class GraphDataService {
     }));
   }
   getSearchDataV2(body) {
-    const url = 'http://localhost:3050/api/graph/datav2';
-    // const url = '/api/graph/datav2';
+   // const url = 'http://localhost:3050/api/graph/datav2';
+     const url = '/api/graph/datav2';
     return this.publicHttp.post(url, body).pipe(map(data => {
       if (!!data) {
         return data;
