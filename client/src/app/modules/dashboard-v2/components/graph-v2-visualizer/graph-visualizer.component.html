@@ -1,9 +1,9 @@
 <app-global-loader *ngIf="loader"></app-global-loader>
 <app-color-panel></app-color-panel>
 <div class="wrapper-countlimit" *ngIf="!loader">
-    <div class="selected-count">Filtered result {{selectedCount}}</div>
+    <div class="selected-count">{{selectedCount}} Elements Found</div>
     <div class="nodeLimit">
-        <p class="nodelimit-head">Node Limit :</p>
+        <p class="nodelimit-head">Element Limit :</p>
         <input type="text" [(ngModel)]=nodeLimit (ngModelChange)="limitChange(nodeLimit)">
     </div>
 </div>

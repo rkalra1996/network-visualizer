@@ -273,7 +273,7 @@ export class GraphDataService {
   }
   getInitialDataV2() {
    // const url = 'http://localhost:3050/api/initialdatav2';
-     const url = '/api/initialdatav2';
+   const url = '/api/initialdatav2';
     return this.publicHttp.get(url).pipe(map(data => {
       if (!!data) {
         return data;

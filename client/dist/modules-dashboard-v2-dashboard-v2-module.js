@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"wrapper\">\n  <div class=\"panel\">\n    <p class=\"panelTitle\">Legends ( Types )</p>\n    <div class=\"panelbody\" *ngIf=\"showDropDown\">\n      <ul class=\"panelList\" type=\"none\">\n        <ng-container *ngFor=\"let item of colorData\">\n            <li class=\"item\" [ngStyle] = \"{color: item.color}\"><span class=\"circle\" [ngStyle] = \"{background: item.color}\"></span>{{item?.name}}</li>\n        </ng-container>\n      </ul>\n    </div>\n    <div class=\"dropDown\" (click)=\"toggleDropdown()\">\n        <i class=\"fas fa-chevron-up\" *ngIf=\"showDropDown\"></i>\n        <i class=\"fas fa-chevron-down\" *ngIf=\"!showDropDown\"></i>\n    </div>\n  </div>\n</div>"
+module.exports = "<div class=\"wrapper\">\n    <div class=\"panel\">\n        <p class=\"panelTitle\">Legend</p>\n        <div class=\"panelbody\" *ngIf=\"showDropDown\">\n            <ul class=\"panelList\" type=\"none\">\n                <ng-container *ngFor=\"let item of colorData\">\n                    <li class=\"item\" [ngStyle]=\"{color: item.color}\"><span class=\"circle\" [ngStyle]=\"{background: item.color}\"></span>{{item?.name}}</li>\n                </ng-container>\n            </ul>\n        </div>\n        <div class=\"dropDown\" (click)=\"toggleDropdown()\">\n            <i class=\"fas fa-chevron-up\" *ngIf=\"showDropDown\"></i>\n            <i class=\"fas fa-chevron-down\" *ngIf=\"!showDropDown\"></i>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -551,7 +551,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\n<app-color-panel></app-color-panel>\n<div class=\"wrapper-countlimit\" *ngIf=\"!loader\">\n    <div class=\"selected-count\">Filtered result {{selectedCount}}</div>\n    <div class=\"nodeLimit\">\n        <p class=\"nodelimit-head\">Node Limit :</p>\n        <input type=\"text\" [(ngModel)]=nodeLimit (ngModelChange)=\"limitChange(nodeLimit)\">\n    </div>\n</div>\n<div class=\"graph-container\" id=\"graphViewer\">\n</div>"
+module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\n<app-color-panel></app-color-panel>\n<div class=\"wrapper-countlimit\" *ngIf=\"!loader\">\n    <div class=\"selected-count\">{{selectedCount}} Elements Found</div>\n    <div class=\"nodeLimit\">\n        <p class=\"nodelimit-head\">Element Limit :</p>\n        <input type=\"text\" [(ngModel)]=nodeLimit (ngModelChange)=\"limitChange(nodeLimit)\">\n    </div>\n</div>\n<div class=\"graph-container\" id=\"graphViewer\">\n</div>"
 
 /***/ }),
 
