@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Observable, of, pipe} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { Observable, of, pipe } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { PublicHttpService } from '../public/public-http/public-http.service';
 import { HttpHeaders } from '@angular/common/http';
 
@@ -26,7 +26,7 @@ export class GraphDataService {
   getSearchData(body) {
     // const url = 'http://localhost:3050/api/graph/data';
     const url = '/api/graph/data';
-    return this.publicHttp.post(url,body).pipe(map(data => {
+    return this.publicHttp.post(url, body).pipe(map(data => {
       if (!!data) {
         return data;
       } else {
@@ -34,7 +34,7 @@ export class GraphDataService {
       }
     }));
   }
-  getNodeLabels() : Observable<any> {
+  getNodeLabels(): Observable<any> {
     // const url = 'http://localhost:3050/api/graph/labeldata';
     // return this.publicHttp.get(url).pipe(map(data => {
     //   if (!!data) {
@@ -45,111 +45,210 @@ export class GraphDataService {
     // }));
     let data = {
       "Name": [
-        "Advaith Foundation", 
-"Anahad", 
-"Annalie Killian", 
-"Arghyam", 
-"Ashoka Fellows", 
-"ATREE", 
-"Avanti Finance", 
-"Bharat Innovation Fund", 
-"Bill Gates", 
-"Bloomberg (NEF)", 
-"BMGF", 
-"Brookings", 
-"Central Square Foundation", 
-"CGD", 
-"Chandler Foundation", 
-"Cisco", 
-"Clearly Vision", 
-"Co-Impact", 
-"Dasra", 
-"Dell", 
-"Dept. of Agriculture (AP)", 
-"Digital Green", 
-"Drucker Forum", 
-"ECHO", 
-"Edumentum", 
-"eGovernments", 
-"EkStep", 
-"Ford Foundation", 
-"Gates Foundation", 
-"Giving Pledge", 
-"Greymatters Capital", 
-"Harambee", 
-"Health Stack", 
-"ICICI", 
-"IDR", 
-"IIITB", 
-"IIMB", 
-"ILIMI", 
-"In The Field", 
-"Ingrid Srinath", 
-"IPI", 
-"ISDM", 
-"iSpirt", 
-"JPAL", 
-"Last Mile Health", 
-"London Business School", 
-"MHRD", 
-"Mindtree Org", 
-"MoHUA", 
-"N/Core", 
-"NIIT", 
-"Nilekani Philanthropies", 
-"NIUA", 
-"Omidyar Network", 
-"Open Mobility", 
-"PIE (Livelihoods)", 
-"Pivotal Ventures", 
-"Pratham Books", 
-"Project Evident", 
-"Raj Shah", 
-"Rita McGrath", 
-"SAMA", 
-"Sangeet Paul Chaudhry", 
-"Santhosh Mathew", 
-"ShikshaLokam", 
-"Skill Stack", 
-"Social Alpha",
-"Societal Platform Team", 
-"Stanford PACS", 
-"Stefan Dercon", 
-"Tarento", 
-"Tasvereein", 
-"Tata Trusts", 
-"Thomas Friedman", 
-"Unilever", 
-"Unleash", 
-"Vayam", 
-"Venkat Ramaswamy", 
-"Vidhi Legal", 
-"World Bank"
-
-      ],
+ "Accenture",
+ "Aditya Birla CSR",
+ "AIILSG",
+ "Amani Institute",
+ "Anahad",
+ "Annalie Killian",
+ "Acumen",
+ "Advaith Foundation",
+ "Alan Schwartz",
+ "Amnesty International",
+ "Andrew Ng",
+ "APF",
+ "Arghyam",
+ "ATREE",
+ "BCG",
+ "Bhavtosh Vajpayee",
+ "Bloomberg (NEF)",
+ "Bosch Foundation",
+ "Bridgespan",
+ "Brookings",
+ "Central Square Foundation",
+ "Chamath Palihapitiya",
+ "Chandu Bhave",
+ "Cisco",
+ "Co-Impact",
+ "Cornell",
+ "APPI",
+ "Ashoka Fellows",
+ "Avanti Finance",
+ "Bharat Innovation Fund",
+ "Bill Gates",
+ "BMGF",
+ "BRAC",
+ "British Asian Trust",
+ "C&R",
+ "CGD",
+ "Chandler Foundation",
+ "Chris Anderson",
+ "Clearly Vision",
+ "Code For America",
+ "Dalberg",
+ "Dayle Stevens",
+ "Dell",
+ "Dept. of Agriculture (AP)",
+ "Devex",
+ "Digital Green",
+ "Dasra",
+ "deAsra",
+ "Deloitte",
+ "Deshpande Foundation",
+ "DIAL",
+ "Don Norman",
+ "ECF",
+ "Edumentum",
+ "EkStep",
+ "FHI360",
+ "Founding Fuel",
+ "Future State",
+ "GDI",
+ "Giving Pledge",
+ "Goradia Foundation",
+ "Guidestar",
+ "Harry Hertz",
+ "Harvard Kennedy School",
+ "Heather McGowan",
+ "IDR",
+ "Drucker Forum",
+ "ECHO",
+ "eGovernments",
+ "EY",
+ "Ford Foundation",
+ "FSG",
+ "Gates Foundation",
+ "Genpact",
+ "Goonj",
+ "Greymatters Capital",
+ "Harambee",
+ "Harvard Business School",
+ "Health Stack",
+ "ICICI",
+ "IIHS",
+ "IIMB",
+ "IKEA Foundation",
+ "Imago",
+ "India Stack",
+ "Ingrid Srinath",
+ "IIITB",
+ "IIT-IIT",
+ "ILIMI",
+ "In The Field",
+ "Indian School of Democracy",
+ "Institute For Transformative Tech.",
+ "IPI",
+ "iSpirt",
+ "JPAL",
+ "Last Mile Health",
+ "Living Farms",
+ "London Business School",
+ "McKinsey",
+ "MHRD",
+ "Mindtree Org",
+ "MoHUA",
+ "Nasscom Foundation",
+ "NIEPA",
+ "NIUA",
+ "NSRCEL",
+ "Intelehealth",
+ "ISDM",
+ "John McDermott",
+ "Landesa",
+ "Lean Impact",
+ "Living Goods",
+ "MAGC",
+ "Mercy Corps",
+ "Michael Susan Dell Foundation",
+ "MIT",
+ "N/Core",
+ "New America Foundation",
+ "NIIT",
+ "Nilekani Philanthropies",
+ "NSDC",
+ "Ola Foundation",
+ "One Acre Fund",
+ "ORF",
+ "PEI (Graduation)",
+ "Piramal Foundation",
+ "Omidyar Network",
+ "Open Mobility",
+ "Pankaj Jalote",
+ "PIE (Livelihoods)",
+ "Pivotal Ventures",
+ "Precision Ag Dev",
+ "PwC",
+ "Ram Sewak Sharma",
+ "SAMA",
+ "Sameer Dua",
+ "Sangeet Paul Chaudhry",
+ "Sara Chamberlain",
+ "ShikshaLokam",
+ "Skoll",
+ "Socion",
+ "Stefan Dercon",
+ "SVP",
+ "Tasvereein",
+ "TechSoup",
+ "Tom Monahan",
+ "Pratham Books",
+ "Project Evident",
+ "Raj Shah",
+ "Rita McGrath",
+ "Samagra Consulting",
+ "Samhita",
+ "Santhosh Mathew",
+ "Sattva",
+ "Skill Stack",
+ "Social Alpha",
+ "Stanford PACS",
+ "Strategyzer",
+ "Tarento",
+ "Tata Trusts",
+ "Thomas Friedman",
+ "TouchKin",
+ "UNDP",
+ "Unilever",
+ "Unleash",
+ "UNSDN",
+ "Ugly Indian",
+ "UNICEF",
+ "University of Wisconsin",
+ "UnLtd",
+ "UNSSC",
+ "Venkat Ramaswamy",
+ "Wadhwani AI",
+ "WEF",
+ "World Bank",
+ "Vayam",
+ "Vidhi Legal",
+ "Wadhwani Foundation",
+ "WHU"
+ 
+   ],
       "Type": [
-        "Philanthropy", 
-"NGO/CBO", 
-"Consulting", 
-"Research Institute", 
-"Private Sector", 
-"Government", 
-"Impact Investor", 
-"Media", 
-"Academia", 
-"International Agency"
-
+        "Philanthropy",
+ "NGO/CBO",
+ "Consulting",
+ "Research Institute",
+ "Private Sector",
+ "Government",
+ "Impact Investor",
+ "Media",
+ "Academia",
+ "International Agency"
+ 
       ],
       "Represent": [
-        "Capital", 
-        "Reach", 
-        "Research Capacity", 
-        "Platform", 
-        "Talent", 
-        "Technology Expertise", 
-        "Partners", 
+        "Capital",
+        "Reach",
+        "Research Capacity",
+        "Platform",
+        "Talent",
+        "Technology Expertise",
+        "Partners",
         "Advisory"
-        
+ 
       ],
       "Status":[
         "Active",
@@ -173,8 +272,8 @@ export class GraphDataService {
     return of(data);
   }
   getInitialDataV2() {
-    // const url = 'http://localhost:3050/api/initialdatav2';
-    const url = '/api/initialdatav2';
+   // const url = 'http://localhost:3050/api/initialdatav2';
+   const url = '/api/initialdatav2';
     return this.publicHttp.get(url).pipe(map(data => {
       if (!!data) {
         return data;
@@ -185,8 +284,8 @@ export class GraphDataService {
   }
   getSearchDataV2(body) {
    // const url = 'http://localhost:3050/api/graph/datav2';
-   const url = '/api/graph/datav2';
-    return this.publicHttp.post(url,body).pipe(map(data => {
+     const url = '/api/graph/datav2';
+    return this.publicHttp.post(url, body).pipe(map(data => {
       if (!!data) {
         return data;
       } else {
@@ -194,4 +293,4 @@ export class GraphDataService {
       }
     }));
   }
- }
+}

@@ -16,6 +16,7 @@ export class GraphVisualizerComponent implements OnInit {
   public graphData = {};
   public loader = true;
   selectedCount;
+  public nodeLimit : number = 150;
   public colorConfig = {
     defaultColor : {
     "Academia" : '#ff4444',
@@ -24,7 +25,7 @@ export class GraphVisualizerComponent implements OnInit {
     "Impact Investor" : '#33b5e5',
     "International Agency" : '#CC0000',
     "Media" : '#FF8800',
-    "NGO/CBO" : '#007E33',
+    "NGO/CBO" : '#007E33',  
     "People" : '#0099CC',
     "Philanthropy" : '#9933CC',
     "Platform" : '#0d47a1',
@@ -141,6 +142,7 @@ export class GraphVisualizerComponent implements OnInit {
     showGraphData(){
       this.loader = true;
       let requestBody = this.sharedGraphService.getGraphData();
+      requestBody["limit"] = this.nodeLimit;
       this.graphService.getSearchDataV2(requestBody).subscribe(result=>{
         // console.log('recieved data from graph service', result);
         // set data for vis
@@ -174,5 +176,12 @@ export class GraphVisualizerComponent implements OnInit {
       // console.log(nodeObj);
       return nodeObj;
 
+    }
+
+    private limitChange(limit){
+      if(limit){
+        this.nodeLimit = parseInt(limit);
+      }
+      
     }
 }

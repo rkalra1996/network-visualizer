@@ -9,9 +9,11 @@ import { DashboardHeaderComponent } from './components/dashboard-v2-header/dashb
 
 import {SuiSelectModule, SuiModule} from 'ng2-semantic-ui';
 import { SharedModule } from '../shared/shared.module';
+import { ColorPanelComponent } from './components/color-panel/color-panel/color-panel.component';
 
 @NgModule({
-  declarations: [MainComponent, GraphVisualizerComponent, DashboardSidebarComponent, DashboardHeaderComponent],
+  declarations: [MainComponent, GraphVisualizerComponent, DashboardSidebarComponent, DashboardHeaderComponent, 
+    ColorPanelComponent],
   imports: [
     CommonModule,
     FormsModule,

@@ -288,13 +288,26 @@ export class DashboardSidebarComponent implements OnInit {
 
   relationSearchGraph(){
     if (this.selectedRelation.length > 0) {
+      let requestBody;
       this.selectedRelationship = [];
       this.selectedRelation.map(rel=>{
         this.selectedRelationship.push({ type: rel });
       })
-      
-      let requestBody = { nodes: [], edges: this.selectedRelationship };
-
+      // let temNodes = [];
+      // if(this.selectedName.length > 0 || this.selectedType.length > 0){
+      //   let temnode = [];
+      //    temnode = this.selectedNodeCheck();
+      //   temnode.filter(node=>{
+      //     temNodes.push(node);      
+      //   })       
+      // }
+      // 
+      //   if(temNodes.length > 0){
+      //      requestBody= { nodes: temNodes, edges: this.selectedRelationship };
+      //   }else{
+           requestBody= { nodes: [], edges: this.selectedRelationship };
+        // }
+       
       this.sharedGraphData.setGraphData(requestBody);
       if (this.count === 1) {
         this.eventClicked.emit('search' + this.count);
@@ -305,6 +318,20 @@ export class DashboardSidebarComponent implements OnInit {
       }
 
     }
+  }
+
+  // this return selected name and type
+  private selectedNodeCheck(){
+      if(this.selectedName.length > 0 && this.selectedType.length > 0){
+        let temNodeArray = [];
+        temNodeArray.push({ type: "Name", value: this.selectedName });
+        temNodeArray.push({ type: "Type", value: this.selectedType});
+        return temNodeArray;
+      }else if(this.selectedType.length > 0){
+          return [{ type: "Type", value: this.selectedType }];
+      }else if(this.selectedName.length > 0){
+        return [{ type: "Name", value: this.selectedName }];
+      }
   }
   noderelationSearchGraph(){
     if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0 && this.selectedRelation.length > 0) {

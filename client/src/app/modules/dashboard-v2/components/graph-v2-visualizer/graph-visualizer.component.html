@@ -1,4 +1,11 @@
 <app-global-loader *ngIf="loader"></app-global-loader>
-<div class="selected-count" *ngIf="!loader">Filtered result {{selectedCount}}</div>
+<app-color-panel></app-color-panel>
+<div class="wrapper-countlimit" *ngIf="!loader">
+    <div class="selected-count">{{selectedCount}} Elements Found</div>
+    <div class="nodeLimit">
+        <p class="nodelimit-head">Element Limit :</p>
+        <input type="text" [(ngModel)]=nodeLimit (ngModelChange)="limitChange(nodeLimit)">
+    </div>
+</div>
 <div class="graph-container" id="graphViewer">
 </div>

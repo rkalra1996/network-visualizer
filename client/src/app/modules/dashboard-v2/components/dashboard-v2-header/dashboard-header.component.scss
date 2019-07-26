@@ -36,6 +36,7 @@
 .dropdown {
     position: relative;
     float: right;
+    z-index : 9998;
 }
 
 .dropdown:hover {
