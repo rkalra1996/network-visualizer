@@ -15,5 +15,17 @@
 .dropdown-menu {
     .dropdown-item {
         cursor: pointer;
+        span {
+            margin-right : 8px;
+        }
+    }
+    .create:hover {
+        color : blue;
+    }
+    .edit:hover {
+        color : green;
+    }
+    .delete:hover {
+        color : red;
     }
 }
