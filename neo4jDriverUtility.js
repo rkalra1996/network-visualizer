@@ -23,14 +23,23 @@ var runQuery = (query) => {
 }
 
 var initiate = () => {
-    if (!user) {
-        console.error('No User provided, make sure you have entered the user in database_config/config.json --->', user);
-    } else if (!password) {
-        neo4Jdriver = neo4j.driver(neoConfig.url, neo4j.auth.basic(neoConfig.user, ''))
+    if (!!Object.keys(neoConfig).length) {
+        if (!user) {
+            console.error('No User provided, make sure you have entered the user in database_config/config.json --->', user);
+            return false;
+        } else if (!password) {
+            neo4Jdriver = neo4j.driver(neoConfig.url, neo4j.auth.basic(neoConfig.user, ''));
+            session = neo4Jdriver.session();
+            return true;
+        } else {
+            neo4Jdriver = neo4j.driver(neoConfig.url, neo4j.auth.basic(neoConfig.user, neoConfig.password));
+            session = neo4Jdriver.session();
+            return true;
+        }
     } else {
-        neo4Jdriver = neo4j.driver(neoConfig.url, neo4j.auth.basic(neoConfig.user, neoConfig.password))
+        console.error('Database config file is either missing or the information is not sufficient to start up neo4J databse');
+        return false;
     }
-    session = neo4Jdriver.session();
 }
 
 var getMetaData = () => {
