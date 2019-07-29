@@ -1,0 +1,23 @@
+<div class="container-fluid">
+<!--<a href="#" class="deleteLink"><span class="fas fa-plus-circle">&nbsp;Delete Node</span></a> -->
+<div class="btn-group nodes">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Node
+    </button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item createLink" (click)="createNode()">Create Node</a>
+      <a class="dropdown-item editLink" (click)="editNode()">Edit Node</a>
+      <a class="dropdown-item deleteLink" (click)="deleteNode()">Delete Node</a>
+    </div>
+</div>
+<div class="btn-group relationships">
+    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Relationships
+    </button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item createLinkRel" (click)="createRelation()">Create Relationship</a>
+      <a class="dropdown-item editLinkRel" (click)="editRelation()">Edit Relationship</a>
+      <a class="dropdown-item deleteLinkRel" (click)="deleteRelation()">Delete Relationship</a>
+    </div>
+</div>
+</div>

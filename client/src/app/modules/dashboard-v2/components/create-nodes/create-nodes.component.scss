@@ -1,0 +1,19 @@
+.container-fluid .btn-group {
+    margin-right : 20px;
+}
+
+.btn-group:active {
+    outline : none;
+    text-decoration: none;
+}
+
+.createLink, .editLink, .deleteLink {
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.dropdown-menu {
+    .dropdown-item {
+        cursor: pointer;
+    }
+}

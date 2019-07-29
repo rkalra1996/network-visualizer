@@ -1,10 +1,13 @@
 <app-global-loader *ngIf="loader"></app-global-loader>
-<app-color-panel></app-color-panel>
+<app-color-panel *ngIf="!loader"></app-color-panel>
 <div class="wrapper-countlimit" *ngIf="!loader">
     <div class="selected-count">{{selectedCount}} Elements Found</div>
     <div class="nodeLimit">
         <p class="nodelimit-head">Element Limit :</p>
         <input type="text" [(ngModel)]=nodeLimit (ngModelChange)="limitChange(nodeLimit, popup)" suiPopup popupText="{{errorMessage}}" popupTrigger="manual" #popup="suiPopup">
+    </div>
+    <div class="creationToolbar">
+            <app-create-nodes></app-create-nodes>
     </div>
 </div>
 <div class="graph-container" id="graphViewer">
