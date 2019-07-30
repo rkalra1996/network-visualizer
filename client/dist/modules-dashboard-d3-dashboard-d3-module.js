@@ -28986,7 +28986,7 @@ module.exports = "<div id=\"canvas\"></div>"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".tooltip {\n  position: absolute;\n  background-color: white;\n  max-width: 200px;\n  height: auto;\n  padding: 1px;\n  border-style: solid;\n  border-radius: 4px;\n  border-width: 1px;\n  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);\n  pointer-events: none; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC1kMy9jb21wb25lbnRzL2dyYXBoLWQzLXZpc3VhbGl6ZXIvZ3JhcGgtZDMtdmlzdWFsaXplci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGtCQUFrQjtFQUNsQix1QkFBdUI7RUFDdkIsZ0JBQWdCO0VBQ2hCLFlBQVk7RUFDWixZQUFZO0VBQ1osbUJBQW1CO0VBQ25CLGtCQUFrQjtFQUNsQixpQkFBaUI7RUFDakIsMkNBQTBDO0VBQzFDLG9CQUFvQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtZDMvY29tcG9uZW50cy9ncmFwaC1kMy12aXN1YWxpemVyL2dyYXBoLWQzLXZpc3VhbGl6ZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIudG9vbHRpcCB7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuICAgIG1heC13aWR0aDogMjAwcHg7XG4gICAgaGVpZ2h0OiBhdXRvO1xuICAgIHBhZGRpbmc6IDFweDtcbiAgICBib3JkZXItc3R5bGU6IHNvbGlkO1xuICAgIGJvcmRlci1yYWRpdXM6IDRweDtcbiAgICBib3JkZXItd2lkdGg6IDFweDtcbiAgICBib3gtc2hhZG93OiAzcHggM3B4IDEwcHggcmdiYSgwLCAwLCAwLCAuNSk7XG4gICAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG59Il19 */"
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvZGFzaGJvYXJkLWQzL2NvbXBvbmVudHMvZ3JhcGgtZDMtdmlzdWFsaXplci9ncmFwaC1kMy12aXN1YWxpemVyLmNvbXBvbmVudC5zY3NzIn0= */"
 
 /***/ }),
 
@@ -29013,6 +29013,39 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
         this.graphService = graphService;
         this.graphData = {};
         this.data = {};
+        this.circleRadius = 25;
+        this.linkColor = "#696969";
+        this.relationColor = "#696969";
+        this.colorConfig = {
+            defaultColor: {
+                "Academia": '#C990C0',
+                "Consulting": '#A5ABB6',
+                "Government": '#8DCC93',
+                "Impact Investor": '#4C8EDA',
+                "International Agency": '#FFC454',
+                "Media": '#D9C8AE',
+                "NGO/CBO": '#F79767',
+                "People": '#569480',
+                "Philanthropy": '#DA7194',
+                "Platform": '#57C7E3',
+                "Private Sector": '#2BBBAD',
+                "Research Institute": '#c51162'
+            },
+            selectedColor: {
+                "Academia": '#ff4444',
+                "Consulting": '#ffbb33',
+                "Government": '#00C851',
+                "Impact Investor": '#33b5e5',
+                "International Agency": '#CC0000',
+                "Media": '#FF8800',
+                "NGO/CBO": '#007E33',
+                "People": '#0099CC',
+                "Philanthropy": '#9933CC',
+                "Platform": '#0d47a1',
+                "Private Sector": '#2BBBAD',
+                "Research Institute": '#c51162'
+            }
+        };
         this.drag = function (simulation) {
             function dragstarted(d) {
                 if (!d3__WEBPACK_IMPORTED_MODULE_2__["event"].active)
@@ -29024,16 +29057,15 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
                 d.fx = d3__WEBPACK_IMPORTED_MODULE_2__["event"].x;
                 d.fy = d3__WEBPACK_IMPORTED_MODULE_2__["event"].y;
             }
-            function dragended(d) {
-                if (!d3__WEBPACK_IMPORTED_MODULE_2__["event"].active)
-                    simulation.alphaTarget(0);
-                d.fx = null;
-                d.fy = null;
-            }
+            // function dragended(d) {
+            //   if (!d3.event.active) simulation.alphaTarget(0);
+            //   d.fx = null;
+            //   d.fy = null;
+            // }
             return d3__WEBPACK_IMPORTED_MODULE_2__["drag"]()
                 .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended);
+                .on("drag", dragged);
+            // .on("end", dragended);
         };
     }
     GraphD3VisualizerComponent.prototype.ngOnInit = function () {
@@ -29045,8 +29077,9 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
             console.log('recieved data from graph service', result);
             if (result.hasOwnProperty('seperateNodes')) {
                 var nodes = [];
+                result['seperateNodes'] = _this.addColors(result['seperateNodes']);
                 result['seperateNodes'].filter(function (node) {
-                    nodes.push({ id: node.id, label: node.label });
+                    nodes.push({ id: node.id, label: node.label, type: node.type[0], connection: node.properties.Connection, status: node.properties.Status, represent: node.properties.Represent, 'Understanding of SP Thinking': node.properties['Understanding of SP Thinking'], color: node.color });
                 });
             }
             _this.graphData['nodes'] = nodes;
@@ -29074,37 +29107,22 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
             .attr('height', height);
         var links = this.graphData['links'].map(function (d) { return Object.create(d); });
         var nodes = this.graphData['nodes'].map(function (d) { return Object.create(d); });
-        var tooltip = d3__WEBPACK_IMPORTED_MODULE_2__["select"]("body")
+        var tooltip = d3__WEBPACK_IMPORTED_MODULE_2__["select"]("#canvas")
             .append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
+            .attr("class", "tooltip");
         var simulation = d3__WEBPACK_IMPORTED_MODULE_2__["forceSimulation"](nodes)
             .force("link", d3__WEBPACK_IMPORTED_MODULE_2__["forceLink"](links).id(function (d) { return d['id']; }).distance(lineLength))
             .force("center", d3__WEBPACK_IMPORTED_MODULE_2__["forceCenter"](width / 2, height / 2))
             .force("charge", d3__WEBPACK_IMPORTED_MODULE_2__["forceManyBody"]().strength(-800)) // Nodes are attracted one each other of value is > 0
             .force("collide", d3__WEBPACK_IMPORTED_MODULE_2__["forceCollide"]().strength(.1).radius(45).iterations(1)); // Force that avoids circle overlapping
+        // edge label
         var link = svg.append("g")
-            .attr("stroke", "#000")
+            .attr("stroke", this.linkColor)
             .attr("stroke-opacity", 0.6)
             .selectAll("line")
             .data(links)
             .join("line")
             .attr("stroke-width", function (d) { return Math.sqrt(d['value']); });
-        var node = svg.append("g")
-            .attr("stroke", "#fff") // for the border of circle
-            .attr("stroke-width", 1.5) // for the border of circle
-            .selectAll("circle")
-            .data(nodes)
-            .join("circle")
-            .attr("r", 25) // circle radius
-            .attr("fill", this.color()) // circle color
-            .call(this.drag(simulation));
-        // node.append("title")
-        //     .text(function (d) {return d.id;});
-        // node.append("text")
-        //     .attr("dx", 12)
-        //     .attr("dy", ".3em")
-        //     .text(function (d) {return d['label'];});
         link.append("title")
             .text(function (d) { return d['type']; });
         var edgepaths = svg.selectAll(".edgepath")
@@ -29124,13 +29142,35 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
             .attr('class', 'edgelabel')
             .attr('id', function (d, i) { return 'edgelabel' + i; })
             .attr('font-size', 10)
-            .attr('fill', '#aaa');
+            .attr('fill', this.relationColor);
         edgelabels.append('textPath')
             .attr('xlink:href', function (d, i) { return '#edgepath' + i; })
             .style('text-anchor', 'middle')
-            .style("pointer-events", "none")
-            .attr("startOffset", "50%")
+            .style('pointer-events', 'none')
+            .attr('startOffset', '50%')
             .text(function (d) { return d['type']; });
+        var node = svg.append("g")
+            .attr("stroke", "#fff") // for the border of circle
+            .attr("stroke-width", 1.5) // for the border of circle
+            .selectAll("circle")
+            .data(nodes)
+            .join("circle")
+            .attr("r", this.circleRadius) // circle radius
+            .attr("fill", this.color()) // circle color
+            .call(this.drag(simulation));
+        // node labels
+        var nodelabels = svg.append("g")
+            .attr("class", "labels")
+            .selectAll("text")
+            .data(nodes)
+            .enter().append("text")
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'central')
+            .style('font-family', 'FontAwesome')
+            .style('font-size', '15px')
+            .style("pointer-events", "none")
+            .text(function (d) { return d['label']; })
+            .call(this.drag(simulation));
         simulation.on("tick", function () {
             edgepaths.attr('d', function (d) {
                 return 'M ' + d['source'].x + ' ' + d['source'].y + ' L ' + d['target'].x + ' ' + d['target'].y;
@@ -29146,6 +29186,10 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
                     return 'rotate(0)';
                 }
             });
+            // update label positions
+            nodelabels
+                .attr("x", function (d) { return d['x']; })
+                .attr("y", function (d) { return d['y']; });
             link
                 .attr("x1", function (d) { return d['source'].x; })
                 .attr("y1", function (d) { return d['source'].y; })
@@ -29157,8 +29201,18 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
                 .on('mouseover.tooltip', function (d) {
                 tooltip.transition()
                     .duration(300)
-                    .style("opacity", .8);
-                tooltip.html("Project:" + d['id'] + "<p/>T:" + d['T'] + "<p/>Q:" + d['Q'])
+                    .style("opacity", 10)
+                    .style("background-color", "#fff")
+                    .style("pointer-events", "none")
+                    .style("z-index", "10")
+                    .style('max-width', '200px')
+                    .style('height', 'auto')
+                    .style('padding', '1px')
+                    .style('border-style', 'solid')
+                    .style('border-width', '.5px')
+                    .style('border-radius', '4px')
+                    .style('box-shadow', '1px 1px 5px rgba(0, 0, 0, .5)');
+                tooltip.html("Name : " + d['label'] + "<br>Status : " + d['status'] + "<br>Connection : " + d['connection'] + "<br>Represent : " + d['represent'] + "<br>SP Thinking : " + d['Understanding of SP Thinking'] + "<p/>Type : " + d['type'])
                     .style("left", (d3__WEBPACK_IMPORTED_MODULE_2__["event"].pageX) + "px")
                     .style("top", (d3__WEBPACK_IMPORTED_MODULE_2__["event"].pageY + 10) + "px");
             })
@@ -29170,8 +29224,19 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
         });
     };
     GraphD3VisualizerComponent.prototype.color = function () {
-        var scale = d3__WEBPACK_IMPORTED_MODULE_2__["scaleOrdinal"](d3__WEBPACK_IMPORTED_MODULE_2__["schemeCategory10"]);
-        return function (d) { return scale(d.group); };
+        //const scale = d3.scaleOrdinal(d3.schemeCategory10);
+        return function (d) { return d.color; };
+    };
+    GraphD3VisualizerComponent.prototype.addColors = function (nodeObj) {
+        var _this = this;
+        // console.log(nodeObj);
+        nodeObj.forEach(function (node) {
+            if (node.hasOwnProperty('type') && node.type.length > 0) {
+                node['color'] = _this.colorConfig.defaultColor[node.type[0]];
+            }
+        });
+        // console.log(nodeObj);
+        return nodeObj;
     };
     GraphD3VisualizerComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
