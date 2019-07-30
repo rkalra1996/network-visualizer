@@ -1,9 +1,8 @@
-import { Component, OnInit, SimpleChanges, Input } from '@angular/core';
+import { Component, OnInit, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
-import {Network, DataSet, Node, Edge, IdType} from 'vis';
+import { Network, DataSet, Node, Edge, IdType } from 'vis';
 import * as _ from 'lodash';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
-import {IPopup} from "ng2-semantic-ui";
 
 @Component({
   selector: 'app-graph-visualizer',
@@ -13,68 +12,70 @@ import {IPopup} from "ng2-semantic-ui";
 export class GraphVisualizerComponent implements OnInit {
 
   @Input() event: String;
+  @Input() totalTypesArray = [];
   public graphData = {};
   public errorMessage = '';
   public loader = true;
-  public defaultNodeLimit : number = 149;
+  public defaultNodeLimit: number = 149;
   selectedCount;
-  public nodeLimit : any = 149;
-  public emptyNodeLimit : number = 179;
+  public nodeLimit: any = 149;
+  public emptyNodeLimit: number = 179;
   public colorConfig = {
-    defaultColor : {
-    "Academia" : '#ff4444',
-    "Consulting" : '#ffbb33',
-    "Government" : '#00C851',
-    "Impact Investor" : '#33b5e5',
-    "International Agency" : '#CC0000',
-    "Media" : '#FF8800',
-    "NGO/CBO" : '#007E33',  
-    "People" : '#0099CC',
-    "Philanthropy" : '#9933CC',
-    "Platform" : '#0d47a1',
-    "Private Sector" : '#2BBBAD',
-    "Research Institute" : '#c51162'
+    defaultColor: {
+      "Academia": '#ff4444',
+      "Consulting": '#ffbb33',
+      "Government": '#00C851',
+      "Impact Investor": '#33b5e5',
+      "International Agency": '#CC0000',
+      "Media": '#FF8800',
+      "NGO/CBO": '#007E33',
+      "People": '#0099CC',
+      "Philanthropy": '#9933CC',
+      "Platform": '#0d47a1',
+      "Private Sector": '#2BBBAD',
+      "Research Institute": '#c51162'
 
     },
-    selectedColor : {
-      "Academia" : '#ff4444',
-      "Consulting" : '#ffbb33',
-      "Government" : '#00C851',
-      "Impact Investor" : '#33b5e5',
-      "International Agency" : '#CC0000',
-      "Media" : '#FF8800',
-      "NGO/CBO" : '#007E33',
-      "People" : '#0099CC',
-      "Philanthropy" : '#9933CC',
-      "Platform" : '#0d47a1',
-      "Private Sector" : '#2BBBAD',
-      "Research Institute" : '#c51162'
-  
+    selectedColor: {
+      "Academia": '#ff4444',
+      "Consulting": '#ffbb33',
+      "Government": '#00C851',
+      "Impact Investor": '#33b5e5',
+      "International Agency": '#CC0000',
+      "Media": '#FF8800',
+      "NGO/CBO": '#007E33',
+      "People": '#0099CC',
+      "Philanthropy": '#9933CC',
+      "Platform": '#0d47a1',
+      "Private Sector": '#2BBBAD',
+      "Research Institute": '#c51162'
+
     }
   };
 
   public network: any;
+  @Output() networkInstance = new EventEmitter<any>();
   private graphOptions = {
-      physics: false,
-      edges: {
-          smooth: {
-              type: 'continuous',
-              forceDirection: 'none'
-              }
-      },
-      nodes: {
-          shape: 'dot',
-          scaling: {
-              customScalingFunction: (min,max,total,value) => {
-                  return value / total;
-              },
-              min: 5,
-              max: 150
-          }
+    physics: false,
+    edges: {
+      smooth: {
+        type: 'continuous',
+        forceDirection: 'none'
       }
+    },
+    nodes: {
+      shape: 'dot',
+      scaling: {
+        customScalingFunction: (min, max, total, value) => {
+          return value / total;
+        },
+        min: 5,
+        max: 150
+      }
+    }
   };
 
-  constructor(private graphService: GraphDataService, private sharedGraphService : SharedGraphService) { }
+  constructor(private graphService: GraphDataService, private sharedGraphService: SharedGraphService) { }
 
   ngOnInit() {
     this.loader = true;
@@ -107,108 +108,162 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-  console.log('graph',this.event);
-  this.changeNodeColor();
+    this.changeNodeColor();
   }
-  changeNodeColor(){
-    if(this.event == 'search1' || this.event == 'search2'){
+  changeNodeColor() {
+    if (this.event == 'search1' || this.event === 'search2') {
       this.loader = true;
       this.showGraphData();
     } else if (this.event === 'reset') {
       this.loader = true;
       this.nodeLimit = this.defaultNodeLimit;
       this.displayInitialGraph();
-    }else{
-    const previousData = _.cloneDeep(this.graphData);
-    // tslint:disable-next-line: no-string-literal
-    if(!!this.graphData['nodes']){
-      var temgraph = this.graphData['nodes'].map(node=>{
-        if(this.event == node.type[0]){
-         // node.color = this.colorConfig.defaultColor[node.type[0]];
-        }else{
-         // node.color='#95BFF8';
+    } else {
+      const previousData = _.cloneDeep(this.graphData);
+      // tslint:disable-next-line: no-string-literal
+      if (!!this.graphData['nodes']) {
+        var temgraph = this.graphData['nodes'].map(node => {
+          if (this.event == node.type[0]) {
+            // node.color = this.colorConfig.defaultColor[node.type[0]];
+          } else {
+            // node.color='#95BFF8';
+            return node;
+          }
           return node;
-        }
-        return node;
-      })
+        })
         previousData.nodes.clear();
         previousData.nodes = new DataSet(_.cloneDeep(temgraph));
         this.graphData = previousData;
-      this.reinitializeGraph();
-      console.log(this.graphData)
+        this.reinitializeGraph();
+      }
     }
-    } 
+  }
+
+  reinitializeGraph() {
+    const container = document.getElementById('graphViewer');
+    this.network.setData(this.graphData);
+  }
+  showGraphData() {
+    this.loader = true;
+    let requestBody = this.sharedGraphService.getGraphData();
+    // check for node limit
+    if (this.nodeLimit === "") {
+      requestBody["limit"] = this.emptyNodeLimit;
+    } else if (!isNaN(this.nodeLimit)) {
+      requestBody["limit"] = this.nodeLimit;
+    } else {
+      requestBody["limit"] = this.defaultNodeLimit;
     }
 
-    reinitializeGraph() {
+    this.graphService.getSearchDataV2(requestBody).subscribe(result => {
+      // console.log('recieved data from graph service', result);
+      // set data for vis
+      if (result.hasOwnProperty('seperateNodes')) {
+        result['seperateNodes'] = this.addColors(result['seperateNodes']);
+        this.graphData['nodes'] = new DataSet(result['seperateNodes']);
+        this.selectedCount = this.graphData['nodes'].length;
+      }
+      if (result.hasOwnProperty('seperateEdges')) {
+        this.graphData['edges'] = new DataSet(result['seperateEdges']);
+      }
+      // console.log('graphData :', this.graphData);
+      // display data
       const container = document.getElementById('graphViewer');
-      this.network.setData(this.graphData);
-    }
-    showGraphData(){
+      this.network = new Network(container, this.graphData, this.graphOptions);
+      this.loader = false;
+    }, err => {
+      console.error('An error occured while retrieving initial graph data', err);
       this.loader = true;
-      let requestBody = this.sharedGraphService.getGraphData();
-      // check for node limit
-      if(this.nodeLimit === ""){
-        requestBody["limit"] = this.emptyNodeLimit;
-      }else if(!isNaN(this.nodeLimit)){
-        requestBody["limit"] = this.nodeLimit;
-      }else{
-        requestBody["limit"] = this.defaultNodeLimit;
+      this.graphData = {};
+    });
+  }
+
+  addColors(nodeObj) {
+    // console.log(nodeObj);
+    nodeObj.forEach(node => {
+      if (node.hasOwnProperty('type') && node.type.length > 0) {
+        node['color'] = this.colorConfig.defaultColor[node.type[0]];
       }
-      
-      this.graphService.getSearchDataV2(requestBody).subscribe(result=>{
-        // console.log('recieved data from graph service', result);
-        // set data for vis
-        if (result.hasOwnProperty('seperateNodes')) {
-          result['seperateNodes'] = this.addColors(result['seperateNodes']);
-          this.graphData['nodes'] = new DataSet(result['seperateNodes']);
-          this.selectedCount = this.graphData['nodes'].length;
-        }
-        if (result.hasOwnProperty('seperateEdges')) {
-          this.graphData['edges'] = new DataSet(result['seperateEdges']);
-        }
-        // console.log('graphData :', this.graphData);
-        // display data
-        const container = document.getElementById('graphViewer');
-        this.network = new Network(container, this.graphData, this.graphOptions);
-        this.loader = false;
-      }, err => {
-        console.error('An error occured while retrieving initial graph data', err);
-        this.loader = true;
-        this.graphData = {};
-       });
+    });
+    // console.log(nodeObj);
+    return nodeObj;
+
+  }
+
+  private limitChange(limit, popup) {
+    if (limit === "") {
+      this.errorMessage = 'Only valid numbers allowed'
+      popup.open();
+      window.setTimeout(() => {
+        popup.close();
+      }, 3000)
+    } else if (!isNaN(limit)) {
+      this.nodeLimit = parseInt(limit);
+    } else {
+      this.errorMessage = 'Only valid numbers allowed'
+      popup.open();
+      window.setTimeout(() => {
+        popup.close();
+      }, 3000)
     }
 
-    addColors(nodeObj) {
-      // console.log(nodeObj);
-      nodeObj.forEach(node => {
-        if (node.hasOwnProperty('type') && node.type.length > 0 ) {
-          node['color'] = this.colorConfig.defaultColor[node.type[0]];
-        }
-      });
-      // console.log(nodeObj);
-      return nodeObj;
+  }
 
-    }
+  nodeEventCapture(event) {
+    if (Object.keys(event).length > 0) {
 
-    private limitChange(limit, popup){
-      if(limit === ""){
-        this.errorMessage = 'Only valid numbers allowed'
-        popup.open();
-        window.setTimeout(() => {
-          popup.close();
-        }, 3000)
-        }else if(!isNaN(limit)){
-          this.nodeLimit = parseInt(limit);
-        }else {
-          this.errorMessage = 'Only valid numbers allowed'
-          popup.open();
-          window.setTimeout(() => {
-            popup.close();
-          }, 3000)
-        }
-        
+      if (event.action === 'create') {
+        // handle the functionaluty of creating a node
+        this.network.once('click', (clickEvent) => {
+          console.log(clickEvent);
+          // user should be able to fire an event onlyonce per dropdown click
+          if (clickEvent.nodes.length > 0 || clickEvent.edges.length > 0) {
+            // obviously a node cannot be created over another node or edge
+            alert('please click on an empty space to create a node');
+          } else {
+            // user clicked on a good place to  create a node
+            console.log(this.graphData);
+            let updatedNodes = this.graphData['nodes'].add([{
+              id: event.data.id,
+              label: event.data.properties.Name,
+              type: [event.data.type],
+              properties: event.data.properties,
+              title: this.serializeProperties(event.data.properties),
+              x: clickEvent.pointer.canvas.x,
+              y: clickEvent.pointer.canvas.y
+            }]);
+            console.log('new node data ', updatedNodes);
+            console.log(this.graphData['nodes']);
+          }
+        });
+      } else if (event.action === 'edit') {
+        // handle the functionality of editing the node
+      } else if (event.action === 'delete') {
+        // handle the functionality of deleting the node
+      } else {
+        // invalid click event
+        console.error('An invalid click event retrieved ', event);
       }
-      
-    
+    }
+  }
+
+  edgeEventCapture(event) {
+    if (Object.keys(event).length > 0) {
+      console.log('recieved an event ', event);
+    }
+  }
+
+  serializeProperties(propertyObject) {
+    if (propertyObject.constructor === Object) {
+        let finalString = '';
+        _.forOwn(Object.keys(propertyObject), (key) => {
+            if (propertyObject[key].hasOwnProperty('low')) {
+                // if the key has an integer value then set the low value of it
+                propertyObject[key] = propertyObject[key]['low']
+            }
+            finalString += `<strong>${key} :</strong> ${propertyObject[key]} <br>`
+        });
+        return finalString;
+    } else return null
+}
 }

@@ -55,6 +55,7 @@ export class DashboardSidebarComponent implements OnInit {
 
     };
   @Output() eventClicked = new EventEmitter<string>();
+  @Output() nodeTypesEvent = new EventEmitter<Array<any>>();
   nameOptions: Array<string> = [];
   relationOptions: Array<string> = [];
   typeOptions: Array<string> = [];
@@ -104,35 +105,37 @@ export class DashboardSidebarComponent implements OnInit {
       let temunder = [];
       let temrelation = [];
       if (data) {
-        data['Name'].filter(node => {
-          temname.push(node);
+        data['Name'].filter(nodeName => {
+          temname.push(nodeName);
         });
-        data['Type'].filter(node => {
+        data['Type'].filter(nodeType => {
           // let x ={
           //   name:node,
           //   color:this.defaultColor[node]
           // }
-          temtype.push(node);
+          temtype.push(nodeType);
         });
-        data['Status'].filter(node => {
-          temstatus.push(node);
+        data['Status'].filter(nodeStatus => {
+          temstatus.push(nodeStatus);
         });
-        data['Represent'].filter(node => {
-          temrepresent.push(node);
+        data['Represent'].filter(nodeRepresent => {
+          temrepresent.push(nodeRepresent);
         });
-        data['Connection'].filter(node => {
-          temconnection.push(node);
+        data['Connection'].filter(nodeConnection => {
+          temconnection.push(nodeConnection);
         })
-        data['Understanding of SP Thinking'].filter(node => {
-          temunder.push(node);
+        data['Understanding of SP Thinking'].filter(nodeSP => {
+          temunder.push(nodeSP);
         })
-        data['Relationships'].filter(node=>{
-          temrelation.push(node);
+        data['Relationships'].filter(nodeRelations => {
+          temrelation.push(nodeRelations);
         });
       
       }
       this.nameOptions = temname;
       this.typeOptions = temtype;
+      // send the types array for further use to the modals
+      this.nodeTypesEvent.emit(temtype);
       this.representOptions = temrepresent;
       this.connectionOptions = temconnection;
       this.understandingOptions = temunder;

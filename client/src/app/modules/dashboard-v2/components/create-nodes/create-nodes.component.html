@@ -5,7 +5,7 @@
       Node
     </button>
     <div class="dropdown-menu">
-      <a class="dropdown-item create" (click)="createNode()"><span class="fas fa-plus-circle"></span>Create Node</a>
+      <a class="dropdown-item create" (click)="createNode()" data-toggle="modal" data-target="#createNodeModal"><span class="fas fa-plus-circle"></span>Create Node</a>
       <a class="dropdown-item edit" (click)="editNode()"><span class="far fa-edit"></span>Edit Node</a>
       <a class="dropdown-item delete" (click)="deleteNode()"><span class="far fa-trash-alt"></span>Delete Node</a>
     </div>
@@ -21,3 +21,61 @@
     </div>
 </div>
 </div>
+<!--modal template to show when node is to be created-->
+<div class="modal fade" id="createNodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Node</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- <div class="modalItem">
+            <p class="sectionName">
+                Name
+            </p>
+            <span class="inputSpan">
+              <input type="text" id="nameText">
+            </span>
+          </div> -->
+          <div class="modalItem">
+            <p class="sectionName">
+              Type
+            </p>
+           <span class="inputSpan">
+              <sui-multi-select [(ngModel)]="selectedType" (ngModelChange)="updateProperties($event)" [options]="typeOptions" [maxSelected]="1" #type>
+                  <div class="ui icon search input">
+                      <i class="search icon"></i>
+                      <input suiSelectSearch type="text" placeholder="Search Type...">
+                  </div>
+                  <div class="scrolling menu">
+                      <sui-select-option *ngFor="let o of type.filteredOptions" [value]="o">
+
+                      </sui-select-option>
+
+                  </div>
+              </sui-multi-select>
+            </span>
+          </div>
+          <div class="modalItem" *ngIf="labelProperties.length > 0">
+            <h5 class="propertyLabel">
+                Properties <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
+            </h5>
+                <ng-container *ngFor="let data of labelProperties">
+                    <div class="modalItem">
+                        <p class="sectionName">{{data}}</p>
+                        <span class="inputSpan"><input type="text" id="id_{{data}}"></span>
+                    </div>
+              </ng-container>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
+          <button type="button" class="btn btn-primary create" (click)="submitModal()">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--modal node create end-->

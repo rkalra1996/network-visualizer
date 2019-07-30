@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
   public clickedEvent: String;
-
+  public totalTypesArray = [];
   constructor() { }
 
   ngOnInit() {
@@ -15,6 +15,13 @@ export class MainComponent implements OnInit {
   
   childEventClicked(event: String) {
     this.clickedEvent = event;
+  }
+
+  sendTypes(event) {
+    if (!!event && event.length > 0) {
+      console.log('sending types', event);
+      this.totalTypesArray = event;
+    }
   }
 
 }
