@@ -29003,11 +29003,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! d3 */ "../node_modules/d3/index.js");
+/* harmony import */ var src_app_modules_core_services_graph_data_service_graph_data_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/modules/core/services/graph-data-service/graph-data.service */ "./src/app/modules/core/services/graph-data-service/graph-data.service.ts");
+
 
 
 
 var GraphD3VisualizerComponent = /** @class */ (function () {
-    function GraphD3VisualizerComponent() {
+    function GraphD3VisualizerComponent(graphService) {
+        this.graphService = graphService;
+        this.graphData = {};
+        this.data = {};
         this.drag = function (simulation) {
             function dragstarted(d) {
                 if (!d3__WEBPACK_IMPORTED_MODULE_2__["event"].active)
@@ -29032,167 +29037,76 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
         };
     }
     GraphD3VisualizerComponent.prototype.ngOnInit = function () {
-        this.d3SimpleGraph();
+        this.displayInitialGraph();
     };
-    // for simple node graph
+    GraphD3VisualizerComponent.prototype.displayInitialGraph = function () {
+        var _this = this;
+        this.graphService.getInitialDataV2().subscribe(function (result) {
+            console.log('recieved data from graph service', result);
+            if (result.hasOwnProperty('seperateNodes')) {
+                var nodes = [];
+                result['seperateNodes'].filter(function (node) {
+                    nodes.push({ id: node.id, label: node.label });
+                });
+            }
+            _this.graphData['nodes'] = nodes;
+            if (result.hasOwnProperty('seperateEdges')) {
+                var edges = [];
+                result['seperateEdges'].filter(function (edge) {
+                    edges.push({ source: edge.from, target: edge.to, type: edge.type, value: 1 });
+                });
+            }
+            _this.graphData['links'] = edges;
+            console.log('graphData :', _this.graphData);
+            // display data
+            _this.d3SimpleGraph();
+        }, function (err) {
+            console.error('An error occured while retrieving initial graph data', err);
+            _this.graphData = {};
+        });
+    };
     GraphD3VisualizerComponent.prototype.d3SimpleGraph = function () {
         var width = window.innerWidth;
         var height = window.innerHeight;
         var lineLength = 130;
-        var data = {
-            nodes: [
-                {
-                    id: "Sean Connery",
-                    group: 1,
-                },
-                {
-                    id: "Roger Moore",
-                    group: 2,
-                },
-                {
-                    id: "Pierce Brosnan",
-                    group: 3,
-                },
-                {
-                    id: "Ghost Ship",
-                    group: 1,
-                },
-                {
-                    id: "Gestolene Herzen",
-                    group: 2,
-                },
-                {
-                    id: "Band of Brothers",
-                    group: 3,
-                },
-                {
-                    id: "Mit aller Macht",
-                    group: 2,
-                },
-                {
-                    id: "Iron Man",
-                    group: 1,
-                },
-                {
-                    id: "Exit",
-                    group: 3,
-                },
-                {
-                    id: "Mission: Impossible",
-                    group: 2,
-                },
-            ],
-            links: [
-                {
-                    source: "Ghost Ship",
-                    target: "Sean Connery",
-                    type: "Knows",
-                    value: 2,
-                },
-                {
-                    source: "Gestolene Herzen",
-                    target: "Sean Connery",
-                    type: "Knows",
-                    value: 1,
-                },
-                {
-                    source: "Mission: Impossible",
-                    target: "Sean Connery",
-                    type: "Knows",
-                    value: 3,
-                },
-                {
-                    source: "Mit aller Macht",
-                    target: "Roger Moore",
-                    type: "Knows",
-                    value: 1,
-                },
-                {
-                    source: "Band of Brothers",
-                    target: "Pierce Brosnan",
-                    type: "Knows",
-                    value: 1,
-                },
-                {
-                    source: "Sean Connery",
-                    target: "Iron Man",
-                    type: "Freinds",
-                    value: 2,
-                },
-                {
-                    source: "Roger Moore",
-                    target: "Mission: Impossible",
-                    type: "Freinds",
-                    value: 1,
-                },
-                {
-                    source: "Pierce Brosnan",
-                    target: "Exit",
-                    type: "Freinds",
-                    value: 3,
-                },
-                {
-                    source: "Pierce Brosnan",
-                    target: "Pierce Brosnan",
-                    type: "Freinds",
-                    value: 1,
-                },
-                {
-                    source: "Exit",
-                    target: "Sean Connery",
-                    type: "Knows",
-                    value: 3,
-                },
-                {
-                    source: "Sean Connery",
-                    target: "Band of Brothers",
-                    type: "Freinds",
-                    value: 2,
-                },
-                {
-                    source: "Roger Moore",
-                    target: "Band of Brothers",
-                    type: "Freinds",
-                    value: 1,
-                },
-            ],
-        };
         var svg = d3__WEBPACK_IMPORTED_MODULE_2__["select"]('#canvas').append('svg')
             .attr('width', width)
             .attr('height', height);
-        var links = data.links.map(function (d) { return Object.create(d); });
-        var nodes = data.nodes.map(function (d) { return Object.create(d); });
+        var links = this.graphData['links'].map(function (d) { return Object.create(d); });
+        var nodes = this.graphData['nodes'].map(function (d) { return Object.create(d); });
         var tooltip = d3__WEBPACK_IMPORTED_MODULE_2__["select"]("body")
             .append("div")
             .attr("class", "tooltip")
             .style("opacity", 0);
         var simulation = d3__WEBPACK_IMPORTED_MODULE_2__["forceSimulation"](nodes)
             .force("link", d3__WEBPACK_IMPORTED_MODULE_2__["forceLink"](links).id(function (d) { return d['id']; }).distance(lineLength))
-            .force("charge", d3__WEBPACK_IMPORTED_MODULE_2__["forceManyBody"]())
-            .force("center", d3__WEBPACK_IMPORTED_MODULE_2__["forceCenter"](width / 2, height / 2));
+            .force("center", d3__WEBPACK_IMPORTED_MODULE_2__["forceCenter"](width / 2, height / 2))
+            .force("charge", d3__WEBPACK_IMPORTED_MODULE_2__["forceManyBody"]().strength(-800)) // Nodes are attracted one each other of value is > 0
+            .force("collide", d3__WEBPACK_IMPORTED_MODULE_2__["forceCollide"]().strength(.1).radius(45).iterations(1)); // Force that avoids circle overlapping
         var link = svg.append("g")
             .attr("stroke", "#000")
             .attr("stroke-opacity", 0.6)
             .selectAll("line")
             .data(links)
             .join("line")
-            .attr("stroke-width", function (d) { return Math.sqrt(d.value); });
+            .attr("stroke-width", function (d) { return Math.sqrt(d['value']); });
         var node = svg.append("g")
-            .attr("stroke", "#fff")
-            .attr("stroke-width", 1.5)
+            .attr("stroke", "#fff") // for the border of circle
+            .attr("stroke-width", 1.5) // for the border of circle
             .selectAll("circle")
             .data(nodes)
             .join("circle")
-            .attr("r", 15)
-            .attr("fill", this.color())
+            .attr("r", 25) // circle radius
+            .attr("fill", this.color()) // circle color
             .call(this.drag(simulation));
         // node.append("title")
         //     .text(function (d) {return d.id;});
-        node.append("text")
-            .attr("dy", -3)
-            .text(function (d) { return "Name :" + d.label; });
+        // node.append("text")
+        //     .attr("dx", 12)
+        //     .attr("dy", ".3em")
+        //     .text(function (d) {return d['label'];});
         link.append("title")
-            .text(function (d) { return d.type; });
+            .text(function (d) { return d['type']; });
         var edgepaths = svg.selectAll(".edgepath")
             .data(links)
             .enter()
@@ -29216,13 +29130,13 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
             .style('text-anchor', 'middle')
             .style("pointer-events", "none")
             .attr("startOffset", "50%")
-            .text(function (d) { return d.type; });
+            .text(function (d) { return d['type']; });
         simulation.on("tick", function () {
             edgepaths.attr('d', function (d) {
-                return 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y;
+                return 'M ' + d['source'].x + ' ' + d['source'].y + ' L ' + d['target'].x + ' ' + d['target'].y;
             });
             edgelabels.attr('transform', function (d) {
-                if (d.target.x < d.source.x) {
+                if (d['target'].x < d['source'].x) {
                     var bbox = this.getBBox();
                     var rx = bbox.x + bbox.width / 2;
                     var ry = bbox.y + bbox.height / 2;
@@ -29233,18 +29147,18 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
                 }
             });
             link
-                .attr("x1", function (d) { return d.source.x; })
-                .attr("y1", function (d) { return d.source.y; })
-                .attr("x2", function (d) { return d.target.x; })
-                .attr("y2", function (d) { return d.target.y; });
+                .attr("x1", function (d) { return d['source'].x; })
+                .attr("y1", function (d) { return d['source'].y; })
+                .attr("x2", function (d) { return d['target'].x; })
+                .attr("y2", function (d) { return d['target'].y; });
             node
-                .attr("cx", function (d) { return d.x; })
-                .attr("cy", function (d) { return d.y; })
+                .attr("cx", function (d) { return d['x']; })
+                .attr("cy", function (d) { return d['y']; })
                 .on('mouseover.tooltip', function (d) {
                 tooltip.transition()
                     .duration(300)
                     .style("opacity", .8);
-                tooltip.html("Project:" + d.id + "<p/>T:" + d.T + "<p/>Q:" + d.Q)
+                tooltip.html("Project:" + d['id'] + "<p/>T:" + d['T'] + "<p/>Q:" + d['Q'])
                     .style("left", (d3__WEBPACK_IMPORTED_MODULE_2__["event"].pageX) + "px")
                     .style("top", (d3__WEBPACK_IMPORTED_MODULE_2__["event"].pageY + 10) + "px");
             })
@@ -29265,7 +29179,7 @@ var GraphD3VisualizerComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./graph-d3-visualizer.component.html */ "./src/app/modules/dashboard-d3/components/graph-d3-visualizer/graph-d3-visualizer.component.html"),
             styles: [__webpack_require__(/*! ./graph-d3-visualizer.component.scss */ "./src/app/modules/dashboard-d3/components/graph-d3-visualizer/graph-d3-visualizer.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_modules_core_services_graph_data_service_graph_data_service__WEBPACK_IMPORTED_MODULE_3__["GraphDataService"]])
     ], GraphD3VisualizerComponent);
     return GraphD3VisualizerComponent;
 }());
