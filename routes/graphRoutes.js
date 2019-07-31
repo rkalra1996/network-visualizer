@@ -146,4 +146,23 @@ router.get('/graph/labels', (req, res) => {
         })
 })
 
+router.post('/graph/node/create', (req,res) => {
+    console.log('create node hit');
+     // get the body, else return the error that no body is provided
+     if (!!Object.keys(req.body).length) {
+        neo4j.createNode(req)
+            .then(response => {
+                res.send(response);
+            })
+            .catch(err => {
+                console.log('err occured while sending back node create data', err);
+                res.status(400).send(err);
+            });
+    } else {
+        // empty object is not allowed
+        console.log('empty body recieved in the req');
+        res.status(400).send({ 'error': 'Request Body is required to access the API' });
+    }
+})
+
 module.exports = router;

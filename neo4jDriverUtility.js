@@ -647,6 +647,51 @@ function limitBasedInitGraphShow(limitObj) {
     });
 }
 
+function addProperties(properties) {
+    let queries = []
+    Object.keys(properties).forEach(key => {
+        queries.push(`\`${key}\`:"${properties[key]}"`);
+    });
+    
+    return '{' + queries.join(',') + '}';
+}
+
+function createNewNodeQuery(data) {
+    let query = 'merge ';
+    let subQuery = '';
+    
+    // first add the type to  the new node
+    subQuery = `(n:\`${data.type[0]}\` `;
+    subQuery += addProperties(data.properties);
+    subQuery += ') return n';
+    query += subQuery;
+    console.log('\ncomplete query created as ', query + '\n');
+    return query;
+
+}
+
+var createNode = (request) => {
+    // the task is to create a query basis the information provided
+    let data = request.body;
+
+    if(!data.hasOwnProperty('type')) {
+        console.log('API : node/create | ERROR encountered while reading data for creating a node -> type key missing');
+        return Promise.reject({error : 'Cannot create a node without a type'});
+    }
+    else {
+        // a type is present, can go further
+        let query = createNewNodeQuery(data);
+        return runQuery(query).then(response => {
+            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+            return Promise.resolve(serializedData);
+            })
+            .catch(err => {
+                console.log('\nAn error occured while runnning the query for create node', err);
+                return Promise.reject('API : node/create | ERROR : Error encountered while reading from database');
+            });
+    }
+};
+
 module.exports = {
     initiate,
     getData,
@@ -656,5 +701,6 @@ module.exports = {
     getGraphDataV2,
     getDataV2,
     getGraphLabelData,
-    getGraphLabels
+    getGraphLabels,
+    createNode
 }

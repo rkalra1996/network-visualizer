@@ -16,6 +16,7 @@ const neo4j = require('./neo4jDriverUtility');
 app.use(cors());
 
 const graphRoutes = require('./routes/graphRoutes');
+
 app.use('/api', graphRoutes);
 app.use('/v2', express.static(path.join(__dirname, 'client/dist/')));
 
