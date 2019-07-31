@@ -19,11 +19,11 @@ export class ColorPanelComponent implements OnInit {
     // get color panel details
     this.colorSrvc.colorObj$.subscribe(data => {
       this.colorObject = data;
-      console.log('color object is ', this.colorObject);
+      // console.log('color object is ', this.colorObject);
       this.objectKeys = Object.keys(this.colorObject);
 
       this.processColors(this.objectKeys, this.colorObject);
-      console.log('processed color data is ', this.colorData);
+      // console.log('processed color data is ', this.colorData);
     });
   }
 

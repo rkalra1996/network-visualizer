@@ -222,18 +222,30 @@ export class GraphVisualizerComponent implements OnInit {
             alert('please click on an empty space to create a node');
           } else {
             // user clicked on a good place to  create a node
-            console.log(this.graphData);
-            let updatedNodes = this.graphData['nodes'].add([{
+            // console.log(this.graphData);
+            let newNodeData = {
               id: event.data.id,
               label: event.data.properties.Name,
               type: [event.data.type],
-              properties: event.data.properties,
-              title: this.serializeProperties(event.data.properties),
-              x: clickEvent.pointer.canvas.x,
-              y: clickEvent.pointer.canvas.y
-            }]);
-            console.log('new node data ', updatedNodes);
-            console.log(this.graphData['nodes']);
+              properties: event.data.properties
+            };
+
+            //let newNodeForVis = _.cloneDeep(newNodeData);
+            // make a request to create a node, if it succeedes only then show in the graph
+            this.graphService.createNewNode(newNodeData).subscribe(response => {
+              console.log(response);
+              // add additional data for vis layout
+              // newNodeForVis = this.addData(newNodeForVis, clickEvent, event);
+              try {
+                let visNode = this.addData(response['seperateNodes'][0], clickEvent, event);
+                // add the new node to the vis
+                this.graphData['nodes'].add([visNode]);
+              } catch (addErr) {
+                console.log('Error while adding the data node to vis ', addErr['message']);
+              }
+            }, error => {
+              console.error('An error occured while creating node in  database ', error);
+            });
           }
         });
       } else if (event.action === 'edit') {
@@ -266,4 +278,13 @@ export class GraphVisualizerComponent implements OnInit {
         return finalString;
     } else return null
 }
+
+  addData(node, clickEvent, event) {
+    node['x'] = clickEvent.pointer.canvas.x;
+    node['y'] = clickEvent.pointer.canvas.y;
+    // node['title'] = this.serializeProperties(event.data.properties);
+    node['color'] = this.colorConfig.defaultColor[event.data.type];
+    console.log('final node is ', node);
+    return node;
+  }
 }
