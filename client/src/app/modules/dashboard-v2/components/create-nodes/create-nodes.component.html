@@ -122,6 +122,19 @@
                     </div>
               </ng-container>
           </div>
+          <h5 class="propertyLabel">
+            Connection <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
+        </h5>
+          <div class="relationScope">
+            <div class="modalItem">
+              <p class="sectionName">From</p>
+              <span class="inputSpan"><input type="text" id="from_node"></span>
+          </div>
+          <div class="modalItem">
+            <p class="sectionName">To</p>
+            <span class="inputSpan"><input type="text" id="to_node"></span>
+        </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>

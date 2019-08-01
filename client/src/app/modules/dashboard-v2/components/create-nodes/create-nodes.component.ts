@@ -199,7 +199,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   updateRelProperties(event) {
     console.log('type is ', event)
  // fetch the properties of selected type and display it in the dropdown
-  this.typeProperties =  this.getRelProperties(event);
+    this.typeProperties =  this.getRelProperties(event);
   }
   getRelProperties(relType: Array<string>): any {
     if (relType.length > 0) {
