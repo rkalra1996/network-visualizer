@@ -129,6 +129,25 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         throw new Error('Cannot create a node with no details');
       }
   }
+  validateRelationData(relationObj) {
+    if (Object.keys(relationObj).length > 0) {
+      if (relationObj.hasOwnProperty('type') && relationObj.type.length > 0) {
+        if (relationObj.hasOwnProperty('properties') && Object.keys(relationObj.properties).length > 0) {
+          return this.cleanRelationshipData(relationObj);
+        }
+        else {
+          // user did not specify any properties, its okay
+        }
+
+      }
+      else {
+        throw new Error('Cannot create a relation with no Type');
+      }
+    }
+    else {
+      throw new Error ('cannot create a relation with no details');
+    }
+  }
 
   generateID() {
     // this function generates a new id for a the node which will be unique
@@ -172,24 +191,39 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
   }
 
+  removeDirtyData(dataObj) {
+    let newPropertyObject = {};
+    Object.keys(dataObj.properties).forEach(property => {
+      if (property !== null && dataObj.properties[property] !== null) {
+        // remove the id_ prefix in the key
+        property = property.split('id_')[1];
+        newPropertyObject[property] = dataObj.properties['id_' + property];
+      }
+    });
+    return newPropertyObject;
+  }
+
   cleanNodeData(nodeObj) {
     let newPropertyObject = {};
     // remove any null properties
-    Object.keys(nodeObj.properties).forEach(property => {
-      if (property !== null && nodeObj.properties[property] !== null) {
-        // remove the id_ prefix in the key
-        property = property.split('id_')[1];
-        newPropertyObject[property] = nodeObj.properties['id_' + property];
-      }
-    });
+    newPropertyObject = this.removeDirtyData(nodeObj);
     // assign it back to the original data
-    nodeObj.properties = newPropertyObject;
+    nodeObj.properties = _.cloneDeep(newPropertyObject);
     console.log('new properties are ', nodeObj);
     // assign a unique id to the node
     nodeObj['id'] = this.generateID();
     // get the type array removed
     nodeObj['type'] = nodeObj['type'][0];
     return nodeObj;
+  }
+
+  cleanRelationshipData(relation) {
+    let relationshipProperties = {};
+    // remove any null properties
+    relationshipProperties = this.removeDirtyData(relation);
+    relation.properties = _.cloneDeep(relationshipProperties);
+    relation['type'] = relation['type'][0];
+    return relation;
   }
 
   extractTypes(ObjectArray: any): any {
@@ -223,6 +257,41 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       return fetchedProperties;
     } else {
       return [];
+    }
+  }
+
+  submitRelModal() {
+    let nodeData = {
+      Name: null
+    };
+    let relationData = {
+      type: null,
+      properties: {}
+    };
+    let sourceNode = _.cloneDeep(nodeData);
+    let targetNode = _.cloneDeep(nodeData);
+
+    relationData.type = this.selectedType;
+    sourceNode.Name = this.selectedNodeNameSource;
+    targetNode.Name = this.selectedNodeNameTarget;
+
+    // extract properties from modal if entered
+    $('#createRelationModal :text').each(function() {
+      let key = $(this).attr('id') || null;
+      let value = $(this).val() || null;
+      relationData.properties[key] = value;
+      });
+      console.log(relationData);
+
+    try {
+      relationData = this.validateRelationData(relationData);
+      console.log('relationship created is ', relationData);
+      this.edgeBtnEvent.emit({ type: 'click', action: 'create', data: relationData });
+      // hide the modal once the data is created properly
+      $('#createRelationModal').modal('hide');
+    }
+    catch (e) {
+      console.log(e);
     }
   }
 }
