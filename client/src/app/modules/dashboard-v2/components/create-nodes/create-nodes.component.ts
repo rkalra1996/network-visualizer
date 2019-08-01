@@ -26,6 +26,10 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   public relationTypeOptions: Array<any> = [];
   public typeProperties: any[] = [];
   public relationsData: any;
+  public toNames: any[] = [];
+  public fromNames: any[] = [];
+  public selectedNodeNameSource: any;
+  public selectedNodeNameTarget: any;
 
   constructor(private SharedSrvc: SearchService, private graphSrvc: GraphDataService, private cdr: ChangeDetectorRef) {
   }
@@ -197,9 +201,16 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   }
 
   updateRelProperties(event) {
-    console.log('type is ', event)
  // fetch the properties of selected type and display it in the dropdown
     this.typeProperties =  this.getRelProperties(event);
+    // trigger an api to get all the names of the nodes in the graph
+    this.graphSrvc.getNodeNames().subscribe(response => {
+      this.fromNames = this.toNames = response;
+    }, error => {
+      console.log(error);
+      this.fromNames = [];
+      this.toNames = [];
+    });
   }
   getRelProperties(relType: Array<string>): any {
     if (relType.length > 0) {

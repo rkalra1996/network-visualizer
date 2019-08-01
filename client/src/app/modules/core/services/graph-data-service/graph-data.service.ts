@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, pipe } from 'rxjs';
+import { Observable, of, pipe, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PublicHttpService } from '../public/public-http/public-http.service';
 import { HttpHeaders } from '@angular/common/http';
 
 import {throwError} from 'rxjs';
+import * as _ from 'lodash';
 
 // import {PublicHttpService} from '@network-visualizer-core/public-http/PublicHttpService';
 
@@ -317,6 +318,20 @@ export class GraphDataService {
     const url = '/api/graph/relations';
     return this.publicHttp.get(url).pipe(map (data => {
       return data;
+    }));
+  }
+
+  getNodeNames() {
+    return this.getInitialData().pipe(map(data => {
+      let nodeNames = [];
+      if (data.hasOwnProperty('seperateNodes')) {
+        let newData = _.cloneDeep(data['seperateNodes']);
+        newData.forEach(element => {
+          nodeNames.push(element['label']);
+          return element['label'];
+        });
+      }
+      return nodeNames;
     }));
   }
 }

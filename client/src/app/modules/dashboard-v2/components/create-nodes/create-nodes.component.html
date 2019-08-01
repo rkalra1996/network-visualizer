@@ -128,11 +128,37 @@
           <div class="relationScope">
             <div class="modalItem">
               <p class="sectionName">From</p>
-              <span class="inputSpan"><input type="text" id="from_node"></span>
+              <span class="inputSpan">
+                <sui-multi-select [(ngModel)]="selectedNodeName" [options]="fromNames" [maxSelected]="1" #NodeFromName>
+                  <div class="ui icon search input">
+                      <i class="search icon"></i>
+                      <input suiSelectSearch type="text" placeholder="Search Node...">
+                  </div>
+                  <div class="scrolling menu">
+                      <sui-select-option *ngFor="let o of NodeFromName.filteredOptions" [value]="o">
+
+                      </sui-select-option>
+
+                  </div>
+              </sui-multi-select>
+              </span>
           </div>
           <div class="modalItem">
             <p class="sectionName">To</p>
-            <span class="inputSpan"><input type="text" id="to_node"></span>
+            <span class="inputSpan">
+              <sui-multi-select [(ngModel)]="selectedNodeNameTarget" [options]="toNames" [maxSelected]="1" #NodeToName>
+                <div class="ui icon search input">
+                    <i class="search icon"></i>
+                    <input suiSelectSearch type="text" placeholder="Search Node...">
+                </div>
+                <div class="scrolling menu">
+                    <sui-select-option *ngFor="let o of NodeToName.filteredOptions" [value]="o">
+
+                    </sui-select-option>
+
+                </div>
+            </sui-multi-select>
+            </span>
         </div>
           </div>
         </div>
