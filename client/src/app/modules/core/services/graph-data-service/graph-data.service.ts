@@ -312,4 +312,11 @@ export class GraphDataService {
       return throwError('Invalid data provided');
     }
   }
+
+  getGraphRelations(): Observable<any> {
+    const url = '/api/graph/relations';
+    return this.publicHttp.get(url).pipe(map (data => {
+      return data;
+    }));
+  }
 }

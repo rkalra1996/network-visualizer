@@ -1,6 +1,8 @@
-import { Component, OnInit, EventEmitter, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import {SearchService} from './../../../shared/services/search-service/search.service';
 import * as _ from 'lodash';
+import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
+
 declare var $:any;
 
 @Component({
@@ -21,8 +23,11 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   public toolTipText = '';
   public processedData;
   public labelProperties = [];
+  public relationTypeOptions: Array<any> = [];
+  public typeProperties: any[] = [];
+  public relationsData: any;
 
-  constructor(private SharedSrvc: SearchService) {
+  constructor(private SharedSrvc: SearchService, private graphSrvc: GraphDataService, private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -55,7 +60,15 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     this.nodeBtnEvent.emit({ type: 'click', action: 'delete' });
   }
   createRelation() {
-    this.edgeBtnEvent.emit({ type: 'click', action: 'create' });
+      this.graphSrvc.getGraphRelations().subscribe(response => {
+        console.log('response recieved is ', response);
+        this.relationsData = response;
+        const extractedTypes = this.extractTypes(response);
+        // pass it into the options for dropdown
+        this.relationTypeOptions = _.cloneDeep(extractedTypes);
+      }, err => {
+        console.error('An error occured while fetching relations ', err);
+      });
   }
   editRelation() {
     this.edgeBtnEvent.emit({ type: 'click', action: 'edit' });
@@ -175,4 +188,30 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     return nodeObj;
   }
 
+  extractTypes(ObjectArray: any): any {
+    let typesArray = [];
+    ObjectArray.forEach(obj => {
+      typesArray.push(obj['type']);
+    });
+    return typesArray;
+  }
+
+  updateRelProperties(event) {
+    console.log('type is ', event)
+ // fetch the properties of selected type and display it in the dropdown
+  this.typeProperties =  this.getRelProperties(event);
+  }
+  getRelProperties(relType: Array<string>): any {
+    if (relType.length > 0) {
+      let fetchedProperties = [];
+      this.relationsData.forEach(Obj => {
+        if (Obj.type === relType[0]) {
+          fetchedProperties = Obj['properties'];
+        }
+      });
+      return fetchedProperties;
+    } else {
+      return [];
+    }
+  }
 }
