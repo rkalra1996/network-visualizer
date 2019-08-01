@@ -286,6 +286,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     try {
       relationData = this.validateRelationData(relationData);
       console.log('relationship created is ', relationData);
+      // add the source and target nodes of this relation
+      relationData['from'] = sourceNode.Name;
+      relationData['to'] = targetNode.Name;
       this.edgeBtnEvent.emit({ type: 'click', action: 'create', data: relationData });
       // hide the modal once the data is created properly
       $('#createRelationModal').modal('hide');

@@ -314,6 +314,23 @@ export class GraphDataService {
     }
   }
 
+  createNewRelation(relationData) {
+    const url = '/api/graph/relation/create';
+    if (relationData.hasOwnProperty('type') &&  relationData.hasOwnProperty('to') && relationData.hasOwnProperty('from') ) {
+      // data is okay now prepare to send
+      return this.publicHttp.post(url, relationData).pipe(map(data => {
+        if (!!data) {
+          return data;
+        } else {
+          return {response: 'empty'};
+      }
+      }));
+    }
+    else {
+      return throwError('Invalid data provided');
+    }
+  }
+
   getGraphRelations(): Observable<any> {
     const url = '/api/graph/relations';
     return this.publicHttp.get(url).pipe(map (data => {
