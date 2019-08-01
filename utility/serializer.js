@@ -149,15 +149,16 @@ var processRelations = (relations) => {
                     extractedData.push({type : record._fields[0], properties : record._fields[1]});
                 }
             });
-            console.log('extracted fields are ', extractedData);
             return extractedData;
         }
         catch (e) {
             // Error occured while parsing the data
+            console.error('Error occured while parsing the relations data in processRelations() ->', e);
         }
     }
     else {
         // the relations string is empty
+        console.error('Cannot parse an empty string ---> error in processRelations()');
     }
 }
 
