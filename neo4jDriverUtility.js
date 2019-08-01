@@ -692,6 +692,19 @@ var createNode = (request) => {
     }
 };
 
+var getRelations = () => {
+    let query = `match ()-[r]-() with type(r) as relation_types,keys(r) 
+      as relation_properties return distinct relation_types, relation_properties`;
+      return runQuery(query).then(response => {
+        // convert into neovis format and return
+        let serializedData = serializer.processRelations(JSON.stringify(response.records));
+            return Promise.resolve(serializedData);
+      }).catch(err => {
+        console.log('\nAn error occured while runnning the query for get relations', err);
+        return Promise.reject('API : graph/relations | ERROR : Error encountered while reading from database');
+      });
+}
+
 module.exports = {
     initiate,
     getData,
@@ -702,5 +715,6 @@ module.exports = {
     getDataV2,
     getGraphLabelData,
     getGraphLabels,
-    createNode
+    createNode,
+    getRelations
 }

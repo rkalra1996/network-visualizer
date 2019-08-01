@@ -165,4 +165,17 @@ router.post('/graph/node/create', (req,res) => {
     }
 })
 
+router.get('/graph/relations', (req,res) => {
+    console.log('/graph/relations hit');
+    neo4j.getRelations()
+    .then( response => {
+        console.log('sending back  data from /graph/relations')
+        res.send(response);
+    })
+    .catch( error => {
+        console.error('An Error occured while sending back relations data ->', error);
+        res.status(500).send({error : 'Something went wrong while sending back the data'});
+    })
+});
+
 module.exports = router;
