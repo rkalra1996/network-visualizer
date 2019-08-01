@@ -28,3 +28,9 @@ This is the client side of network visualizer for neo4J.
 4. Unzip the folder and paste it in location "neo4j-community-3.3.9/data/databases".
 5. Now open a terminal in the folder "neo4j-community-3.3.9" and run "./bin/neo4j start" (with prefix "sudo" for Linux users) to run the neo4j server.
 6. Open the Neo4j server in the browser at "http://localhost:7474".
+
+# Want to Contribute ?
+
+[ **Please Note** ] Contribution to the project without the consent of the repository owner is strictly probihited. Developers and contributors are welcome to start discussions on the issues reported on github / report new issues / suggest new features or changes to existing one but sending direct PRs without informing the owner will result in direct ban from using the repository or its codebase.
+
+If you want to contribute, feel free to ping the project owners / maintainers or reach out the contributors to get yourself started.
