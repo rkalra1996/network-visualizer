@@ -652,8 +652,13 @@ function addProperties(properties) {
     Object.keys(properties).forEach(key => {
         queries.push(`\`${key}\`:"${properties[key]}"`);
     });
-    
-    return '{' + queries.join(',') + '}';
+    if (queries.length) {
+        return '{' + queries.join(',') + '}';
+    }
+    else {
+        // empty properties , no need to add anything to it
+        return '';
+    }
 }
 
 function createNewNodeQuery(data) {
