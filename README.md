@@ -1,5 +1,13 @@
 # Network-Visualizer
-This is the client side of network visualizer for neo4J.
+
+Network Visulizer is a tool which allows users to manage the graph database (neo4j) from a GUI. It has the capability to visualize the database and make changes to it without interacting with the database directly thus, removing the hassle to manage database using complex queries and much more. This repository is the client side of Network-Visualizer.
+
+
+# Technology Stack used
+
+* Angular 6/7 for UI
+* NodeJS for Backend Development with Express for APIs
+* Neo4j as the core Database
 
 # Installation
 
@@ -16,6 +24,7 @@ This is the client side of network visualizer for neo4J.
 3. Your app will be active on port 4200
 
 ## For Production build (continued from above)
+
 1. Since the server is up, just go to your browser and hit localhost:3050
 
 # Installation and Setup of Neo4j Database
