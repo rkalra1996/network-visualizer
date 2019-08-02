@@ -239,7 +239,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     this.typeProperties =  this.getRelProperties(event);
     // trigger an api to get all the names of the nodes in the graph
     this.graphSrvc.getNodeNames().subscribe(response => {
-      this.fromNames = this.toNames = response;
+      this.fromNames = _.cloneDeep(response);
+      this.toNames = _.cloneDeep(response);
     }, error => {
       console.log(error);
       this.fromNames = [];
@@ -295,6 +296,32 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
     catch (e) {
       console.log(e);
+    }
+  }
+
+  updateList(key,name) {
+    if (name.length > 0) {
+      let ans = '';
+      // if name is selected from source, remove it from target and vice versa
+      if (key == 'from') {
+        ans = _.remove(this.fromNames, (val) => {
+          return val === name[0];
+        });
+        if (ans) {
+          this.fromNames = _.cloneDeep(this.fromNames);
+        }
+      }
+      else if (key == 'to') {
+        ans = _.remove(this.toNames, (val) => {
+          return val === name[0];
+        });
+        if (ans) {
+          this.toNames = _.cloneDeep(this.toNames);
+        }
+      }
+      else {
+        // nothing
+      }
     }
   }
 }

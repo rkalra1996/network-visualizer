@@ -129,7 +129,7 @@
             <div class="modalItem">
               <p class="sectionName">From</p>
               <span class="inputSpan">
-                <sui-multi-select [(ngModel)]="selectedNodeNameSource" [options]="fromNames" [maxSelected]="1" #NodeFromName>
+                <sui-multi-select [(ngModel)]="selectedNodeNameSource" (ngModelChange)="updateList('to',selectedNodeNameSource)" [options]="fromNames" [maxSelected]="1" #NodeFromName>
                   <div class="ui icon search input">
                       <i class="search icon"></i>
                       <input suiSelectSearch type="text" placeholder="Search Node...">
@@ -146,7 +146,7 @@
           <div class="modalItem">
             <p class="sectionName">To</p>
             <span class="inputSpan">
-              <sui-multi-select [(ngModel)]="selectedNodeNameTarget" [options]="toNames" [maxSelected]="1" #NodeToName>
+              <sui-multi-select [(ngModel)]="selectedNodeNameTarget" (ngModelChange)="updateList('from',selectedNodeNameTarget)" [options]="toNames" [maxSelected]="1" #NodeToName>
                 <div class="ui icon search input">
                     <i class="search icon"></i>
                     <input suiSelectSearch type="text" placeholder="Search Node...">

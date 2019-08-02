@@ -150,6 +150,7 @@ export class GraphDataService {
         "MHRD",
         "Mindtree Org",
         "MoHUA",
+        "OxFord",
         "Nasscom Foundation",
         "NIEPA",
         "NIUA",
@@ -339,7 +340,7 @@ export class GraphDataService {
   }
 
   getNodeNames() {
-    return this.getInitialData().pipe(map(data => {
+    return this.getInitialDataV2().pipe(map(data => {
       let nodeNames = [];
       if (data.hasOwnProperty('seperateNodes')) {
         let newData = _.cloneDeep(data['seperateNodes']);
