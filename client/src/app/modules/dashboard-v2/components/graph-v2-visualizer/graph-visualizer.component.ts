@@ -59,8 +59,8 @@ export class GraphVisualizerComponent implements OnInit {
     physics: false,
     edges: {
       smooth: {
-        type: 'continuous',
-        forceDirection: 'none'
+        type: 'dynamic',
+        
       }
     },
     nodes: {
