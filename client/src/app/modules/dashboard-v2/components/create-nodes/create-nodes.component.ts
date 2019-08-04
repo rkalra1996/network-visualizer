@@ -131,7 +131,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         this.updateProperties(this.selectedType);
         const prefilledInfo = this.recreatePrefilledData(this.editData['properties']);
         if (!!prefilledInfo) {
-          console.log('recieved some prefilled info ', prefilledInfo);
+          // console.log('recieved some prefilled info ', prefilledInfo);
           // set the data into the modal
           this.prefillData('createNodeModal', prefilledInfo);
         } else {
@@ -160,13 +160,11 @@ export class CreateNodesComponent implements OnInit, OnChanges {
           // capture the modal text boxes once it is visible
           $(`#${modalID} :text`).each(function() {
             let key = $(this).attr('id') || null;
-            let value = $(this).val() || null;
             if (Object.keys(dataToFill).indexOf(key) > -1) {
               // assign this text box a prefilled value from dataToFill
               $(`[id='${key}']`).val(dataToFill[key]);
             }
-            console.log('key and value are ', `${key} ${value}`);
-              });
+          });
         });
       }
       else {
@@ -297,7 +295,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   updateProperties(event) {
     // fetch the properties of selected label and display it in the dropdown
-    console.log(event)
+    // console.log(event)
     this.labelProperties =  this.getProperties([event]);
   }
 

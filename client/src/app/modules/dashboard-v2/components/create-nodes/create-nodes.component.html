@@ -63,7 +63,7 @@
   </sui-select>
             </span>
           </div>
-          <div class="modalItem" *ngIf="labelProperties.length > 0 && selectedType.length > 0">
+          <div class="modalItem" *ngIf="labelProperties?.length > 0 && selectedType?.length > 0">
             <h5 class="propertyLabel">
                 Properties <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
             </h5>
@@ -78,7 +78,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
           <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true">Create</button>
-          <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true">Create</button>
+          <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true">Update</button>
         </div>
       </div>
     </div>
