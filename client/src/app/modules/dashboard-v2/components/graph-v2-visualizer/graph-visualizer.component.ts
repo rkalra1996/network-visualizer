@@ -53,14 +53,14 @@ export class GraphVisualizerComponent implements OnInit {
     }
   };
 
+  public editNodeData = null;
   public network: any;
   @Output() networkInstance = new EventEmitter<any>();
   private graphOptions = {
     physics: false,
     edges: {
       smooth: {
-        type: 'dynamic',
-        
+        type: 'dynamic'
       }
     },
     nodes: {
@@ -250,7 +250,19 @@ export class GraphVisualizerComponent implements OnInit {
         });
       } else if (event.action === 'edit') {
         // handle the functionality of editing the node
+        console.log('Node edit is being clicked');
+        this.network.once('click', (clickEvent) => {
+          console.log(clickEvent);
+          let clickedNode = this.graphData['nodes'].get(clickEvent.nodes);
+          // if there are multiple nodes one above another, always select the top most one
+          if (clickedNode.length > 0) {
+            clickedNode = _.cloneDeep(clickedNode[0]);
+          }
+          console.log('clicked Node is ', clickedNode);
+          this.startEditProcess(clickedNode);
+        });
       } else if (event.action === 'delete') {
+        console.log('Node delete has been clicked');
         // handle the functionality of deleting the node
       } else {
         // invalid click event
@@ -315,5 +327,11 @@ export class GraphVisualizerComponent implements OnInit {
     node['color'] = this.colorConfig.defaultColor[event.data.type];
     console.log('final node is ', node);
     return node;
+  }
+
+  startEditProcess(clickedNode) {
+    // to extract relevant information and send it back to the edit modal
+    console.log(clickedNode);
+    this.editNodeData = clickedNode;
   }
 }

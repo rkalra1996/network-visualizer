@@ -2,6 +2,8 @@ import { Component, OnInit, EventEmitter, Output, Input, OnChanges, SimpleChange
 import {SearchService} from './../../../shared/services/search-service/search.service';
 import * as _ from 'lodash';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 declare var $:any;
 
@@ -18,7 +20,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   @Input() nodeTypes: Array<any> = [];
   public nodeTypes2: Array<any> = [];
-  public selectedType: any;
+  public selectedType: any = [];
   public typeOptions: Array<any> = [];
   public toolTipText = '';
   public processedData;
@@ -30,6 +32,24 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   public fromNames: any[] = [];
   public selectedNodeNameSource: any;
   public selectedNodeNameTarget: any;
+  public editNodeConfig = {};
+  public deleteNodeConfig = {};
+  public queryObj = {
+    raw: true,
+    query: `MATCH (p) WITH DISTINCT keys(p) AS keys,p
+     with DISTINCT labels(p) as label,keys 
+     UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields,label
+     RETURN collect(allfields),label`
+  };
+  public popupConfig = {
+    createNodePopup : false,
+    editNodePopup : false,
+    deleteNodePopup : false,
+    createRelationPopup : false,
+    editRelationPopup : false,
+    deleteRelationPopup : false
+  };
+  @Input() editData: any;
 
   constructor(private SharedSrvc: SearchService, private graphSrvc: GraphDataService, private cdr: ChangeDetectorRef) {
   }
@@ -40,14 +60,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   }
 
   createNode() {
-    let queryObj = {
-      raw: true,
-      query: `MATCH (p) WITH DISTINCT keys(p) AS keys,p
-       with DISTINCT labels(p) as label,keys 
-       UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields,label
-       RETURN collect(allfields),label`
-    }
-    this.SharedSrvc.runQuery(queryObj).subscribe(data => {
+    this.popupConfig.createNodePopup = true;
+    /* this.SharedSrvc.runQuery(this.queryObj).subscribe(data => {
       console.log('recieved label data from service ', data);
       this.processedData = this.processData(data);
       // extract types from the array
@@ -55,9 +69,16 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.typeOptions = _.cloneDeep(this.nodeTypes2);
     }, err => {
       console.log('An error occured while reading label data from the database');
+    }); */
+    this.getNodeTypes().subscribe(data => {
+      this.typeOptions = _.cloneDeep(data);
+    }, err => {
+      console.log('An error occured while reading label data from the database', err);
+      this.typeOptions = _.cloneDeep([]);
     });
   }
   editNode() {
+    // this will send the edit event and then the app will wait for the node click event sent back to this component
     this.nodeBtnEvent.emit({ type: 'click', action: 'edit' });
   }
   deleteNode() {
@@ -81,34 +102,136 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     this.edgeBtnEvent.emit({ type: 'click', action: 'delete' });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // console.log('Types recieved in create Nodes ', this.nodeTypes);
-    // this.typeOptions = this.nodeTypes2;
+  getNodeTypes() {
+    return this.SharedSrvc.runQuery(this.queryObj).pipe(map(data => {
+      console.log('recieved label data from service ', data);
+      this.processedData = this.processData(data);
+      // extract types from the array
+      this.extractLabels(this.processedData);
+      // this.typeOptions = _.cloneDeep(this.nodeTypes2);
+      return this.nodeTypes2;
+    }));
   }
 
-  submitModal() {
-    let nodeData = {
-      id: null,
-      properties: {},
-      type: null
-    };
-    nodeData.type = this.selectedType;
-    $('#createNodeModal :text').each(function() {
-      let key = $(this).attr('id') || null;
-      let value = $(this).val() || null;
-      nodeData.properties[key] = value;
-        });
+  ngOnChanges(changes: SimpleChanges) {
+    $('#createNodeModal').on('hidden.bs.modal', (e) => {
+      // this event will reset the popupConfig object so that everytime correct data is accessed
+      this.setAllToFalse();
+    });
 
-    console.log(nodeData);
-    try {
-      nodeData = this.validateNodeData(nodeData);
-      console.log('node created is ', nodeData);
-      this.nodeBtnEvent.emit({ type: 'click', action: 'create', data : nodeData });
-      // hide the modal once the data is created properly
-      $('#createNodeModal').modal('hide');
+    if ((!!this.editData && !!this.editData.length) || (!!this.editData && !!Object.keys(this.editData).length)) {
+      // console.log('edit data recieved is ', this.editData);
+      this.editNodeConfig = _.cloneDeep({properties : this.editData['properties'], type : this.editData['type'][0]});
+      // console.log('editNodeConfig is ', this.editNodeConfig);
+      this.selectedType = null;
+      this.getNodeTypes().subscribe(data => {
+        this.typeOptions = _.cloneDeep(data);
+        this.selectedType = this.editNodeConfig['type'];
+        // trigger update properties to show data before hand
+        this.updateProperties(this.selectedType);
+        const prefilledInfo = this.recreatePrefilledData(this.editData['properties']);
+        if (!!prefilledInfo) {
+          console.log('recieved some prefilled info ', prefilledInfo);
+          // set the data into the modal
+          this.prefillData('createNodeModal', prefilledInfo);
+        } else {
+          // will allow the modal to be visible anyway
+          console.error('An error occured while prefilling the data, did not recieve anyhting');
+        }
+      }, err => {
+        console.log('An error occured while reading label data from the database');
+        this.typeOptions = [];
+      });
     }
-    catch (e) {
-      console.log(e);
+  }
+
+  prefillData(modalID, dataToFill) {
+    if (!modalID) {
+      console.warn('cannot prefill data as modal id is not supplied');
+    } else if (!Object.keys(dataToFill).length) {
+      console.warn('Did not recieve any data to prefill');
+    } else {
+      // both are supplied, time to prefill the modal
+      if ($(`#${modalID}`).length) {
+        this.popupConfig.editNodePopup = true;
+        this.showModal(modalID);
+        // found the modal
+        $(`#${modalID}`).on('shown.bs.modal', (event) => {
+          // capture the modal text boxes once it is visible
+          $(`#${modalID} :text`).each(function() {
+            let key = $(this).attr('id') || null;
+            let value = $(this).val() || null;
+            if (Object.keys(dataToFill).indexOf(key) > -1) {
+              // assign this text box a prefilled value from dataToFill
+              $(`[id='${key}']`).val(dataToFill[key]);
+            }
+            console.log('key and value are ', `${key} ${value}`);
+              });
+        });
+      }
+      else {
+        console.warn('did not find any element with provided ID');
+      }
+    }
+  }
+
+  recreatePrefilledData(prefilledData) {
+    // main purpose is to attach id_ to the object keys so that it can be used to find elements in the modal
+    if (Object.keys(prefilledData).length > 0) {
+      // iterate on the keys and rename them
+      let prefilledObj = {};
+      Object.keys(prefilledData).forEach(key => {
+        let newKey = `id_${key}`;
+        prefilledObj[newKey] = prefilledData[key];
+      });
+      return prefilledObj;
+    }
+    else {return null}
+  }
+
+  showModal(modalID) {
+    $(`#${modalID}`).modal('show');
+  }
+
+  setAllToFalse() {
+    Object.keys(this.popupConfig).forEach(key => {
+      if (this.popupConfig[key]) {
+        this.popupConfig[key] = false;
+      }
+    });
+    this.selectedType = _.cloneDeep([]);
+  }
+
+  submitModal(type = 'create') {
+    console.log(type);
+    if (type === 'create') {
+      let nodeData = {
+        id: null,
+        properties: {},
+        type: null
+      };
+      nodeData.type = [this.selectedType];
+      $('#createNodeModal :text').each(function() {
+        let key = $(this).attr('id') || null;
+        let value = $(this).val() || null;
+        nodeData.properties[key] = value;
+          });
+
+      console.log(nodeData);
+      try {
+        nodeData = this.validateNodeData(nodeData);
+        console.log('node created is ', nodeData);
+        this.nodeBtnEvent.emit({ type: 'click', action: 'create', data : nodeData });
+        // hide the modal once the data is created properly
+        $('#createNodeModal').modal('hide');
+        this.popupConfig.createNodePopup = false;
+      }
+      catch (e) {
+        console.log(e);
+      }
+    }
+    else {
+      console.log('edit submit button is clicked');
     }
 
   }
@@ -165,6 +288,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   }
 
   extractLabels(data) {
+    this.nodeTypes2 = [];
     data.forEach(label => {
       this.nodeTypes2.push(label.type[0]);
     });
@@ -173,7 +297,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   updateProperties(event) {
     // fetch the properties of selected label and display it in the dropdown
-    this.labelProperties =  this.getProperties(event);
+    console.log(event)
+    this.labelProperties =  this.getProperties([event]);
   }
 
   getProperties(labelName) {
