@@ -6,6 +6,9 @@ const neoConfig = require('./database_config/config.json');
 //import serializer to serialize for visJS format
 const serializer = require('./utility/serializer');
 
+// import data utility to process data
+const dataUtility = require('./utility/dataUtility');
+
 const { user, password } = neoConfig;
 
 let neo4Jdriver;
@@ -699,7 +702,8 @@ var createNode = (request) => {
     else {
         // a type is present, can go further
         let query = createNewNodeQuery(data);
-        return runQuery(query).then(response => {
+        return runQuery(query)
+        .then(response => {
             let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
             return Promise.resolve(serializedData);
             })
@@ -709,6 +713,28 @@ var createNode = (request) => {
             });
     }
 };
+
+var updateNode = (request) => {
+     // the task is to create a query basis the information provided
+     let data = request.body;
+
+     if(!data.hasOwnProperty('type')) {
+         console.log('API : node/update | ERROR encountered while reading data for updating a node -> type key missing');
+         return Promise.reject({error : 'Cannot update a node without a type'});
+     } else {
+        let query = dataUtility.createUpdateNodeQuery(data);
+        // run the query
+         return runQuery(query)
+         .then(response => {
+            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+            return Promise.resolve(serializedData);
+         })
+         .catch(err => {
+            console.log('\nAn error occured while runnning the query to update a node', err);
+            return Promise.reject('API : node/update | ERROR : Error encountered while reading from database');
+        });
+     }
+}
 
 var createRelation = (request) => {
      // the task is to create a query basis the information provided
@@ -761,6 +787,7 @@ module.exports = {
     getGraphLabelData,
     getGraphLabels,
     createNode,
+    updateNode,
     getRelations,
     createRelation
 }
