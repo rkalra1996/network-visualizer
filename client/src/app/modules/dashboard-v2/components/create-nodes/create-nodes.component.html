@@ -55,7 +55,7 @@
               (ngModelChange)="updateProperties($event)"
               [options]="typeOptions"
               [isSearchable]="searchable"
-              [isDisabled]="disabled"
+              [isDisabled]="disabledBox"
               #select>
       <sui-select-option *ngFor="let option of select.filteredOptions"
                          [value]="option">
@@ -78,7 +78,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
           <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true">Create</button>
-          <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true">Update</button>
+          <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true" id="edit_btn">Update</button>
         </div>
       </div>
     </div>

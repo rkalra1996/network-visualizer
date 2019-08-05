@@ -230,7 +230,7 @@ export class GraphVisualizerComponent implements OnInit {
               properties: event.data.properties
             };
 
-            //let newNodeForVis = _.cloneDeep(newNodeData);
+            // let newNodeForVis = _.cloneDeep(newNodeData);
             // make a request to create a node, if it succeedes only then show in the graph
             this.graphService.createNewNode(newNodeData).subscribe(response => {
               console.log(response);
@@ -241,14 +241,14 @@ export class GraphVisualizerComponent implements OnInit {
                 // add the new node to the vis
                 this.graphData['nodes'].add([visNode]);
               } catch (addErr) {
-                console.log('Error while adding the data node to vis ', addErr['message']);
+                console.error('Error while adding the data node to vis ', addErr['message']);
               }
             }, error => {
               console.error('An error occured while creating node in  database ', error);
             });
           }
         });
-      } else if (event.action === 'edit') {
+      } else if (event.action === 'edit' && !event.hasOwnProperty('process')) {
         // handle the functionality of editing the node
         console.log('Node edit is being clicked');
         this.network.once('click', (clickEvent) => {
@@ -260,6 +260,43 @@ export class GraphVisualizerComponent implements OnInit {
           }
           console.log('clicked Node is ', clickedNode);
           this.startEditProcess(clickedNode);
+        });
+      } else if (event.action === 'edit' && event.hasOwnProperty('process') && event.process === 'complete') {
+        // this will be invoked when the user has clicked on edit feature and submitted the form with new data
+        console.log('edit event captured with new data', event.data);
+        // the process is to first create a node for data base update
+        // once the node is updated , use the updated node from the database to update in the visJS
+        let newNodeData = {
+          id: event.data.id,
+          label: event.data.properties.Name,
+          type: [event.data.type],
+          properties: event.data.properties
+        };
+
+        this.graphService.updateNode(newNodeData).subscribe(response => {
+          console.log('response from update node ', response);
+          try {
+            let updatedNode = response['seperateNodes'][0];
+            // logic to update node in vis data set
+            let visNode = this.graphData['nodes'].get(updatedNode['id']);
+            // update everything except color and id
+            if ([visNode].length == 1) {
+              visNode['properties'] = updatedNode['properties'];
+              visNode['label'] = updatedNode['label'];
+              visNode['title'] = updatedNode['title'];
+              visNode['type'] = updatedNode['type'];
+              console.log('update node details are ', visNode);
+              // node was present, simply update it now
+              this.graphData['nodes'].update(visNode);
+            }
+            console.log(visNode);
+
+          } catch (updateErr) {
+            // any error encountered while updating the node in vis js
+            console.error('Error while upating the data node to vis ', updateErr['message']);
+          }
+        }, err => {
+          console.error('An error occured while updating node in database ', err);
         });
       } else if (event.action === 'delete') {
         console.log('Node delete has been clicked');
@@ -327,6 +364,18 @@ export class GraphVisualizerComponent implements OnInit {
     node['color'] = this.colorConfig.defaultColor[event.data.type];
     console.log('final node is ', node);
     return node;
+  }
+
+  addNodeColor(node) {
+    let colorCode = this.colorConfig.defaultColor[node.type[0]] || null;
+    if (colorCode) {
+      node['color'] = colorCode;
+      return node;
+    }
+    else {
+      console.warn('Error while adding color to the node ', node['label']);
+      return node;
+    }
   }
 
   startEditProcess(clickedNode) {

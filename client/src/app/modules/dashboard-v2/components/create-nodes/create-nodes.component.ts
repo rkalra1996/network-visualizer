@@ -16,6 +16,7 @@ declare var $:any;
 export class CreateNodesComponent implements OnInit, OnChanges {
 
   @Output() nodeBtnEvent = new EventEmitter<any>();
+  public disabledBox = false;
   @Output() edgeBtnEvent = new EventEmitter<any>();
 
   @Input() nodeTypes: Array<any> = [];
@@ -61,6 +62,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   createNode() {
     this.popupConfig.createNodePopup = true;
+    this.disabledBox = false;
     /* this.SharedSrvc.runQuery(this.queryObj).subscribe(data => {
       console.log('recieved label data from service ', data);
       this.processedData = this.processData(data);
@@ -78,6 +80,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     });
   }
   editNode() {
+    this.disabledBox = true;
     // this will send the edit event and then the app will wait for the node click event sent back to this component
     this.nodeBtnEvent.emit({ type: 'click', action: 'edit' });
   }
@@ -121,7 +124,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
     if ((!!this.editData && !!this.editData.length) || (!!this.editData && !!Object.keys(this.editData).length)) {
       // console.log('edit data recieved is ', this.editData);
-      this.editNodeConfig = _.cloneDeep({properties : this.editData['properties'], type : this.editData['type'][0]});
+      this.editNodeConfig = _.cloneDeep({properties : this.editData['properties'], type : this.editData['type'][0], id: this.editData['id']});
       // console.log('editNodeConfig is ', this.editNodeConfig);
       this.selectedType = null;
       this.getNodeTypes().subscribe(data => {
@@ -133,7 +136,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         if (!!prefilledInfo) {
           // console.log('recieved some prefilled info ', prefilledInfo);
           // set the data into the modal
-          this.prefillData('createNodeModal', prefilledInfo);
+          this.prefillData('createNodeModal', prefilledInfo, this.editNodeConfig['id']);
         } else {
           // will allow the modal to be visible anyway
           console.error('An error occured while prefilling the data, did not recieve anyhting');
@@ -145,7 +148,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
   }
 
-  prefillData(modalID, dataToFill) {
+  prefillData(modalID, dataToFill, nodeID) {
     if (!modalID) {
       console.warn('cannot prefill data as modal id is not supplied');
     } else if (!Object.keys(dataToFill).length) {
@@ -163,14 +166,24 @@ export class CreateNodesComponent implements OnInit, OnChanges {
             if (Object.keys(dataToFill).indexOf(key) > -1) {
               // assign this text box a prefilled value from dataToFill
               $(`[id='${key}']`).val(dataToFill[key]);
+              // disable the Name box since it is unique fot the database
+              /* if (key === 'id_Name') {
+                $(`[id='${key}']`).attr('disabled', 'disabled');
+              } */
             }
           });
+          // add id of the node to the modal
+          this.addAttribute('edit_btn', 'node_id', nodeID);
         });
-      }
-      else {
+      } else {
         console.warn('did not find any element with provided ID');
       }
     }
+  }
+
+  addAttribute(elementID, attributeKey,attributeValue) {
+    $(`[id='${elementID}']`).attr(attributeKey, attributeValue);
+
   }
 
   recreatePrefilledData(prefilledData) {
@@ -202,36 +215,33 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   submitModal(type = 'create') {
     console.log(type);
-    if (type === 'create') {
-      let nodeData = {
-        id: null,
-        properties: {},
-        type: null
-      };
-      nodeData.type = [this.selectedType];
-      $('#createNodeModal :text').each(function() {
-        let key = $(this).attr('id') || null;
-        let value = $(this).val() || null;
-        nodeData.properties[key] = value;
-          });
-
-      console.log(nodeData);
-      try {
-        nodeData = this.validateNodeData(nodeData);
+    let nodeData = {
+      id: null,
+      properties: {},
+      type: null
+    };
+    nodeData.type = [this.selectedType];
+    $('#createNodeModal :text').each(function () {
+      let key = $(this).attr('id') || null;
+      let value = $(this).val() || null;
+      nodeData.properties[key] = value;
+    });
+    try {
+      nodeData = this.validateNodeData(nodeData);
+      // hide the modal once the data is created properly
+      $('#createNodeModal').modal('hide');
+      if (type === 'create') {
         console.log('node created is ', nodeData);
-        this.nodeBtnEvent.emit({ type: 'click', action: 'create', data : nodeData });
-        // hide the modal once the data is created properly
-        $('#createNodeModal').modal('hide');
+        this.nodeBtnEvent.emit({ type: 'click', action: 'create', data: nodeData });
         this.popupConfig.createNodePopup = false;
-      }
-      catch (e) {
-        console.log(e);
+      } else if (type === 'edit') {
+        this.nodeBtnEvent.emit({ type: 'click', action: 'edit', data: nodeData, process : 'complete' });
+        this.popupConfig.editNodePopup = false;
       }
     }
-    else {
-      console.log('edit submit button is clicked');
+    catch (e) {
+      console.log(e);
     }
-
   }
 
   validateNodeData(nodeObj) {
@@ -335,6 +345,13 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     console.log('new properties are ', nodeObj);
     // assign a unique id to the node
     nodeObj['id'] = this.generateID();
+    if (this.popupConfig.editNodePopup === true) {
+      // assign the node id
+      this.disabledBox = true;
+      let nodeID = !isNaN($(`#edit_btn`).attr('node_id')) ? $(`#edit_btn`).attr('node_id') : null;
+      console.log('node id is ', nodeID);
+      nodeObj['id'] = nodeID;
+    }
     // get the type array removed
     nodeObj['type'] = nodeObj['type'][0];
     return nodeObj;
