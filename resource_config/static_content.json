@@ -1,0 +1,17 @@
+{
+    "error": {
+        "server" : {
+            "m001": "Cannot create a relation without a type",
+            "m002": "Cannot update a relation without a type",
+            "m003": "Cannot update a relation which doesn't have a source or target"
+        },
+        "API": {
+            "relation" : {
+                "update": {
+                    "a001": "API : relation/update | ERROR : Error encountered while reading from database"
+                }
+            }
+        }
+    },
+    "succcess": {}
+}
