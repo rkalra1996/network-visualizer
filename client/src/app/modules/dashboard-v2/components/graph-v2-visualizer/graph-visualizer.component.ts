@@ -13,6 +13,7 @@ export class GraphVisualizerComponent implements OnInit {
 
   @Input() event: String;
   @Input() totalTypesArray = [];
+  public requestedNodeDetails = null;
   public graphData = {};
   public errorMessage = '';
   public loader = true;
@@ -54,6 +55,7 @@ export class GraphVisualizerComponent implements OnInit {
   };
 
   public editNodeData = null;
+  public editRelationData = null;
   public network: any;
   @Output() networkInstance = new EventEmitter<any>();
   private graphOptions = {
@@ -80,6 +82,13 @@ export class GraphVisualizerComponent implements OnInit {
   ngOnInit() {
     this.loader = true;
     this.displayInitialGraph();
+    this.sharedGraphService.getNodeByIDs.subscribe(nodeIDArray => {
+      // recieved array IDs
+      console.log('recieved array ID for processing ', nodeIDArray);
+      let nodesByIDs = this.getNodeDetails(nodeIDArray);
+      console.log('processed data now is  ', nodesByIDs);
+      this.sharedGraphService.sendNodeDetails(nodesByIDs);
+    }, err => {});
   }
 
   displayInitialGraph() {
@@ -100,11 +109,48 @@ export class GraphVisualizerComponent implements OnInit {
       const container = document.getElementById('graphViewer');
       this.loader = false;
       this.network = new Network(container, this.graphData, this.graphOptions);
+
+      // activating double click event for editing node or relationship
+      this.network.on('doubleClick', (event) => {
+        // if nodes array exists, it is a node edit event else it is edge edit event
+        console.log(event);
+        if (!!event.nodes.length) {
+          // emit node edit event data
+          let clickedNode = this.graphData['nodes'].get(event.nodes);
+          // if there are multiple nodes one above another, always select the top most one
+          if (clickedNode.length > 0) {
+            clickedNode = _.cloneDeep(clickedNode[0]);
+          }
+          console.log('clicked Node is ', clickedNode);
+          this.startEditProcess(clickedNode);
+        }
+        else if (!!event.edges.length) {
+          // emit edge edit event data
+          console.log('Relation edit is being clicked');
+          console.log(event);
+          if (event.nodes.length > 0) {
+            // user clicked on node despite selecting 'edit edge' feature
+            alert('Please click on an edge not a node');
+          } else {
+            console.log('edge click ok');
+            let clickedEdge = this.graphData['edges'].get(event.edges[0]);
+            // if there are multiple nodes one above another, always select the top most one
+            if ([clickedEdge].length > 0) {
+              clickedEdge = _.cloneDeep([clickedEdge][0]);
+            }
+            console.log('clicked Edge is ', clickedEdge);
+            // emit data for edge
+            this.startEditProcess(clickedEdge, 'edge');
+          }
+        }
+      });
     }, err => {
       console.error('An error occured while retrieving initial graph data', err);
       this.loader = true;
       this.graphData = {};
     });
+    // activate double click event for editing a node or a relationship
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -315,8 +361,8 @@ export class GraphVisualizerComponent implements OnInit {
         let newRelationData = {
           type: [event.data.type],
           properties: event.data.properties,
-          from: event.data.from[0],
-          to: event.data.to[0]
+          from: event.data.from,
+          to: event.data.to
         };
         // make a request to create a node, if it succeedes only then show in the graph
         this.graphService.createNewRelation(newRelationData).subscribe(response => {
@@ -325,7 +371,15 @@ export class GraphVisualizerComponent implements OnInit {
           try {
             let visRelation = response['seperateEdges'][0]
             // add the new node to the vis
-            this.graphData['edges'].add([visRelation]);
+            // first get the edge, if it is already present, simply update it else add it
+            let isAlreadyPresent = this.graphData['edges'].get(visRelation['id']);
+            console.log('is already present is  ', isAlreadyPresent);
+            if (isAlreadyPresent !== null) {
+              //update it 
+              this.graphData['edges'].update([visRelation]);
+            } else {
+              this.graphData['edges'].add([visRelation]);
+            }
           } catch (addErr) {
             console.log('Error while adding the data relation to vis ', addErr['message']);
           }
@@ -333,7 +387,37 @@ export class GraphVisualizerComponent implements OnInit {
           console.log('error while reading new relation data from service ', error);
         });
       } else if (event.action === 'edit') {
-        // handle the functionality of editing the node
+        // capture the details of the relationship clicked by the user, clean it if needed and send for use
+        console.log('Relation edit is being clicked');
+        /* this.network.once('click', (clickEvent) => {
+          console.log(clickEvent);
+          if (clickEvent.nodes.length > 0) {
+            // user clicked on node despite selecting 'edit edge' feature
+            alert('Please click on an edge not a node');
+          } else {
+            console.log('edge click ok');
+            let clickedEdge = this.graphData['edges'].get(clickEvent.edges[0]);
+          // if there are multiple nodes one above another, always select the top most one
+            if (clickedEdge.length > 0) {
+              clickedEdge = _.cloneDeep(clickedEdge[0]);
+            }
+            console.log('clicked Edge is ', clickedEdge);
+            // emit data for edge
+            this.startEditProcess(clickedEdge, 'edge');
+          }
+        }); */
+        // hit the update relation service and updae it in visJS too
+        let relationData = _.cloneDeep(event.data);
+        if (relationData.hasOwnProperty('id') && relationData.hasOwnProperty('type')) {
+          // object has atleast id and type key, move ahead
+          this.graphService.updateRelation(relationData).subscribe(response => {
+            let newRelation = response['seperateEdges'][0];
+            console.log('new relation data is ', newRelation);
+            this.updateRelationinVIS(newRelation);
+          }, err => {
+            console.error('An error occured while reading the updated relation data', err);
+          });
+        }
       } else if (event.action === 'delete') {
         // handle the functionality of deleting the node
       } else {
@@ -341,6 +425,13 @@ export class GraphVisualizerComponent implements OnInit {
         console.error('An invalid click event retrieved ', event);
       }
     }
+  }
+
+  updateRelationinVIS(relation) {
+    let oldRelationID = relation['id'];
+    let oldRelation = this.graphData['edges'].get(oldRelationID);
+    console.log('old relation is  ', oldRelation);
+    this.graphData['edges'].update([relation]);
   }
 
   serializeProperties(propertyObject) {
@@ -378,9 +469,25 @@ export class GraphVisualizerComponent implements OnInit {
     }
   }
 
-  startEditProcess(clickedNode) {
+  startEditProcess(clickedData, typeProcess = 'node') {
     // to extract relevant information and send it back to the edit modal
-    console.log(clickedNode);
-    this.editNodeData = clickedNode;
+    console.log(clickedData);
+    if (typeProcess === 'node') {
+      this.editRelationData = null;
+      this.editNodeData = clickedData;
+    }
+    else if (typeProcess === 'edge') {
+      this.editNodeData = null;
+      this.editRelationData = clickedData;
+    }
+  }
+
+  getNodeDetails(nodeIDs) {
+    // process node IDs and send back
+    let changedNodeIDs = nodeIDs.map(nodeID => {
+      return this.graphData['nodes'].get(nodeID);
+    });
+    console.log('post processing ', changedNodeIDs);
+    return changedNodeIDs;
   }
 }

@@ -5,6 +5,8 @@ import { GraphDataService } from 'src/app/modules/core/services/graph-data-servi
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import {SharedGraphService} from './../../../core/services/shared-graph.service';
+
 declare var $:any;
 
 @Component({
@@ -17,6 +19,10 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   @Output() nodeBtnEvent = new EventEmitter<any>();
   public disabledBox = false;
+  public disabledFromBox = false;
+  public disabledToBox = false;
+  public relationSourceNode = null;
+  public relationTargetNode = null;
   @Output() edgeBtnEvent = new EventEmitter<any>();
 
   @Input() nodeTypes: Array<any> = [];
@@ -51,8 +57,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     deleteRelationPopup : false
   };
   @Input() editData: any;
+  @Input() editRelData: any;
 
-  constructor(private SharedSrvc: SearchService, private graphSrvc: GraphDataService, private cdr: ChangeDetectorRef) {
+  constructor(private SharedSrvc: SearchService, private graphSrvc: GraphDataService, private sharedGraphSrvc: SharedGraphService) {
   }
 
   ngOnInit() {
@@ -88,16 +95,11 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     this.nodeBtnEvent.emit({ type: 'click', action: 'delete' });
   }
   createRelation() {
-      this.graphSrvc.getGraphRelations().subscribe(response => {
-        console.log('response recieved is ', response);
-        this.relationsData = response;
-        const extractedTypes = this.extractTypes(response);
-        // pass it into the options for dropdown
-        this.relationTypeOptions = _.cloneDeep(extractedTypes);
-      }, err => {
-        console.error('An error occured while fetching relations ', err);
-      });
+    this.popupConfig.createRelationPopup = true;
+    this.disabledBox = false;
+    this.getRelationTypes().subscribe(data => {});
   }
+
   editRelation() {
     this.edgeBtnEvent.emit({ type: 'click', action: 'edit' });
   }
@@ -116,15 +118,41 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }));
   }
 
+  getRelationTypes() {
+    return this.graphSrvc.getGraphRelations().pipe(map(response => {
+      this.relationsData = response;
+      const extractedTypes = this.extractTypes(response);
+      // pass it into the options for dropdown
+      this.relationTypeOptions = _.cloneDeep(extractedTypes);
+      return true;
+    }, err => {
+      console.error('An error occured while fetching relations ', err);
+      throw Error();
+    }));
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     $('#createNodeModal').on('hidden.bs.modal', (e) => {
       // this event will reset the popupConfig object so that everytime correct data is accessed
       this.setAllToFalse();
+      this.disabledBox = false;
+    });
+    $('#createRelationModal').on('hidden.bs.modal', (e) => {
+      // this event will reset the popupConfig object so that everytime correct data is accessed
+      this.setAllToFalse();
+      this.disabledBox = false;
+      this.disabledFromBox = false;
+      this.disabledToBox = false;
     });
 
     if ((!!this.editData && !!this.editData.length) || (!!this.editData && !!Object.keys(this.editData).length)) {
+      this.disabledBox = true;
       // console.log('edit data recieved is ', this.editData);
-      this.editNodeConfig = _.cloneDeep({properties : this.editData['properties'], type : this.editData['type'][0], id: this.editData['id']});
+      this.editNodeConfig = _.cloneDeep({
+        properties : this.editData['properties'],
+        type : this.editData['type'][0],
+        id: this.editData['id']
+      });
       // console.log('editNodeConfig is ', this.editNodeConfig);
       this.selectedType = null;
       this.getNodeTypes().subscribe(data => {
@@ -145,10 +173,77 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         console.log('An error occured while reading label data from the database');
         this.typeOptions = [];
       });
+    } else if ((!!this.editRelData && !!this.editRelData.length) || (!!this.editRelData && !!Object.keys(this.editRelData).length)) {
+      // execute this portion if edit relationship is triggred
+      this.popupConfig.editRelationPopup = true;
+      console.log('recieved edit relation data is ', this.editRelData);
+      this.disabledBox = true;
+      let editRelConfig = {
+        id : this.editRelData['id'],
+        type : this.editRelData['type'],
+        properties : this.editRelData['properties'],
+        from : this.editRelData['from'],
+        to : this.editRelData['to']
+      };
+
+      this.getRelationTypes().subscribe(response => {
+      console.log('fetched relationship types successfully');
+      // once types are loaded, set a default type which is the type of selected relation
+      // relationTypeOptions are already set
+      this.selectedType = editRelConfig['type'];
+      this.updateRelProperties(this.selectedType);
+      const prefilledRelInfo = this.recreatePrefilledData(editRelConfig['properties']);
+
+      // disable the from and to boxes
+      this.disabledFromBox = true;
+      this.disabledToBox = true;
+
+      if (!!prefilledRelInfo) {
+        // console.log('recieved some prefilled info ', prefilledRelInfo);
+        // set the data into the modal
+        this.prefillData('createRelationModal', prefilledRelInfo, editRelConfig['id'], 'relation');
+      } else {
+        // will allow the modal to be visible anyway
+        console.error('An error occured while prefilling the relation data, did not recieve anyhting');
+      }
+
+      // prefill the connected nodes names for the selected relationship modal
+      this.prefillConnectedNodes(editRelConfig);
+      this.sharedGraphSrvc.nodeDetails.subscribe(nodeDetailsArray => {
+        // this variable will have arrays of nodes in same sequesnce the ids were sent
+        console.log('recieved connected node information', nodeDetailsArray);
+        this.selectedNodeNameSource = nodeDetailsArray[0]['label'] || '';
+        this.selectedNodeNameTarget = nodeDetailsArray[1]['label'] || '';
+      });
+
+    }, err => {
+      console.warn('An error occured while setting the types in the dropdown');
+    });
+      // open the edit modal
+      this.disabledBox = true;
+      this.showModal('createRelationModal');
     }
   }
 
-  prefillData(modalID, dataToFill, nodeID) {
+  prefillConnectedNodes(RelationData) {
+    if (RelationData.hasOwnProperty('from') && RelationData.hasOwnProperty('to')) {
+      let nodeIDs = _.cloneDeep([RelationData['from'], RelationData['to']]);
+      this.fetchNodeNameFromID(nodeIDs);
+    }
+  }
+
+  fetchNodeNameFromID(nodeIDArray) {
+    // this function will send the node id to the graph visualilzer which has all the information of the nodes
+    // the graph visualizer will fetch the node details using the provided node id and send the details back here
+    if (!!nodeIDArray.length) {
+      console.log('asking for details of ', nodeIDArray);
+      this.sharedGraphSrvc.getNodeDetails(nodeIDArray);
+    } else {
+      console.warn('nodeID was not valid while sending event to read node details');
+    }
+  }
+
+  prefillData(modalID, dataToFill, IDToSupply, type = 'node') {
     if (!modalID) {
       console.warn('cannot prefill data as modal id is not supplied');
     } else if (!Object.keys(dataToFill).length) {
@@ -173,7 +268,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
             }
           });
           // add id of the node to the modal
-          this.addAttribute('edit_btn', 'node_id', nodeID);
+          this.addAttribute('edit_btn', `${type}_id`, IDToSupply);
         });
       } else {
         console.warn('did not find any element with provided ID');
@@ -181,7 +276,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
   }
 
-  addAttribute(elementID, attributeKey,attributeValue) {
+  addAttribute(elementID, attributeKey, attributeValue) {
     $(`[id='${elementID}']`).attr(attributeKey, attributeValue);
 
   }
@@ -376,7 +471,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   updateRelProperties(event) {
  // fetch the properties of selected type and display it in the dropdown
-    this.typeProperties =  this.getRelProperties(event);
+    this.typeProperties =  this.getRelProperties([event]);
     // trigger an api to get all the names of the nodes in the graph
     this.graphSrvc.getNodeNames().subscribe(response => {
       this.fromNames = _.cloneDeep(response);
@@ -393,6 +488,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.relationsData.forEach(Obj => {
         if (Obj.type === relType[0]) {
           fetchedProperties = Obj['properties'];
+          return fetchedProperties;
         }
       });
       return fetchedProperties;
@@ -401,20 +497,29 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
   }
 
-  submitRelModal() {
-    let nodeData = {
-      Name: null
-    };
-    let relationData = {
+  submitRelModal(type = 'create') {
+    let nodeData = null;
+    let relationData = null;
+    let sourceNode = null;
+    let targetNode = null;
+
+    if (type === 'create') {
+      nodeData = {
+        Name: null
+      };
+      sourceNode = _.cloneDeep(nodeData);
+      targetNode = _.cloneDeep(nodeData);
+      sourceNode.Name = this.selectedNodeNameSource;
+      targetNode.Name = this.selectedNodeNameTarget;
+    }
+
+    relationData = {
       type: null,
       properties: {}
     };
-    let sourceNode = _.cloneDeep(nodeData);
-    let targetNode = _.cloneDeep(nodeData);
 
-    relationData.type = this.selectedType;
-    sourceNode.Name = this.selectedNodeNameSource;
-    targetNode.Name = this.selectedNodeNameTarget;
+    relationData.type = [this.selectedType];
+
 
     // extract properties from modal if entered
     $('#createRelationModal :text').each(function() {
@@ -428,9 +533,13 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       relationData = this.validateRelationData(relationData);
       console.log('relationship created is ', relationData);
       // add the source and target nodes of this relation
-      relationData['from'] = sourceNode.Name;
-      relationData['to'] = targetNode.Name;
-      this.edgeBtnEvent.emit({ type: 'click', action: 'create', data: relationData });
+      if (type === 'create') {
+        relationData['from'] = sourceNode.Name;
+        relationData['to'] = targetNode.Name;
+      }
+      const relationID = !isNaN($(`#edit_btn`).attr('relation_id')) ? $(`#edit_btn`).attr('relation_id') : null;
+      relationData['id'] = relationID;
+      this.edgeBtnEvent.emit({ type: 'click', action: `${type}`, data: relationData });
       // hide the modal once the data is created properly
       $('#createRelationModal').modal('hide');
     }

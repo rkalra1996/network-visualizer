@@ -332,6 +332,21 @@ export class GraphDataService {
     }
   }
 
+  updateRelation(relationData) {
+    const url = '/api/graph/relation/update';
+    if (relationData.hasOwnProperty('id') && relationData.hasOwnProperty('type')) {
+      return this.publicHttp.post(url, relationData).pipe(map(data => {
+        if (!!data) {
+          return data;
+        } else {
+          return {response : 'empty'};
+        }
+      }));
+    } else {
+      return throwError('Incomplete data provided');
+    }
+  }
+
   createNewRelation(relationData) {
     const url = '/api/graph/relation/create';
     if (relationData.hasOwnProperty('type') &&  relationData.hasOwnProperty('to') && relationData.hasOwnProperty('from') ) {
