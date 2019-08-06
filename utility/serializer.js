@@ -120,7 +120,7 @@ function processEdges(edgeArray) {
                     to: edge.end.low,
                     properties: edge.properties || null,
                     type: edge.type || null,
-                    identity: edge.identity || null,
+                    id: edge.identity.low || null,
                     label: edge.type || 'Name not available',
                     arrows: 'to',
                     font: { align: 'bottom' },

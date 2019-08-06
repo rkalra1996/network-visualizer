@@ -203,6 +203,25 @@ router.post('/graph/relation/create', (req,res) => {
 
 });
 
+router.post('/graph/relation/update', (req,res) => {
+    console.log('update relation hit');
+    // get the body, else return the error that no body is provided
+    if (!!Object.keys(req.body).length) {
+        neo4j.updateRelationship(req)
+            .then(response => {
+                res.send(response);
+            })
+            .catch(err => {
+                console.log('err occured while sending back relation update data', err);
+                res.status(400).send(err);
+            });
+    } else {
+        // empty object is not allowed
+        console.log('empty body recieved in the req');
+        res.status(400).send({ 'error': 'Request Body is required to access the API' });
+    }
+});
+
 router.get('/graph/relations', (req,res) => {
     console.log('/graph/relations hit');
     neo4j.getRelations()

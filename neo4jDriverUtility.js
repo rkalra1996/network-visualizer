@@ -3,6 +3,9 @@ const neo4j = require('neo4j-driver').v1;
 //import config file for database
 const neoConfig = require('./database_config/config.json');
 
+// import static strings
+const messages = require('./resource_config/static_content.json');
+
 //import serializer to serialize for visJS format
 const serializer = require('./utility/serializer');
 
@@ -682,11 +685,14 @@ function createNewRelationQuery(data) {
     let source = data.from; 
     let target = data.to;
     let relationType = data.type[0];
-    let subQuery = addProperties(data.properties);
-    let query = `MATCH (source),(target)
-    WHERE source.Name = "${source}" AND target.Name = "${target}"
-    MERGE (source)-[r:\`${relationType}\` ${subQuery}]->(target)
-    RETURN source,target,r`;
+    // let subQuery = addProperties(data.properties);
+    let subQuery = dataUtility.processProperties('r',data.properties);
+    // `merge (source)-[r:\`${data.type[0]}\`]-(target)`
+    let query = `Match (source {Name: "${source}"}),(target {Name: "${target}"})
+    MERGE (source)-[r: \`${relationType}\`]->(target)
+    ON CREATE SET ${subQuery}
+    ON MATCH SET ${subQuery}
+    RETURN source,target,r`
     console.log('\nfinal query is ', query + '\n');
     return query;
 }
@@ -742,7 +748,7 @@ var createRelation = (request) => {
 
      if(!data.hasOwnProperty('type')) {
          console.log('API : node/create | ERROR encountered while reading data for creating a relation -> type key missing');
-         return Promise.reject({error : 'Cannot create a relation without a type'});
+         return Promise.reject({error : messages.error.server.m001});
      } else {
          if (!data.hasOwnProperty('from') || !data.hasOwnProperty('to')) {
             console.log('API : node/create | ERROR encountered while reading data for creating a relation -> either of "to"  or "from" key missing');
@@ -776,6 +782,44 @@ var getRelations = () => {
       });
 }
 
+var updateRelationship = (request) => {
+    // the task is to create a query basis the information provided
+    let data = request.body;
+
+    if(!data.hasOwnProperty('type') || !data.hasOwnProperty('id')) {
+        console.log('API : relation/update | ERROR encountered while reading data for updating a relation -> type key or id missing');
+        return Promise.reject({error : messages.error.server.m002});
+    } else {
+            // data has all three, now proceed
+            // a type is present, can go further
+       let query = dataUtility.createUpdateRelationQuery(data);
+       return runQuery(query).then(response => {
+           let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+           return Promise.resolve(serializedData);
+           })
+           .catch(err => {
+               console.log('\nAn error occured while runnning the query for create node', err);
+               return Promise.reject(messages.error.API.relation.update.a001);
+           });
+        /* if (!data.hasOwnProperty('from') || !data.hasOwnProperty('to')) {
+           console.log('API : relation/update | ERROR encountered while reading data for updating a relation -> either of "to"  or "from" key missing');
+           return Promise.reject({error : messages.error.server.m003});
+        } else {
+            // data has all three, now proceed
+            // a type is present, can go further
+       let query = dataUtility.createUpdateRelationQuery(data);
+       return runQuery(query).then(response => {
+           let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+           return Promise.resolve(serializedData);
+           })
+           .catch(err => {
+               console.log('\nAn error occured while runnning the query for create node', err);
+               return Promise.reject(messages.error.API.relation.update.a001);
+           });
+        } */
+    }
+}
+
 module.exports = {
     initiate,
     getData,
@@ -789,5 +833,6 @@ module.exports = {
     createNode,
     updateNode,
     getRelations,
-    createRelation
+    createRelation,
+    updateRelationship
 }
