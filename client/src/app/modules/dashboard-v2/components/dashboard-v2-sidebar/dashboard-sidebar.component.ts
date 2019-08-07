@@ -153,7 +153,13 @@ export class DashboardSidebarComponent implements OnInit {
             "International Agency"
           ]
      this.typeOptions = temtype;
-    // this.relationOptions = temrelation;
+     temrelation = [
+          "Advisory",
+          "Collaborator",
+          "Partner",
+          "Service Provider"
+        ]
+     this.relationOptions = temrelation;
     });
   }
 
