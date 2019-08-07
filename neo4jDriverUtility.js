@@ -820,6 +820,31 @@ var updateRelationship = (request) => {
     }
 }
 
+var deleteNode = (request) => {
+    let data = request.body;
+    // delete will precisely work like update, it will set the deleted property to true
+    if (data.hasOwnProperty('id')) {
+        //id of node is present, continue
+        // find the node with id
+        // set the deleted property to true
+        let query = dataUtility.createDeleteNodeQuery(data.id);
+        return runQuery(query).then(response => {
+            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+            return Promise.resolve(serializedData);
+            })
+            .catch(err => {
+                console.log('\nAn error occured while runnning the query for delete node', err);
+                return Promise.reject(messages.error.API.node.delete.c001);
+            });
+    }
+    else {
+        console.log('cannot delete a node without specifying an id');
+        return Promise.reject({error : messages.error.server.m004});
+    }
+}
+
+var deleteRelationhip = (request) => {}
+
 module.exports = {
     initiate,
     getData,
@@ -834,5 +859,7 @@ module.exports = {
     updateNode,
     getRelations,
     createRelation,
-    updateRelationship
+    updateRelationship,
+    deleteNode,
+    deleteRelationhip
 }

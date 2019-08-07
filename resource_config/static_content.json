@@ -3,13 +3,22 @@
         "server" : {
             "m001": "Cannot create a relation without a type",
             "m002": "Cannot update a relation without a type",
-            "m003": "Cannot update a relation which doesn't have a source or target"
+            "m003": "Cannot update a relation which doesn't have a source or target",
+            "m004": "cannot delete a node without specifying an id"
         },
         "API": {
             "relation" : {
                 "update": {
                     "a001": "API : relation/update | ERROR : Error encountered while reading from database"
                 }
+            },
+            "node" : {
+                "update" : {},
+                "create" : {},
+                "delete" : {
+                    "c001": "API : node/delete | ERROR : Error encountered while reading from database"
+                },
+                "read" : {}
             }
         }
     },

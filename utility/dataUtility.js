@@ -22,6 +22,7 @@ var processProperties = (objectName, dataProperties, addBrackets = false) => {
     else return '';
 }
 
+// deprecated , processProperties now has this capability
 function quickQuery(objectName,properties,) {
     let queryArr = [];
     Object.keys(properties).forEach(key => {
@@ -69,8 +70,20 @@ var createUpdateRelationQuery = (data) => {
     }
 } 
 
+var createDeleteNodeQuery = (nodeID) => {
+    if (!!nodeID) {
+        let query = `match (source) where id(source) = ${nodeID} set source.\`deleted\` = true return source`;
+        return query;
+    }
+    else return '';
+}
+
+var createDeleteRelationQuery = (relationID) => {}
+
 module.exports = {
     createUpdateNodeQuery,
     createUpdateRelationQuery,
+    createDeleteNodeQuery,
+    createDeleteRelationQuery,
     processProperties
 }
