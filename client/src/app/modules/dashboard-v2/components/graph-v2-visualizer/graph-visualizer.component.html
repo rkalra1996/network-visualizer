@@ -9,6 +9,10 @@
     <div class="creationToolbar">
         <app-create-nodes [nodeTypes]="totalTypesArray" [editData]="editNodeData" [editRelData]="editRelationData" [hideDelModal]="hideDelModal" (nodeBtnEvent)="nodeEventCapture($event)" (edgeBtnEvent)="edgeEventCapture($event)"></app-create-nodes>
     </div>
+    <!-- graph exporter -->
+    <div class="export">
+        <app-graph-exporter></app-graph-exporter>
+    </div>
 </div>
 <div class="graph-container" id="graphViewer">
 </div>
