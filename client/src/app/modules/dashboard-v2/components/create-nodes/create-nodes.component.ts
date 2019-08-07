@@ -413,7 +413,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
           fetchedProperties = labelObj.properties;
         }
       });
-      return fetchedProperties;
+      return fetchedProperties.filter(ele => {
+        return ele !== 'deleted';
+    });
     }
     else {
       return [];
@@ -492,7 +494,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
           return fetchedProperties;
         }
       });
-      return fetchedProperties;
+      return fetchedProperties.filter(el => {
+        return el !== 'deleted';
+      });
     } else {
       return [];
     }

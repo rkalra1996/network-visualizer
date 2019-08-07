@@ -72,9 +72,6 @@ function serializeProperties(propertyObject) {
 
 function processNodes(nodeArray) {
     let processedNode = [];
-    console.log("done");
-    var x = 5;
-    console.log(x);
     let preprocessedNodeFiltered = [];
     if (nodeArray.length > 0) {
         // serialize edges accordingly
@@ -91,9 +88,14 @@ function processNodes(nodeArray) {
                     id: node.identity.low,
                     label: node.properties.Name || 'No Name',
                     font: { align: 'middle' },
-                    value: 30,
-                    title: serializeProperties(node.properties),
+                    value: 30
                 }
+                // remove the deleted property as it is not required in the frontend
+                if (preprocessedNode.properties.hasOwnProperty('deleted')) {
+                    delete preprocessedNode.properties.deleted;
+                }
+                //add the new title veresion of properties
+                preprocessedNode['title'] = serializeProperties(preprocessedNode.properties);
                 return preprocessedNode;
             });
             // make them unique
@@ -124,9 +126,13 @@ function processEdges(edgeArray) {
                     label: edge.type || 'Name not available',
                     arrows: 'to',
                     font: { align: 'bottom' },
-                    title: serializeProperties(edge.properties),
                     color: colorManager.getEdgeColors(edge.type)
                 }
+                if (preprocessedEdge.properties.hasOwnProperty('deleted')) {
+                    delete preprocessedEdge.properties.deleted;
+                }
+                // add the text format of updated properties
+                preprocessedEdge['title'] = serializeProperties(preprocessedEdge.properties);
                 return preprocessedEdge;
             });
         } catch (e) {
