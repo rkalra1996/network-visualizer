@@ -8,6 +8,8 @@ const messages = require('./resource_config/static_content.json');
 
 //import serializer to serialize for visJS format
 const serializer = require('./utility/serializer');
+const serializerv2 = require('./utility/serializerv2');
+const labelSerializer = require('./utility/labelSerializer/labelSerializer');
 
 // import data utility to process data
 const dataUtility = require('./utility/dataUtility');
@@ -588,12 +590,12 @@ function runQueryWithTypesV2(dataObj) {
 var getGraphLabelData = (query) => {
     let queryStatement = '';
 
-    queryStatement = `Match(n) RETURN n.Name,n.Connection,n.status,n.Represent,n.Url,n.\`Understanding of SP Thinking\`,labels(n) ORDER BY labels(n)`;
+    queryStatement = `Match(n) RETURN n.Name,n.Connection,n.Status,n.Represent,n.Url,n.\`Understanding of SP Thinking\`,labels(n) ORDER BY labels(n)`;
 
-    console.log('query for lable is ', queryStatement);
+    console.log('query for label is ', queryStatement);
 
     return runQuery(queryStatement).then(result => {
-        let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+        let serializedData = serializerv2.Neo4JtoVisFormat(JSON.stringify(result.records));
         return new Promise((resolve, reject) => {
             resolve(serializedData);
         });
@@ -660,8 +662,7 @@ function addProperties(properties) {
     });
     if (queries.length) {
         return '{' + queries.join(',') + '}';
-    }
-    else {
+    } else {
         // empty properties , no need to add anything to it
         return '';
     }
@@ -670,7 +671,7 @@ function addProperties(properties) {
 function createNewNodeQuery(data) {
     let query = 'merge ';
     let subQuery = '';
-    
+
     // first add the type to  the new node
     subQuery = `(n:\`${data.type[0]}\` `;
     subQuery += addProperties(data.properties);
@@ -682,11 +683,11 @@ function createNewNodeQuery(data) {
 }
 
 function createNewRelationQuery(data) {
-    let source = data.from; 
+    let source = data.from;
     let target = data.to;
     let relationType = data.type[0];
     // let subQuery = addProperties(data.properties);
-    let subQuery = dataUtility.processProperties('r',data.properties);
+    let subQuery = dataUtility.processProperties('r', data.properties);
     // `merge (source)-[r:\`${data.type[0]}\`]-(target)`
     let query = `Match (source {Name: "${source}"}),(target {Name: "${target}"})
     MERGE (source)-[r: \`${relationType}\`]->(target)
@@ -701,17 +702,16 @@ var createNode = (request) => {
     // the task is to create a query basis the information provided
     let data = request.body;
 
-    if(!data.hasOwnProperty('type')) {
+    if (!data.hasOwnProperty('type')) {
         console.log('API : node/create | ERROR encountered while reading data for creating a node -> type key missing');
-        return Promise.reject({error : 'Cannot create a node without a type'});
-    }
-    else {
+        return Promise.reject({ error: 'Cannot create a node without a type' });
+    } else {
         // a type is present, can go further
         let query = createNewNodeQuery(data);
         return runQuery(query)
-        .then(response => {
-            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
-            return Promise.resolve(serializedData);
+            .then(response => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                return Promise.resolve(serializedData);
             })
             .catch(err => {
                 console.log('\nAn error occured while runnning the query for create node', err);
@@ -721,86 +721,86 @@ var createNode = (request) => {
 };
 
 var updateNode = (request) => {
-     // the task is to create a query basis the information provided
-     let data = request.body;
+    // the task is to create a query basis the information provided
+    let data = request.body;
 
-     if(!data.hasOwnProperty('type')) {
-         console.log('API : node/update | ERROR encountered while reading data for updating a node -> type key missing');
-         return Promise.reject({error : 'Cannot update a node without a type'});
-     } else {
+    if (!data.hasOwnProperty('type')) {
+        console.log('API : node/update | ERROR encountered while reading data for updating a node -> type key missing');
+        return Promise.reject({ error: 'Cannot update a node without a type' });
+    } else {
         let query = dataUtility.createUpdateNodeQuery(data);
         // run the query
-         return runQuery(query)
-         .then(response => {
-            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
-            return Promise.resolve(serializedData);
-         })
-         .catch(err => {
-            console.log('\nAn error occured while runnning the query to update a node', err);
-            return Promise.reject('API : node/update | ERROR : Error encountered while reading from database');
-        });
-     }
+        return runQuery(query)
+            .then(response => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                return Promise.resolve(serializedData);
+            })
+            .catch(err => {
+                console.log('\nAn error occured while runnning the query to update a node', err);
+                return Promise.reject('API : node/update | ERROR : Error encountered while reading from database');
+            });
+    }
 }
 
 var createRelation = (request) => {
-     // the task is to create a query basis the information provided
-     let data = request.body;
+    // the task is to create a query basis the information provided
+    let data = request.body;
 
-     if(!data.hasOwnProperty('type')) {
-         console.log('API : node/create | ERROR encountered while reading data for creating a relation -> type key missing');
-         return Promise.reject({error : messages.error.server.m001});
-     } else {
-         if (!data.hasOwnProperty('from') || !data.hasOwnProperty('to')) {
+    if (!data.hasOwnProperty('type')) {
+        console.log('API : node/create | ERROR encountered while reading data for creating a relation -> type key missing');
+        return Promise.reject({ error: messages.error.server.m001 });
+    } else {
+        if (!data.hasOwnProperty('from') || !data.hasOwnProperty('to')) {
             console.log('API : node/create | ERROR encountered while reading data for creating a relation -> either of "to"  or "from" key missing');
-            return Promise.reject({error : 'Cannot create a relation without a source or target node'});
-         } else {
-             // data has all three, now proceed
-             // a type is present, can go further
-        let query = createNewRelationQuery(data);
-        return runQuery(query).then(response => {
-            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
-            return Promise.resolve(serializedData);
-            })
-            .catch(err => {
-                console.log('\nAn error occured while runnning the query for create node', err);
-                return Promise.reject('API : node/create | ERROR : Error encountered while reading from database');
-            });
-         }
-     }
+            return Promise.reject({ error: 'Cannot create a relation without a source or target node' });
+        } else {
+            // data has all three, now proceed
+            // a type is present, can go further
+            let query = createNewRelationQuery(data);
+            return runQuery(query).then(response => {
+                    let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                    return Promise.resolve(serializedData);
+                })
+                .catch(err => {
+                    console.log('\nAn error occured while runnning the query for create node', err);
+                    return Promise.reject('API : node/create | ERROR : Error encountered while reading from database');
+                });
+        }
+    }
 }
 
 var getRelations = () => {
     let query = `match ()-[r]-() with type(r) as relation_types,keys(r) 
       as relation_properties return distinct relation_types, relation_properties`;
-      return runQuery(query).then(response => {
+    return runQuery(query).then(response => {
         // convert into neovis format and return
         let serializedData = serializer.processRelations(JSON.stringify(response.records));
-            return Promise.resolve(serializedData);
-      }).catch(err => {
+        return Promise.resolve(serializedData);
+    }).catch(err => {
         console.log('\nAn error occured while runnning the query for get relations', err);
         return Promise.reject('API : graph/relations | ERROR : Error encountered while reading from database');
-      });
+    });
 }
 
 var updateRelationship = (request) => {
     // the task is to create a query basis the information provided
     let data = request.body;
 
-    if(!data.hasOwnProperty('type') || !data.hasOwnProperty('id')) {
+    if (!data.hasOwnProperty('type') || !data.hasOwnProperty('id')) {
         console.log('API : relation/update | ERROR encountered while reading data for updating a relation -> type key or id missing');
-        return Promise.reject({error : messages.error.server.m002});
+        return Promise.reject({ error: messages.error.server.m002 });
     } else {
-            // data has all three, now proceed
-            // a type is present, can go further
-       let query = dataUtility.createUpdateRelationQuery(data);
-       return runQuery(query).then(response => {
-           let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
-           return Promise.resolve(serializedData);
-           })
-           .catch(err => {
-               console.log('\nAn error occured while runnning the query for create node', err);
-               return Promise.reject(messages.error.API.relation.update.a001);
-           });
+        // data has all three, now proceed
+        // a type is present, can go further
+        let query = dataUtility.createUpdateRelationQuery(data);
+        return runQuery(query).then(response => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                return Promise.resolve(serializedData);
+            })
+            .catch(err => {
+                console.log('\nAn error occured while runnning the query for create node', err);
+                return Promise.reject(messages.error.API.relation.update.a001);
+            });
         /* if (!data.hasOwnProperty('from') || !data.hasOwnProperty('to')) {
            console.log('API : relation/update | ERROR encountered while reading data for updating a relation -> either of "to"  or "from" key missing');
            return Promise.reject({error : messages.error.server.m003});
@@ -820,6 +820,21 @@ var updateRelationship = (request) => {
     }
 }
 
+// for run query provided by utility
+var neo4jRunQuery = (query) => {
+    return runQuery(query)
+        .then(response => {
+            console.log("query : ", query);
+            console.log('Data recieved from database')
+            let serializedData = labelSerializer.Neo4JtoJsonFormat(JSON.stringify(response.records));
+            return Promise.resolve(serializedData);
+        })
+        .catch(err => {
+            console.log('an error occured while retrieving metadata for nodes', err);
+            neo4Jdriver.close();
+        });
+}
+
 module.exports = {
     initiate,
     getData,
@@ -834,5 +849,6 @@ module.exports = {
     updateNode,
     getRelations,
     createRelation,
-    updateRelationship
+    updateRelationship,
+    neo4jRunQuery
 }
