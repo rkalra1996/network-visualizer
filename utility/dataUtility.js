@@ -22,6 +22,7 @@ var processProperties = (objectName, dataProperties, addBrackets = false) => {
     else return '';
 }
 
+// deprecated , processProperties now has this capability
 function quickQuery(objectName,properties,) {
     let queryArr = [];
     Object.keys(properties).forEach(key => {
@@ -69,8 +70,43 @@ var createUpdateRelationQuery = (data) => {
     }
 } 
 
+var createDeleteNodeQuery = (nodeID, relationIDS) => {
+    // if there is no relation connected to node, simply delete the node
+    if (!!nodeID && relationIDS.length === 0) {
+        let query = `match (source) where id(source) = ${nodeID} set source.\`deleted\` = true return source`;
+        return query;
+    }
+    else if (!!nodeID && relationIDS.length > 0) {
+        // user did not supply nodeID , cannot delete only relationship on delete node
+        let query = `match (source)-[r]-() where id(source) = ${nodeID} and id(r) in [${relationIDS}] 
+        set source.\`deleted\` = true , r.\`deleted\` = true return source,r`;
+        console.log('delete node query is ', query);
+        return query;
+    }
+    else if (!nodeID && relationIDS.length === 0) {
+        // if user did not supply anything, there is no use
+        console.log('Error : NodeID and relationArray both are empty / missing');
+        return ''
+    } else {
+        // some arbitrary error
+        return '';
+    }
+}
+
+var createDeleteRelationQuery = (relationID) => {
+    if (relationID.length > 0 || !isNaN(relationID)) {
+        let query = `match ()-[r]-() where id(r) = ${relationID} set r.\`deleted\` = true return r`;
+        return query;
+    }
+    else {
+        return '';
+    }
+}
+
 module.exports = {
     createUpdateNodeQuery,
     createUpdateRelationQuery,
+    createDeleteNodeQuery,
+    createDeleteRelationQuery,
     processProperties
 }

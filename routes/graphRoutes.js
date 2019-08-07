@@ -234,4 +234,42 @@ router.get('/graph/relations', (req, res) => {
         })
 });
 
+router.post('/graph/node/delete', (req,res) => {
+    console.log('delete node hit');
+    // get the body, else return the error that no body is provided
+    if (!!Object.keys(req.body).length) {
+        neo4j.deleteNode(req)
+            .then(response => {
+                res.send(response);
+            })
+            .catch(err => {
+                console.log('err occured while sending back node delete data', err);
+                res.status(400).send(err);
+            });
+    } else {
+        // empty object is not allowed
+        console.log('empty body recieved in the req');
+        res.status(400).send({ 'error': 'Request Body is required to access the API' });
+    }
+});
+
+router.post('/graph/relation/delete', (req,res) => {
+    console.log('delete relation hit');
+    // get the body, else return the error that no body is provided
+    if (!!Object.keys(req.body).length) {
+        neo4j.deleteRelationhip(req)
+            .then(response => {
+                res.send(response);
+            })
+            .catch(err => {
+                console.log('err occured while sending back relation delete data', err);
+                res.status(400).send(err);
+            });
+    } else {
+        // empty object is not allowed
+        console.log('empty body recieved in the req');
+        res.status(400).send({ 'error': 'Request Body is required to access the API' });
+    }
+});
+
 module.exports = router;

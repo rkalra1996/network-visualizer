@@ -840,6 +840,54 @@ var neo4jRunQuery = (query) => {
             neo4Jdriver.close();
         });
 }
+var deleteNode = (request) => {
+    let data = request.body;
+    // delete will precisely work like update, it will set the deleted property to true
+    if (data.hasOwnProperty('id')) {
+        //id of node is present, continue
+        // find the node with id
+        // set the deleted property to true
+        if (!data.hasOwnProperty('relations') || !data.relations.length) {
+            data['relations'] = [];
+        }
+        let query = dataUtility.createDeleteNodeQuery(data.id, data.relations);
+        return runQuery(query).then(response => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                return Promise.resolve(serializedData);
+            })
+            .catch(err => {
+                console.log('\nAn error occured while runnning the query for delete node', err);
+                return Promise.reject(messages.error.API.node.delete.c001);
+            });
+    } else {
+        console.log('cannot delete a node without specifying an id');
+        return Promise.reject({ error: messages.error.server.m004 });
+    }
+}
+
+var deleteRelationhip = (request) => {
+    let data = request.body;
+    // delete will precisely work like update, it will set the deleted property to true
+    if (data.hasOwnProperty('id')) {
+        //id of node is present, continue
+        // find the node with id
+        // set the deleted property to true
+        let query = dataUtility.createDeleteRelationQuery(data.id);
+        return runQuery(query).then(response => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                // select only one from the two  responses which comes in case of bi directional relations
+                serializedData['seperateEdges'] = serializedData['seperateEdges'][0];
+                return Promise.resolve(serializedData);
+            })
+            .catch(err => {
+                console.log('\nAn error occured while runnning the query for delete relationship', err);
+                return Promise.reject(messages.error.API.node.delete.c001);
+            });
+    } else {
+        console.log('cannot delete a node without specifying an id');
+        return Promise.reject({ error: messages.error.server.m004 });
+    }
+}
 
 module.exports = {
     initiate,
@@ -856,5 +904,7 @@ module.exports = {
     getRelations,
     createRelation,
     updateRelationship,
-    neo4jRunQuery
+    neo4jRunQuery,
+    deleteNode,
+    deleteRelationhip
 }

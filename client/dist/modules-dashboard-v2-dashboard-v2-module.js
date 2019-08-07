@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"wrapper\">\n    <div class=\"panel\">\n        <p class=\"panelTitle\">Legend</p>\n        <div class=\"panelbody\" *ngIf=\"showDropDown\">\n            <ul class=\"panelList\" type=\"none\">\n                <ng-container *ngFor=\"let item of colorData\">\n                    <li class=\"item\" [ngStyle]=\"{color: item.color}\"><span class=\"circle\" [ngStyle]=\"{background: item.color}\"></span>{{item?.name}}</li>\n                </ng-container>\n            </ul>\n        </div>\n        <div class=\"dropDown\" (click)=\"toggleDropdown()\">\n            <i class=\"fas fa-chevron-up\" *ngIf=\"showDropDown\"></i>\n            <i class=\"fas fa-chevron-down\" *ngIf=\"!showDropDown\"></i>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"wrapper\">\r\n    <div class=\"panel\">\r\n        <p class=\"panelTitle\">Legend</p>\r\n        <div class=\"panelbody\" *ngIf=\"showDropDown\">\r\n            <ul class=\"panelList\" type=\"none\">\r\n                <ng-container *ngFor=\"let item of colorData\">\r\n                    <li class=\"item\" [ngStyle]=\"{color: item.color}\"><span class=\"circle\" [ngStyle]=\"{background: item.color}\"></span>{{item?.name}}</li>\r\n                </ng-container>\r\n            </ul>\r\n        </div>\r\n        <div class=\"dropDown\" (click)=\"toggleDropdown()\">\r\n            <i class=\"fas fa-chevron-up\" *ngIf=\"showDropDown\"></i>\r\n            <i class=\"fas fa-chevron-down\" *ngIf=\"!showDropDown\"></i>\r\n        </div>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -18,7 +18,7 @@ module.exports = "<div class=\"wrapper\">\n    <div class=\"panel\">\n        <p
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".wrapper {\n  width: 250px;\n  background-color: transparent;\n  position: absolute;\n  right: 0;\n  padding-right: 20px;\n  padding-top: 20px;\n  z-index: 9900; }\n\n.panel {\n  background-color: white;\n  border-radius: 10px;\n  width: 150px;\n  margin: auto;\n  margin-right: 0; }\n\n.panelTitle, .panelbody {\n  padding: 10px 5px; }\n\n.panelTitle {\n  font-size: 1rem;\n  font-weight: 400;\n  text-align: center; }\n\n.panelList {\n  padding-left: 14px; }\n\n.item {\n  word-wrap: break;\n  line-height: 2; }\n\n.circle {\n  width: 16px;\n  height: 16px;\n  display: inline-block;\n  border-radius: 50%;\n  margin-right: 8px; }\n\n.dropDown {\n  cursor: pointer; }\n\n.dropDown i {\n    display: block;\n    text-align: center;\n    font-size: 20px;\n    padding-bottom: 8px; }\n\n.display-ok {\n  display: block; }\n\n.no-display {\n  display: none; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2NvbG9yLXBhbmVsL2NvbG9yLXBhbmVsL2NvbG9yLXBhbmVsLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksWUFBYTtFQUNiLDZCQUE2QjtFQUM3QixrQkFBbUI7RUFDbkIsUUFBUztFQUNULG1CQUFtQjtFQUNuQixpQkFBa0I7RUFDbEIsYUFBYyxFQUFBOztBQUdsQjtFQUNJLHVCQUF1QjtFQUN2QixtQkFBbUI7RUFDbkIsWUFBYTtFQUNiLFlBQVk7RUFDWixlQUFlLEVBQUE7O0FBR25CO0VBQ0ksaUJBQWtCLEVBQUE7O0FBR3RCO0VBQ0ksZUFBZTtFQUNmLGdCQUFpQjtFQUNqQixrQkFBa0IsRUFBQTs7QUFHdEI7RUFDSSxrQkFBbUIsRUFBQTs7QUFHdkI7RUFDSSxnQkFBZ0I7RUFDaEIsY0FBYyxFQUFBOztBQUdsQjtFQUNBLFdBQVc7RUFDWCxZQUFZO0VBQ1oscUJBQXFCO0VBQ3JCLGtCQUFrQjtFQUNsQixpQkFBaUIsRUFBQTs7QUFHakI7RUFDSSxlQUFlLEVBQUE7O0FBRG5CO0lBR1EsY0FBYztJQUNkLGtCQUFrQjtJQUNsQixlQUFlO0lBQ2YsbUJBQW9CLEVBQUE7O0FBSTVCO0VBQ0ksY0FBYyxFQUFBOztBQUdsQjtFQUNJLGFBQWMsRUFBQSIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvZGFzaGJvYXJkLXYyL2NvbXBvbmVudHMvY29sb3ItcGFuZWwvY29sb3ItcGFuZWwvY29sb3ItcGFuZWwuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIud3JhcHBlciB7XG4gICAgd2lkdGggOiAyNTBweDtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDtcbiAgICBwb3NpdGlvbiA6IGFic29sdXRlO1xuICAgIHJpZ2h0IDogMDtcbiAgICBwYWRkaW5nLXJpZ2h0OiAyMHB4O1xuICAgIHBhZGRpbmctdG9wIDogMjBweDtcbiAgICB6LWluZGV4IDogOTkwMDtcbn1cblxuLnBhbmVsIHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICBib3JkZXItcmFkaXVzOiAxMHB4O1xuICAgIHdpZHRoIDogMTUwcHg7XG4gICAgbWFyZ2luOiBhdXRvO1xuICAgIG1hcmdpbi1yaWdodDogMDtcbn1cblxuLnBhbmVsVGl0bGUsIC5wYW5lbGJvZHkge1xuICAgIHBhZGRpbmcgOiAxMHB4IDVweDtcbn1cblxuLnBhbmVsVGl0bGUge1xuICAgIGZvbnQtc2l6ZTogMXJlbTtcbiAgICBmb250LXdlaWdodCA6IDQwMDtcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG59XG5cbi5wYW5lbExpc3Qge1xuICAgIHBhZGRpbmctbGVmdCA6IDE0cHg7XG59XG5cbi5pdGVtIHtcbiAgICB3b3JkLXdyYXA6YnJlYWsgO1xuICAgIGxpbmUtaGVpZ2h0OiAyO1xufVxuXG4uY2lyY2xlIHtcbndpZHRoOiAxNnB4O1xuaGVpZ2h0OiAxNnB4O1xuZGlzcGxheTogaW5saW5lLWJsb2NrO1xuYm9yZGVyLXJhZGl1czogNTAlO1xubWFyZ2luLXJpZ2h0OiA4cHg7XG59XG5cbi5kcm9wRG93biB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGkge1xuICAgICAgICBkaXNwbGF5OiBibG9jaztcbiAgICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgICAgICBmb250LXNpemU6IDIwcHg7XG4gICAgICAgIHBhZGRpbmctYm90dG9tIDogOHB4O1xuICAgIH1cbn1cblxuLmRpc3BsYXktb2sge1xuICAgIGRpc3BsYXk6IGJsb2NrO1xufVxuXG4ubm8tZGlzcGxheSB7XG4gICAgZGlzcGxheSA6IG5vbmU7XG59Il19 */"
+module.exports = ".wrapper {\n  width: 250px;\n  background-color: transparent;\n  position: absolute;\n  right: 0;\n  padding-right: 20px;\n  padding-top: 20px;\n  z-index: 9900; }\n\n.panel {\n  background-color: white;\n  border-radius: 10px;\n  width: 150px;\n  margin: auto;\n  margin-right: 0; }\n\n.panelTitle, .panelbody {\n  padding: 10px 5px; }\n\n.panelTitle {\n  font-size: 1rem;\n  font-weight: 400;\n  text-align: center; }\n\n.panelList {\n  padding-left: 14px; }\n\n.item {\n  word-wrap: break;\n  line-height: 2; }\n\n.circle {\n  width: 16px;\n  height: 16px;\n  display: inline-block;\n  border-radius: 50%;\n  margin-right: 8px; }\n\n.dropDown {\n  cursor: pointer; }\n\n.dropDown i {\n    display: block;\n    text-align: center;\n    font-size: 20px;\n    padding-bottom: 8px; }\n\n.display-ok {\n  display: block; }\n\n.no-display {\n  display: none; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9jb2xvci1wYW5lbC9jb2xvci1wYW5lbC9EOlxcbmVvNGotY29tbXVuaXR5LTMuMy45XFxkZXZlbG9wbWVudF9wcm9qZWN0c1xcbmVvNGpEYXRhRHJpdmVyXFxjbGllbnQvc3JjXFxhcHBcXG1vZHVsZXNcXGRhc2hib2FyZC12MlxcY29tcG9uZW50c1xcY29sb3ItcGFuZWxcXGNvbG9yLXBhbmVsXFxjb2xvci1wYW5lbC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLFlBQWE7RUFDYiw2QkFBNkI7RUFDN0Isa0JBQW1CO0VBQ25CLFFBQVM7RUFDVCxtQkFBbUI7RUFDbkIsaUJBQWtCO0VBQ2xCLGFBQWMsRUFBQTs7QUFHbEI7RUFDSSx1QkFBdUI7RUFDdkIsbUJBQW1CO0VBQ25CLFlBQWE7RUFDYixZQUFZO0VBQ1osZUFBZSxFQUFBOztBQUduQjtFQUNJLGlCQUFrQixFQUFBOztBQUd0QjtFQUNJLGVBQWU7RUFDZixnQkFBaUI7RUFDakIsa0JBQWtCLEVBQUE7O0FBR3RCO0VBQ0ksa0JBQW1CLEVBQUE7O0FBR3ZCO0VBQ0ksZ0JBQWdCO0VBQ2hCLGNBQWMsRUFBQTs7QUFHbEI7RUFDQSxXQUFXO0VBQ1gsWUFBWTtFQUNaLHFCQUFxQjtFQUNyQixrQkFBa0I7RUFDbEIsaUJBQWlCLEVBQUE7O0FBR2pCO0VBQ0ksZUFBZSxFQUFBOztBQURuQjtJQUdRLGNBQWM7SUFDZCxrQkFBa0I7SUFDbEIsZUFBZTtJQUNmLG1CQUFvQixFQUFBOztBQUk1QjtFQUNJLGNBQWMsRUFBQTs7QUFHbEI7RUFDSSxhQUFjLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2NvbG9yLXBhbmVsL2NvbG9yLXBhbmVsL2NvbG9yLXBhbmVsLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLndyYXBwZXIge1xyXG4gICAgd2lkdGggOiAyNTBweDtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IHRyYW5zcGFyZW50O1xyXG4gICAgcG9zaXRpb24gOiBhYnNvbHV0ZTtcclxuICAgIHJpZ2h0IDogMDtcclxuICAgIHBhZGRpbmctcmlnaHQ6IDIwcHg7XHJcbiAgICBwYWRkaW5nLXRvcCA6IDIwcHg7XHJcbiAgICB6LWluZGV4IDogOTkwMDtcclxufVxyXG5cclxuLnBhbmVsIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xyXG4gICAgYm9yZGVyLXJhZGl1czogMTBweDtcclxuICAgIHdpZHRoIDogMTUwcHg7XHJcbiAgICBtYXJnaW46IGF1dG87XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDA7XHJcbn1cclxuXHJcbi5wYW5lbFRpdGxlLCAucGFuZWxib2R5IHtcclxuICAgIHBhZGRpbmcgOiAxMHB4IDVweDtcclxufVxyXG5cclxuLnBhbmVsVGl0bGUge1xyXG4gICAgZm9udC1zaXplOiAxcmVtO1xyXG4gICAgZm9udC13ZWlnaHQgOiA0MDA7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbn1cclxuXHJcbi5wYW5lbExpc3Qge1xyXG4gICAgcGFkZGluZy1sZWZ0IDogMTRweDtcclxufVxyXG5cclxuLml0ZW0ge1xyXG4gICAgd29yZC13cmFwOmJyZWFrIDtcclxuICAgIGxpbmUtaGVpZ2h0OiAyO1xyXG59XHJcblxyXG4uY2lyY2xlIHtcclxud2lkdGg6IDE2cHg7XHJcbmhlaWdodDogMTZweDtcclxuZGlzcGxheTogaW5saW5lLWJsb2NrO1xyXG5ib3JkZXItcmFkaXVzOiA1MCU7XHJcbm1hcmdpbi1yaWdodDogOHB4O1xyXG59XHJcblxyXG4uZHJvcERvd24ge1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgaSB7XHJcbiAgICAgICAgZGlzcGxheTogYmxvY2s7XHJcbiAgICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gICAgICAgIGZvbnQtc2l6ZTogMjBweDtcclxuICAgICAgICBwYWRkaW5nLWJvdHRvbSA6IDhweDtcclxuICAgIH1cclxufVxyXG5cclxuLmRpc3BsYXktb2sge1xyXG4gICAgZGlzcGxheTogYmxvY2s7XHJcbn1cclxuXHJcbi5uby1kaXNwbGF5IHtcclxuICAgIGRpc3BsYXkgOiBub25lO1xyXG59Il19 */"
 
 /***/ }),
 
@@ -96,7 +96,7 @@ var ColorPanelComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\">\n    <!--<a href=\"#\" class=\"deleteLink\"><span class=\"fas fa-plus-circle\">&nbsp;Delete Node</span></a> -->\n    <div class=\"btn-group nodes\">\n        <!-- <button type=\"button\" class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n      Node\n    </button>\n    <div class=\"dropdown-menu\">\n      <a class=\"dropdown-item create\" (click)=\"createNode()\" data-toggle=\"modal\" data-target=\"#createNodeModal\"><span class=\"fas fa-plus-circle\"></span>Create Node</a>\n      <a class=\"dropdown-item edit\" (click)=\"editNode()\"><span class=\"far fa-edit\"></span>Edit Node</a>\n      <a class=\"dropdown-item delete\" (click)=\"deleteNode()\"><span class=\"far fa-trash-alt\"></span>Delete Node</a>\n    </div> -->\n        <button type=\"button\" (click)=\"createNode()\" data-toggle=\"modal\" data-target=\"#createNodeModal\" class=\"btn\" aria-expanded=\"false\">\n      Create Node\n    </button>\n    </div>\n    <div class=\"btn-group relationships\">\n        <!-- <button type=\"button\" class=\"btn btn-success dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n      Relationships\n    </button>\n        <div class=\"dropdown-menu\">\n            <a class=\"dropdown-item create\" (click)=\"createRelation()\" data-toggle=\"modal\" data-target=\"#createRelationModal\"><span class=\"fas fa-plus-circle\"></span>Create Relationship</a>\n            <a class=\"dropdown-item edit\" (click)=\"editRelation()\"><span class=\"far fa-edit\"></span>Edit Relationship</a>\n            <a class=\"dropdown-item delete\" (click)=\"deleteRelation()\"><span class=\"far fa-trash-alt\"></span>Delete Relationship</a>\n        </div> -->\n        <button type=\"button\" (click)=\"createRelation()\" data-toggle=\"modal\" data-target=\"#createRelationModal\" class=\"btn\" aria-expanded=\"false\">\n          Create Relationships\n        </button>\n    </div>\n</div>\n<!--modal template to show when node is to be created-->\n<div class=\"modal fade\" id=\"createNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"NodeModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.createNodePopup === true\">Create Node</h5>\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.editNodePopup === true\">Node Details</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n            <span aria-hidden=\"true\">&times;</span>\n          </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"modalItem\">\n                    <p class=\"sectionName\">\n                        Type\n                    </p>\n                    <span class=\"inputSpan\">\n              <!-- <sui-multi-select [(ngModel)]=\"selectedType\" (ngModelChange)=\"updateProperties($event)\" [options]=\"typeOptions\" [maxSelected]=\"1\" #type>\n                  <div class=\"ui icon search input\">\n                      <i class=\"search icon\"></i>\n                      <input suiSelectSearch type=\"text\" placeholder=\"Search Type...\">\n                  </div>\n                  <div class=\"scrolling menu\">\n                      <sui-select-option *ngFor=\"let o of type.filteredOptions\" [value]=\"o\">\n\n                      </sui-select-option>\n\n                  </div>\n              </sui-multi-select> -->\n              <sui-select class=\"selection\"\n              [(ngModel)]=\"selectedType\"\n              (ngModelChange)=\"updateProperties($event)\"\n              [options]=\"typeOptions\"\n              [isSearchable]=\"searchable\"\n              [isDisabled]=\"disabledBox\"\n              #select>\n      <sui-select-option *ngFor=\"let option of select.filteredOptions\"\n                         [value]=\"option\">\n      </sui-select-option>\n  </sui-select>\n            </span>\n                </div>\n                <div class=\"modalItem\" *ngIf=\"labelProperties?.length > 0 && selectedType?.length > 0\">\n                    <h5 class=\"propertyLabel\">\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\n                    </h5>\n                    <ng-container *ngFor=\"let data of labelProperties\">\n                        <div class=\"modalItem\">\n                            <p class=\"sectionName\">{{data}}</p>\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_{{data}}\"></span>\n                        </div>\n                    </ng-container>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-danger deleteBtn\" data-dismiss=\"modal\" *ngIf=\"popupConfig.editNodePopup === true\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'Node')\">Delete</button>\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal()\" *ngIf=\"popupConfig.createNodePopup === true\">Create</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal('edit')\" *ngIf=\"popupConfig.editNodePopup === true\" id=\"edit_btn\">Update</button>\n            </div>\n        </div>\n    </div>\n</div>\n<!--modal node create end-->\n\n\n<!--modal relationship start-->\n<div class=\"modal fade\" id=\"createRelationModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"popupConfig.createRelationPopup === true\">Create Relationship</h5>\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"popupConfig.editRelationPopup === true\">Relationship Details</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n            <span aria-hidden=\"true\">&times;</span>\n          </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"modalItem\">\n                    <p class=\"sectionName\">\n                        Type\n                    </p>\n                    <span class=\"inputSpan\">\n              <!-- <sui-multi-select [(ngModel)]=\"selectedType\" (ngModelChange)=\"updateRelProperties($event)\" [options]=\"relationTypeOptions\" [maxSelected]=\"1\" #typeRel>\n                  <div class=\"ui icon search input\">\n                      <i class=\"search icon\"></i>\n                      <input suiSelectSearch type=\"text\" placeholder=\"Search Type...\">\n                  </div>\n                  <div class=\"scrolling menu\">\n                      <sui-select-option *ngFor=\"let o of typeRel.filteredOptions\" [value]=\"o\">\n\n                      </sui-select-option>\n\n                  </div>\n              </sui-multi-select> -->\n              <sui-select class=\"selection\"\n              [(ngModel)]=\"selectedType\"\n              (ngModelChange)=\"updateRelProperties($event)\"\n              [options]=\"relationTypeOptions\"\n              [isSearchable]=\"true\"\n              [isDisabled]=\"disabledBox\"\n              #selectRelationBox>\n      <sui-select-option *ngFor=\"let option of selectRelationBox.filteredOptions\"\n                         [value]=\"option\">\n      </sui-select-option>\n  </sui-select>\n            </span>\n                </div>\n                <div class=\"modalItem\" *ngIf=\"typeProperties.length > 0\">\n                    <h5 class=\"propertyLabel\">\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\n                    </h5>\n                    <ng-container *ngFor=\"let data of typeProperties\">\n                        <div class=\"modalItem\">\n                            <p class=\"sectionName\">{{data}}</p>\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_{{data}}\"></span>\n                        </div>\n                    </ng-container>\n                </div>\n                <h5 class=\"propertyLabel\">\n                    Connection <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\n                </h5>\n                <div class=\"relationScope\">\n                    <div class=\"modalItem\">\n                        <p class=\"sectionName\">From</p>\n                        <span class=\"inputSpan\">\n                <!-- <sui-multi-select [(ngModel)]=\"selectedNodeNameSource\" (ngModelChange)=\"updateList('to',selectedNodeNameSource)\" [options]=\"fromNames\" [maxSelected]=\"1\" #NodeFromName>\n                  <div class=\"ui icon search input\">\n                      <i class=\"search icon\"></i>\n                      <input suiSelectSearch type=\"text\" placeholder=\"Search Node...\">\n                  </div>\n                  <div class=\"scrolling menu\">\n                      <sui-select-option *ngFor=\"let o of NodeFromName.filteredOptions\" [value]=\"o\">\n\n                      </sui-select-option>\n\n                  </div>\n              </sui-multi-select> -->\n              <sui-select class=\"selection\"\n              [(ngModel)]=\"selectedNodeNameSource\"\n              (ngModelChange)=\"updateList('to',[selectedNodeNameSource])\"\n              [options]=\"fromNames\"\n              [isSearchable]=\"true\"\n              [isDisabled]=\"disabledFromBox\"\n              #NodeFromName>\n      <sui-select-option *ngFor=\"let option of NodeFromName.filteredOptions\"\n                         [value]=\"option\">\n      </sui-select-option>\n      </sui-select>\n            </span>\n                    </div>\n                    <div class=\"modalItem\">\n                        <p class=\"sectionName\">To</p>\n                        <span class=\"inputSpan\">\n              <!-- <sui-multi-select [(ngModel)]=\"selectedNodeNameTarget\" (ngModelChange)=\"updateList('from',selectedNodeNameTarget)\" [options]=\"toNames\" [maxSelected]=\"1\" #NodeToName>\n                <div class=\"ui icon search input\">\n                    <i class=\"search icon\"></i>\n                    <input suiSelectSearch type=\"text\" placeholder=\"Search Node...\">\n                </div>\n                <div class=\"scrolling menu\">\n                    <sui-select-option *ngFor=\"let o of NodeToName.filteredOptions\" [value]=\"o\">\n\n                    </sui-select-option>\n\n                </div>\n            </sui-multi-select> -->\n            <sui-select class=\"selection\"\n            [(ngModel)]=\"selectedNodeNameTarget\"\n            (ngModelChange)=\"updateList('from',[selectedNodeNameTarget])\"\n            [options]=\"toNames\"\n            [isSearchable]=\"true\"\n            [isDisabled]=\"disabledToBox\"\n            #NodeToName>\n    <sui-select-option *ngFor=\"let option of NodeToName.filteredOptions\"\n                       [value]=\"option\">\n    </sui-select-option>\n    </sui-select> \n          </span>\n                    </div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-danger deleteBtn\" data-dismiss=\"modal\" style=\"color: white;\" *ngIf=\"popupConfig.editRelationPopup === true\" (click)=\"activateDelete('deleteModal', 'Relation')\">Delete</button>\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal()\" *ngIf=\"popupConfig.createRelationPopup === true\">Create</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal('edit')\" *ngIf=\"popupConfig.editRelationPopup === true\" id=\"edit_btn\">Update</button>\n            </div>\n        </div>\n    </div>\n</div>\n<!--modal relationship end-->\n\n<!-- Delete modal -->\n<div class=\"modal fade\" id=\"deleteModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"deleteModal\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"deleteModalTitle\">Delete</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n            </div>\n            <div class=\"modal-body\">\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:500;\">Are you sure you want to delete this {{deleteContext}} ?</b>\n                <h6 *ngIf=\"deleteContext === 'Node'\" style=\"font-size: 14px; padding-top: 15px; font-weight: 400;\">[NOTE] : Deleting a node will also delete the relationships connected with the node. <span style=\"color: red;\">Proceed with caution</span></h6>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn ui-button-text later\" data-dismiss=\"modal\">Maybe Later</button>\n                <button type=\"button\" class=\"btn btn-danger\">Delete</button>\n            </div>\n        </div>\n    </div>\n</div>\n<!--Delete modal end-->"
+module.exports = "<div class=\"container-fluid\">\r\n<!--<a href=\"#\" class=\"deleteLink\"><span class=\"fas fa-plus-circle\">&nbsp;Delete Node</span></a> -->\r\n<div class=\"btn-group nodes\">\r\n    <button type=\"button\" class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n      Node\r\n    </button>\r\n    <div class=\"dropdown-menu\">\r\n      <a class=\"dropdown-item create\" (click)=\"createNode()\" data-toggle=\"modal\" data-target=\"#createNodeModal\"><span class=\"fas fa-plus-circle\"></span>Create Node</a>\r\n      <a class=\"dropdown-item edit\" (click)=\"editNode()\"><span class=\"far fa-edit\"></span>Edit Node</a>\r\n      <a class=\"dropdown-item delete\" (click)=\"deleteNode()\"><span class=\"far fa-trash-alt\"></span>Delete Node</a>\r\n    </div>\r\n</div>\r\n<div class=\"btn-group relationships\">\r\n    <button type=\"button\" class=\"btn btn-success dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n      Relationships\r\n    </button>\r\n    <div class=\"dropdown-menu\">\r\n      <a class=\"dropdown-item create\" (click)=\"createRelation()\"><span class=\"fas fa-plus-circle\"></span>Create Relationship</a>\r\n      <a class=\"dropdown-item edit\" (click)=\"editRelation()\"><span class=\"far fa-edit\"></span>Edit Relationship</a>\r\n      <a class=\"dropdown-item delete\" (click)=\"deleteRelation()\"><span class=\"far fa-trash-alt\"></span>Delete Relationship</a>\r\n    </div>\r\n</div>\r\n</div>\r\n<!--modal template to show when node is to be created-->\r\n<div class=\"modal fade\" id=\"createNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n      <div class=\"modal-content\">\r\n        <div class=\"modal-header\">\r\n          <h5 class=\"modal-title\" id=\"exampleModalLabel\">Create Node</h5>\r\n          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n          </button>\r\n        </div>\r\n        <div class=\"modal-body\">\r\n          <!-- <div class=\"modalItem\">\r\n            <p class=\"sectionName\">\r\n                Name\r\n            </p>\r\n            <span class=\"inputSpan\">\r\n              <input type=\"text\" id=\"nameText\">\r\n            </span>\r\n          </div> -->\r\n          <div class=\"modalItem\">\r\n            <p class=\"sectionName\">\r\n              Type\r\n            </p>\r\n           <span class=\"inputSpan\">\r\n              <sui-multi-select [(ngModel)]=\"selectedType\" (ngModelChange)=\"updateProperties($event)\" [options]=\"typeOptions\" [maxSelected]=\"1\" #type>\r\n                  <div class=\"ui icon search input\">\r\n                      <i class=\"search icon\"></i>\r\n                      <input suiSelectSearch type=\"text\" placeholder=\"Search Type...\">\r\n                  </div>\r\n                  <div class=\"scrolling menu\">\r\n                      <sui-select-option *ngFor=\"let o of type.filteredOptions\" [value]=\"o\">\r\n\r\n                      </sui-select-option>\r\n\r\n                  </div>\r\n              </sui-multi-select>\r\n            </span>\r\n          </div>\r\n          <div class=\"modalItem\" *ngIf=\"labelProperties.length > 0\">\r\n            <h5 class=\"propertyLabel\">\r\n                Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n            </h5>\r\n                <ng-container *ngFor=\"let data of labelProperties\">\r\n                    <div class=\"modalItem\">\r\n                        <p class=\"sectionName\">{{data}}</p>\r\n                        <span class=\"inputSpan\"><input type=\"text\" id=\"id_{{data}}\"></span>\r\n                    </div>\r\n              </ng-container>\r\n          </div>\r\n        </div>\r\n        <div class=\"modal-footer\">\r\n          <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\r\n          <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal()\">Create</button>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n  <!--modal node create end-->"
 
 /***/ }),
 
@@ -107,7 +107,7 @@ module.exports = "<div class=\"container-fluid\">\n    <!--<a href=\"#\" class=\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".container-fluid .btn-group {\n  margin-right: 20px; }\n  .container-fluid .btn-group button {\n    border-radius: 0;\n    background: #e4e4e4;\n    color: #000;\n    box-shadow: 2px 9px 17px -1px #cccccc; }\n  .container-fluid .btn-group button:active {\n    box-shadow: none;\n    transition: 0.5s; }\n  .btn-group:active {\n  outline: none;\n  text-decoration: none; }\n  .createLink,\n.editLink,\n.deleteLink {\n  text-decoration: none;\n  font-size: 12px; }\n  .dropdown-menu .dropdown-item {\n  cursor: pointer; }\n  .dropdown-menu .dropdown-item span {\n    margin-right: 8px; }\n  .dropdown-menu .dropdown-item:active {\n  background-color: white; }\n  .dropdown-menu .create:hover {\n  color: blue; }\n  .dropdown-menu .edit:hover {\n  color: green; }\n  .dropdown-menu .delete:hover {\n  color: red; }\n  .modal-header {\n  background: #5f5f5f;\n  color: white;\n  border-color: #5f5f5f; }\n  .modal-header button.close {\n    color: white; }\n  .modalItem {\n  padding: 10px; }\n  .modalItem .fa-info-circle {\n    font-size: 14px;\n    cursor: pointer; }\n  .sectionName {\n  display: inline-block;\n  margin: 0;\n  max-width: 50%; }\n  .inputSpan {\n  position: absolute;\n  left: 50%; }\n  .inputSpan input {\n    border: 1px solid #acacac;\n    outline: none; }\n  .propertyLabel {\n  padding-top: 13px;\n  padding-bottom: 13px;\n  text-align: center; }\n  input[disabled=\"true\"] {\n  cursor: not-allowed; }\n  .deleteBtn {\n  margin-right: auto;\n  cursor: pointer !important; }\n  .later {\n  text-decoration: none;\n  cursor: pointer; }\n  .later:hover {\n  background-color: #5f5f5f;\n  color: white; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2NyZWF0ZS1ub2Rlcy9jcmVhdGUtbm9kZXMuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxrQkFBa0IsRUFBQTtFQUR0QjtJQUdRLGdCQUFnQjtJQUNoQixtQkFBbUI7SUFDbkIsV0FBVztJQUdYLHFDQUFvRCxFQUFBO0VBUjVEO0lBV1EsZ0JBQWdCO0lBQ2hCLGdCQUFnQixFQUFBO0VBSXhCO0VBQ0ksYUFBYTtFQUNiLHFCQUFxQixFQUFBO0VBR3pCOzs7RUFHSSxxQkFBcUI7RUFDckIsZUFBZSxFQUFBO0VBR25CO0VBRVEsZUFBZSxFQUFBO0VBRnZCO0lBSVksaUJBQWlCLEVBQUE7RUFKN0I7RUFRUSx1QkFBdUIsRUFBQTtFQVIvQjtFQVdRLFdBQVcsRUFBQTtFQVhuQjtFQWNRLFlBQVksRUFBQTtFQWRwQjtFQWlCUSxVQUFVLEVBQUE7RUFJbEI7RUFDSSxtQkFBbUI7RUFDbkIsWUFBWTtFQUNaLHFCQUFxQixFQUFBO0VBSHpCO0lBS1EsWUFBWSxFQUFBO0VBSXBCO0VBQ0ksYUFBYSxFQUFBO0VBRGpCO0lBR1EsZUFBZTtJQUNmLGVBQWUsRUFBQTtFQUl2QjtFQUNJLHFCQUFxQjtFQUNyQixTQUFTO0VBQ1QsY0FBYyxFQUFBO0VBR2xCO0VBQ0ksa0JBQWtCO0VBQ2xCLFNBQVMsRUFBQTtFQUZiO0lBSVEseUJBQXlCO0lBQ3pCLGFBQWEsRUFBQTtFQUlyQjtFQUNJLGlCQUFpQjtFQUNqQixvQkFBb0I7RUFDcEIsa0JBQWtCLEVBQUE7RUFHdEI7RUFDSSxtQkFBbUIsRUFBQTtFQUd2QjtFQUNJLGtCQUFrQjtFQUNsQiwwQkFBMEIsRUFBQTtFQUc5QjtFQUNJLHFCQUFxQjtFQUNyQixlQUFlLEVBQUE7RUFHbkI7RUFDSSx5QkFBeUI7RUFDekIsWUFBWSxFQUFBIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9jcmVhdGUtbm9kZXMvY3JlYXRlLW5vZGVzLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmNvbnRhaW5lci1mbHVpZCAuYnRuLWdyb3VwIHtcbiAgICBtYXJnaW4tcmlnaHQ6IDIwcHg7XG4gICAgYnV0dG9uIHtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogMDtcbiAgICAgICAgYmFja2dyb3VuZDogI2U0ZTRlNDtcbiAgICAgICAgY29sb3I6ICMwMDA7XG4gICAgICAgIC13ZWJraXQtYm94LXNoYWRvdzogMnB4IDlweCAxN3B4IC0xcHggcmdiYSgyMDQsIDIwNCwgMjA0LCAxKTtcbiAgICAgICAgLW1vei1ib3gtc2hhZG93OiAycHggOXB4IDE3cHggLTFweCByZ2JhKDIwNCwgMjA0LCAyMDQsIDEpO1xuICAgICAgICBib3gtc2hhZG93OiAycHggOXB4IDE3cHggLTFweCByZ2JhKDIwNCwgMjA0LCAyMDQsIDEpO1xuICAgIH1cbiAgICBidXR0b246YWN0aXZlIHtcbiAgICAgICAgYm94LXNoYWRvdzogbm9uZTtcbiAgICAgICAgdHJhbnNpdGlvbjogMC41cztcbiAgICB9XG59XG5cbi5idG4tZ3JvdXA6YWN0aXZlIHtcbiAgICBvdXRsaW5lOiBub25lO1xuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcbn1cblxuLmNyZWF0ZUxpbmssXG4uZWRpdExpbmssXG4uZGVsZXRlTGluayB7XG4gICAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xuICAgIGZvbnQtc2l6ZTogMTJweDtcbn1cblxuLmRyb3Bkb3duLW1lbnUge1xuICAgIC5kcm9wZG93bi1pdGVtIHtcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xuICAgICAgICBzcGFuIHtcbiAgICAgICAgICAgIG1hcmdpbi1yaWdodDogOHB4O1xuICAgICAgICB9XG4gICAgfVxuICAgIC5kcm9wZG93bi1pdGVtOmFjdGl2ZSB7XG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xuICAgIH1cbiAgICAuY3JlYXRlOmhvdmVyIHtcbiAgICAgICAgY29sb3I6IGJsdWU7XG4gICAgfVxuICAgIC5lZGl0OmhvdmVyIHtcbiAgICAgICAgY29sb3I6IGdyZWVuO1xuICAgIH1cbiAgICAuZGVsZXRlOmhvdmVyIHtcbiAgICAgICAgY29sb3I6IHJlZDtcbiAgICB9XG59XG5cbi5tb2RhbC1oZWFkZXIge1xuICAgIGJhY2tncm91bmQ6ICM1ZjVmNWY7XG4gICAgY29sb3I6IHdoaXRlO1xuICAgIGJvcmRlci1jb2xvcjogIzVmNWY1ZjtcbiAgICBidXR0b24uY2xvc2Uge1xuICAgICAgICBjb2xvcjogd2hpdGU7XG4gICAgfVxufVxuXG4ubW9kYWxJdGVtIHtcbiAgICBwYWRkaW5nOiAxMHB4O1xuICAgIC5mYS1pbmZvLWNpcmNsZSB7XG4gICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIH1cbn1cblxuLnNlY3Rpb25OYW1lIHtcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gICAgbWFyZ2luOiAwO1xuICAgIG1heC13aWR0aDogNTAlO1xufVxuXG4uaW5wdXRTcGFuIHtcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gICAgbGVmdDogNTAlO1xuICAgIGlucHV0IHtcbiAgICAgICAgYm9yZGVyOiAxcHggc29saWQgI2FjYWNhYztcbiAgICAgICAgb3V0bGluZTogbm9uZTtcbiAgICB9XG59XG5cbi5wcm9wZXJ0eUxhYmVsIHtcbiAgICBwYWRkaW5nLXRvcDogMTNweDtcbiAgICBwYWRkaW5nLWJvdHRvbTogMTNweDtcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG59XG5cbmlucHV0W2Rpc2FibGVkPVwidHJ1ZVwiXSB7XG4gICAgY3Vyc29yOiBub3QtYWxsb3dlZDtcbn1cblxuLmRlbGV0ZUJ0biB7XG4gICAgbWFyZ2luLXJpZ2h0OiBhdXRvO1xuICAgIGN1cnNvcjogcG9pbnRlciAhaW1wb3J0YW50O1xufVxuXG4ubGF0ZXIge1xuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG59XG5cbi5sYXRlcjpob3ZlciB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzVmNWY1ZjtcbiAgICBjb2xvcjogd2hpdGU7XG59Il19 */"
+module.exports = ".container-fluid .btn-group {\n  margin-right: 20px; }\n\n.btn-group:active {\n  outline: none;\n  text-decoration: none; }\n\n.createLink, .editLink, .deleteLink {\n  text-decoration: none;\n  font-size: 12px; }\n\n.dropdown-menu .dropdown-item {\n  cursor: pointer; }\n\n.dropdown-menu .dropdown-item span {\n    margin-right: 8px; }\n\n.dropdown-menu .dropdown-item:active {\n  background-color: white; }\n\n.dropdown-menu .create:hover {\n  color: blue; }\n\n.dropdown-menu .edit:hover {\n  color: green; }\n\n.dropdown-menu .delete:hover {\n  color: red; }\n\n.modal-header {\n  background: #5f5f5f;\n  color: white;\n  border-color: #5f5f5f; }\n\n.modal-header button.close {\n    color: white; }\n\n.modalItem {\n  padding: 10px; }\n\n.modalItem .fa-info-circle {\n    font-size: 14px;\n    cursor: pointer; }\n\n.sectionName {\n  display: inline-block;\n  margin: 0;\n  max-width: 50%; }\n\n.inputSpan {\n  position: absolute;\n  left: 50%; }\n\n.inputSpan input {\n    border: 1px solid #acacac;\n    outline: none; }\n\n.propertyLabel {\n  padding-top: 13px;\n  padding-bottom: 13px;\n  text-align: center; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9jcmVhdGUtbm9kZXMvRDpcXG5lbzRqLWNvbW11bml0eS0zLjMuOVxcZGV2ZWxvcG1lbnRfcHJvamVjdHNcXG5lbzRqRGF0YURyaXZlclxcY2xpZW50L3NyY1xcYXBwXFxtb2R1bGVzXFxkYXNoYm9hcmQtdjJcXGNvbXBvbmVudHNcXGNyZWF0ZS1ub2Rlc1xcY3JlYXRlLW5vZGVzLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksa0JBQW1CLEVBQUE7O0FBR3ZCO0VBQ0ksYUFBYztFQUNkLHFCQUFxQixFQUFBOztBQUd6QjtFQUNJLHFCQUFxQjtFQUNyQixlQUFlLEVBQUE7O0FBR25CO0VBRVEsZUFBZSxFQUFBOztBQUZ2QjtJQUlZLGlCQUFrQixFQUFBOztBQUo5QjtFQVFRLHVCQUF1QixFQUFBOztBQVIvQjtFQVdRLFdBQVksRUFBQTs7QUFYcEI7RUFjUSxZQUFhLEVBQUE7O0FBZHJCO0VBaUJRLFVBQVcsRUFBQTs7QUFJbkI7RUFDSSxtQkFBb0I7RUFDcEIsWUFBYTtFQUNiLHFCQUFxQixFQUFBOztBQUh6QjtJQUtRLFlBQWEsRUFBQTs7QUFHckI7RUFDSSxhQUFjLEVBQUE7O0FBRGxCO0lBR1EsZUFBZ0I7SUFDaEIsZUFBZSxFQUFBOztBQUl2QjtFQUNJLHFCQUFzQjtFQUN0QixTQUFVO0VBQ1YsY0FBZSxFQUFBOztBQUduQjtFQUNJLGtCQUFtQjtFQUNuQixTQUFVLEVBQUE7O0FBRmQ7SUFJUSx5QkFBMEI7SUFDMUIsYUFBYyxFQUFBOztBQUl0QjtFQUNJLGlCQUFpQjtFQUNqQixvQkFBb0I7RUFDcEIsa0JBQWtCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2NyZWF0ZS1ub2Rlcy9jcmVhdGUtbm9kZXMuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY29udGFpbmVyLWZsdWlkIC5idG4tZ3JvdXAge1xyXG4gICAgbWFyZ2luLXJpZ2h0IDogMjBweDtcclxufVxyXG5cclxuLmJ0bi1ncm91cDphY3RpdmUge1xyXG4gICAgb3V0bGluZSA6IG5vbmU7XHJcbiAgICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XHJcbn1cclxuXHJcbi5jcmVhdGVMaW5rLCAuZWRpdExpbmssIC5kZWxldGVMaW5rIHtcclxuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcclxuICAgIGZvbnQtc2l6ZTogMTJweDtcclxufVxyXG5cclxuLmRyb3Bkb3duLW1lbnUge1xyXG4gICAgLmRyb3Bkb3duLWl0ZW0ge1xyXG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgICAgICBzcGFuIHtcclxuICAgICAgICAgICAgbWFyZ2luLXJpZ2h0IDogOHB4O1xyXG4gICAgICAgIH1cclxuICAgIH1cclxuICAgIC5kcm9wZG93bi1pdGVtOmFjdGl2ZSB7XHJcbiAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XHJcbiAgICB9XHJcbiAgICAuY3JlYXRlOmhvdmVyIHtcclxuICAgICAgICBjb2xvciA6IGJsdWU7XHJcbiAgICB9XHJcbiAgICAuZWRpdDpob3ZlciB7XHJcbiAgICAgICAgY29sb3IgOiBncmVlbjtcclxuICAgIH1cclxuICAgIC5kZWxldGU6aG92ZXIge1xyXG4gICAgICAgIGNvbG9yIDogcmVkO1xyXG4gICAgfVxyXG59XHJcblxyXG4ubW9kYWwtaGVhZGVyIHtcclxuICAgIGJhY2tncm91bmQgOiAjNWY1ZjVmO1xyXG4gICAgY29sb3IgOiB3aGl0ZTtcclxuICAgIGJvcmRlci1jb2xvcjogIzVmNWY1ZjtcclxuICAgIGJ1dHRvbi5jbG9zZSB7XHJcbiAgICAgICAgY29sb3IgOiB3aGl0ZTtcclxuICAgIH1cclxufVxyXG4ubW9kYWxJdGVtIHtcclxuICAgIHBhZGRpbmcgOiAxMHB4O1xyXG4gICAgLmZhLWluZm8tY2lyY2xlIHtcclxuICAgICAgICBmb250LXNpemUgOiAxNHB4O1xyXG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgIH1cclxufVxyXG5cclxuLnNlY3Rpb25OYW1lIHtcclxuICAgIGRpc3BsYXkgOiBpbmxpbmUtYmxvY2s7XHJcbiAgICBtYXJnaW4gOiAwO1xyXG4gICAgbWF4LXdpZHRoIDogNTAlO1xyXG59XHJcblxyXG4uaW5wdXRTcGFuIHtcclxuICAgIHBvc2l0aW9uIDogYWJzb2x1dGU7XHJcbiAgICBsZWZ0IDogNTAlO1xyXG4gICAgaW5wdXQge1xyXG4gICAgICAgIGJvcmRlciA6IDFweCBzb2xpZCAjYWNhY2FjO1xyXG4gICAgICAgIG91dGxpbmUgOiBub25lO1xyXG4gICAgfVxyXG59XHJcblxyXG4ucHJvcGVydHlMYWJlbCB7XHJcbiAgICBwYWRkaW5nLXRvcDogMTNweDtcclxuICAgIHBhZGRpbmctYm90dG9tOiAxM3B4O1xyXG4gICAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG59Il19 */"
 
 /***/ }),
 
@@ -126,53 +126,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_services_search_service_search_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../../../shared/services/search-service/search.service */ "./src/app/modules/shared/services/search-service/search.service.ts");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var src_app_modules_core_services_graph_data_service_graph_data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/modules/core/services/graph-data-service/graph-data.service */ "./src/app/modules/core/services/graph-data-service/graph-data.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var _core_services_shared_graph_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../../../core/services/shared-graph.service */ "./src/app/modules/core/services/shared-graph.service.ts");
-
-
-
 
 
 
 
 var CreateNodesComponent = /** @class */ (function () {
-    function CreateNodesComponent(SharedSrvc, graphSrvc, sharedGraphSrvc) {
+    function CreateNodesComponent(SharedSrvc) {
         this.SharedSrvc = SharedSrvc;
-        this.graphSrvc = graphSrvc;
-        this.sharedGraphSrvc = sharedGraphSrvc;
         this.nodeBtnEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
-        this.disabledBox = false;
-        this.deleteContext = 'Node';
-        this.disabledFromBox = false;
-        this.disabledToBox = false;
-        this.relationSourceNode = null;
-        this.relationTargetNode = null;
         this.edgeBtnEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.nodeTypes = [];
         this.nodeTypes2 = [];
-        this.selectedType = [];
         this.typeOptions = [];
         this.toolTipText = '';
         this.labelProperties = [];
-        this.relationTypeOptions = [];
-        this.typeProperties = [];
-        this.toNames = [];
-        this.fromNames = [];
-        this.editNodeConfig = {};
-        this.deleteNodeConfig = {};
-        this.queryObj = {
-            raw: true,
-            query: "MATCH (p) WITH DISTINCT keys(p) AS keys,p\n     with DISTINCT labels(p) as label,keys \n     UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields,label\n     RETURN collect(allfields),label"
-        };
-        this.popupConfig = {
-            createNodePopup: false,
-            editNodePopup: false,
-            deleteNodePopup: false,
-            createRelationPopup: false,
-            editRelationPopup: false,
-            deleteRelationPopup: false
-        };
     }
     CreateNodesComponent.prototype.ngOnInit = function () {
         this.toolTipText = 'The Properties section can be left blank to set a default Node';
@@ -180,36 +147,28 @@ var CreateNodesComponent = /** @class */ (function () {
     };
     CreateNodesComponent.prototype.createNode = function () {
         var _this = this;
-        this.popupConfig.createNodePopup = true;
-        this.disabledBox = false;
-        /* this.SharedSrvc.runQuery(this.queryObj).subscribe(data => {
-          console.log('recieved label data from service ', data);
-          this.processedData = this.processData(data);
-          // extract types from the array
-          this.extractLabels(this.processedData);
-          this.typeOptions = _.cloneDeep(this.nodeTypes2);
-        }, err => {
-          console.log('An error occured while reading label data from the database');
-        }); */
-        this.getNodeTypes().subscribe(function (data) {
-            _this.typeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](data);
+        var queryObj = {
+            raw: true,
+            query: "MATCH (p) WITH DISTINCT keys(p) AS keys,p\n       with DISTINCT labels(p) as label,keys \n       UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields,label\n       RETURN collect(allfields),label"
+        };
+        this.SharedSrvc.runQuery(queryObj).subscribe(function (data) {
+            console.log('recieved label data from service ', data);
+            _this.processedData = _this.processData(data);
+            // extract types from the array
+            _this.extractLabels(_this.processedData);
+            _this.typeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](_this.nodeTypes2);
         }, function (err) {
-            console.log('An error occured while reading label data from the database', err);
-            _this.typeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"]([]);
+            console.log('An error occured while reading label data from the database');
         });
     };
     CreateNodesComponent.prototype.editNode = function () {
-        this.disabledBox = true;
-        // this will send the edit event and then the app will wait for the node click event sent back to this component
         this.nodeBtnEvent.emit({ type: 'click', action: 'edit' });
     };
     CreateNodesComponent.prototype.deleteNode = function () {
         this.nodeBtnEvent.emit({ type: 'click', action: 'delete' });
     };
     CreateNodesComponent.prototype.createRelation = function () {
-        this.popupConfig.createRelationPopup = true;
-        this.disabledBox = false;
-        this.getRelationTypes().subscribe(function (data) { });
+        this.edgeBtnEvent.emit({ type: 'click', action: 'create' });
     };
     CreateNodesComponent.prototype.editRelation = function () {
         this.edgeBtnEvent.emit({ type: 'click', action: 'edit' });
@@ -217,232 +176,29 @@ var CreateNodesComponent = /** @class */ (function () {
     CreateNodesComponent.prototype.deleteRelation = function () {
         this.edgeBtnEvent.emit({ type: 'click', action: 'delete' });
     };
-    CreateNodesComponent.prototype.getNodeTypes = function () {
-        var _this = this;
-        return this.SharedSrvc.runQuery(this.queryObj).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (data) {
-            console.log('recieved label data from service ', data);
-            _this.processedData = _this.processData(data);
-            // extract types from the array
-            _this.extractLabels(_this.processedData);
-            // this.typeOptions = _.cloneDeep(this.nodeTypes2);
-            return _this.nodeTypes2;
-        }));
-    };
-    CreateNodesComponent.prototype.getRelationTypes = function () {
-        var _this = this;
-        return this.graphSrvc.getGraphRelations().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (response) {
-            _this.relationsData = response;
-            var extractedTypes = _this.extractTypes(response);
-            // pass it into the options for dropdown
-            _this.relationTypeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](extractedTypes);
-            return true;
-        }, function (err) {
-            console.error('An error occured while fetching relations ', err);
-            throw Error();
-        }));
-    };
     CreateNodesComponent.prototype.ngOnChanges = function (changes) {
-        var _this = this;
-        $('#createNodeModal').on('hidden.bs.modal', function (e) {
-            // this event will reset the popupConfig object so that everytime correct data is accessed
-            _this.setAllToFalse();
-            _this.disabledBox = false;
-        });
-        $('#createRelationModal').on('hidden.bs.modal', function (e) {
-            // this event will reset the popupConfig object so that everytime correct data is accessed
-            _this.setAllToFalse();
-            _this.disabledBox = false;
-            _this.disabledFromBox = false;
-            _this.disabledToBox = false;
-        });
-        if ((!!this.editData && !!this.editData.length) || (!!this.editData && !!Object.keys(this.editData).length)) {
-            this.disabledBox = true;
-            // console.log('edit data recieved is ', this.editData);
-            this.editNodeConfig = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"]({
-                properties: this.editData['properties'],
-                type: this.editData['type'][0],
-                id: this.editData['id']
-            });
-            // console.log('editNodeConfig is ', this.editNodeConfig);
-            this.selectedType = null;
-            this.getNodeTypes().subscribe(function (data) {
-                _this.typeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](data);
-                _this.selectedType = _this.editNodeConfig['type'];
-                // trigger update properties to show data before hand
-                _this.updateProperties(_this.selectedType);
-                var prefilledInfo = _this.recreatePrefilledData(_this.editData['properties']);
-                if (!!prefilledInfo) {
-                    // console.log('recieved some prefilled info ', prefilledInfo);
-                    // set the data into the modal
-                    _this.prefillData('createNodeModal', prefilledInfo, _this.editNodeConfig['id']);
-                }
-                else {
-                    // will allow the modal to be visible anyway
-                    console.error('An error occured while prefilling the data, did not recieve anyhting');
-                }
-            }, function (err) {
-                console.log('An error occured while reading label data from the database');
-                _this.typeOptions = [];
-            });
-        }
-        else if ((!!this.editRelData && !!this.editRelData.length) || (!!this.editRelData && !!Object.keys(this.editRelData).length)) {
-            // execute this portion if edit relationship is triggred
-            this.popupConfig.editRelationPopup = true;
-            console.log('recieved edit relation data is ', this.editRelData);
-            this.disabledBox = true;
-            var editRelConfig_1 = {
-                id: this.editRelData['id'],
-                type: this.editRelData['type'],
-                properties: this.editRelData['properties'],
-                from: this.editRelData['from'],
-                to: this.editRelData['to']
-            };
-            this.getRelationTypes().subscribe(function (response) {
-                console.log('fetched relationship types successfully');
-                // once types are loaded, set a default type which is the type of selected relation
-                // relationTypeOptions are already set
-                _this.selectedType = editRelConfig_1['type'];
-                _this.updateRelProperties(_this.selectedType);
-                var prefilledRelInfo = _this.recreatePrefilledData(editRelConfig_1['properties']);
-                // disable the from and to boxes
-                _this.disabledFromBox = true;
-                _this.disabledToBox = true;
-                if (!!prefilledRelInfo) {
-                    // console.log('recieved some prefilled info ', prefilledRelInfo);
-                    // set the data into the modal
-                    _this.prefillData('createRelationModal', prefilledRelInfo, editRelConfig_1['id'], 'relation');
-                }
-                else {
-                    // will allow the modal to be visible anyway
-                    console.error('An error occured while prefilling the relation data, did not recieve anyhting');
-                }
-                // prefill the connected nodes names for the selected relationship modal
-                _this.prefillConnectedNodes(editRelConfig_1);
-                _this.sharedGraphSrvc.nodeDetails.subscribe(function (nodeDetailsArray) {
-                    // this variable will have arrays of nodes in same sequesnce the ids were sent
-                    console.log('recieved connected node information', nodeDetailsArray);
-                    _this.selectedNodeNameSource = nodeDetailsArray[0]['label'] || '';
-                    _this.selectedNodeNameTarget = nodeDetailsArray[1]['label'] || '';
-                });
-            }, function (err) {
-                console.warn('An error occured while setting the types in the dropdown');
-            });
-            // open the edit modal
-            this.disabledBox = true;
-            this.showModal('createRelationModal');
-        }
+        // console.log('Types recieved in create Nodes ', this.nodeTypes);
+        // this.typeOptions = this.nodeTypes2;
     };
-    CreateNodesComponent.prototype.prefillConnectedNodes = function (RelationData) {
-        if (RelationData.hasOwnProperty('from') && RelationData.hasOwnProperty('to')) {
-            var nodeIDs = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"]([RelationData['from'], RelationData['to']]);
-            this.fetchNodeNameFromID(nodeIDs);
-        }
-    };
-    CreateNodesComponent.prototype.fetchNodeNameFromID = function (nodeIDArray) {
-        // this function will send the node id to the graph visualilzer which has all the information of the nodes
-        // the graph visualizer will fetch the node details using the provided node id and send the details back here
-        if (!!nodeIDArray.length) {
-            console.log('asking for details of ', nodeIDArray);
-            this.sharedGraphSrvc.getNodeDetails(nodeIDArray);
-        }
-        else {
-            console.warn('nodeID was not valid while sending event to read node details');
-        }
-    };
-    CreateNodesComponent.prototype.prefillData = function (modalID, dataToFill, IDToSupply, type) {
-        var _this = this;
-        if (type === void 0) { type = 'node'; }
-        if (!modalID) {
-            console.warn('cannot prefill data as modal id is not supplied');
-        }
-        else if (!Object.keys(dataToFill).length) {
-            console.warn('Did not recieve any data to prefill');
-        }
-        else {
-            // both are supplied, time to prefill the modal
-            if ($("#" + modalID).length) {
-                this.popupConfig.editNodePopup = true;
-                this.showModal(modalID);
-                // found the modal
-                $("#" + modalID).on('shown.bs.modal', function (event) {
-                    // capture the modal text boxes once it is visible
-                    $("#" + modalID + " :text").each(function () {
-                        var key = $(this).attr('id') || null;
-                        if (Object.keys(dataToFill).indexOf(key) > -1) {
-                            // assign this text box a prefilled value from dataToFill
-                            $("[id='" + key + "']").val(dataToFill[key]);
-                            // disable the Name box since it is unique fot the database
-                            /* if (key === 'id_Name') {
-                              $(`[id='${key}']`).attr('disabled', 'disabled');
-                            } */
-                        }
-                    });
-                    // add id of the node to the modal
-                    _this.addAttribute('edit_btn', type + "_id", IDToSupply);
-                });
-            }
-            else {
-                console.warn('did not find any element with provided ID');
-            }
-        }
-    };
-    CreateNodesComponent.prototype.addAttribute = function (elementID, attributeKey, attributeValue) {
-        $("[id='" + elementID + "']").attr(attributeKey, attributeValue);
-    };
-    CreateNodesComponent.prototype.recreatePrefilledData = function (prefilledData) {
-        // main purpose is to attach id_ to the object keys so that it can be used to find elements in the modal
-        if (Object.keys(prefilledData).length > 0) {
-            // iterate on the keys and rename them
-            var prefilledObj_1 = {};
-            Object.keys(prefilledData).forEach(function (key) {
-                var newKey = "id_" + key;
-                prefilledObj_1[newKey] = prefilledData[key];
-            });
-            return prefilledObj_1;
-        }
-        else {
-            return null;
-        }
-    };
-    CreateNodesComponent.prototype.showModal = function (modalID) {
-        $("#" + modalID).modal('show');
-    };
-    CreateNodesComponent.prototype.setAllToFalse = function () {
-        var _this = this;
-        Object.keys(this.popupConfig).forEach(function (key) {
-            if (_this.popupConfig[key]) {
-                _this.popupConfig[key] = false;
-            }
-        });
-        this.selectedType = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"]([]);
-    };
-    CreateNodesComponent.prototype.submitModal = function (type) {
-        if (type === void 0) { type = 'create'; }
-        console.log(type);
+    CreateNodesComponent.prototype.submitModal = function () {
         var nodeData = {
             id: null,
             properties: {},
             type: null
         };
-        nodeData.type = [this.selectedType];
+        nodeData.type = this.selectedType;
         $('#createNodeModal :text').each(function () {
             var key = $(this).attr('id') || null;
             var value = $(this).val() || null;
             nodeData.properties[key] = value;
         });
+        console.log(nodeData);
         try {
             nodeData = this.validateNodeData(nodeData);
+            console.log('node created is ', nodeData);
+            this.nodeBtnEvent.emit({ type: 'click', action: 'create', data: nodeData });
             // hide the modal once the data is created properly
             $('#createNodeModal').modal('hide');
-            if (type === 'create') {
-                console.log('node created is ', nodeData);
-                this.nodeBtnEvent.emit({ type: 'click', action: 'create', data: nodeData });
-                this.popupConfig.createNodePopup = false;
-            }
-            else if (type === 'edit') {
-                this.nodeBtnEvent.emit({ type: 'click', action: 'edit', data: nodeData, process: 'complete' });
-                this.popupConfig.editNodePopup = false;
-            }
         }
         catch (e) {
             console.log(e);
@@ -466,24 +222,6 @@ var CreateNodesComponent = /** @class */ (function () {
             throw new Error('Cannot create a node with no details');
         }
     };
-    CreateNodesComponent.prototype.validateRelationData = function (relationObj) {
-        if (Object.keys(relationObj).length > 0) {
-            if (relationObj.hasOwnProperty('type') && relationObj.type.length > 0) {
-                if (relationObj.hasOwnProperty('properties') && Object.keys(relationObj.properties).length > 0) {
-                    return this.cleanRelationshipData(relationObj);
-                }
-                else {
-                    // user did not specify any properties, its okay
-                }
-            }
-            else {
-                throw new Error('Cannot create a relation with no Type');
-            }
-        }
-        else {
-            throw new Error('cannot create a relation with no details');
-        }
-    };
     CreateNodesComponent.prototype.generateID = function () {
         // this function generates a new id for a the node which will be unique
         return Math.floor(Date.now() + Math.random());
@@ -501,7 +239,6 @@ var CreateNodesComponent = /** @class */ (function () {
     };
     CreateNodesComponent.prototype.extractLabels = function (data) {
         var _this = this;
-        this.nodeTypes2 = [];
         data.forEach(function (label) {
             _this.nodeTypes2.push(label.type[0]);
         });
@@ -509,8 +246,7 @@ var CreateNodesComponent = /** @class */ (function () {
     };
     CreateNodesComponent.prototype.updateProperties = function (event) {
         // fetch the properties of selected label and display it in the dropdown
-        // console.log(event)
-        this.labelProperties = this.getProperties([event]);
+        this.labelProperties = this.getProperties(event);
     };
     CreateNodesComponent.prototype.getProperties = function (labelName) {
         if (labelName.length > 0) {
@@ -526,155 +262,24 @@ var CreateNodesComponent = /** @class */ (function () {
             return [];
         }
     };
-    CreateNodesComponent.prototype.removeDirtyData = function (dataObj) {
-        var newPropertyObject = {};
-        Object.keys(dataObj.properties).forEach(function (property) {
-            if (property !== null && dataObj.properties[property] !== null) {
-                // remove the id_ prefix in the key
-                property = property.split('id_')[1];
-                newPropertyObject[property] = dataObj.properties['id_' + property];
-            }
-        });
-        return newPropertyObject;
-    };
     CreateNodesComponent.prototype.cleanNodeData = function (nodeObj) {
         var newPropertyObject = {};
         // remove any null properties
-        newPropertyObject = this.removeDirtyData(nodeObj);
+        Object.keys(nodeObj.properties).forEach(function (property) {
+            if (property !== null && nodeObj.properties[property] !== null) {
+                // remove the id_ prefix in the key
+                property = property.split('id_')[1];
+                newPropertyObject[property] = nodeObj.properties['id_' + property];
+            }
+        });
         // assign it back to the original data
-        nodeObj.properties = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](newPropertyObject);
+        nodeObj.properties = newPropertyObject;
         console.log('new properties are ', nodeObj);
         // assign a unique id to the node
         nodeObj['id'] = this.generateID();
-        if (this.popupConfig.editNodePopup === true) {
-            // assign the node id
-            this.disabledBox = true;
-            var nodeID = !isNaN($("#edit_btn").attr('node_id')) ? $("#edit_btn").attr('node_id') : null;
-            console.log('node id is ', nodeID);
-            nodeObj['id'] = nodeID;
-        }
         // get the type array removed
         nodeObj['type'] = nodeObj['type'][0];
         return nodeObj;
-    };
-    CreateNodesComponent.prototype.cleanRelationshipData = function (relation) {
-        var relationshipProperties = {};
-        // remove any null properties
-        relationshipProperties = this.removeDirtyData(relation);
-        relation.properties = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](relationshipProperties);
-        relation['type'] = relation['type'][0];
-        return relation;
-    };
-    CreateNodesComponent.prototype.extractTypes = function (ObjectArray) {
-        var typesArray = [];
-        ObjectArray.forEach(function (obj) {
-            typesArray.push(obj['type']);
-        });
-        return typesArray;
-    };
-    CreateNodesComponent.prototype.updateRelProperties = function (event) {
-        var _this = this;
-        // fetch the properties of selected type and display it in the dropdown
-        this.typeProperties = this.getRelProperties([event]);
-        // trigger an api to get all the names of the nodes in the graph
-        this.graphSrvc.getNodeNames().subscribe(function (response) {
-            _this.fromNames = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](response);
-            _this.toNames = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](response);
-        }, function (error) {
-            console.log(error);
-            _this.fromNames = [];
-            _this.toNames = [];
-        });
-    };
-    CreateNodesComponent.prototype.getRelProperties = function (relType) {
-        if (relType.length > 0) {
-            var fetchedProperties_2 = [];
-            this.relationsData.forEach(function (Obj) {
-                if (Obj.type === relType[0]) {
-                    fetchedProperties_2 = Obj['properties'];
-                    return fetchedProperties_2;
-                }
-            });
-            return fetchedProperties_2;
-        }
-        else {
-            return [];
-        }
-    };
-    CreateNodesComponent.prototype.submitRelModal = function (type) {
-        if (type === void 0) { type = 'create'; }
-        var nodeData = null;
-        var relationData = null;
-        var sourceNode = null;
-        var targetNode = null;
-        if (type === 'create') {
-            nodeData = {
-                Name: null
-            };
-            sourceNode = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](nodeData);
-            targetNode = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](nodeData);
-            sourceNode.Name = this.selectedNodeNameSource;
-            targetNode.Name = this.selectedNodeNameTarget;
-        }
-        relationData = {
-            type: null,
-            properties: {}
-        };
-        relationData.type = [this.selectedType];
-        // extract properties from modal if entered
-        $('#createRelationModal :text').each(function () {
-            var key = $(this).attr('id') || null;
-            var value = $(this).val() || null;
-            relationData.properties[key] = value;
-        });
-        console.log(relationData);
-        try {
-            relationData = this.validateRelationData(relationData);
-            console.log('relationship created is ', relationData);
-            // add the source and target nodes of this relation
-            if (type === 'create') {
-                relationData['from'] = sourceNode.Name;
-                relationData['to'] = targetNode.Name;
-            }
-            var relationID = !isNaN($("#edit_btn").attr('relation_id')) ? $("#edit_btn").attr('relation_id') : null;
-            relationData['id'] = relationID;
-            this.edgeBtnEvent.emit({ type: 'click', action: "" + type, data: relationData });
-            // hide the modal once the data is created properly
-            $('#createRelationModal').modal('hide');
-        }
-        catch (e) {
-            console.log(e);
-        }
-    };
-    CreateNodesComponent.prototype.updateList = function (key, name) {
-        if (name.length > 0) {
-            var ans = '';
-            // if name is selected from source, remove it from target and vice versa
-            if (key == 'from') {
-                ans = lodash__WEBPACK_IMPORTED_MODULE_3__["remove"](this.fromNames, function (val) {
-                    return val === name[0];
-                });
-                if (ans) {
-                    this.fromNames = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](this.fromNames);
-                }
-            }
-            else if (key == 'to') {
-                ans = lodash__WEBPACK_IMPORTED_MODULE_3__["remove"](this.toNames, function (val) {
-                    return val === name[0];
-                });
-                if (ans) {
-                    this.toNames = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](this.toNames);
-                }
-            }
-            else {
-                // nothing
-            }
-        }
-    };
-    CreateNodesComponent.prototype.activateDelete = function (deleteModalID, triggeredBy) {
-        // first get the information of the modal which is trying to trigger the delete modal, then show the delete modal
-        this.deleteContext = triggeredBy;
-        $("#" + deleteModalID).modal('show');
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
@@ -688,21 +293,13 @@ var CreateNodesComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Array)
     ], CreateNodesComponent.prototype, "nodeTypes", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
-    ], CreateNodesComponent.prototype, "editData", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
-    ], CreateNodesComponent.prototype, "editRelData", void 0);
     CreateNodesComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-create-nodes',
             template: __webpack_require__(/*! ./create-nodes.component.html */ "./src/app/modules/dashboard-v2/components/create-nodes/create-nodes.component.html"),
             styles: [__webpack_require__(/*! ./create-nodes.component.scss */ "./src/app/modules/dashboard-v2/components/create-nodes/create-nodes.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_shared_services_search_service_search_service__WEBPACK_IMPORTED_MODULE_2__["SearchService"], src_app_modules_core_services_graph_data_service_graph_data_service__WEBPACK_IMPORTED_MODULE_4__["GraphDataService"], _core_services_shared_graph_service__WEBPACK_IMPORTED_MODULE_6__["SharedGraphService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_shared_services_search_service_search_service__WEBPACK_IMPORTED_MODULE_2__["SearchService"]])
     ], CreateNodesComponent);
     return CreateNodesComponent;
 }());
@@ -718,7 +315,7 @@ var CreateNodesComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid p-3\">\n    <div class=\"headerWrapper\">\n        <div class=\"row\">\n            <div class=\"col-3 logo left-logo\">\n                <img src=\"assets/societal-logo.png\" />\n            </div>\n            <div class=\"col-9 rightToolbar\">\n                <div class=\"dropdown\">\n                    <div class=\"profilePic\">\n                        <p>Hi Rishabh</p>\n                        <img src=\"./../../../../../assets/round_profile.jpg\" />\n                    </div>\n                    <div class=\"dropdown-content\">\n                        <a href=\"/profile\">PROFILE</a>\n                        <a href=\"/settings\">SETTINGS</a>\n                        <a href=\"/logout\">LOGOUT</a>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"container-fluid p-3\">\r\n    <div class=\"headerWrapper\">\r\n        <div class=\"row\">\r\n            <div class=\"col-3 logo left-logo\">\r\n                <img src=\"assets/societal-logo.png\" />\r\n            </div>\r\n            <div class=\"col-9 rightToolbar\">\r\n                <div class=\"dropdown\">\r\n                    <div class=\"profilePic\">\r\n                        <p>Hi Rishabh</p>\r\n                        <img src=\"./../../../../../assets/round_profile.jpg\" />\r\n                    </div>\r\n                    <div class=\"dropdown-content\">\r\n                        <a href=\"/profile\">PROFILE</a>\r\n                        <a href=\"/settings\">SETTINGS</a>\r\n                        <a href=\"/logout\">LOGOUT</a>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -729,7 +326,7 @@ module.exports = "<div class=\"container-fluid p-3\">\n    <div class=\"headerWr
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".headerWrapper {\n  height: 10vh;\n  background: #fff; }\n\n.container-fluid {\n  background: #fff; }\n\n.rightToolbar {\n  height: 100%;\n  float: right;\n  width: 30%; }\n\n.login-button {\n  border-radius: 20px;\n  font-size: 14px;\n  line-height: 2;\n  min-width: 90px;\n  float: right;\n  background: #5f5f5f;\n  border: none;\n  text-decoration: none; }\n\n.login-button:active:focus {\n  background: #5f5f5e; }\n\n.login-button:hover {\n  box-shadow: 2px 7px 18px 1px rgba(95, 95, 95, 0.76);\n  transition: 0.7s; }\n\n.dropdown {\n  position: relative;\n  float: right;\n  z-index: 9998; }\n\n.dropdown:hover .dropdown-content {\n  display: block;\n  transition: 0.5s; }\n\n.dropdown-content:hover {\n  display: block; }\n\n.dropdown-content {\n  display: none;\n  position: absolute;\n  background-color: white;\n  padding: 0;\n  min-height: 120px;\n  min-width: 220px;\n  right: 1px;\n  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);\n  border-radius: 5px;\n  z-index: 1; }\n\n.dropdown-content a {\n    padding: 20px 10px;\n    display: block;\n    text-decoration: none;\n    color: grey;\n    font-weight: 400; }\n\n.dropdown-content a:hover {\n    background-color: #5f5f5f;\n    color: white;\n    transition: 0.7s;\n    border-radius: 5px; }\n\n.profilePic {\n  margin-right: 30px;\n  border-radius: 50%;\n  display: -webkit-box; }\n\n.profilePic img {\n    cursor: pointer;\n    width: 70px;\n    height: 70px; }\n\n.profilePic img:hover {\n    width: 80px;\n    height: 80px;\n    transition: 0.5s; }\n\n.profilePic p {\n    margin-top: 30px;\n    margin-right: 20px;\n    cursor: pointer; }\n\n.profileDetails {\n  position: absolute;\n  background: whitesmoke;\n  color: black;\n  display: inline;\n  min-width: 100px; }\n\n.left-logo {\n  max-width: 20%; }\n\n.left-logo img {\n    max-height: 10vh; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2Rhc2hib2FyZC12Mi1oZWFkZXIvZGFzaGJvYXJkLWhlYWRlci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLFlBQVk7RUFDWixnQkFBZ0IsRUFBQTs7QUFHcEI7RUFDSSxnQkFBZ0IsRUFBQTs7QUFHcEI7RUFDSSxZQUFZO0VBQ1osWUFBWTtFQUNaLFVBQVUsRUFBQTs7QUFHZDtFQUNJLG1CQUFtQjtFQUNuQixlQUFlO0VBQ2YsY0FBYztFQUNkLGVBQWU7RUFDZixZQUFZO0VBQ1osbUJBQW1CO0VBQ25CLFlBQVk7RUFDWixxQkFBcUIsRUFBQTs7QUFHekI7RUFDSSxtQkFBbUIsRUFBQTs7QUFHdkI7RUFDSSxtREFBbUQ7RUFDbkQsZ0JBQWdCLEVBQUE7O0FBR3BCO0VBQ0ksa0JBQWtCO0VBQ2xCLFlBQVk7RUFDWixhQUFjLEVBQUE7O0FBR2xCO0VBRVEsY0FBYztFQUNkLGdCQUFnQixFQUFBOztBQUl4QjtFQUNJLGNBQWMsRUFBQTs7QUFHbEI7RUFDSSxhQUFhO0VBQ2Isa0JBQWtCO0VBQ2xCLHVCQUF1QjtFQUN2QixVQUFVO0VBQ1YsaUJBQWlCO0VBQ2pCLGdCQUFnQjtFQUVoQixVQUFVO0VBQ1YsK0NBQStDO0VBYy9DLGtCQUFrQjtFQUNsQixVQUFVLEVBQUE7O0FBeEJkO0lBV1Esa0JBQWtCO0lBQ2xCLGNBQWM7SUFDZCxxQkFBcUI7SUFDckIsV0FBVztJQUNYLGdCQUFnQixFQUFBOztBQWZ4QjtJQWtCUSx5QkFBeUI7SUFDekIsWUFBWTtJQUNaLGdCQUFnQjtJQUNoQixrQkFBa0IsRUFBQTs7QUFNMUI7RUFDSSxrQkFBa0I7RUFDbEIsa0JBQWtCO0VBQ2xCLG9CQUFvQixFQUFBOztBQUh4QjtJQUtRLGVBQWU7SUFDZixXQUFXO0lBQ1gsWUFBWSxFQUFBOztBQVBwQjtJQVVRLFdBQVc7SUFDWCxZQUFZO0lBQ1osZ0JBQWdCLEVBQUE7O0FBWnhCO0lBZVEsZ0JBQWdCO0lBQ2hCLGtCQUFrQjtJQUNsQixlQUFlLEVBQUE7O0FBSXZCO0VBQ0ksa0JBQWtCO0VBQ2xCLHNCQUFzQjtFQUN0QixZQUFZO0VBQ1osZUFBZTtFQUNmLGdCQUFnQixFQUFBOztBQUdwQjtFQUNJLGNBQWMsRUFBQTs7QUFEbEI7SUFHUSxnQkFBZ0IsRUFBQSIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvZGFzaGJvYXJkLXYyL2NvbXBvbmVudHMvZGFzaGJvYXJkLXYyLWhlYWRlci9kYXNoYm9hcmQtaGVhZGVyLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmhlYWRlcldyYXBwZXIge1xuICAgIGhlaWdodDogMTB2aDtcbiAgICBiYWNrZ3JvdW5kOiAjZmZmO1xufVxuXG4uY29udGFpbmVyLWZsdWlkIHtcbiAgICBiYWNrZ3JvdW5kOiAjZmZmO1xufVxuXG4ucmlnaHRUb29sYmFyIHtcbiAgICBoZWlnaHQ6IDEwMCU7XG4gICAgZmxvYXQ6IHJpZ2h0O1xuICAgIHdpZHRoOiAzMCU7XG59XG5cbi5sb2dpbi1idXR0b24ge1xuICAgIGJvcmRlci1yYWRpdXM6IDIwcHg7XG4gICAgZm9udC1zaXplOiAxNHB4O1xuICAgIGxpbmUtaGVpZ2h0OiAyO1xuICAgIG1pbi13aWR0aDogOTBweDtcbiAgICBmbG9hdDogcmlnaHQ7XG4gICAgYmFja2dyb3VuZDogIzVmNWY1ZjtcbiAgICBib3JkZXI6IG5vbmU7XG4gICAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xufVxuXG4ubG9naW4tYnV0dG9uOmFjdGl2ZTpmb2N1cyB7XG4gICAgYmFja2dyb3VuZDogIzVmNWY1ZTtcbn1cblxuLmxvZ2luLWJ1dHRvbjpob3ZlciB7XG4gICAgYm94LXNoYWRvdzogMnB4IDdweCAxOHB4IDFweCByZ2JhKDk1LCA5NSwgOTUsIDAuNzYpO1xuICAgIHRyYW5zaXRpb246IDAuN3M7XG59XG5cbi5kcm9wZG93biB7XG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgIGZsb2F0OiByaWdodDtcbiAgICB6LWluZGV4IDogOTk5ODtcbn1cblxuLmRyb3Bkb3duOmhvdmVyIHtcbiAgICAuZHJvcGRvd24tY29udGVudCB7XG4gICAgICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgICAgICB0cmFuc2l0aW9uOiAwLjVzO1xuICAgIH1cbn1cblxuLmRyb3Bkb3duLWNvbnRlbnQ6aG92ZXIge1xuICAgIGRpc3BsYXk6IGJsb2NrO1xufVxuXG4uZHJvcGRvd24tY29udGVudCB7XG4gICAgZGlzcGxheTogbm9uZTtcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG4gICAgcGFkZGluZzogMDtcbiAgICBtaW4taGVpZ2h0OiAxMjBweDtcbiAgICBtaW4td2lkdGg6IDIyMHB4O1xuICAgIC8vIHRvcDogODZweDtcbiAgICByaWdodDogMXB4O1xuICAgIGJveC1zaGFkb3c6IDBweCA4cHggMTZweCAwcHggcmdiYSgwLCAwLCAwLCAwLjIpO1xuICAgIGEge1xuICAgICAgICBwYWRkaW5nOiAyMHB4IDEwcHg7XG4gICAgICAgIGRpc3BsYXk6IGJsb2NrO1xuICAgICAgICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG4gICAgICAgIGNvbG9yOiBncmV5O1xuICAgICAgICBmb250LXdlaWdodDogNDAwO1xuICAgIH1cbiAgICBhOmhvdmVyIHtcbiAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogIzVmNWY1ZjtcbiAgICAgICAgY29sb3I6IHdoaXRlO1xuICAgICAgICB0cmFuc2l0aW9uOiAwLjdzO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgfVxuICAgIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgICB6LWluZGV4OiAxO1xufVxuXG4ucHJvZmlsZVBpYyB7XG4gICAgbWFyZ2luLXJpZ2h0OiAzMHB4O1xuICAgIGJvcmRlci1yYWRpdXM6IDUwJTtcbiAgICBkaXNwbGF5OiAtd2Via2l0LWJveDtcbiAgICBpbWcge1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIHdpZHRoOiA3MHB4O1xuICAgICAgICBoZWlnaHQ6IDcwcHg7XG4gICAgfVxuICAgIGltZzpob3ZlciB7XG4gICAgICAgIHdpZHRoOiA4MHB4O1xuICAgICAgICBoZWlnaHQ6IDgwcHg7XG4gICAgICAgIHRyYW5zaXRpb246IDAuNXM7XG4gICAgfVxuICAgIHAge1xuICAgICAgICBtYXJnaW4tdG9wOiAzMHB4O1xuICAgICAgICBtYXJnaW4tcmlnaHQ6IDIwcHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICB9XG59XG5cbi5wcm9maWxlRGV0YWlscyB7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIGJhY2tncm91bmQ6IHdoaXRlc21va2U7XG4gICAgY29sb3I6IGJsYWNrO1xuICAgIGRpc3BsYXk6IGlubGluZTtcbiAgICBtaW4td2lkdGg6IDEwMHB4O1xufVxuXG4ubGVmdC1sb2dvIHtcbiAgICBtYXgtd2lkdGg6IDIwJTtcbiAgICBpbWcge1xuICAgICAgICBtYXgtaGVpZ2h0OiAxMHZoO1xuICAgIH1cbn0iXX0= */"
+module.exports = ".headerWrapper {\n  height: 10vh;\n  background: #fff; }\n\n.container-fluid {\n  background: #fff; }\n\n.rightToolbar {\n  height: 100%;\n  float: right;\n  width: 30%; }\n\n.login-button {\n  border-radius: 20px;\n  font-size: 14px;\n  line-height: 2;\n  min-width: 90px;\n  float: right;\n  background: #5f5f5f;\n  border: none;\n  text-decoration: none; }\n\n.login-button:active:focus {\n  background: #5f5f5e; }\n\n.login-button:hover {\n  box-shadow: 2px 7px 18px 1px rgba(95, 95, 95, 0.76);\n  transition: 0.7s; }\n\n.dropdown {\n  position: relative;\n  float: right;\n  z-index: 9998; }\n\n.dropdown:hover .dropdown-content {\n  display: block;\n  transition: 0.5s; }\n\n.dropdown-content:hover {\n  display: block; }\n\n.dropdown-content {\n  display: none;\n  position: absolute;\n  background-color: white;\n  padding: 0;\n  min-height: 120px;\n  min-width: 220px;\n  right: 1px;\n  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);\n  border-radius: 5px;\n  z-index: 1; }\n\n.dropdown-content a {\n    padding: 20px 10px;\n    display: block;\n    text-decoration: none;\n    color: grey;\n    font-weight: 400; }\n\n.dropdown-content a:hover {\n    background-color: #5f5f5f;\n    color: white;\n    transition: 0.7s;\n    border-radius: 5px; }\n\n.profilePic {\n  margin-right: 30px;\n  border-radius: 50%;\n  display: -webkit-box; }\n\n.profilePic img {\n    cursor: pointer;\n    width: 70px;\n    height: 70px; }\n\n.profilePic img:hover {\n    width: 80px;\n    height: 80px;\n    transition: 0.5s; }\n\n.profilePic p {\n    margin-top: 30px;\n    margin-right: 20px;\n    cursor: pointer; }\n\n.profileDetails {\n  position: absolute;\n  background: whitesmoke;\n  color: black;\n  display: inline;\n  min-width: 100px; }\n\n.left-logo {\n  max-width: 20%; }\n\n.left-logo img {\n    max-height: 10vh; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9kYXNoYm9hcmQtdjItaGVhZGVyL0Q6XFxuZW80ai1jb21tdW5pdHktMy4zLjlcXGRldmVsb3BtZW50X3Byb2plY3RzXFxuZW80akRhdGFEcml2ZXJcXGNsaWVudC9zcmNcXGFwcFxcbW9kdWxlc1xcZGFzaGJvYXJkLXYyXFxjb21wb25lbnRzXFxkYXNoYm9hcmQtdjItaGVhZGVyXFxkYXNoYm9hcmQtaGVhZGVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksWUFBWTtFQUNaLGdCQUFnQixFQUFBOztBQUdwQjtFQUNJLGdCQUFnQixFQUFBOztBQUdwQjtFQUNJLFlBQVk7RUFDWixZQUFZO0VBQ1osVUFBVSxFQUFBOztBQUdkO0VBQ0ksbUJBQW1CO0VBQ25CLGVBQWU7RUFDZixjQUFjO0VBQ2QsZUFBZTtFQUNmLFlBQVk7RUFDWixtQkFBbUI7RUFDbkIsWUFBWTtFQUNaLHFCQUFxQixFQUFBOztBQUd6QjtFQUNJLG1CQUFtQixFQUFBOztBQUd2QjtFQUNJLG1EQUFtRDtFQUNuRCxnQkFBZ0IsRUFBQTs7QUFHcEI7RUFDSSxrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLGFBQWMsRUFBQTs7QUFHbEI7RUFFUSxjQUFjO0VBQ2QsZ0JBQWdCLEVBQUE7O0FBSXhCO0VBQ0ksY0FBYyxFQUFBOztBQUdsQjtFQUNJLGFBQWE7RUFDYixrQkFBa0I7RUFDbEIsdUJBQXVCO0VBQ3ZCLFVBQVU7RUFDVixpQkFBaUI7RUFDakIsZ0JBQWdCO0VBRWhCLFVBQVU7RUFDViwrQ0FBK0M7RUFjL0Msa0JBQWtCO0VBQ2xCLFVBQVUsRUFBQTs7QUF4QmQ7SUFXUSxrQkFBa0I7SUFDbEIsY0FBYztJQUNkLHFCQUFxQjtJQUNyQixXQUFXO0lBQ1gsZ0JBQWdCLEVBQUE7O0FBZnhCO0lBa0JRLHlCQUF5QjtJQUN6QixZQUFZO0lBQ1osZ0JBQWdCO0lBQ2hCLGtCQUFrQixFQUFBOztBQU0xQjtFQUNJLGtCQUFrQjtFQUNsQixrQkFBa0I7RUFDbEIsb0JBQW9CLEVBQUE7O0FBSHhCO0lBS1EsZUFBZTtJQUNmLFdBQVc7SUFDWCxZQUFZLEVBQUE7O0FBUHBCO0lBVVEsV0FBVztJQUNYLFlBQVk7SUFDWixnQkFBZ0IsRUFBQTs7QUFaeEI7SUFlUSxnQkFBZ0I7SUFDaEIsa0JBQWtCO0lBQ2xCLGVBQWUsRUFBQTs7QUFJdkI7RUFDSSxrQkFBa0I7RUFDbEIsc0JBQXNCO0VBQ3RCLFlBQVk7RUFDWixlQUFlO0VBQ2YsZ0JBQWdCLEVBQUE7O0FBR3BCO0VBQ0ksY0FBYyxFQUFBOztBQURsQjtJQUdRLGdCQUFnQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9kYXNoYm9hcmQtdjItaGVhZGVyL2Rhc2hib2FyZC1oZWFkZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuaGVhZGVyV3JhcHBlciB7XHJcbiAgICBoZWlnaHQ6IDEwdmg7XHJcbiAgICBiYWNrZ3JvdW5kOiAjZmZmO1xyXG59XHJcblxyXG4uY29udGFpbmVyLWZsdWlkIHtcclxuICAgIGJhY2tncm91bmQ6ICNmZmY7XHJcbn1cclxuXHJcbi5yaWdodFRvb2xiYXIge1xyXG4gICAgaGVpZ2h0OiAxMDAlO1xyXG4gICAgZmxvYXQ6IHJpZ2h0O1xyXG4gICAgd2lkdGg6IDMwJTtcclxufVxyXG5cclxuLmxvZ2luLWJ1dHRvbiB7XHJcbiAgICBib3JkZXItcmFkaXVzOiAyMHB4O1xyXG4gICAgZm9udC1zaXplOiAxNHB4O1xyXG4gICAgbGluZS1oZWlnaHQ6IDI7XHJcbiAgICBtaW4td2lkdGg6IDkwcHg7XHJcbiAgICBmbG9hdDogcmlnaHQ7XHJcbiAgICBiYWNrZ3JvdW5kOiAjNWY1ZjVmO1xyXG4gICAgYm9yZGVyOiBub25lO1xyXG4gICAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xyXG59XHJcblxyXG4ubG9naW4tYnV0dG9uOmFjdGl2ZTpmb2N1cyB7XHJcbiAgICBiYWNrZ3JvdW5kOiAjNWY1ZjVlO1xyXG59XHJcblxyXG4ubG9naW4tYnV0dG9uOmhvdmVyIHtcclxuICAgIGJveC1zaGFkb3c6IDJweCA3cHggMThweCAxcHggcmdiYSg5NSwgOTUsIDk1LCAwLjc2KTtcclxuICAgIHRyYW5zaXRpb246IDAuN3M7XHJcbn1cclxuXHJcbi5kcm9wZG93biB7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBmbG9hdDogcmlnaHQ7XHJcbiAgICB6LWluZGV4IDogOTk5ODtcclxufVxyXG5cclxuLmRyb3Bkb3duOmhvdmVyIHtcclxuICAgIC5kcm9wZG93bi1jb250ZW50IHtcclxuICAgICAgICBkaXNwbGF5OiBibG9jaztcclxuICAgICAgICB0cmFuc2l0aW9uOiAwLjVzO1xyXG4gICAgfVxyXG59XHJcblxyXG4uZHJvcGRvd24tY29udGVudDpob3ZlciB7XHJcbiAgICBkaXNwbGF5OiBibG9jaztcclxufVxyXG5cclxuLmRyb3Bkb3duLWNvbnRlbnQge1xyXG4gICAgZGlzcGxheTogbm9uZTtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xyXG4gICAgcGFkZGluZzogMDtcclxuICAgIG1pbi1oZWlnaHQ6IDEyMHB4O1xyXG4gICAgbWluLXdpZHRoOiAyMjBweDtcclxuICAgIC8vIHRvcDogODZweDtcclxuICAgIHJpZ2h0OiAxcHg7XHJcbiAgICBib3gtc2hhZG93OiAwcHggOHB4IDE2cHggMHB4IHJnYmEoMCwgMCwgMCwgMC4yKTtcclxuICAgIGEge1xyXG4gICAgICAgIHBhZGRpbmc6IDIwcHggMTBweDtcclxuICAgICAgICBkaXNwbGF5OiBibG9jaztcclxuICAgICAgICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XHJcbiAgICAgICAgY29sb3I6IGdyZXk7XHJcbiAgICAgICAgZm9udC13ZWlnaHQ6IDQwMDtcclxuICAgIH1cclxuICAgIGE6aG92ZXIge1xyXG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6ICM1ZjVmNWY7XHJcbiAgICAgICAgY29sb3I6IHdoaXRlO1xyXG4gICAgICAgIHRyYW5zaXRpb246IDAuN3M7XHJcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNXB4O1xyXG4gICAgfVxyXG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xyXG4gICAgei1pbmRleDogMTtcclxufVxyXG5cclxuLnByb2ZpbGVQaWMge1xyXG4gICAgbWFyZ2luLXJpZ2h0OiAzMHB4O1xyXG4gICAgYm9yZGVyLXJhZGl1czogNTAlO1xyXG4gICAgZGlzcGxheTogLXdlYmtpdC1ib3g7XHJcbiAgICBpbWcge1xyXG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgICAgICB3aWR0aDogNzBweDtcclxuICAgICAgICBoZWlnaHQ6IDcwcHg7XHJcbiAgICB9XHJcbiAgICBpbWc6aG92ZXIge1xyXG4gICAgICAgIHdpZHRoOiA4MHB4O1xyXG4gICAgICAgIGhlaWdodDogODBweDtcclxuICAgICAgICB0cmFuc2l0aW9uOiAwLjVzO1xyXG4gICAgfVxyXG4gICAgcCB7XHJcbiAgICAgICAgbWFyZ2luLXRvcDogMzBweDtcclxuICAgICAgICBtYXJnaW4tcmlnaHQ6IDIwcHg7XHJcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgfVxyXG59XHJcblxyXG4ucHJvZmlsZURldGFpbHMge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgYmFja2dyb3VuZDogd2hpdGVzbW9rZTtcclxuICAgIGNvbG9yOiBibGFjaztcclxuICAgIGRpc3BsYXk6IGlubGluZTtcclxuICAgIG1pbi13aWR0aDogMTAwcHg7XHJcbn1cclxuXHJcbi5sZWZ0LWxvZ28ge1xyXG4gICAgbWF4LXdpZHRoOiAyMCU7XHJcbiAgICBpbWcge1xyXG4gICAgICAgIG1heC1oZWlnaHQ6IDEwdmg7XHJcbiAgICB9XHJcbn0iXX0= */"
 
 /***/ }),
 
@@ -774,7 +371,7 @@ var DashboardHeaderComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"wrapper sidebar-wrapper\">\n    <div class=\"sidebarBody p-0\">\n        <div class=\"sidebarBodyTitle\">\n            <p>Filter By Attributes</p>\n        </div>\n        <div class=\"sidebarElements\">\n            <div class=\"item\">\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Name');rotateObj.Name.rotate = !rotateObj.Name.rotate\" data-toggle=\"collapse\" href=\"#collapseExample\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample\"\n                    [ngClass]=\"{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}\">Names<span class=\"ele-count count-org\">{{nameOptions.length}}</span></a>\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample\" (click)=\"rotateObj.Name.rotate = !rotateObj.Name.rotate\" [ngClass]=\"{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}\"></span>\n                <div class=\"collapse\" id=\"collapseExample\">\n                    <sui-multi-select [(ngModel)]=\"selectedName\" [options]=\"nameOptions\" [maxSelected]=\"15\" (ngModelChange)=\"searchElement()\" #names>\n                        <div class=\"ui icon search input\">\n                            <i class=\"search icon\"></i>\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Name...\">\n                        </div>\n                        <div class=\"scrolling menu\">\n                            <sui-select-option *ngFor=\"let o of names.filteredOptions\" [value]=\"o\"></sui-select-option>\n                        </div>\n                    </sui-multi-select>\n                </div>\n            </div>\n            <div class=\"item\">\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Type');rotateObj.Type.rotate = !rotateObj.Type.rotate\" data-toggle=\"collapse\" href=\"#collapseExample2\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample2\"\n                    [ngClass]=\"{'rotate': rotateObj?.Type.rotate, 'no-rotate': !rotateObj?.Type.rotate}\">Type<span class=\"ele-count count-department\">{{typeOptions.length}}</span></a>\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample2\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample2\" (click)=\"rotateObj.Type.rotate = !rotateObj.Type.rotate\" [ngClass]=\"{'rotate': rotateObj?.Type.rotate, 'no-rotate': !rotateObj?.Type.rotate}\"></span>\n                <div class=\"collapse\" id=\"collapseExample2\">\n                    <sui-multi-select [(ngModel)]=\"selectedType\" [options]=\"typeOptions\" [maxSelected]=\"15\" #type>\n                        <div class=\"ui icon search input\">\n                            <i class=\"search icon\"></i>\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Type...\">\n                        </div>\n                        <div class=\"scrolling menu\">\n                            <sui-select-option *ngFor=\"let o of type.filteredOptions\" [value]=\"o\">\n\n                            </sui-select-option>\n\n                        </div>\n                    </sui-multi-select>\n                </div>\n            </div>\n            <div class=\"item\">\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Represent');rotateObj.Represent.rotate = !rotateObj.Represent.rotate\" data-toggle=\"collapse\" href=\"#collapseExample3\" role=\"button\" aria-expanded=\"false\"\n                    aria-controls=\"collapseExample3\" [ngClass]=\"{'rotate': rotateObj?.Represent.rotate, 'no-rotate': !rotateObj?.Represent.rotate}\">Represent<span class=\"ele-count count-person\">{{representOptions.length}}</span></a>\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample3\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample3\" (click)=\"rotateObj.Represent.rotate = !rotateObj.Represent.rotate\" [ngClass]=\"{'rotate': rotateObj?.Represent.rotate, 'no-rotate': !rotateObj?.Represent.rotate}\"></span>\n                <div class=\"collapse\" id=\"collapseExample3\">\n                    <sui-multi-select [(ngModel)]=\"selectedRepresent\" [options]=\"representOptions\" [maxSelected]=\"15\" #represent>\n                        <div class=\"ui icon search input\">\n                            <i class=\"search icon\"></i>\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Represent...\">\n                        </div>\n                        <div class=\"scrolling menu\">\n                            <sui-select-option *ngFor=\"let o of represent.filteredOptions\" [value]=\"o\"></sui-select-option>\n                        </div>\n                    </sui-multi-select>\n                </div>\n            </div>\n            <div class=\"item\">\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Connection');rotateObj.Connection.rotate = !rotateObj.Connection.rotate\" data-toggle=\"collapse\" href=\"#collapseExample4\" role=\"button\" aria-expanded=\"false\"\n                    aria-controls=\"collapseExample4\" [ngClass]=\"{'rotate': rotateObj?.Connection.rotate, 'no-rotate': !rotateObj?.Connection.rotate}\">Connection<span class=\"ele-count count-person\">{{connectionOptions.length}}</span></a>\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample4\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample4\" (click)=\"rotateObj.Connection.rotate = !rotateObj.Connection.rotate\" [ngClass]=\"{'rotate': rotateObj?.Connection.rotate, 'no-rotate': !rotateObj?.Connection.rotate}\"></span>\n                <div class=\"collapse\" id=\"collapseExample4\">\n                    <sui-multi-select [(ngModel)]=\"selectedConnection\" [options]=\"connectionOptions\" [maxSelected]=\"15\" #connection>\n                        <div class=\"ui icon search input\">\n                            <i class=\"search icon\"></i>\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Connection...\">\n                        </div>\n                        <div class=\"scrolling menu\">\n                            <sui-select-option *ngFor=\"let o of connection.filteredOptions\" [value]=\"o\"></sui-select-option>\n                        </div>\n                    </sui-multi-select>\n                </div>\n            </div>\n            <div class=\"item\">\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Status');rotateObj.Status.rotate = !rotateObj.Status.rotate\" data-toggle=\"collapse\" href=\"#collapseExample5\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample5\"\n                    [ngClass]=\"{'rotate': rotateObj?.Status.rotate, 'no-rotate': !rotateObj?.Status.rotate}\">Status<span class=\"ele-count count-person\">{{statusOptions.length}}</span></a>\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample5\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample5\" (click)=\"rotateObj.Status.rotate = !rotateObj.Status.rotate\" [ngClass]=\"{'rotate': rotateObj?.Status.rotate, 'no-rotate': !rotateObj?.Status.rotate}\"></span>\n                <div class=\"collapse\" id=\"collapseExample5\">\n                    <sui-multi-select [(ngModel)]=\"selectedStatus\" [options]=\"statusOptions\" [maxSelected]=\"15\" #status>\n                        <div class=\"ui icon search input\">\n                            <i class=\"search icon\"></i>\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Status...\">\n                        </div>\n                        <div class=\"scrolling menu\">\n                            <sui-select-option *ngFor=\"let o of status.filteredOptions\" [value]=\"o\"></sui-select-option>\n                        </div>\n                    </sui-multi-select>\n                </div>\n            </div>\n            <div class=\"item\">\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Understanding');rotateObj.Understanding.rotate = !rotateObj.Understanding.rotate\" data-toggle=\"collapse\" href=\"#collapseExample6\" role=\"button\" aria-expanded=\"false\"\n                    aria-controls=\"collapseExample6\" [ngClass]=\"{'rotate': rotateObj?.Understanding.rotate, 'no-rotate': !rotateObj?.Understanding.rotate}\">SP Thinking<span class=\"ele-count count-person\">{{understandingOptions.length}}</span></a>\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample6\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample6\" (click)=\"rotateObj.Understanding.rotate = !rotateObj.Understanding.rotate\" [ngClass]=\"{'rotate': rotateObj?.Understanding.rotate, 'no-rotate': !rotateObj?.Understanding.rotate}\"></span>\n                <div class=\"collapse\" id=\"collapseExample6\">\n                    <sui-multi-select [(ngModel)]=\"selectedUnderstanding\" [options]=\"understandingOptions\" [maxSelected]=\"15\" #understanding>\n                        <div class=\"ui icon search input\">\n                            <i class=\"search icon\"></i>\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Understanding...\">\n                        </div>\n                        <div class=\"scrolling menu\">\n                            <sui-select-option *ngFor=\"let o of understanding.filteredOptions\" [value]=\"o\"></sui-select-option>\n                        </div>\n                    </sui-multi-select>\n                </div>\n            </div>\n            <div class=\"item\">\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Url');rotateObj.Url.rotate = !rotateObj.Url.rotate\" data-toggle=\"collapse\" href=\"#collapseExample7\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample7\"\n                    [ngClass]=\"{'rotate': rotateObj?.Url.rotate, 'no-rotate': !rotateObj?.Url.rotate}\">Url<span class=\"ele-count count-person\">{{urlOptions.length}}</span></a>\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample7\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample7\" (click)=\"rotateObj.Url.rotate = !rotateObj.Url.rotate\" [ngClass]=\"{'rotate': rotateObj?.Url.rotate, 'no-rotate': !rotateObj?.Url.rotate}\"></span>\n                <div class=\"collapse\" id=\"collapseExample7\">\n                    <sui-multi-select [(ngModel)]=\"selectedUrl\" [options]=\"urlOptions\" [maxSelected]=\"15\" #url>\n                        <div class=\"ui icon search input\">\n                            <i class=\"search icon\"></i>\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Url...\">\n                        </div>\n                        <div class=\"scrolling menu\">\n                            <sui-select-option *ngFor=\"let o of url.filteredOptions\" [value]=\"o\"></sui-select-option>\n                        </div>\n                    </sui-multi-select>\n                </div>\n            </div>\n        </div>\n        <div class=\"btn-container d-flex justify-content-around\">\n            <div class=\"searchBtnWrapper btn-sidebar\">\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\n            </div>\n            <div class=\"searchBtnWrapper btn-sidebar\">\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"searchGraph()\">Apply</button>\n            </div>\n\n        </div>\n        <div class=\"sidebarBodyTitle\">\n            <p>Filter By Relationships</p>\n        </div>\n        <div class=\"sidebarElements\">\n            <div class=\"item\">\n                <sui-multi-select [(ngModel)]=\"selectedRelation\" [options]=\"relationOptions\" [maxSelected]=\"5\" #relation>\n                    <div class=\"ui icon search input\">\n                        <i class=\"search icon\"></i>\n                        <input suiSelectSearch type=\"text\" placeholder=\"Search Relationships...\">\n                    </div>\n                    <div class=\"scrolling menu\">\n                        <sui-select-option *ngFor=\"let o of relation.filteredOptions\" [value]=\"o\"></sui-select-option>\n                    </div>\n                </sui-multi-select>\n                <!-- <div class=\"rel-tabs-container\" *ngFor=\"let r of relationOptions\">\n                    <div class=\"rel-tab\" (click)=\"relationclickEvent(r)\" id={{r}}>\n                        <p>{{r}}</p>\n                    </div>\n                </div> -->\n                <div class=\"btn-container d-flex justify-content-around\">\n                    <div class=\"searchBtnWrapper btn-sidebar\">\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\n                    </div>\n                    <div class=\"searchBtnWrapper btn-sidebar\">\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"relationSearchGraph()\">Apply</button>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n        <!-- <div class=\"searchBtnWrapper btn-sidebar\">\n            <button class=\"btn btn-default btn-md searchBtn\" (click)=\"noderelationSearchGraph()\">Apply Both</button>\n        </div> -->\n    </div>\n\n</div>"
+module.exports = "<div class=\"wrapper sidebar-wrapper\">\r\n    <div class=\"sidebarBody p-0\">\r\n        <div class=\"sidebarBodyTitle\">\r\n            <p>Filter By Attributes</p>\r\n        </div>\r\n        <div class=\"sidebarElements\">\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Name');rotateObj.Name.rotate = !rotateObj.Name.rotate\" data-toggle=\"collapse\" href=\"#collapseExample\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}\">Names<span class=\"ele-count count-org\">{{nameOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample\" (click)=\"rotateObj.Name.rotate = !rotateObj.Name.rotate\" [ngClass]=\"{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedName\" [options]=\"nameOptions\" [maxSelected]=\"15\" (ngModelChange)=\"searchElement()\" #names>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Name...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of names.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Type');rotateObj.Type.rotate = !rotateObj.Type.rotate\" data-toggle=\"collapse\" href=\"#collapseExample2\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample2\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Type.rotate, 'no-rotate': !rotateObj?.Type.rotate}\">Type<span class=\"ele-count count-department\">{{typeOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample2\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample2\" (click)=\"rotateObj.Type.rotate = !rotateObj.Type.rotate\" [ngClass]=\"{'rotate': rotateObj?.Type.rotate, 'no-rotate': !rotateObj?.Type.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample2\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedType\" [options]=\"typeOptions\" [maxSelected]=\"15\" #type>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Type...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of type.filteredOptions\" [value]=\"o\">\r\n\r\n                            </sui-select-option>\r\n\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Represent');rotateObj.Represent.rotate = !rotateObj.Represent.rotate\" data-toggle=\"collapse\" href=\"#collapseExample3\" role=\"button\" aria-expanded=\"false\"\r\n                    aria-controls=\"collapseExample3\" [ngClass]=\"{'rotate': rotateObj?.Represent.rotate, 'no-rotate': !rotateObj?.Represent.rotate}\">Represent<span class=\"ele-count count-person\">{{representOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample3\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample3\" (click)=\"rotateObj.Represent.rotate = !rotateObj.Represent.rotate\" [ngClass]=\"{'rotate': rotateObj?.Represent.rotate, 'no-rotate': !rotateObj?.Represent.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample3\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedRepresent\" [options]=\"representOptions\" [maxSelected]=\"15\" #represent>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Represent...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of represent.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Connection');rotateObj.Connection.rotate = !rotateObj.Connection.rotate\" data-toggle=\"collapse\" href=\"#collapseExample4\" role=\"button\" aria-expanded=\"false\"\r\n                    aria-controls=\"collapseExample4\" [ngClass]=\"{'rotate': rotateObj?.Connection.rotate, 'no-rotate': !rotateObj?.Connection.rotate}\">Connection<span class=\"ele-count count-person\">{{connectionOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample4\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample4\" (click)=\"rotateObj.Connection.rotate = !rotateObj.Connection.rotate\" [ngClass]=\"{'rotate': rotateObj?.Connection.rotate, 'no-rotate': !rotateObj?.Connection.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample4\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedConnection\" [options]=\"connectionOptions\" [maxSelected]=\"15\" #connection>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Connection...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of connection.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Status');rotateObj.Status.rotate = !rotateObj.Status.rotate\" data-toggle=\"collapse\" href=\"#collapseExample5\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample5\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Status.rotate, 'no-rotate': !rotateObj?.Status.rotate}\">Status<span class=\"ele-count count-person\">{{statusOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample5\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample5\" (click)=\"rotateObj.Status.rotate = !rotateObj.Status.rotate\" [ngClass]=\"{'rotate': rotateObj?.Status.rotate, 'no-rotate': !rotateObj?.Status.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample5\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedStatus\" [options]=\"statusOptions\" [maxSelected]=\"15\" #status>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Status...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of status.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Understanding');rotateObj.Understanding.rotate = !rotateObj.Understanding.rotate\" data-toggle=\"collapse\" href=\"#collapseExample6\" role=\"button\" aria-expanded=\"false\"\r\n                    aria-controls=\"collapseExample6\" [ngClass]=\"{'rotate': rotateObj?.Understanding.rotate, 'no-rotate': !rotateObj?.Understanding.rotate}\">SP Thinking<span class=\"ele-count count-person\">{{understandingOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample6\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample6\" (click)=\"rotateObj.Understanding.rotate = !rotateObj.Understanding.rotate\" [ngClass]=\"{'rotate': rotateObj?.Understanding.rotate, 'no-rotate': !rotateObj?.Understanding.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample6\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedUnderstanding\" [options]=\"understandingOptions\" [maxSelected]=\"15\" #understanding>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Understanding...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of understanding.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Url');rotateObj.Url.rotate = !rotateObj.Url.rotate\" data-toggle=\"collapse\" href=\"#collapseExample7\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample7\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Url.rotate, 'no-rotate': !rotateObj?.Url.rotate}\">Url<span class=\"ele-count count-person\">{{urlOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample7\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample7\" (click)=\"rotateObj.Url.rotate = !rotateObj.Url.rotate\" [ngClass]=\"{'rotate': rotateObj?.Url.rotate, 'no-rotate': !rotateObj?.Url.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample7\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedUrl\" [options]=\"urlOptions\" [maxSelected]=\"15\" #url>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Url...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of url.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"btn-container d-flex justify-content-around\">\r\n            <div class=\"searchBtnWrapper btn-sidebar\">\r\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\r\n            </div>\r\n            <div class=\"searchBtnWrapper btn-sidebar\">\r\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"searchGraph()\">Apply</button>\r\n            </div>\r\n\r\n        </div>\r\n        <div class=\"sidebarBodyTitle\">\r\n            <p>Filter By Relationships</p>\r\n        </div>\r\n        <div class=\"sidebarElements\">\r\n            <div class=\"item\">\r\n                <sui-multi-select [(ngModel)]=\"selectedRelation\" [options]=\"relationOptions\" [maxSelected]=\"5\" #relation>\r\n                    <div class=\"ui icon search input\">\r\n                        <i class=\"search icon\"></i>\r\n                        <input suiSelectSearch type=\"text\" placeholder=\"Search Relationships...\">\r\n                    </div>\r\n                    <div class=\"scrolling menu\">\r\n                        <sui-select-option *ngFor=\"let o of relation.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                    </div>\r\n                </sui-multi-select>\r\n                <!-- <div class=\"rel-tabs-container\" *ngFor=\"let r of relationOptions\">\r\n                    <div class=\"rel-tab\" (click)=\"relationclickEvent(r)\" id={{r}}>\r\n                        <p>{{r}}</p>\r\n                    </div>\r\n                </div> -->\r\n                <div class=\"btn-container d-flex justify-content-around\">\r\n                    <div class=\"searchBtnWrapper btn-sidebar\">\r\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\r\n                    </div>\r\n                    <div class=\"searchBtnWrapper btn-sidebar\">\r\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"relationSearchGraph()\">Apply</button>\r\n                    </div>\r\n\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <!-- <div class=\"searchBtnWrapper btn-sidebar\">\r\n            <button class=\"btn btn-default btn-md searchBtn\" (click)=\"noderelationSearchGraph()\">Apply Both</button>\r\n        </div> -->\r\n    </div>\r\n\r\n</div>"
 
 /***/ }),
 
@@ -785,7 +382,7 @@ module.exports = "<div class=\"wrapper sidebar-wrapper\">\n    <div class=\"side
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "@import url(\"https://fonts.googleapis.com/css?family=Kanit&display=swap\");\n::-webkit-scrollbar-track {\n  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #F5F5F5; }\n::-webkit-scrollbar {\n  width: 6px;\n  background-color: #F5F5F5; }\n::-webkit-scrollbar-thumb {\n  background-color: #5f5f5f; }\n.sidebar-wrapper {\n  position: absolute;\n  top: 13%;\n  left: 0;\n  overflow-y: auto;\n  z-index: 1;\n  width: 20%;\n  height: 87vh;\n  background: #fff; }\n.logo {\n  text-align: center; }\n.logo img {\n  cursor: pointer; }\n.sidebarBodyTitle {\n  font-family: 'Kanit', sans-serif;\n  font-size: 18px;\n  text-align: center; }\n.sidebarBodyTitle p {\n    padding: 0 10px;\n    padding-top: 8px;\n    padding-bottom: 8px;\n    background: transparent;\n    color: #5f5f5f;\n    font-weight: bold;\n    border-radius: 5px;\n    transition: 1s;\n    text-align: left; }\n.sidebarElements {\n  width: 100%;\n  padding: 25px 0; }\n.item {\n  font-size: 16px;\n  width: 100%;\n  padding: 0; }\n.item span {\n    margin-right: 20px; }\n.hoverable:hover {\n  font-size: 18px;\n  transition: 0.5s; }\n.item,\n.item span {\n  min-height: 50px;\n  line-height: 2.7; }\n.item-text {\n  cursor: pointer;\n  text-decoration: none;\n  color: #000; }\n.fa-chevron-right {\n  float: right;\n  cursor: pointer; }\n.rotate {\n  transform: rotate(90deg);\n  transition: .8s; }\n.no-rotate {\n  transform: rotate(0deg);\n  transition: .8s; }\n.click-pink {\n  color: pink; }\n.hide {\n  display: none; }\n.show {\n  display: block; }\n.ui.teal.left.pointing.label {\n  background: #5f5f5f !important; }\n.searchBtnWrapper {\n  font-family: 'Kanit', sans-serif;\n  font-size: 18px;\n  text-align: center;\n  position: relative;\n  margin-bottom: 20px;\n  bottom: 0;\n  width: 100%; }\n.searchBtnWrapper button {\n    background: #e4e4e4;\n    color: #000;\n    min-width: 100px;\n    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); }\n.searchBtnWrapper button:active {\n    box-shadow: none;\n    transition: 0.5s; }\n.btn-sidebar {\n  display: inline; }\n.btn-container {\n  margin-bottom: 25px; }\n.rel-tabs-container {\n  display: inline-block; }\n.rel-tab p {\n  word-break: break-all;\n  cursor: pointer;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-weight: bold;\n  font-size: 15px;\n  background-color: #F5F5F5;\n  color: #30333a;\n  margin: 4px;\n  padding: 3px 7px;\n  border-radius: 3px; }\n.ele-count {\n  border-radius: 50%;\n  padding: 8px;\n  margin-left: 10px;\n  text-align: center;\n  display: inline; }\n.wrapper hr {\n  margin-bottom: 2em;\n  margin-top: 0.15em; }\n.rel-tabs-container .selected {\n  box-shadow: -4px 4px 17px -8px rgba(0, 0, 0, 0.75); }\n.count-org {\n  background-color: #F5F5F5; }\n.count-person {\n  background-color: #F5F5F5; }\n.count-department {\n  background-color: #F5F5F5; }\nspan.ele-count.count-org {\n  padding: 9px 11px 9px 11px; }\n.c_ff4444 {\n  background-color: '#ff4444'; }\n.c_ffbb33 {\n  background-color: '#ffbb33'; }\n.c_00C851 {\n  background-color: '#00C851'; }\n.c_33b5e5 {\n  background-color: '#33b5e5'; }\n.c_CC0000 {\n  background-color: '#CC0000'; }\n.c_FF8800 {\n  background-color: '#FF8800'; }\n.c_007E33 {\n  background-color: '#007E33'; }\n.c_0099CC {\n  background-color: '#0099CC'; }\n.c_9933CC {\n  background-color: '#9933CC'; }\n.c_0d47a1 {\n  background-color: '#0d47a1'; }\n.c_2BBBAD {\n  background-color: '#2BBBAD'; }\n.c_c51162 {\n  background-color: '#c51162'; }\n@media screen and (max-width: 1100px) {\n  .sidebar-wrapper {\n    width: 25%; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2Rhc2hib2FyZC12Mi1zaWRlYmFyL2Rhc2hib2FyZC1zaWRlYmFyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLHlFQUFZO0FBQ1o7RUFFSSw0Q0FBNEM7RUFDNUMseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSxVQUFVO0VBQ1YseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSx5QkFBeUIsRUFBQTtBQUc3QjtFQUNJLGtCQUFrQjtFQUNsQixRQUFRO0VBQ1IsT0FBTztFQUdQLGdCQUFnQjtFQUNoQixVQUFVO0VBQ1YsVUFBVTtFQUNWLFlBQVk7RUFDWixnQkFBZ0IsRUFBQTtBQUdwQjtFQUNJLGtCQUFrQixFQUFBO0FBSXRCO0VBR1EsZUFBZSxFQUFBO0FBSXZCO0VBQ0ksZ0NBQWdDO0VBQ2hDLGVBQWU7RUFDZixrQkFBa0IsRUFBQTtBQUh0QjtJQU1RLGVBQWU7SUFDZixnQkFBZ0I7SUFDaEIsbUJBQW1CO0lBQ25CLHVCQUF1QjtJQUN2QixjQUFjO0lBQ2QsaUJBQWlCO0lBRWpCLGtCQUFrQjtJQUNsQixjQUFjO0lBQ2QsZ0JBQWdCLEVBQUE7QUFJeEI7RUFDSSxXQUFXO0VBQ1gsZUFBZSxFQUFBO0FBR25CO0VBQ0ksZUFBZTtFQUNmLFdBQVc7RUFDWCxVQUFVLEVBQUE7QUFIZDtJQU1RLGtCQUFrQixFQUFBO0FBSTFCO0VBQ0ksZUFBZTtFQUNmLGdCQUFnQixFQUFBO0FBR3BCOztFQUVJLGdCQUFnQjtFQUNoQixnQkFBZ0IsRUFBQTtBQUdwQjtFQUNJLGVBQWU7RUFDZixxQkFBcUI7RUFDckIsV0FBVyxFQUFBO0FBR2Y7RUFDSSxZQUFZO0VBQ1osZUFBZSxFQUFBO0FBR25CO0VBQ0ksd0JBQXdCO0VBQ3hCLGVBQWUsRUFBQTtBQUduQjtFQUNJLHVCQUF1QjtFQUN2QixlQUFlLEVBQUE7QUFHbkI7RUFDSSxXQUFXLEVBQUE7QUFHZjtFQUNJLGFBQWEsRUFBQTtBQUdqQjtFQUNJLGNBQWMsRUFBQTtBQUdsQjtFQUNJLDhCQUE4QixFQUFBO0FBR2xDO0VBQ0ksZ0NBQWdDO0VBQ2hDLGVBQWU7RUFDZixrQkFBa0I7RUFDbEIsa0JBQWtCO0VBQ2xCLG1CQUFtQjtFQUNuQixTQUFTO0VBQ1QsV0FBVyxFQUFBO0FBUGY7SUFVUSxtQkFBbUI7SUFDbkIsV0FBVztJQUNYLGdCQUFnQjtJQUNoQiwrQ0FBK0MsRUFBQTtBQWJ2RDtJQWdCUSxnQkFBZ0I7SUFDaEIsZ0JBQWdCLEVBQUE7QUFJeEI7RUFDSSxlQUFlLEVBQUE7QUFHbkI7RUFDSSxtQkFBbUIsRUFBQTtBQUd2QjtFQUNJLHFCQUFxQixFQUFBO0FBR3pCO0VBQ0kscUJBQXFCO0VBQ3JCLGVBQWU7RUFDZiwyREFBMkQ7RUFDM0QsaUJBQWlCO0VBQ2pCLGVBQWU7RUFDZix5QkFBeUI7RUFDekIsY0FBc0I7RUFDdEIsV0FBVztFQUNYLGdCQUFnQjtFQUNoQixrQkFBa0IsRUFBQTtBQUd0QjtFQUVJLGtCQUFrQjtFQUNsQixZQUFZO0VBQ1osaUJBQWlCO0VBQ2pCLGtCQUFrQjtFQUNsQixlQUFlLEVBQUE7QUFHbkI7RUFDSSxrQkFBa0I7RUFDbEIsa0JBQWtCLEVBQUE7QUFHdEI7RUFHSSxrREFBa0QsRUFBQTtBQUd0RDtFQUNJLHlCQUF5QixFQUFBO0FBRzdCO0VBQ0kseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSx5QkFBeUIsRUFBQTtBQUc3QjtFQUNJLDBCQUEwQixFQUFBO0FBRzlCO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUdBO0VBQ0k7SUFDSSxVQUFVLEVBQUEsRUFDYiIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvZGFzaGJvYXJkLXYyL2NvbXBvbmVudHMvZGFzaGJvYXJkLXYyLXNpZGViYXIvZGFzaGJvYXJkLXNpZGViYXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0IHVybCgnaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PUthbml0JmRpc3BsYXk9c3dhcCcpO1xuOjotd2Via2l0LXNjcm9sbGJhci10cmFjayB7XG4gICAgLXdlYmtpdC1ib3gtc2hhZG93OiBpbnNldCAwIDAgNnB4IHJnYmEoMCwgMCwgMCwgMC4zKTtcbiAgICBib3gtc2hhZG93OiBpbnNldCAwIDAgNnB4IHJnYmEoMCwgMCwgMCwgMC4zKTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xufVxuXG46Oi13ZWJraXQtc2Nyb2xsYmFyIHtcbiAgICB3aWR0aDogNnB4O1xuICAgIGJhY2tncm91bmQtY29sb3I6ICNGNUY1RjU7XG59XG5cbjo6LXdlYmtpdC1zY3JvbGxiYXItdGh1bWIge1xuICAgIGJhY2tncm91bmQtY29sb3I6ICM1ZjVmNWY7XG59XG5cbi5zaWRlYmFyLXdyYXBwZXIge1xuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICB0b3A6IDEzJTtcbiAgICBsZWZ0OiAwO1xuICAgIC8vIHdpZHRoOiAyMyU7XG4gICAgLy8gaGVpZ2h0OiAxMDB2aDtcbiAgICBvdmVyZmxvdy15OiBhdXRvO1xuICAgIHotaW5kZXg6IDE7XG4gICAgd2lkdGg6IDIwJTtcbiAgICBoZWlnaHQ6IDg3dmg7XG4gICAgYmFja2dyb3VuZDogI2ZmZjtcbn1cblxuLmxvZ28ge1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICAvLyBwYWRkaW5nLXRvcDogMTBweDtcbn1cblxuLmxvZ28ge1xuICAgIGltZyB7XG4gICAgICAgIC8vIHdpZHRoOiA3MCU7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICB9XG59XG5cbi5zaWRlYmFyQm9keVRpdGxlIHtcbiAgICBmb250LWZhbWlseTogJ0thbml0Jywgc2Fucy1zZXJpZjtcbiAgICBmb250LXNpemU6IDE4cHg7XG4gICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgIHAge1xuICAgICAgICAvLyBkaXNwbGF5OiBpbmxpbmU7XG4gICAgICAgIHBhZGRpbmc6IDAgMTBweDtcbiAgICAgICAgcGFkZGluZy10b3A6IDhweDtcbiAgICAgICAgcGFkZGluZy1ib3R0b206IDhweDtcbiAgICAgICAgYmFja2dyb3VuZDogdHJhbnNwYXJlbnQ7XG4gICAgICAgIGNvbG9yOiAjNWY1ZjVmO1xuICAgICAgICBmb250LXdlaWdodDogYm9sZDtcbiAgICAgICAgLy8gYm94LXNoYWRvdzogMnB4IDdweCAxOHB4IDFweCByZ2JhKDk1LCA5NSwgOTUsIDAuNzYpO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgICAgIHRyYW5zaXRpb246IDFzO1xuICAgICAgICB0ZXh0LWFsaWduOiBsZWZ0O1xuICAgIH1cbn1cblxuLnNpZGViYXJFbGVtZW50cyB7XG4gICAgd2lkdGg6IDEwMCU7XG4gICAgcGFkZGluZzogMjVweCAwO1xufVxuXG4uaXRlbSB7XG4gICAgZm9udC1zaXplOiAxNnB4O1xuICAgIHdpZHRoOiAxMDAlO1xuICAgIHBhZGRpbmc6IDA7XG4gICAgLy8gcGFkZGluZy1sZWZ0OiAzMHB4O1xuICAgIHNwYW4ge1xuICAgICAgICBtYXJnaW4tcmlnaHQ6IDIwcHg7XG4gICAgfVxufVxuXG4uaG92ZXJhYmxlOmhvdmVyIHtcbiAgICBmb250LXNpemU6IDE4cHg7XG4gICAgdHJhbnNpdGlvbjogMC41cztcbn1cblxuLml0ZW0sXG4uaXRlbSBzcGFuIHtcbiAgICBtaW4taGVpZ2h0OiA1MHB4O1xuICAgIGxpbmUtaGVpZ2h0OiAyLjc7XG59XG5cbi5pdGVtLXRleHQge1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG4gICAgY29sb3I6ICMwMDA7XG59XG5cbi5mYS1jaGV2cm9uLXJpZ2h0IHtcbiAgICBmbG9hdDogcmlnaHQ7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4ucm90YXRlIHtcbiAgICB0cmFuc2Zvcm06IHJvdGF0ZSg5MGRlZyk7XG4gICAgdHJhbnNpdGlvbjogLjhzO1xufVxuXG4ubm8tcm90YXRlIHtcbiAgICB0cmFuc2Zvcm06IHJvdGF0ZSgwZGVnKTtcbiAgICB0cmFuc2l0aW9uOiAuOHM7XG59XG5cbi5jbGljay1waW5rIHtcbiAgICBjb2xvcjogcGluaztcbn1cblxuLmhpZGUge1xuICAgIGRpc3BsYXk6IG5vbmU7XG59XG5cbi5zaG93IHtcbiAgICBkaXNwbGF5OiBibG9jaztcbn1cblxuLnVpLnRlYWwubGVmdC5wb2ludGluZy5sYWJlbCB7XG4gICAgYmFja2dyb3VuZDogIzVmNWY1ZiAhaW1wb3J0YW50O1xufVxuXG4uc2VhcmNoQnRuV3JhcHBlciB7XG4gICAgZm9udC1mYW1pbHk6ICdLYW5pdCcsIHNhbnMtc2VyaWY7XG4gICAgZm9udC1zaXplOiAxOHB4O1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgbWFyZ2luLWJvdHRvbTogMjBweDtcbiAgICBib3R0b206IDA7XG4gICAgd2lkdGg6IDEwMCU7XG4gICAgLy8gbWFyZ2luLXJpZ2h0OiAyMHB4O1xuICAgIGJ1dHRvbiB7XG4gICAgICAgIGJhY2tncm91bmQ6ICNlNGU0ZTQ7XG4gICAgICAgIGNvbG9yOiAjMDAwO1xuICAgICAgICBtaW4td2lkdGg6IDEwMHB4O1xuICAgICAgICBib3gtc2hhZG93OiAwcHggOHB4IDE2cHggMHB4IHJnYmEoMCwgMCwgMCwgMC4yKTtcbiAgICB9XG4gICAgYnV0dG9uOmFjdGl2ZSB7XG4gICAgICAgIGJveC1zaGFkb3c6IG5vbmU7XG4gICAgICAgIHRyYW5zaXRpb246IDAuNXM7XG4gICAgfVxufVxuXG4uYnRuLXNpZGViYXIge1xuICAgIGRpc3BsYXk6IGlubGluZTtcbn1cblxuLmJ0bi1jb250YWluZXIge1xuICAgIG1hcmdpbi1ib3R0b206IDI1cHg7XG59XG5cbi5yZWwtdGFicy1jb250YWluZXIge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbn1cblxuLnJlbC10YWIgcCB7XG4gICAgd29yZC1icmVhazogYnJlYWstYWxsO1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICBmb250LWZhbWlseTogXCJIZWx2ZXRpY2EgTmV1ZVwiLCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmO1xuICAgIGZvbnQtd2VpZ2h0OiBib2xkO1xuICAgIGZvbnQtc2l6ZTogMTVweDtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xuICAgIGNvbG9yOiByZ2IoNDgsIDUxLCA1OCk7XG4gICAgbWFyZ2luOiA0cHg7XG4gICAgcGFkZGluZzogM3B4IDdweDtcbiAgICBib3JkZXItcmFkaXVzOiAzcHg7XG59XG5cbi5lbGUtY291bnQge1xuICAgIC8vIGJhY2tncm91bmQtY29sb3I6ICNGNUY1RjU7XG4gICAgYm9yZGVyLXJhZGl1czogNTAlO1xuICAgIHBhZGRpbmc6IDhweDtcbiAgICBtYXJnaW4tbGVmdDogMTBweDtcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgZGlzcGxheTogaW5saW5lO1xufVxuXG4ud3JhcHBlciBociB7XG4gICAgbWFyZ2luLWJvdHRvbTogMmVtO1xuICAgIG1hcmdpbi10b3A6IDAuMTVlbTtcbn1cblxuLnJlbC10YWJzLWNvbnRhaW5lciAuc2VsZWN0ZWQge1xuICAgIC13ZWJraXQtYm94LXNoYWRvdzogLTRweCA0cHggMTdweCAtOHB4IHJnYmEoMCwgMCwgMCwgMC43NSk7XG4gICAgLW1vei1ib3gtc2hhZG93OiAtNHB4IDRweCAxN3B4IC04cHggcmdiYSgwLCAwLCAwLCAwLjc1KTtcbiAgICBib3gtc2hhZG93OiAtNHB4IDRweCAxN3B4IC04cHggcmdiYSgwLCAwLCAwLCAwLjc1KTtcbn1cblxuLmNvdW50LW9yZyB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogI0Y1RjVGNTtcbn1cblxuLmNvdW50LXBlcnNvbiB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogI0Y1RjVGNTtcbn1cblxuLmNvdW50LWRlcGFydG1lbnQge1xuICAgIGJhY2tncm91bmQtY29sb3I6ICNGNUY1RjU7XG59XG5cbnNwYW4uZWxlLWNvdW50LmNvdW50LW9yZyB7XG4gICAgcGFkZGluZzogOXB4IDExcHggOXB4IDExcHg7XG59XG5cbi5jX2ZmNDQ0NCB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyNmZjQ0NDQnXG59XG5cbi5jX2ZmYmIzMyB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyNmZmJiMzMnXG59XG5cbi5jXzAwQzg1MSB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyMwMEM4NTEnXG59XG5cbi5jXzMzYjVlNSB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyMzM2I1ZTUnXG59XG5cbi5jX0NDMDAwMCB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyNDQzAwMDAnXG59XG5cbi5jX0ZGODgwMCB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyNGRjg4MDAnXG59XG5cbi5jXzAwN0UzMyB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyMwMDdFMzMnXG59XG5cbi5jXzAwOTlDQyB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyMwMDk5Q0MnXG59XG5cbi5jXzk5MzNDQyB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyM5OTMzQ0MnXG59XG5cbi5jXzBkNDdhMSB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyMwZDQ3YTEnXG59XG5cbi5jXzJCQkJBRCB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyMyQkJCQUQnXG59XG5cbi5jX2M1MTE2MiB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyNjNTExNjInXG59XG5cbi8vIGFuIGF0dGVtcHQgdG8gbWFrZSBpdCBhIGJpdCByZXNwb25zaXZlXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAnMTEwMHB4Jykge1xuICAgIC5zaWRlYmFyLXdyYXBwZXIge1xuICAgICAgICB3aWR0aDogMjUlO1xuICAgIH1cbn0iXX0= */"
+module.exports = "@import url(\"https://fonts.googleapis.com/css?family=Kanit&display=swap\");\n::-webkit-scrollbar-track {\n  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #F5F5F5; }\n::-webkit-scrollbar {\n  width: 6px;\n  background-color: #F5F5F5; }\n::-webkit-scrollbar-thumb {\n  background-color: #5f5f5f; }\n.sidebar-wrapper {\n  position: absolute;\n  top: 13%;\n  left: 0;\n  overflow-y: auto;\n  z-index: 1;\n  width: 20%;\n  height: 87vh;\n  background: #fff; }\n.logo {\n  text-align: center; }\n.logo img {\n  cursor: pointer; }\n.sidebarBodyTitle {\n  font-family: 'Kanit', sans-serif;\n  font-size: 18px;\n  text-align: center; }\n.sidebarBodyTitle p {\n    padding: 0 10px;\n    padding-top: 8px;\n    padding-bottom: 8px;\n    background: transparent;\n    color: #5f5f5f;\n    font-weight: bold;\n    border-radius: 5px;\n    transition: 1s;\n    text-align: left; }\n.sidebarElements {\n  width: 100%;\n  padding: 25px 0; }\n.item {\n  font-size: 16px;\n  width: 100%;\n  padding: 0; }\n.item span {\n    margin-right: 20px; }\n.hoverable:hover {\n  font-size: 18px;\n  transition: 0.5s; }\n.item,\n.item span {\n  min-height: 50px;\n  line-height: 2.7; }\n.item-text {\n  cursor: pointer;\n  text-decoration: none;\n  color: #000; }\n.fa-chevron-right {\n  float: right;\n  cursor: pointer; }\n.rotate {\n  transform: rotate(90deg);\n  transition: .8s; }\n.no-rotate {\n  transform: rotate(0deg);\n  transition: .8s; }\n.click-pink {\n  color: pink; }\n.hide {\n  display: none; }\n.show {\n  display: block; }\n.ui.teal.left.pointing.label {\n  background: #5f5f5f !important; }\n.searchBtnWrapper {\n  font-family: 'Kanit', sans-serif;\n  font-size: 18px;\n  text-align: center;\n  position: relative;\n  margin-bottom: 20px;\n  bottom: 0;\n  width: 100%; }\n.searchBtnWrapper button {\n    background: #e4e4e4;\n    color: #000;\n    min-width: 100px;\n    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); }\n.searchBtnWrapper button:active {\n    box-shadow: none;\n    transition: 0.5s; }\n.btn-sidebar {\n  display: inline; }\n.btn-container {\n  margin-bottom: 25px; }\n.rel-tabs-container {\n  display: inline-block; }\n.rel-tab p {\n  word-break: break-all;\n  cursor: pointer;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-weight: bold;\n  font-size: 15px;\n  background-color: #F5F5F5;\n  color: #30333a;\n  margin: 4px;\n  padding: 3px 7px;\n  border-radius: 3px; }\n.ele-count {\n  border-radius: 50%;\n  padding: 8px;\n  margin-left: 10px;\n  text-align: center;\n  display: inline; }\n.wrapper hr {\n  margin-bottom: 2em;\n  margin-top: 0.15em; }\n.rel-tabs-container .selected {\n  box-shadow: -4px 4px 17px -8px rgba(0, 0, 0, 0.75); }\n.count-org {\n  background-color: #F5F5F5; }\n.count-person {\n  background-color: #F5F5F5; }\n.count-department {\n  background-color: #F5F5F5; }\nspan.ele-count.count-org {\n  padding: 9px 11px 9px 11px; }\n.c_ff4444 {\n  background-color: '#ff4444'; }\n.c_ffbb33 {\n  background-color: '#ffbb33'; }\n.c_00C851 {\n  background-color: '#00C851'; }\n.c_33b5e5 {\n  background-color: '#33b5e5'; }\n.c_CC0000 {\n  background-color: '#CC0000'; }\n.c_FF8800 {\n  background-color: '#FF8800'; }\n.c_007E33 {\n  background-color: '#007E33'; }\n.c_0099CC {\n  background-color: '#0099CC'; }\n.c_9933CC {\n  background-color: '#9933CC'; }\n.c_0d47a1 {\n  background-color: '#0d47a1'; }\n.c_2BBBAD {\n  background-color: '#2BBBAD'; }\n.c_c51162 {\n  background-color: '#c51162'; }\n@media screen and (max-width: 1100px) {\n  .sidebar-wrapper {\n    width: 25%; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9kYXNoYm9hcmQtdjItc2lkZWJhci9EOlxcbmVvNGotY29tbXVuaXR5LTMuMy45XFxkZXZlbG9wbWVudF9wcm9qZWN0c1xcbmVvNGpEYXRhRHJpdmVyXFxjbGllbnQvc3JjXFxhcHBcXG1vZHVsZXNcXGRhc2hib2FyZC12MlxcY29tcG9uZW50c1xcZGFzaGJvYXJkLXYyLXNpZGViYXJcXGRhc2hib2FyZC1zaWRlYmFyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLHlFQUFZO0FBQ1o7RUFFSSw0Q0FBNEM7RUFDNUMseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSxVQUFVO0VBQ1YseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSx5QkFBeUIsRUFBQTtBQUc3QjtFQUNJLGtCQUFrQjtFQUNsQixRQUFRO0VBQ1IsT0FBTztFQUdQLGdCQUFnQjtFQUNoQixVQUFVO0VBQ1YsVUFBVTtFQUNWLFlBQVk7RUFDWixnQkFBZ0IsRUFBQTtBQUdwQjtFQUNJLGtCQUFrQixFQUFBO0FBSXRCO0VBR1EsZUFBZSxFQUFBO0FBSXZCO0VBQ0ksZ0NBQWdDO0VBQ2hDLGVBQWU7RUFDZixrQkFBa0IsRUFBQTtBQUh0QjtJQU1RLGVBQWU7SUFDZixnQkFBZ0I7SUFDaEIsbUJBQW1CO0lBQ25CLHVCQUF1QjtJQUN2QixjQUFjO0lBQ2QsaUJBQWlCO0lBRWpCLGtCQUFrQjtJQUNsQixjQUFjO0lBQ2QsZ0JBQWdCLEVBQUE7QUFJeEI7RUFDSSxXQUFXO0VBQ1gsZUFBZSxFQUFBO0FBR25CO0VBQ0ksZUFBZTtFQUNmLFdBQVc7RUFDWCxVQUFVLEVBQUE7QUFIZDtJQU1RLGtCQUFrQixFQUFBO0FBSTFCO0VBQ0ksZUFBZTtFQUNmLGdCQUFnQixFQUFBO0FBR3BCOztFQUVJLGdCQUFnQjtFQUNoQixnQkFBZ0IsRUFBQTtBQUdwQjtFQUNJLGVBQWU7RUFDZixxQkFBcUI7RUFDckIsV0FBVyxFQUFBO0FBR2Y7RUFDSSxZQUFZO0VBQ1osZUFBZSxFQUFBO0FBR25CO0VBQ0ksd0JBQXdCO0VBQ3hCLGVBQWUsRUFBQTtBQUduQjtFQUNJLHVCQUF1QjtFQUN2QixlQUFlLEVBQUE7QUFHbkI7RUFDSSxXQUFXLEVBQUE7QUFHZjtFQUNJLGFBQWEsRUFBQTtBQUdqQjtFQUNJLGNBQWMsRUFBQTtBQUdsQjtFQUNJLDhCQUE4QixFQUFBO0FBR2xDO0VBQ0ksZ0NBQWdDO0VBQ2hDLGVBQWU7RUFDZixrQkFBa0I7RUFDbEIsa0JBQWtCO0VBQ2xCLG1CQUFtQjtFQUNuQixTQUFTO0VBQ1QsV0FBVyxFQUFBO0FBUGY7SUFVUSxtQkFBbUI7SUFDbkIsV0FBVztJQUNYLGdCQUFnQjtJQUNoQiwrQ0FBK0MsRUFBQTtBQWJ2RDtJQWdCUSxnQkFBZ0I7SUFDaEIsZ0JBQWdCLEVBQUE7QUFJeEI7RUFDSSxlQUFlLEVBQUE7QUFHbkI7RUFDSSxtQkFBbUIsRUFBQTtBQUd2QjtFQUNJLHFCQUFxQixFQUFBO0FBR3pCO0VBQ0kscUJBQXFCO0VBQ3JCLGVBQWU7RUFDZiwyREFBMkQ7RUFDM0QsaUJBQWlCO0VBQ2pCLGVBQWU7RUFDZix5QkFBeUI7RUFDekIsY0FBc0I7RUFDdEIsV0FBVztFQUNYLGdCQUFnQjtFQUNoQixrQkFBa0IsRUFBQTtBQUd0QjtFQUVJLGtCQUFrQjtFQUNsQixZQUFZO0VBQ1osaUJBQWlCO0VBQ2pCLGtCQUFrQjtFQUNsQixlQUFlLEVBQUE7QUFHbkI7RUFDSSxrQkFBa0I7RUFDbEIsa0JBQWtCLEVBQUE7QUFHdEI7RUFHSSxrREFBa0QsRUFBQTtBQUd0RDtFQUNJLHlCQUF5QixFQUFBO0FBRzdCO0VBQ0kseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSx5QkFBeUIsRUFBQTtBQUc3QjtFQUNJLDBCQUEwQixFQUFBO0FBRzlCO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUdBO0VBQ0k7SUFDSSxVQUFVLEVBQUEsRUFDYiIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvZGFzaGJvYXJkLXYyL2NvbXBvbmVudHMvZGFzaGJvYXJkLXYyLXNpZGViYXIvZGFzaGJvYXJkLXNpZGViYXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0IHVybCgnaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PUthbml0JmRpc3BsYXk9c3dhcCcpO1xyXG46Oi13ZWJraXQtc2Nyb2xsYmFyLXRyYWNrIHtcclxuICAgIC13ZWJraXQtYm94LXNoYWRvdzogaW5zZXQgMCAwIDZweCByZ2JhKDAsIDAsIDAsIDAuMyk7XHJcbiAgICBib3gtc2hhZG93OiBpbnNldCAwIDAgNnB4IHJnYmEoMCwgMCwgMCwgMC4zKTtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICNGNUY1RjU7XHJcbn1cclxuXHJcbjo6LXdlYmtpdC1zY3JvbGxiYXIge1xyXG4gICAgd2lkdGg6IDZweDtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICNGNUY1RjU7XHJcbn1cclxuXHJcbjo6LXdlYmtpdC1zY3JvbGxiYXItdGh1bWIge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzVmNWY1ZjtcclxufVxyXG5cclxuLnNpZGViYXItd3JhcHBlciB7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgICB0b3A6IDEzJTtcclxuICAgIGxlZnQ6IDA7XHJcbiAgICAvLyB3aWR0aDogMjMlO1xyXG4gICAgLy8gaGVpZ2h0OiAxMDB2aDtcclxuICAgIG92ZXJmbG93LXk6IGF1dG87XHJcbiAgICB6LWluZGV4OiAxO1xyXG4gICAgd2lkdGg6IDIwJTtcclxuICAgIGhlaWdodDogODd2aDtcclxuICAgIGJhY2tncm91bmQ6ICNmZmY7XHJcbn1cclxuXHJcbi5sb2dvIHtcclxuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICAgIC8vIHBhZGRpbmctdG9wOiAxMHB4O1xyXG59XHJcblxyXG4ubG9nbyB7XHJcbiAgICBpbWcge1xyXG4gICAgICAgIC8vIHdpZHRoOiA3MCU7XHJcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgfVxyXG59XHJcblxyXG4uc2lkZWJhckJvZHlUaXRsZSB7XHJcbiAgICBmb250LWZhbWlseTogJ0thbml0Jywgc2Fucy1zZXJpZjtcclxuICAgIGZvbnQtc2l6ZTogMThweDtcclxuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICAgIHAge1xyXG4gICAgICAgIC8vIGRpc3BsYXk6IGlubGluZTtcclxuICAgICAgICBwYWRkaW5nOiAwIDEwcHg7XHJcbiAgICAgICAgcGFkZGluZy10b3A6IDhweDtcclxuICAgICAgICBwYWRkaW5nLWJvdHRvbTogOHB4O1xyXG4gICAgICAgIGJhY2tncm91bmQ6IHRyYW5zcGFyZW50O1xyXG4gICAgICAgIGNvbG9yOiAjNWY1ZjVmO1xyXG4gICAgICAgIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gICAgICAgIC8vIGJveC1zaGFkb3c6IDJweCA3cHggMThweCAxcHggcmdiYSg5NSwgOTUsIDk1LCAwLjc2KTtcclxuICAgICAgICBib3JkZXItcmFkaXVzOiA1cHg7XHJcbiAgICAgICAgdHJhbnNpdGlvbjogMXM7XHJcbiAgICAgICAgdGV4dC1hbGlnbjogbGVmdDtcclxuICAgIH1cclxufVxyXG5cclxuLnNpZGViYXJFbGVtZW50cyB7XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIHBhZGRpbmc6IDI1cHggMDtcclxufVxyXG5cclxuLml0ZW0ge1xyXG4gICAgZm9udC1zaXplOiAxNnB4O1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBwYWRkaW5nOiAwO1xyXG4gICAgLy8gcGFkZGluZy1sZWZ0OiAzMHB4O1xyXG4gICAgc3BhbiB7XHJcbiAgICAgICAgbWFyZ2luLXJpZ2h0OiAyMHB4O1xyXG4gICAgfVxyXG59XHJcblxyXG4uaG92ZXJhYmxlOmhvdmVyIHtcclxuICAgIGZvbnQtc2l6ZTogMThweDtcclxuICAgIHRyYW5zaXRpb246IDAuNXM7XHJcbn1cclxuXHJcbi5pdGVtLFxyXG4uaXRlbSBzcGFuIHtcclxuICAgIG1pbi1oZWlnaHQ6IDUwcHg7XHJcbiAgICBsaW5lLWhlaWdodDogMi43O1xyXG59XHJcblxyXG4uaXRlbS10ZXh0IHtcclxuICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcclxuICAgIGNvbG9yOiAjMDAwO1xyXG59XHJcblxyXG4uZmEtY2hldnJvbi1yaWdodCB7XHJcbiAgICBmbG9hdDogcmlnaHQ7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXI7XHJcbn1cclxuXHJcbi5yb3RhdGUge1xyXG4gICAgdHJhbnNmb3JtOiByb3RhdGUoOTBkZWcpO1xyXG4gICAgdHJhbnNpdGlvbjogLjhzO1xyXG59XHJcblxyXG4ubm8tcm90YXRlIHtcclxuICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpO1xyXG4gICAgdHJhbnNpdGlvbjogLjhzO1xyXG59XHJcblxyXG4uY2xpY2stcGluayB7XHJcbiAgICBjb2xvcjogcGluaztcclxufVxyXG5cclxuLmhpZGUge1xyXG4gICAgZGlzcGxheTogbm9uZTtcclxufVxyXG5cclxuLnNob3cge1xyXG4gICAgZGlzcGxheTogYmxvY2s7XHJcbn1cclxuXHJcbi51aS50ZWFsLmxlZnQucG9pbnRpbmcubGFiZWwge1xyXG4gICAgYmFja2dyb3VuZDogIzVmNWY1ZiAhaW1wb3J0YW50O1xyXG59XHJcblxyXG4uc2VhcmNoQnRuV3JhcHBlciB7XHJcbiAgICBmb250LWZhbWlseTogJ0thbml0Jywgc2Fucy1zZXJpZjtcclxuICAgIGZvbnQtc2l6ZTogMThweDtcclxuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgIG1hcmdpbi1ib3R0b206IDIwcHg7XHJcbiAgICBib3R0b206IDA7XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIC8vIG1hcmdpbi1yaWdodDogMjBweDtcclxuICAgIGJ1dHRvbiB7XHJcbiAgICAgICAgYmFja2dyb3VuZDogI2U0ZTRlNDtcclxuICAgICAgICBjb2xvcjogIzAwMDtcclxuICAgICAgICBtaW4td2lkdGg6IDEwMHB4O1xyXG4gICAgICAgIGJveC1zaGFkb3c6IDBweCA4cHggMTZweCAwcHggcmdiYSgwLCAwLCAwLCAwLjIpO1xyXG4gICAgfVxyXG4gICAgYnV0dG9uOmFjdGl2ZSB7XHJcbiAgICAgICAgYm94LXNoYWRvdzogbm9uZTtcclxuICAgICAgICB0cmFuc2l0aW9uOiAwLjVzO1xyXG4gICAgfVxyXG59XHJcblxyXG4uYnRuLXNpZGViYXIge1xyXG4gICAgZGlzcGxheTogaW5saW5lO1xyXG59XHJcblxyXG4uYnRuLWNvbnRhaW5lciB7XHJcbiAgICBtYXJnaW4tYm90dG9tOiAyNXB4O1xyXG59XHJcblxyXG4ucmVsLXRhYnMtY29udGFpbmVyIHtcclxuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxufVxyXG5cclxuLnJlbC10YWIgcCB7XHJcbiAgICB3b3JkLWJyZWFrOiBicmVhay1hbGw7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgICBmb250LWZhbWlseTogXCJIZWx2ZXRpY2EgTmV1ZVwiLCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmO1xyXG4gICAgZm9udC13ZWlnaHQ6IGJvbGQ7XHJcbiAgICBmb250LXNpemU6IDE1cHg7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xyXG4gICAgY29sb3I6IHJnYig0OCwgNTEsIDU4KTtcclxuICAgIG1hcmdpbjogNHB4O1xyXG4gICAgcGFkZGluZzogM3B4IDdweDtcclxuICAgIGJvcmRlci1yYWRpdXM6IDNweDtcclxufVxyXG5cclxuLmVsZS1jb3VudCB7XHJcbiAgICAvLyBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xyXG4gICAgYm9yZGVyLXJhZGl1czogNTAlO1xyXG4gICAgcGFkZGluZzogOHB4O1xyXG4gICAgbWFyZ2luLWxlZnQ6IDEwcHg7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgICBkaXNwbGF5OiBpbmxpbmU7XHJcbn1cclxuXHJcbi53cmFwcGVyIGhyIHtcclxuICAgIG1hcmdpbi1ib3R0b206IDJlbTtcclxuICAgIG1hcmdpbi10b3A6IDAuMTVlbTtcclxufVxyXG5cclxuLnJlbC10YWJzLWNvbnRhaW5lciAuc2VsZWN0ZWQge1xyXG4gICAgLXdlYmtpdC1ib3gtc2hhZG93OiAtNHB4IDRweCAxN3B4IC04cHggcmdiYSgwLCAwLCAwLCAwLjc1KTtcclxuICAgIC1tb3otYm94LXNoYWRvdzogLTRweCA0cHggMTdweCAtOHB4IHJnYmEoMCwgMCwgMCwgMC43NSk7XHJcbiAgICBib3gtc2hhZG93OiAtNHB4IDRweCAxN3B4IC04cHggcmdiYSgwLCAwLCAwLCAwLjc1KTtcclxufVxyXG5cclxuLmNvdW50LW9yZyB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xyXG59XHJcblxyXG4uY291bnQtcGVyc29uIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICNGNUY1RjU7XHJcbn1cclxuXHJcbi5jb3VudC1kZXBhcnRtZW50IHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICNGNUY1RjU7XHJcbn1cclxuXHJcbnNwYW4uZWxlLWNvdW50LmNvdW50LW9yZyB7XHJcbiAgICBwYWRkaW5nOiA5cHggMTFweCA5cHggMTFweDtcclxufVxyXG5cclxuLmNfZmY0NDQ0IHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjZmY0NDQ0J1xyXG59XHJcblxyXG4uY19mZmJiMzMge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyNmZmJiMzMnXHJcbn1cclxuXHJcbi5jXzAwQzg1MSB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnIzAwQzg1MSdcclxufVxyXG5cclxuLmNfMzNiNWU1IHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjMzNiNWU1J1xyXG59XHJcblxyXG4uY19DQzAwMDAge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyNDQzAwMDAnXHJcbn1cclxuXHJcbi5jX0ZGODgwMCB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnI0ZGODgwMCdcclxufVxyXG5cclxuLmNfMDA3RTMzIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjMDA3RTMzJ1xyXG59XHJcblxyXG4uY18wMDk5Q0Mge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyMwMDk5Q0MnXHJcbn1cclxuXHJcbi5jXzk5MzNDQyB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnIzk5MzNDQydcclxufVxyXG5cclxuLmNfMGQ0N2ExIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjMGQ0N2ExJ1xyXG59XHJcblxyXG4uY18yQkJCQUQge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyMyQkJCQUQnXHJcbn1cclxuXHJcbi5jX2M1MTE2MiB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnI2M1MTE2MidcclxufVxyXG5cclxuLy8gYW4gYXR0ZW1wdCB0byBtYWtlIGl0IGEgYml0IHJlc3BvbnNpdmVcclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogJzExMDBweCcpIHtcclxuICAgIC5zaWRlYmFyLXdyYXBwZXIge1xyXG4gICAgICAgIHdpZHRoOiAyNSU7XHJcbiAgICB9XHJcbn0iXX0= */"
 
 /***/ }),
 
@@ -1190,7 +787,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\n<app-color-panel *ngIf=\"!loader\"></app-color-panel>\n<div class=\"wrapper-countlimit\" *ngIf=\"!loader\">\n    <div class=\"selected-count\">{{selectedCount}} Elements Found</div>\n    <div class=\"nodeLimit\">\n        <p class=\"nodelimit-head\">Element Limit :</p>\n        <input type=\"text\" [(ngModel)]=nodeLimit (ngModelChange)=\"limitChange(nodeLimit, popup)\" suiPopup popupText=\"{{errorMessage}}\" popupTrigger=\"manual\" #popup=\"suiPopup\">\n    </div>\n    <div class=\"creationToolbar\">\n            <app-create-nodes [nodeTypes]=\"totalTypesArray\" \n            [editData]=\"editNodeData\" [editRelData]=\"editRelationData\" \n            (nodeBtnEvent)=\"nodeEventCapture($event)\" (edgeBtnEvent)=\"edgeEventCapture($event)\"\n            ></app-create-nodes>\n    </div>\n</div>\n<div class=\"graph-container\" id=\"graphViewer\">\n</div>\n<ng-template *ngIf=\"showlimiterror\" let-popup #popupTemplate>\n    <div class=\"header\">Rating</div>\n    <div class=\"content\">\n        <sui-rating class=\"star\" (click)=\"popup.close()\"></sui-rating>\n    </div>\n</ng-template>"
+module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\r\n<app-color-panel *ngIf=\"!loader\"></app-color-panel>\r\n<div class=\"wrapper-countlimit\" *ngIf=\"!loader\">\r\n    <div class=\"selected-count\">{{selectedCount}} Elements Found</div>\r\n    <div class=\"nodeLimit\">\r\n        <p class=\"nodelimit-head\">Element Limit :</p>\r\n        <input type=\"text\" [(ngModel)]=nodeLimit (ngModelChange)=\"limitChange(nodeLimit, popup)\" suiPopup popupText=\"{{errorMessage}}\" popupTrigger=\"manual\" #popup=\"suiPopup\">\r\n    </div>\r\n    <div class=\"creationToolbar\">\r\n            <app-create-nodes [nodeTypes]=\"totalTypesArray\" (nodeBtnEvent)=\"nodeEventCapture($event)\" (edgeBtnEvent)=\"edgeEventCapture($event)\"></app-create-nodes>\r\n    </div>\r\n</div>\r\n<div class=\"graph-container\" id=\"graphViewer\">\r\n</div>\r\n<ng-template *ngIf=\"showlimiterror\" let-popup #popupTemplate>\r\n    <div class=\"header\">Rating</div>\r\n    <div class=\"content\">\r\n        <sui-rating class=\"star\" (click)=\"popup.close()\"></sui-rating>\r\n    </div>\r\n</ng-template>"
 
 /***/ }),
 
@@ -1201,7 +798,7 @@ module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\n<app
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".graph-container {\n  background: #F5F5F5;\n  height: 81vh;\n  width: 80%;\n  float: right; }\n\n.selected-count {\n  background: #F5F5F5;\n  word-break: break-all;\n  cursor: pointer;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  color: #30333a;\n  border-radius: 3px;\n  padding: 1em;\n  float: left; }\n\n.wrapper-countlimit {\n  width: 80%;\n  float: right; }\n\n.nodeLimit {\n  max-width: 200px;\n  top: 50px;\n  float: left;\n  border-radius: 3px;\n  padding: 1em;\n  background: #F5F5F5;\n  outline: none; }\n\n.creationToolbar {\n  top: 50px;\n  float: left;\n  padding: 1em;\n  outline: none; }\n\n.nodeLimit input {\n  width: 35%;\n  border: 0.3px solid #000;\n  padding: 5px;\n  border-radius: 2px; }\n\n.nodeLimit:focus {\n  outline: none; }\n\n.nodelimit-head {\n  display: inline;\n  margin-right: 3px; }\n\n@media screen and (max-width: 1100px) {\n  .graph-container,\n  .selected-count {\n    width: 75%; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2dyYXBoLXYyLXZpc3VhbGl6ZXIvZ3JhcGgtdmlzdWFsaXplci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLG1CQUFtQjtFQUNuQixZQUFZO0VBQ1osVUFBVTtFQUNWLFlBQVksRUFBQTs7QUFHaEI7RUFDSSxtQkFBbUI7RUFDbkIscUJBQXFCO0VBQ3JCLGVBQWU7RUFDZiwyREFBMkQ7RUFDM0QsZUFBZTtFQUNmLGNBQWM7RUFDZCxrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLFdBQVcsRUFBQTs7QUFHZjtFQUNJLFVBQVU7RUFDVixZQUFZLEVBQUE7O0FBR2hCO0VBQ0ksZ0JBQWlCO0VBQ2pCLFNBQVM7RUFDVCxXQUFXO0VBQ1gsa0JBQWtCO0VBQ2xCLFlBQVk7RUFDWixtQkFBbUI7RUFDbkIsYUFBYSxFQUFBOztBQUdqQjtFQUNJLFNBQVU7RUFDVixXQUFXO0VBQ1gsWUFBYTtFQUNiLGFBQWMsRUFBQTs7QUFHbEI7RUFDSSxVQUFVO0VBQ1Ysd0JBQXdCO0VBQ3hCLFlBQVk7RUFDWixrQkFBa0IsRUFBQTs7QUFHdEI7RUFDSSxhQUFhLEVBQUE7O0FBR2pCO0VBQ0ksZUFBZTtFQUNmLGlCQUFpQixFQUFBOztBQUdyQjtFQUNJOztJQUVJLFVBQVUsRUFBQSxFQUNiIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9ncmFwaC12Mi12aXN1YWxpemVyL2dyYXBoLXZpc3VhbGl6ZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZ3JhcGgtY29udGFpbmVyIHtcbiAgICBiYWNrZ3JvdW5kOiAjRjVGNUY1O1xuICAgIGhlaWdodDogODF2aDtcbiAgICB3aWR0aDogODAlO1xuICAgIGZsb2F0OiByaWdodDtcbn1cblxuLnNlbGVjdGVkLWNvdW50IHtcbiAgICBiYWNrZ3JvdW5kOiAjRjVGNUY1O1xuICAgIHdvcmQtYnJlYWs6IGJyZWFrLWFsbDtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgZm9udC1mYW1pbHk6IFwiSGVsdmV0aWNhIE5ldWVcIiwgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjtcbiAgICBmb250LXNpemU6IDE2cHg7XG4gICAgY29sb3I6ICMzMDMzM2E7XG4gICAgYm9yZGVyLXJhZGl1czogM3B4O1xuICAgIHBhZGRpbmc6IDFlbTtcbiAgICBmbG9hdDogbGVmdDtcbn1cblxuLndyYXBwZXItY291bnRsaW1pdCB7XG4gICAgd2lkdGg6IDgwJTtcbiAgICBmbG9hdDogcmlnaHQ7XG59XG5cbi5ub2RlTGltaXQge1xuICAgIG1heC13aWR0aCA6IDIwMHB4O1xuICAgIHRvcDogNTBweDtcbiAgICBmbG9hdDogbGVmdDtcbiAgICBib3JkZXItcmFkaXVzOiAzcHg7XG4gICAgcGFkZGluZzogMWVtO1xuICAgIGJhY2tncm91bmQ6ICNGNUY1RjU7XG4gICAgb3V0bGluZTogbm9uZTtcbn1cblxuLmNyZWF0aW9uVG9vbGJhciB7XG4gICAgdG9wIDogNTBweDtcbiAgICBmbG9hdDogbGVmdDtcbiAgICBwYWRkaW5nIDogMWVtO1xuICAgIG91dGxpbmUgOiBub25lO1xufVxuXG4ubm9kZUxpbWl0IGlucHV0IHtcbiAgICB3aWR0aDogMzUlO1xuICAgIGJvcmRlcjogMC4zcHggc29saWQgIzAwMDtcbiAgICBwYWRkaW5nOiA1cHg7XG4gICAgYm9yZGVyLXJhZGl1czogMnB4O1xufVxuXG4ubm9kZUxpbWl0OmZvY3VzIHtcbiAgICBvdXRsaW5lOiBub25lO1xufVxuXG4ubm9kZWxpbWl0LWhlYWQge1xuICAgIGRpc3BsYXk6IGlubGluZTtcbiAgICBtYXJnaW4tcmlnaHQ6IDNweDtcbn1cblxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogJzExMDBweCcpIHtcbiAgICAuZ3JhcGgtY29udGFpbmVyLFxuICAgIC5zZWxlY3RlZC1jb3VudCB7XG4gICAgICAgIHdpZHRoOiA3NSU7XG4gICAgfVxufSJdfQ== */"
+module.exports = ".graph-container {\n  background: #F5F5F5;\n  height: 81vh;\n  width: 80%;\n  float: right; }\n\n.selected-count {\n  background: #F5F5F5;\n  word-break: break-all;\n  cursor: pointer;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  color: #30333a;\n  border-radius: 3px;\n  padding: 1em;\n  float: left; }\n\n.wrapper-countlimit {\n  width: 80%;\n  float: right; }\n\n.nodeLimit {\n  max-width: 200px;\n  top: 50px;\n  float: left;\n  border-radius: 3px;\n  padding: 1em;\n  background: #F5F5F5;\n  outline: none; }\n\n.creationToolbar {\n  top: 50px;\n  float: left;\n  padding: 1em;\n  outline: none; }\n\n.nodeLimit input {\n  width: 35%;\n  border: 0.3px solid #000;\n  padding: 5px;\n  border-radius: 2px; }\n\n.nodeLimit:focus {\n  outline: none; }\n\n.nodelimit-head {\n  display: inline;\n  margin-right: 3px; }\n\n@media screen and (max-width: 1100px) {\n  .graph-container,\n  .selected-count {\n    width: 75%; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9ncmFwaC12Mi12aXN1YWxpemVyL0Q6XFxuZW80ai1jb21tdW5pdHktMy4zLjlcXGRldmVsb3BtZW50X3Byb2plY3RzXFxuZW80akRhdGFEcml2ZXJcXGNsaWVudC9zcmNcXGFwcFxcbW9kdWxlc1xcZGFzaGJvYXJkLXYyXFxjb21wb25lbnRzXFxncmFwaC12Mi12aXN1YWxpemVyXFxncmFwaC12aXN1YWxpemVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksbUJBQW1CO0VBQ25CLFlBQVk7RUFDWixVQUFVO0VBQ1YsWUFBWSxFQUFBOztBQUdoQjtFQUNJLG1CQUFtQjtFQUNuQixxQkFBcUI7RUFDckIsZUFBZTtFQUNmLDJEQUEyRDtFQUMzRCxlQUFlO0VBQ2YsY0FBYztFQUNkLGtCQUFrQjtFQUNsQixZQUFZO0VBQ1osV0FBVyxFQUFBOztBQUdmO0VBQ0ksVUFBVTtFQUNWLFlBQVksRUFBQTs7QUFHaEI7RUFDSSxnQkFBaUI7RUFDakIsU0FBUztFQUNULFdBQVc7RUFDWCxrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLG1CQUFtQjtFQUNuQixhQUFhLEVBQUE7O0FBR2pCO0VBQ0ksU0FBVTtFQUNWLFdBQVc7RUFDWCxZQUFhO0VBQ2IsYUFBYyxFQUFBOztBQUdsQjtFQUNJLFVBQVU7RUFDVix3QkFBd0I7RUFDeEIsWUFBWTtFQUNaLGtCQUFrQixFQUFBOztBQUd0QjtFQUNJLGFBQWEsRUFBQTs7QUFHakI7RUFDSSxlQUFlO0VBQ2YsaUJBQWlCLEVBQUE7O0FBR3JCO0VBQ0k7O0lBRUksVUFBVSxFQUFBLEVBQ2IiLCJmaWxlIjoic3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2dyYXBoLXYyLXZpc3VhbGl6ZXIvZ3JhcGgtdmlzdWFsaXplci5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5ncmFwaC1jb250YWluZXIge1xyXG4gICAgYmFja2dyb3VuZDogI0Y1RjVGNTtcclxuICAgIGhlaWdodDogODF2aDtcclxuICAgIHdpZHRoOiA4MCU7XHJcbiAgICBmbG9hdDogcmlnaHQ7XHJcbn1cclxuXHJcbi5zZWxlY3RlZC1jb3VudCB7XHJcbiAgICBiYWNrZ3JvdW5kOiAjRjVGNUY1O1xyXG4gICAgd29yZC1icmVhazogYnJlYWstYWxsO1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgZm9udC1mYW1pbHk6IFwiSGVsdmV0aWNhIE5ldWVcIiwgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjtcclxuICAgIGZvbnQtc2l6ZTogMTZweDtcclxuICAgIGNvbG9yOiAjMzAzMzNhO1xyXG4gICAgYm9yZGVyLXJhZGl1czogM3B4O1xyXG4gICAgcGFkZGluZzogMWVtO1xyXG4gICAgZmxvYXQ6IGxlZnQ7XHJcbn1cclxuXHJcbi53cmFwcGVyLWNvdW50bGltaXQge1xyXG4gICAgd2lkdGg6IDgwJTtcclxuICAgIGZsb2F0OiByaWdodDtcclxufVxyXG5cclxuLm5vZGVMaW1pdCB7XHJcbiAgICBtYXgtd2lkdGggOiAyMDBweDtcclxuICAgIHRvcDogNTBweDtcclxuICAgIGZsb2F0OiBsZWZ0O1xyXG4gICAgYm9yZGVyLXJhZGl1czogM3B4O1xyXG4gICAgcGFkZGluZzogMWVtO1xyXG4gICAgYmFja2dyb3VuZDogI0Y1RjVGNTtcclxuICAgIG91dGxpbmU6IG5vbmU7XHJcbn1cclxuXHJcbi5jcmVhdGlvblRvb2xiYXIge1xyXG4gICAgdG9wIDogNTBweDtcclxuICAgIGZsb2F0OiBsZWZ0O1xyXG4gICAgcGFkZGluZyA6IDFlbTtcclxuICAgIG91dGxpbmUgOiBub25lO1xyXG59XHJcblxyXG4ubm9kZUxpbWl0IGlucHV0IHtcclxuICAgIHdpZHRoOiAzNSU7XHJcbiAgICBib3JkZXI6IDAuM3B4IHNvbGlkICMwMDA7XHJcbiAgICBwYWRkaW5nOiA1cHg7XHJcbiAgICBib3JkZXItcmFkaXVzOiAycHg7XHJcbn1cclxuXHJcbi5ub2RlTGltaXQ6Zm9jdXMge1xyXG4gICAgb3V0bGluZTogbm9uZTtcclxufVxyXG5cclxuLm5vZGVsaW1pdC1oZWFkIHtcclxuICAgIGRpc3BsYXk6IGlubGluZTtcclxuICAgIG1hcmdpbi1yaWdodDogM3B4O1xyXG59XHJcblxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAnMTEwMHB4Jykge1xyXG4gICAgLmdyYXBoLWNvbnRhaW5lcixcclxuICAgIC5zZWxlY3RlZC1jb3VudCB7XHJcbiAgICAgICAgd2lkdGg6IDc1JTtcclxuICAgIH1cclxufSJdfQ== */"
 
 /***/ }),
 
@@ -1234,7 +831,6 @@ var GraphVisualizerComponent = /** @class */ (function () {
         this.graphService = graphService;
         this.sharedGraphService = sharedGraphService;
         this.totalTypesArray = [];
-        this.requestedNodeDetails = null;
         this.graphData = {};
         this.errorMessage = '';
         this.loader = true;
@@ -1271,14 +867,13 @@ var GraphVisualizerComponent = /** @class */ (function () {
                 "Research Institute": '#c51162'
             }
         };
-        this.editNodeData = null;
-        this.editRelationData = null;
         this.networkInstance = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.graphOptions = {
             physics: false,
             edges: {
                 smooth: {
-                    type: 'dynamic'
+                    type: 'continuous',
+                    forceDirection: 'none'
                 }
             },
             nodes: {
@@ -1294,16 +889,8 @@ var GraphVisualizerComponent = /** @class */ (function () {
         };
     }
     GraphVisualizerComponent.prototype.ngOnInit = function () {
-        var _this = this;
         this.loader = true;
         this.displayInitialGraph();
-        this.sharedGraphService.getNodeByIDs.subscribe(function (nodeIDArray) {
-            // recieved array IDs
-            console.log('recieved array ID for processing ', nodeIDArray);
-            var nodesByIDs = _this.getNodeDetails(nodeIDArray);
-            console.log('processed data now is  ', nodesByIDs);
-            _this.sharedGraphService.sendNodeDetails(nodesByIDs);
-        }, function (err) { });
     };
     GraphVisualizerComponent.prototype.displayInitialGraph = function () {
         var _this = this;
@@ -1324,47 +911,11 @@ var GraphVisualizerComponent = /** @class */ (function () {
             var container = document.getElementById('graphViewer');
             _this.loader = false;
             _this.network = new vis__WEBPACK_IMPORTED_MODULE_3__["Network"](container, _this.graphData, _this.graphOptions);
-            // activating double click event for editing node or relationship
-            _this.network.on('doubleClick', function (event) {
-                // if nodes array exists, it is a node edit event else it is edge edit event
-                console.log(event);
-                if (!!event.nodes.length) {
-                    // emit node edit event data
-                    var clickedNode = _this.graphData['nodes'].get(event.nodes);
-                    // if there are multiple nodes one above another, always select the top most one
-                    if (clickedNode.length > 0) {
-                        clickedNode = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](clickedNode[0]);
-                    }
-                    console.log('clicked Node is ', clickedNode);
-                    _this.startEditProcess(clickedNode);
-                }
-                else if (!!event.edges.length) {
-                    // emit edge edit event data
-                    console.log('Relation edit is being clicked');
-                    console.log(event);
-                    if (event.nodes.length > 0) {
-                        // user clicked on node despite selecting 'edit edge' feature
-                        alert('Please click on an edge not a node');
-                    }
-                    else {
-                        console.log('edge click ok');
-                        var clickedEdge = _this.graphData['edges'].get(event.edges[0]);
-                        // if there are multiple nodes one above another, always select the top most one
-                        if ([clickedEdge].length > 0) {
-                            clickedEdge = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"]([clickedEdge][0]);
-                        }
-                        console.log('clicked Edge is ', clickedEdge);
-                        // emit data for edge
-                        _this.startEditProcess(clickedEdge, 'edge');
-                    }
-                }
-            });
         }, function (err) {
             console.error('An error occured while retrieving initial graph data', err);
             _this.loader = true;
             _this.graphData = {};
         });
-        // activate double click event for editing a node or a relationship
     };
     GraphVisualizerComponent.prototype.ngOnChanges = function (changes) {
         this.changeNodeColor();
@@ -1492,7 +1043,7 @@ var GraphVisualizerComponent = /** @class */ (function () {
                             type: [event.data.type],
                             properties: event.data.properties
                         };
-                        // let newNodeForVis = _.cloneDeep(newNodeData);
+                        //let newNodeForVis = _.cloneDeep(newNodeData);
                         // make a request to create a node, if it succeedes only then show in the graph
                         _this.graphService.createNewNode(newNodeData).subscribe(function (response) {
                             console.log(response);
@@ -1504,7 +1055,7 @@ var GraphVisualizerComponent = /** @class */ (function () {
                                 _this.graphData['nodes'].add([visNode]);
                             }
                             catch (addErr) {
-                                console.error('Error while adding the data node to vis ', addErr['message']);
+                                console.log('Error while adding the data node to vis ', addErr['message']);
                             }
                         }, function (error) {
                             console.error('An error occured while creating node in  database ', error);
@@ -1512,59 +1063,10 @@ var GraphVisualizerComponent = /** @class */ (function () {
                     }
                 });
             }
-            else if (event.action === 'edit' && !event.hasOwnProperty('process')) {
+            else if (event.action === 'edit') {
                 // handle the functionality of editing the node
-                console.log('Node edit is being clicked');
-                this.network.once('click', function (clickEvent) {
-                    console.log(clickEvent);
-                    var clickedNode = _this.graphData['nodes'].get(clickEvent.nodes);
-                    // if there are multiple nodes one above another, always select the top most one
-                    if (clickedNode.length > 0) {
-                        clickedNode = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](clickedNode[0]);
-                    }
-                    console.log('clicked Node is ', clickedNode);
-                    _this.startEditProcess(clickedNode);
-                });
-            }
-            else if (event.action === 'edit' && event.hasOwnProperty('process') && event.process === 'complete') {
-                // this will be invoked when the user has clicked on edit feature and submitted the form with new data
-                console.log('edit event captured with new data', event.data);
-                // the process is to first create a node for data base update
-                // once the node is updated , use the updated node from the database to update in the visJS
-                var newNodeData = {
-                    id: event.data.id,
-                    label: event.data.properties.Name,
-                    type: [event.data.type],
-                    properties: event.data.properties
-                };
-                this.graphService.updateNode(newNodeData).subscribe(function (response) {
-                    console.log('response from update node ', response);
-                    try {
-                        var updatedNode = response['seperateNodes'][0];
-                        // logic to update node in vis data set
-                        var visNode = _this.graphData['nodes'].get(updatedNode['id']);
-                        // update everything except color and id
-                        if ([visNode].length == 1) {
-                            visNode['properties'] = updatedNode['properties'];
-                            visNode['label'] = updatedNode['label'];
-                            visNode['title'] = updatedNode['title'];
-                            visNode['type'] = updatedNode['type'];
-                            console.log('update node details are ', visNode);
-                            // node was present, simply update it now
-                            _this.graphData['nodes'].update(visNode);
-                        }
-                        console.log(visNode);
-                    }
-                    catch (updateErr) {
-                        // any error encountered while updating the node in vis js
-                        console.error('Error while upating the data node to vis ', updateErr['message']);
-                    }
-                }, function (err) {
-                    console.error('An error occured while updating node in database ', err);
-                });
             }
             else if (event.action === 'delete') {
-                console.log('Node delete has been clicked');
                 // handle the functionality of deleting the node
             }
             else {
@@ -1574,87 +1076,9 @@ var GraphVisualizerComponent = /** @class */ (function () {
         }
     };
     GraphVisualizerComponent.prototype.edgeEventCapture = function (event) {
-        var _this = this;
         if (Object.keys(event).length > 0) {
-            if (event.action === 'create') {
-                // handle the functionaluty of creating a node
-                var newRelationData = {
-                    type: [event.data.type],
-                    properties: event.data.properties,
-                    from: event.data.from,
-                    to: event.data.to
-                };
-                // make a request to create a node, if it succeedes only then show in the graph
-                this.graphService.createNewRelation(newRelationData).subscribe(function (response) {
-                    console.log(response);
-                    try {
-                        var visRelation = response['seperateEdges'][0];
-                        // add the new node to the vis
-                        // first get the edge, if it is already present, simply update it else add it
-                        var isAlreadyPresent = _this.graphData['edges'].get(visRelation['id']);
-                        console.log('is already present is  ', isAlreadyPresent);
-                        if (isAlreadyPresent !== null) {
-                            //update it 
-                            _this.graphData['edges'].update([visRelation]);
-                        }
-                        else {
-                            _this.graphData['edges'].add([visRelation]);
-                        }
-                    }
-                    catch (addErr) {
-                        console.log('Error while adding the data relation to vis ', addErr['message']);
-                    }
-                }, function (error) {
-                    console.log('error while reading new relation data from service ', error);
-                });
-            }
-            else if (event.action === 'edit') {
-                // capture the details of the relationship clicked by the user, clean it if needed and send for use
-                console.log('Relation edit is being clicked');
-                /* this.network.once('click', (clickEvent) => {
-                  console.log(clickEvent);
-                  if (clickEvent.nodes.length > 0) {
-                    // user clicked on node despite selecting 'edit edge' feature
-                    alert('Please click on an edge not a node');
-                  } else {
-                    console.log('edge click ok');
-                    let clickedEdge = this.graphData['edges'].get(clickEvent.edges[0]);
-                  // if there are multiple nodes one above another, always select the top most one
-                    if (clickedEdge.length > 0) {
-                      clickedEdge = _.cloneDeep(clickedEdge[0]);
-                    }
-                    console.log('clicked Edge is ', clickedEdge);
-                    // emit data for edge
-                    this.startEditProcess(clickedEdge, 'edge');
-                  }
-                }); */
-                // hit the update relation service and updae it in visJS too
-                var relationData = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](event.data);
-                if (relationData.hasOwnProperty('id') && relationData.hasOwnProperty('type')) {
-                    // object has atleast id and type key, move ahead
-                    this.graphService.updateRelation(relationData).subscribe(function (response) {
-                        var newRelation = response['seperateEdges'][0];
-                        console.log('new relation data is ', newRelation);
-                        _this.updateRelationinVIS(newRelation);
-                    }, function (err) {
-                        console.error('An error occured while reading the updated relation data', err);
-                    });
-                }
-            }
-            else if (event.action === 'delete') {
-                // handle the functionality of deleting the node
-            }
-            else {
-                // invalid click event
-                console.error('An invalid click event retrieved ', event);
-            }
+            console.log('recieved an event ', event);
         }
-    };
-    GraphVisualizerComponent.prototype.updateRelationinVIS = function (relation) {
-        var oldRelationID = relation['id'];
-        var oldRelation = this.graphData['edges'].get(oldRelationID);
-        console.log('old relation is  ', oldRelation);
-        this.graphData['edges'].update([relation]);
     };
     GraphVisualizerComponent.prototype.serializeProperties = function (propertyObject) {
         if (propertyObject.constructor === Object) {
@@ -1678,39 +1102,6 @@ var GraphVisualizerComponent = /** @class */ (function () {
         node['color'] = this.colorConfig.defaultColor[event.data.type];
         console.log('final node is ', node);
         return node;
-    };
-    GraphVisualizerComponent.prototype.addNodeColor = function (node) {
-        var colorCode = this.colorConfig.defaultColor[node.type[0]] || null;
-        if (colorCode) {
-            node['color'] = colorCode;
-            return node;
-        }
-        else {
-            console.warn('Error while adding color to the node ', node['label']);
-            return node;
-        }
-    };
-    GraphVisualizerComponent.prototype.startEditProcess = function (clickedData, typeProcess) {
-        if (typeProcess === void 0) { typeProcess = 'node'; }
-        // to extract relevant information and send it back to the edit modal
-        console.log(clickedData);
-        if (typeProcess === 'node') {
-            this.editRelationData = null;
-            this.editNodeData = clickedData;
-        }
-        else if (typeProcess === 'edge') {
-            this.editNodeData = null;
-            this.editRelationData = clickedData;
-        }
-    };
-    GraphVisualizerComponent.prototype.getNodeDetails = function (nodeIDs) {
-        var _this = this;
-        // process node IDs and send back
-        var changedNodeIDs = nodeIDs.map(function (nodeID) {
-            return _this.graphData['nodes'].get(nodeID);
-        });
-        console.log('post processing ', changedNodeIDs);
-        return changedNodeIDs;
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
@@ -1746,7 +1137,7 @@ var GraphVisualizerComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-dashboard-header></app-dashboard-header>\n<app-dashboard-sidebar (eventClicked)=\"childEventClicked($event)\" (nodeTypesEvent)=\"sendTypes($event)\"></app-dashboard-sidebar>\n<app-graph-visualizer [event]=\"clickedEvent\" [totalTypesArray]=\"totalTypesArray\"></app-graph-visualizer>"
+module.exports = "<app-dashboard-header></app-dashboard-header>\r\n<app-dashboard-sidebar (eventClicked)=\"childEventClicked($event)\" (nodeTypesEvent)=\"sendTypes($event)\"></app-dashboard-sidebar>\r\n<app-graph-visualizer [event]=\"clickedEvent\" [totalTypesArray]=\"totalTypesArray\"></app-graph-visualizer>"
 
 /***/ }),
 

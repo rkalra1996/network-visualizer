@@ -384,4 +384,36 @@ export class GraphDataService {
       return nodeNames;
     }));
   }
+
+  deleteNode(nodeData) {
+    const url = '/api/graph/node/delete';
+    if (nodeData.hasOwnProperty('id') && nodeData.hasOwnProperty('relations')) {
+      // data is okay now prepare to send
+      return this.publicHttp.post(url, nodeData).pipe(map(data => {
+        if (!!data) {
+          return data;
+        } else {
+          return {response: 'empty'};
+      }
+      }));
+    } else {
+      return throwError('Invalid data provided');
+    }
+  }
+
+  deleteRelation(relationIDData) {
+    const url = '/api/graph/relation/delete';
+    if (relationIDData.hasOwnProperty('id')) {
+      // data is okay now prepare to send
+      return this.publicHttp.post(url, relationIDData).pipe(map(data => {
+        if (!!data) {
+          return data;
+        } else {
+          return {response: 'empty'};
+      }
+      }));
+    } else {
+      return throwError('Invalid data provided');
+    }
+  }
 }

@@ -59,6 +59,7 @@ export class GraphVisualizerComponent implements OnInit {
   public editRelationData = null;
   public network: any;
   @Output() networkInstance = new EventEmitter<any>();
+  public hideDelModal = false;
   private graphOptions = {
     physics: false,
     edges: {
@@ -348,8 +349,29 @@ export class GraphVisualizerComponent implements OnInit {
           console.error('An error occured while updating node in database ', err);
         });
       } else if (event.action === 'delete') {
-        console.log('Node delete has been clicked');
-        // handle the functionality of deleting the node
+        console.log('Node delete has been clicked', event.data);
+        let nodeID = event.data.id;
+        // get the list of relation ids which are connected to this node
+        let connectedEdgeIDs = this.network.getConnectedEdges(nodeID);
+        // hit the delete node api
+        let requestOption = {
+          id : nodeID,
+          relations : connectedEdgeIDs
+        }
+        this.graphService.deleteNode(requestOption).subscribe(response => {
+          console.log('recieved some response', response);
+          // remove the node in vis graph and connected edges, if any
+          let removedNode = response['seperateNodes'];
+          if (response['seperateEdges'].length > 0) {
+            let removedEdges = response['seperateEdges'];
+            this.graphData['edges'].remove(removedEdges);
+          }
+          // remove the node
+          this.graphData['nodes'].remove(removedNode);
+          this.hideDelModal = true;
+        }, err => {
+          console.error('An error occured while reading response for node delete ', err);
+        });
       } else {
         // invalid click event
         console.error('An invalid click event retrieved ', event);
@@ -423,6 +445,28 @@ export class GraphVisualizerComponent implements OnInit {
         }
       } else if (event.action === 'delete') {
         // handle the functionality of deleting the node
+        console.log('realtion delete has been clicked', event.data);
+        let relationID = null;
+        // capture the relation id and send delete request
+        if (event.data.hasOwnProperty('id')) {
+          relationID = event.data.id;
+          // create the delete request
+          let requestObj = {
+            id : relationID
+          };
+          this.graphService.deleteRelation(requestObj).subscribe(response => {
+            console.log('recieved some response', response['seperateEdges']);
+            // once database relation is deleted, remove it from visGraph also
+            let deletedRel = _.cloneDeep(response['seperateEdges'])
+            this.graphData['edges'].remove([deletedRel]);
+            this.hideDelModal = false;
+            this.hideDelModal = true;
+          }, err => {
+            console.error('An error occured while reading response for relation delete ', err);
+          });
+        } else {
+          console.warn('did not recieve the id of relation for deletion in edgeEventCapture');
+        }
       } else {
         // invalid click event
         console.error('An invalid click event retrieved ', event);
