@@ -76,7 +76,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger deleteBtn" data-dismiss="modal" style="color: white;" (click)="activateDelete('deleteModal', 'Node')">Delete</button>
+          <button type="button" class="btn btn-danger deleteBtn" style="color: white;" (click)="activateDelete('deleteModal', 'node')">Delete</button>
           <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
           <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true">Create</button>
           <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true" id="edit_btn">Update</button>
@@ -203,7 +203,7 @@
           </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger deleteBtn" data-dismiss="modal" style="color: white;" (click)="activateDelete('deleteModal', 'Relation')">Delete</button>
+            <button type="button" class="btn btn-danger deleteBtn" style="color: white;" (click)="activateDelete('deleteModal', 'relation')">Delete</button>
           <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
           <button type="button" class="btn btn-primary create" (click)="submitRelModal()" *ngIf="popupConfig.createRelationPopup === true">Create</button>
           <button type="button" class="btn btn-primary create" (click)="submitRelModal('edit')" *ngIf="popupConfig.editRelationPopup === true" id="edit_btn">Update</button>
@@ -229,7 +229,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn ui-button-text later" data-dismiss="modal">Maybe Later</button>
-        <button type="button" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-danger" (click)="submitDelete(deleteContext)" id="del_btn">Delete</button>
       </div>
     </div>
   </div>

@@ -10,15 +10,30 @@
             "relation" : {
                 "update": {
                     "a001": "API : relation/update | ERROR : Error encountered while reading from database"
+                },
+                "create" : {
+                    "b001" : "API : relation/create | ERROR : Error encountered while reading from database"
+                },
+                "delete" : {
+                    "c001" : "API : relation/delete | ERROR : Error encountered while reading from database"
+                },
+                "read" : {
+                    "d001": "API : relation/read | ERROR : Error encountered while reading from database"
                 }
             },
             "node" : {
-                "update" : {},
-                "create" : {},
+                "update" : {
+                    "a001" : ""
+                },
+                "create" : {
+                    "b001": ""
+                },
                 "delete" : {
                     "c001": "API : node/delete | ERROR : Error encountered while reading from database"
                 },
-                "read" : {}
+                "read" : {
+                    "d001" : ""
+                }
             }
         }
     },

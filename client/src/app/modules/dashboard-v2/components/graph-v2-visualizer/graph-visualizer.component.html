@@ -8,7 +8,8 @@
     </div>
     <div class="creationToolbar">
             <app-create-nodes [nodeTypes]="totalTypesArray" 
-            [editData]="editNodeData" [editRelData]="editRelationData" 
+            [editData]="editNodeData" [editRelData]="editRelationData"
+            [hideDelModal]="hideDelModal" 
             (nodeBtnEvent)="nodeEventCapture($event)" (edgeBtnEvent)="edgeEventCapture($event)"
             ></app-create-nodes>
     </div>

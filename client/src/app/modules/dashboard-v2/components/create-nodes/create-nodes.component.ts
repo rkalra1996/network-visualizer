@@ -20,6 +20,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   @Output() nodeBtnEvent = new EventEmitter<any>();
   public disabledBox = false;
   public deleteContext = 'Node';
+  public clickedNodeID = null;
+  public clickedRelationID = null;
   public disabledFromBox = false;
   public disabledToBox = false;
   public relationSourceNode = null;
@@ -59,6 +61,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   };
   @Input() editData: any;
   @Input() editRelData: any;
+  @Input() hideDelModal: any;
 
   constructor(private SharedSrvc: SearchService, private graphSrvc: GraphDataService, private sharedGraphSrvc: SharedGraphService) {
   }
@@ -93,6 +96,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     this.nodeBtnEvent.emit({ type: 'click', action: 'edit' });
   }
   deleteNode() {
+    // gather the information to delete node and send to the graph
+
     this.nodeBtnEvent.emit({ type: 'click', action: 'delete' });
   }
   createRelation() {
@@ -133,6 +138,13 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (this.hideDelModal === true) {
+      // hide the delete modal
+      console.log('hide event recieved');
+      this.hideModal('deleteModal');
+      this.hideDelModal = false;
+
+    }
     $('#createNodeModal').on('hidden.bs.modal', (e) => {
       // this event will reset the popupConfig object so that everytime correct data is accessed
       this.setAllToFalse();
@@ -154,6 +166,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         type : this.editData['type'][0],
         id: this.editData['id']
       });
+      this.clickedNodeID = _.cloneDeep(this.editNodeConfig['id']);
       // console.log('editNodeConfig is ', this.editNodeConfig);
       this.selectedType = null;
       this.getNodeTypes().subscribe(data => {
@@ -186,7 +199,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         from : this.editRelData['from'],
         to : this.editRelData['to']
       };
-
+      this.clickedRelationID = _.cloneDeep(editRelConfig['id']);
       this.getRelationTypes().subscribe(response => {
       console.log('fetched relationship types successfully');
       // once types are loaded, set a default type which is the type of selected relation
@@ -298,6 +311,10 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   showModal(modalID) {
     $(`#${modalID}`).modal('show');
+  }
+
+  hideModal(modalID) {
+    $(`#${modalID}`).modal('hide');
   }
 
   setAllToFalse() {
@@ -580,8 +597,37 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   }
 
   activateDelete(deleteModalID, triggeredBy) {
+    let id = null;
     // first get the information of the modal which is trying to trigger the delete modal, then show the delete modal
     this.deleteContext = triggeredBy;
+    // hide the respective node or relation modal before showing delete modal
+    if (triggeredBy === 'node') {
+      this.hideModal('createNodeModal');
+    }
+    if (triggeredBy === 'relation') {
+      this.hideModal('createRelationModal');
+    }
     $(`#${deleteModalID}`).modal('show');
+    // get the id of the node/relation triggering delete
+    if (triggeredBy === 'node') {
+      id = this.clickedNodeID;
+    } else if (triggeredBy === 'relation') {
+      id = this.clickedRelationID;
+    }
+    // add the id of node/relation on the delete button for later reference
+    this.addAttribute('del_btn', `${triggeredBy}_id`, id);
+  }
+
+  submitDelete(deleteContext) {
+    console.log('delete ', deleteContext);
+    // get the id of node/relation  to delete
+    const selectedID = $(`#del_btn`).attr(`${deleteContext}_id`);
+    if (deleteContext === 'node') {
+      this.nodeBtnEvent.emit({ type: 'click', action: 'delete', data : {id: selectedID} });
+    } else if  (deleteContext === 'relation') {
+      this.edgeBtnEvent.emit({ type: 'click', action: 'delete', data : {id: selectedID} });
+    } else {
+      // nothing
+    }
   }
 }
