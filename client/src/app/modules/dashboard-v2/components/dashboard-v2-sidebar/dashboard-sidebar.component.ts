@@ -1,7 +1,9 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
 import { Network, DataSet, Node, Edge, IdType } from 'vis';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
+import { Subscription } from 'rxjs';
+import * as _ from 'lodash';
 @Component({
   selector: 'app-dashboard-sidebar',
   templateUrl: './dashboard-sidebar.component.html',
@@ -9,6 +11,7 @@ import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.s
 })
 export class DashboardSidebarComponent implements OnInit {
 
+  @Input() newNodeCreated: string;
   public rotateObj = {
     Name: {
       rotate: false,
@@ -88,12 +91,14 @@ export class DashboardSidebarComponent implements OnInit {
     this.getGraph();
   }
 
-  networkElementClick(element) {
-    if (element) {
-      this.eventClicked.emit(element);
+  ngOnChanges(){
+    //update all dropdown when new node is created
+    if(this.newNodeCreated === "NewNodeCreated"){
+      this.getGraph();
     }
   }
 
+  // set all data in sidebar dropdown
   getGraph() {
     this.graphDataService.getNodeLabelData().subscribe(response => {
       // this.graphInitData.push(data);
@@ -132,7 +137,9 @@ export class DashboardSidebarComponent implements OnInit {
         
       });
       }
-      this.nameOptions = temname;
+      this.nameOptions = _.cloneDeep([]);
+      let temp = _.cloneDeep(temname);
+      this.nameOptions = temp;
       
       // send the types array for further use to the modals
       // this.nodeTypesEvent.emit(temtype);
@@ -161,7 +168,7 @@ export class DashboardSidebarComponent implements OnInit {
         ]
      this.relationOptions = temrelation;
     });
-  }
+    }
 
   onlyUnique(value, index, self) {
     return self.indexOf(value) === index;

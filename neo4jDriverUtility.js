@@ -477,18 +477,20 @@ function runQueryWithTypesV2(dataObj) {
                     queryStatement = `match (p {Name:"Societal Platform Team"})-[r${dataObj.relation}]-(q) where labels(q) In [${dataObj.nodes[1].value}] and q.Name IN [${dataObj.nodes[0].value}] return p,r,q limit 50`;
                 }
             } else if (!!dataObj.relation) {
-                queryStatement = `match (p {Name:"Societal Platform Team"}) <-[r${dataObj.relation}]->(q) return p,q,r limit ${dataObj.limit}`;
+                queryStatement = `match (p {Name:"Societal Platform Team"}) <-[r${dataObj.relation}]->(q) where p.deleted = "false" and r.deleted = "false" and q.deleted = "false" return p,q,r limit ${dataObj.limit}`;
             } else if (typeArray.length > 0) {
                 // queryStatement = `match (p)-[r]-(q) where labels(p) In [${dataObj.nodes[1].value}] p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
                 if (allSubQuery.length > 0) {
 
-                    queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where labels(q) In [${typeArray}] and ${allSubQuery} return p,r,q limit ${dataObj.limit}`;
+                    //queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where labels(q) In [${typeArray}] and ${allSubQuery} and p.deleted = false and r.deleted = false and q.deleted = false return p,r,q limit ${dataObj.limit}`;
+                    queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and ${allSubQuery} and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
                 } else {
-                    queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where labels(q) In [${typeArray}] return p,r,q limit ${dataObj.limit}`;
+                    //queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where labels(q) In [${typeArray}] and p.deleted = false and r.deleted = false and q.deleted = false return p,r,q limit ${dataObj.limit}`;
+                    queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
                 }
 
             } else {
-                queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where ${allSubQuery} return p,r,q limit ${dataObj.limit}`;
+                queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where ${allSubQuery} and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" return p,r,q limit ${dataObj.limit}`;
             }
             console.log('query for 1 node type is ', queryStatement);
             return runQuery(queryStatement).then(result => {
@@ -590,7 +592,7 @@ function runQueryWithTypesV2(dataObj) {
 var getGraphLabelData = (query) => {
     let queryStatement = '';
 
-    queryStatement = `Match(n) RETURN n.Name,n.Connection,n.Status,n.Represent,n.Url,n.\`Understanding of SP Thinking\`,labels(n) ORDER BY labels(n)`;
+    queryStatement = `Match(n) where n.deleted = "false" RETURN n.Name,n.Connection,n.Status,n.Represent,n.Url,n.\`Understanding of SP Thinking\`,labels(n) ORDER BY labels(n)`;
 
     console.log('query for label is ', queryStatement);
 
@@ -674,6 +676,8 @@ function createNewNodeQuery(data) {
 
     // first add the type to  the new node
     subQuery = `(n:\`${data.type[0]}\` `;
+    // add deleted to be false by default
+    data.properties['deleted'] = false;
     subQuery += addProperties(data.properties);
     subQuery += ') return n';
     query += subQuery;
@@ -756,6 +760,8 @@ var createRelation = (request) => {
         } else {
             // data has all three, now proceed
             // a type is present, can go further
+            // first add default deleted key to false
+            data.properties['deleted'] = false;
             let query = createNewRelationQuery(data);
             return runQuery(query).then(response => {
                     let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));

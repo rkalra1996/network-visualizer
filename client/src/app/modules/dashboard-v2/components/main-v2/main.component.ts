@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class MainComponent implements OnInit {
   public clickedEvent: String;
   public totalTypesArray = [];
+  public newNodeCreated: String;
   constructor() { }
 
   ngOnInit() {
@@ -15,6 +16,9 @@ export class MainComponent implements OnInit {
   
   childEventClicked(event: String) {
     this.clickedEvent = event;
+  }
+  childEventClicked2(event: String) {
+    this.newNodeCreated = event;
   }
 
   sendTypes(event) {
