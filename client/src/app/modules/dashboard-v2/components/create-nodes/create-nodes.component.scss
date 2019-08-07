@@ -1,3 +1,5 @@
+
+
 .container-fluid .btn-group {
     margin-right : 20px;
 }
@@ -76,4 +78,15 @@ input[disabled="true"] {
 
 .deleteBtn {
     margin-right : auto;
+    cursor: pointer !important;
+}
+
+.later {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.later:hover {
+    background-color: #5f5f5f;
+    color : white;
 }

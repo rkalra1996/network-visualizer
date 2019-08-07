@@ -19,6 +19,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   @Output() nodeBtnEvent = new EventEmitter<any>();
   public disabledBox = false;
+  public deleteContext = 'Node';
   public disabledFromBox = false;
   public disabledToBox = false;
   public relationSourceNode = null;
@@ -572,5 +573,11 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         // nothing
       }
     }
+  }
+
+  activateDelete(deleteModalID, triggeredBy) {
+    // first get the information of the modal which is trying to trigger the delete modal, then show the delete modal
+    this.deleteContext = triggeredBy;
+    $(`#${deleteModalID}`).modal('show');
   }
 }
