@@ -95,8 +95,8 @@ export class DashboardSidebarComponent implements OnInit {
   }
 
   getGraph() {
-    this.graphDataService.getNodeLabels().subscribe(data => {
-      this.graphInitData.push(data);
+    this.graphDataService.getNodeLabelData().subscribe(response => {
+      // this.graphInitData.push(data);
       let temname = [];
       let temstatus = [];
       let temrepresent = [];
@@ -104,10 +104,20 @@ export class DashboardSidebarComponent implements OnInit {
       let temtype = [];
       let temunder = [];
       let temrelation = [];
-      if (data) {
-        data['Name'].filter(nodeName => {
-          temname.push(nodeName);
-        });
+      if (response && response.length > 0) {
+        response.forEach(data => {
+          let keyName = Object.keys(data)[0];
+          if(keyName === "Name"){
+            temname = data['Name'];
+          }else if(keyName === "Status"){
+            temstatus = data['Status'];
+          }else if(keyName === "Represent"){
+            temrepresent = data['Represent'];
+          }else if(keyName === "Connection"){
+            temconnection = data['Connection'];
+          }else if(keyName === "Understanding of SP Thinking"){
+            temunder = data['Understanding of SP Thinking'];
+          }
         // data['Type'].filter(nodeType => {
         //   // let x ={
         //   //   name:node,
@@ -115,32 +125,35 @@ export class DashboardSidebarComponent implements OnInit {
         //   // }
         //   temtype.push(nodeType);
         // });
-        data['Status'].filter(nodeStatus => {
-          temstatus.push(nodeStatus);
-        });
-        data['Represent'].filter(nodeRepresent => {
-          temrepresent.push(nodeRepresent);
-        });
-        data['Connection'].filter(nodeConnection => {
-          temconnection.push(nodeConnection);
-        })
-        data['Understanding of SP Thinking'].filter(nodeSP => {
-          temunder.push(nodeSP);
-        })
+        
         // data['Relationships'].filter(nodeRelations => {
         //   temrelation.push(nodeRelations);
         // });
-      
+        
+      });
       }
       this.nameOptions = temname;
-      // this.typeOptions = temtype;
+      
       // send the types array for further use to the modals
-      this.nodeTypesEvent.emit(temtype);
+      // this.nodeTypesEvent.emit(temtype);
       this.representOptions = temrepresent;
       this.connectionOptions = temconnection;
       this.understandingOptions = temunder;
       this.statusOptions = temstatus;
-     // this.relationOptions = temrelation;
+      temtype = [
+            "Philanthropy",
+            "NGO/CBO",
+            "Consulting",
+            "Research Institute",
+            "Private Sector",
+            "Government",
+            "Impact Investor",
+            "Media",
+            "Academia",
+            "International Agency"
+          ]
+     this.typeOptions = temtype;
+    // this.relationOptions = temrelation;
     });
   }
 

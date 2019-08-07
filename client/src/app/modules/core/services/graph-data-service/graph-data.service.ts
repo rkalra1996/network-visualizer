@@ -37,7 +37,7 @@ export class GraphDataService {
       }
     }));
   }
-  getNodeLabels(): Observable<any> {
+  getNodeLabelData(): Observable<any> {
     const url = 'http://localhost:3050/api/graph/labeldata';
     return this.publicHttp.get(url).pipe(map(data => {
       if (!!data) {

@@ -354,7 +354,7 @@ var getDataV2 = (query) => {
     }
     return runQuery(query)
         .then(result => {
-            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+            let serializedData = serializerv2.Neo4JtoVisFormat(JSON.stringify(result.records));
             console.log('serialized data is ', serializedData.seperateNodes.length, serializedData.seperateEdges.length);
             neo4Jdriver.close();
             return new Promise((res, rej) => {
@@ -586,7 +586,7 @@ function runQueryWithTypesV2(dataObj) {
     }
 }
 
-
+// to get properties of node from database
 var getGraphLabelData = (query) => {
     let queryStatement = '';
 
@@ -595,7 +595,7 @@ var getGraphLabelData = (query) => {
     console.log('query for label is ', queryStatement);
 
     return runQuery(queryStatement).then(result => {
-        let serializedData = serializerv2.Neo4JtoVisFormat(JSON.stringify(result.records));
+        let serializedData = labelSerializer.Neo4JtoJsonFormat(JSON.stringify(result.records));
         return new Promise((resolve, reject) => {
             resolve(serializedData);
         });

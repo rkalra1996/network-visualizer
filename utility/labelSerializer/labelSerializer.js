@@ -3,7 +3,7 @@ const _ = require('lodash');
 
 var Neo4JtoJsonFormat = (data) => {
     // clean the data containers before processing
-    let allLabelData = {};
+    let allLabelData = [];
     let name = [];
 
 
@@ -14,33 +14,56 @@ var Neo4JtoJsonFormat = (data) => {
         try {
             data = JSON.parse(data);
             data[0].keys.forEach(key => {
-                if (true) {
+                if (key.includes(".")) {
                     //check for dot
-                    if (true) {
+                    key = key.split(".");
+                    if (key[1].includes("`")) {
                         // check for tild
-                        allLabelData[key] = [];
+                        key[1] = key[1].split("`")
+                        allLabelData.push({
+                            [key[1][1]]: []
+                        });
                     } else {
-                        allLabelData[key] = [];
+                        allLabelData.push({
+                            [key[1]]: []
+                        });
+                    }
+                } else {
+                    if (key.includes("(")) {
+                        key = key.split("(");
+                        allLabelData.push({
+                            [key[0]]: []
+                        });
                     }
                 }
 
             });
             data.forEach((properties, index) => {
                 // Extract keys 
-
                 let propertiesArray = properties._fields;
                 propertiesArray.forEach((property, i) => {
+                    // store property with respective keys
                     if (property) {
-                        // store property with respective keys
-                        // use index in both this&allLabelData
+                        let keyName = Object.keys(allLabelData[i])[0];
+                        allLabelData[i][keyName].push(property);
                     }
                 });
             });
+            allLabelData = getUnique(allLabelData);
         } catch (e) {
             console.error('An error occured while processing the data in the labelserializer', e);
         }
         return allLabelData;
     }
+}
+
+function getUnique(allLabelData) {
+    allLabelData.forEach((data, i) => {
+        let keyName = Object.keys(allLabelData[i])[0];
+        allLabelData[i][keyName] = _.uniq(allLabelData[i][keyName]);
+
+    })
+    return allLabelData;
 }
 
 module.exports = {
