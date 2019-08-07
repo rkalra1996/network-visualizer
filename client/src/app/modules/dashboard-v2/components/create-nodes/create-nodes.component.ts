@@ -474,9 +474,18 @@ export class CreateNodesComponent implements OnInit, OnChanges {
  // fetch the properties of selected type and display it in the dropdown
     this.typeProperties =  this.getRelProperties([event]);
     // trigger an api to get all the names of the nodes in the graph
-    this.graphSrvc.getNodeNames().subscribe(response => {
-      this.fromNames = _.cloneDeep(response);
-      this.toNames = _.cloneDeep(response);
+    this.graphSrvc.getNodeLabelData().subscribe(response => {
+      let temname = [];
+      if (response && response.length > 0) {
+        response.forEach(data => {
+          let keyName = Object.keys(data)[0];
+          if(keyName === "Name"){
+            temname = data['Name'];
+          }
+        });
+        this.fromNames = _.cloneDeep(temname);
+        this.toNames = _.cloneDeep(temname);
+      }    
     }, error => {
       console.log(error);
       this.fromNames = [];
