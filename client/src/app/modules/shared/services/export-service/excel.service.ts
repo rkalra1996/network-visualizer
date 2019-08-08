@@ -1,54 +1,38 @@
 import { Injectable } from '@angular/core';
 import * as $ from 'jquery';
+import { PublicHttpService } from 'src/app/modules/core/services/public/public-http/public-http.service';
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
+
+import * as token from './../../../../../assets/user-token.json';
 @Injectable({
   providedIn: 'root'
 })
 export class ExcelService {
 
-  constructor() { }
+  constructor(private publicHttp : PublicHttpService) { }
 
-  // public exportAsExcelFile(json: any[], excelFileName: string): void {
-  //   var blob = new Blob(json, { type: 'data:application/vnd.ms-excel' });
-  //           var downloadUrl = URL.createObjectURL(blob);
-  //           var a = document.createElement("a");
-  //           a.href = downloadUrl;
-  //           a.download = "downloadFile.xlsx";
-  //           document.body.appendChild(a);
-  //           a.click();
-  // }
   public exportAsExcelFile(){
-    $(document).ready(function(){
-      var settings = {
-          url: "http://localhost:9000/v1/data/read",
-             type: 'GET',
-             headers: {
-              "user-token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuZXR3b3JrLXZpc3VhbGl6ZXIiLCJpc3MiOiJOSUlUIiwiaWF0IjoxNTY1MTgwMTc1LCJleHAiOjE1NjUyNjY1NzV9.HP-TGO1MjR4RnyMrvTHyslUgNJcbgP-dIib7jU5-Kns8g4PvrQS2RrQzH7HeDMwrhXRPZilkF5DN70ElUAzmnA"
-             },
-             contentType: 'application/json; charset=utf-8',
-             success:function (response) {
-              console.log(response);
-              var blob = new Blob([response], { type: 'data:text/csv' });
-              var downloadUrl = URL.createObjectURL(blob);
-              var a = document.createElement("a");
-              a.href = downloadUrl;
-              a.download = "downloadFile.csv";
-              document.body.appendChild(a);
-              a.click();
-            }
-        }
-        $.ajax(settings).done(function(response) {
-          console.log('hello',response);
-          var blob = new Blob([response], { type: 'data:application/vnd.ms-excel' });
-          var downloadUrl = URL.createObjectURL(blob);
-          var a = document.createElement("a");
-          a.href = downloadUrl;
-          a.download = "downloadFile.xlsx";
-          document.body.appendChild(a);
-          a.click();
-        });
-   })
+    let request = {
+      url: "http://localhost:9000/v1/data/read",
+      httpOptions :{
+          // "user-token": token['user-token'],
+          // "contentType": 'application/json; charset=utf-8'
+          "Access-Control-Allow-Origin" : true
+         }
+    }
+  
+    this.publicHttp.get(request.url, request.httpOptions).subscribe((response:any) => {
+      let blob = new Blob([response], { type: 'data:application/vnd.ms-excel' });
+      let downloadUrl = URL.createObjectURL(blob);
+      let a = document.createElement("a");
+      a.href = downloadUrl;
+      let d = new Date();
+      a.download = "GraphData_"+d.getTime();+".xlsx";
+      document.body.appendChild(a);
+      a.click();
+    })
+        
    
   }
 }
