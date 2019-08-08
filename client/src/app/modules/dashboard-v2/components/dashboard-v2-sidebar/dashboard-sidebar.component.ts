@@ -401,4 +401,7 @@ export class DashboardSidebarComponent implements OnInit {
       }
 
   }
+
+
+  networkElementClick(element) {}
 }

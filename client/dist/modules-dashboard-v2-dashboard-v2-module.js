@@ -11919,6 +11919,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
             this.count = 1;
         }
     };
+    DashboardSidebarComponent.prototype.networkElementClick = function (element) { };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
