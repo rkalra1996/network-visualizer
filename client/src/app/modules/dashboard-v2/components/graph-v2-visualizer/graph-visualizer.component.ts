@@ -114,37 +114,7 @@ export class GraphVisualizerComponent implements OnInit {
 
       // activating double click event for editing node or relationship
       this.network.on('doubleClick', (event) => {
-        // if nodes array exists, it is a node edit event else it is edge edit event
-        console.log(event);
-        if (!!event.nodes.length) {
-          // emit node edit event data
-          let clickedNode = this.graphData['nodes'].get(event.nodes);
-          // if there are multiple nodes one above another, always select the top most one
-          if (clickedNode.length > 0) {
-            clickedNode = _.cloneDeep(clickedNode[0]);
-          }
-          console.log('clicked Node is ', clickedNode);
-          this.startEditProcess(clickedNode);
-        }
-        else if (!!event.edges.length) {
-          // emit edge edit event data
-          console.log('Relation edit is being clicked');
-          console.log(event);
-          if (event.nodes.length > 0) {
-            // user clicked on node despite selecting 'edit edge' feature
-            alert('Please click on an edge not a node');
-          } else {
-            console.log('edge click ok');
-            let clickedEdge = this.graphData['edges'].get(event.edges[0]);
-            // if there are multiple nodes one above another, always select the top most one
-            if ([clickedEdge].length > 0) {
-              clickedEdge = _.cloneDeep([clickedEdge][0]);
-            }
-            console.log('clicked Edge is ', clickedEdge);
-            // emit data for edge
-            this.startEditProcess(clickedEdge, 'edge');
-          }
-        }
+        this.doubleClickHandler(event);
       });
     }, err => {
       console.error('An error occured while retrieving initial graph data', err);
@@ -190,6 +160,9 @@ export class GraphVisualizerComponent implements OnInit {
   reinitializeGraph() {
     const container = document.getElementById('graphViewer');
     this.network.setData(this.graphData);
+    this.network.on('doubleClick', (event) => {
+      this.doubleClickHandler(event);
+    });
   }
   showGraphData() {
     this.loader = true;
@@ -218,6 +191,9 @@ export class GraphVisualizerComponent implements OnInit {
       // display data
       const container = document.getElementById('graphViewer');
       this.network = new Network(container, this.graphData, this.graphOptions);
+      this.network.on('doubleClick', (event) => {
+        this.doubleClickHandler(event);
+      });
       this.loader = false;
     }, err => {
       console.error('An error occured while retrieving initial graph data', err);
@@ -459,7 +435,6 @@ export class GraphVisualizerComponent implements OnInit {
             // once database relation is deleted, remove it from visGraph also
             let deletedRel = _.cloneDeep(response['seperateEdges'])
             this.graphData['edges'].remove([deletedRel]);
-            this.hideDelModal = false;
             this.hideDelModal = true;
           }, err => {
             console.error('An error occured while reading response for relation delete ', err);
@@ -536,5 +511,40 @@ export class GraphVisualizerComponent implements OnInit {
     });
     console.log('post processing ', changedNodeIDs);
     return changedNodeIDs;
+  }
+
+
+  doubleClickHandler(event) {
+      // if nodes array exists, it is a node edit event else it is edge edit event
+      console.log(event);
+      if (!!event.nodes.length) {
+        // emit node edit event data
+        let clickedNode = this.graphData['nodes'].get(event.nodes);
+        // if there are multiple nodes one above another, always select the top most one
+        if (clickedNode.length > 0) {
+          clickedNode = _.cloneDeep(clickedNode[0]);
+        }
+        console.log('clicked Node is ', clickedNode);
+        this.startEditProcess(clickedNode);
+      }
+      else if (!!event.edges.length) {
+        // emit edge edit event data
+        console.log('Relation edit is being clicked');
+        console.log(event);
+        if (event.nodes.length > 0) {
+          // user clicked on node despite selecting 'edit edge' feature
+          alert('Please click on an edge not a node');
+        } else {
+          console.log('edge click ok');
+          let clickedEdge = this.graphData['edges'].get(event.edges[0]);
+          // if there are multiple nodes one above another, always select the top most one
+          if ([clickedEdge].length > 0) {
+            clickedEdge = _.cloneDeep([clickedEdge][0]);
+          }
+          console.log('clicked Edge is ', clickedEdge);
+          // emit data for edge
+          this.startEditProcess(clickedEdge, 'edge');
+        }
+      }
   }
 }
