@@ -262,7 +262,7 @@ export class GraphVisualizerComponent implements OnInit {
             this.graphService.createNewNode(newNodeData).subscribe(response => {
               console.log(response);
               //update sidebar dropdown
-              this.newNodeCreated.emit("NodeEvent_"+response['seperateNodes'][0].id);
+              this.newNodeCreated.emit("NodeEvent_create"+response['seperateNodes'][0].id);
               // add additional data for vis layout
               // newNodeForVis = this.addData(newNodeForVis, clickEvent, event);
               try {
@@ -318,7 +318,7 @@ export class GraphVisualizerComponent implements OnInit {
               // node was present, simply update it now
               this.graphData['nodes'].update(visNode);
               //update sidebar dropdown
-              this.newNodeCreated.emit("NodeEvent_"+response['seperateNodes'][0].id);
+              this.newNodeCreated.emit("NodeEvent_update"+response['seperateNodes'][0].id);
             }
             console.log(visNode);
 
@@ -352,7 +352,7 @@ export class GraphVisualizerComponent implements OnInit {
           console.log('changing hideDelModal value');
           this.hideDelModal = _.cloneDeep(true);
           //update sidebar dropdown
-          this.newNodeCreated.emit("NodeEvent_"+response['seperateNodes'][0].id);
+          this.newNodeCreated.emit("NodeEvent_delete"+response['seperateNodes'][0].id);
         }, err => {
           console.error('An error occured while reading response for node delete ', err);
         });
