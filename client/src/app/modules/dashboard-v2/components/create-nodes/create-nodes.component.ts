@@ -138,11 +138,16 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log('hideDelModal is ', this.hideDelModal);
     if (this.hideDelModal === true) {
       // hide the delete modal
       console.log('hide event recieved');
       this.hideModal('deleteModal');
-      this.hideDelModal = false;
+      this.hideModal('createNodeModal');
+      this.hideModal('createRelationModal');
+      this.editData = null;
+      this.editRelData = null;
+      console.log('post hide event is ', this.hideDelModal);
 
     }
     $('#createNodeModal').on('hidden.bs.modal', (e) => {

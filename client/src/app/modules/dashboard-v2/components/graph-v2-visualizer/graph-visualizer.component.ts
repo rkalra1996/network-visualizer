@@ -114,6 +114,7 @@ export class GraphVisualizerComponent implements OnInit {
 
       // activating double click event for editing node or relationship
       this.network.on('doubleClick', (event) => {
+        this.hideDelModal = false;
         this.doubleClickHandler(event);
       });
     }, err => {
@@ -161,6 +162,7 @@ export class GraphVisualizerComponent implements OnInit {
     const container = document.getElementById('graphViewer');
     this.network.setData(this.graphData);
     this.network.on('doubleClick', (event) => {
+      this.hideDelModal = false;
       this.doubleClickHandler(event);
     });
   }
@@ -192,6 +194,7 @@ export class GraphVisualizerComponent implements OnInit {
       const container = document.getElementById('graphViewer');
       this.network = new Network(container, this.graphData, this.graphOptions);
       this.network.on('doubleClick', (event) => {
+        this.hideDelModal = false;
         this.doubleClickHandler(event);
       });
       this.loader = false;
@@ -346,7 +349,8 @@ export class GraphVisualizerComponent implements OnInit {
           }
           // remove the node
           this.graphData['nodes'].remove(removedNode);
-          this.hideDelModal = true;
+          console.log('changing hideDelModal value');
+          this.hideDelModal = _.cloneDeep(true);
           //update sidebar dropdown
           this.newNodeCreated.emit("NodeEvent_"+response['seperateNodes'][0].id);
         }, err => {
@@ -378,7 +382,6 @@ export class GraphVisualizerComponent implements OnInit {
             // add the new node to the vis
             // first get the edge, if it is already present, simply update it else add it
             let isAlreadyPresent = this.graphData['edges'].get(visRelation['id']);
-            console.log('is already present is  ', isAlreadyPresent);
             if (isAlreadyPresent !== null) {
               //update it 
               this.graphData['edges'].update([visRelation]);
@@ -520,7 +523,6 @@ export class GraphVisualizerComponent implements OnInit {
 
   doubleClickHandler(event) {
       // if nodes array exists, it is a node edit event else it is edge edit event
-      console.log(event);
       if (!!event.nodes.length) {
         // emit node edit event data
         let clickedNode = this.graphData['nodes'].get(event.nodes);
@@ -533,13 +535,10 @@ export class GraphVisualizerComponent implements OnInit {
       }
       else if (!!event.edges.length) {
         // emit edge edit event data
-        console.log('Relation edit is being clicked');
-        console.log(event);
         if (event.nodes.length > 0) {
           // user clicked on node despite selecting 'edit edge' feature
           alert('Please click on an edge not a node');
         } else {
-          console.log('edge click ok');
           let clickedEdge = this.graphData['edges'].get(event.edges[0]);
           // if there are multiple nodes one above another, always select the top most one
           if ([clickedEdge].length > 0) {
