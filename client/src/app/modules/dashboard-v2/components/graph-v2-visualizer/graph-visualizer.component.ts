@@ -371,6 +371,8 @@ export class GraphVisualizerComponent implements OnInit {
           // remove the node
           this.graphData['nodes'].remove(removedNode);
           this.hideDelModal = true;
+          //update sidebar dropdown
+          this.newNodeCreated.emit("NodeEvent_"+response['seperateNodes'][0].id);
         }, err => {
           console.error('An error occured while reading response for node delete ', err);
         });
