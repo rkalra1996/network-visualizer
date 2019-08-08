@@ -1,5 +1,7 @@
 # Network-Visualizer
 This is the client side of network visualizer for neo4J.
+View the live version of the application here : 
+* http://ec2-3-92-217-52.compute-1.amazonaws.com:3050/
 
 # Installation
 
