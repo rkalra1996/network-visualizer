@@ -93,7 +93,10 @@ export class DashboardSidebarComponent implements OnInit {
 
   ngOnChanges(){
     //update all dropdown when new node is created
-    if(this.newNodeCreated === "NewNodeCreated"){
+    // get the createdEvent
+    let nodeEvent = this.newNodeCreated.split('_')[0];
+
+    if(nodeEvent === "NodeEvent"){
       this.getGraph();
     }
   }
