@@ -29,7 +29,7 @@ module.exports = [[module.i, "/*!\n *  Font Awesome 4.7.0 by @davegandy - http:/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = [[module.i, "/* You can add global styles to this file, and also import other style files */\nbody {\n  background: #F5F5F5; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9EOlxcbmVvNGotY29tbXVuaXR5LTMuMy45XFxkZXZlbG9wbWVudF9wcm9qZWN0c1xcbmVvNGpEYXRhRHJpdmVyXFxjbGllbnQvc3JjXFxzdHlsZXMuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSw4RUFBQTtBQUVBO0VBQ0ksbUJBQW1CLEVBQUEiLCJmaWxlIjoic3JjL3N0eWxlcy5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLyogWW91IGNhbiBhZGQgZ2xvYmFsIHN0eWxlcyB0byB0aGlzIGZpbGUsIGFuZCBhbHNvIGltcG9ydCBvdGhlciBzdHlsZSBmaWxlcyAqL1xyXG5cclxuYm9keSB7XHJcbiAgICBiYWNrZ3JvdW5kOiAjRjVGNUY1O1xyXG59Il19 */", '', '']]
+module.exports = [[module.i, "/* You can add global styles to this file, and also import other style files */\nbody {\n  background: #F5F5F5; }\nbutton {\n  cursor: pointer !important; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9EOlxcbmVvNGotY29tbXVuaXR5LTMuMy45XFxkZXZlbG9wbWVudF9wcm9qZWN0c1xcbmVvNGpEYXRhRHJpdmVyXFxjbGllbnQvc3JjXFxzdHlsZXMuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSw4RUFBQTtBQUVBO0VBQ0ksbUJBQW1CLEVBQUE7QUFHdkI7RUFDSSwwQkFBMEIsRUFBQSIsImZpbGUiOiJzcmMvc3R5bGVzLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvKiBZb3UgY2FuIGFkZCBnbG9iYWwgc3R5bGVzIHRvIHRoaXMgZmlsZSwgYW5kIGFsc28gaW1wb3J0IG90aGVyIHN0eWxlIGZpbGVzICovXHJcblxyXG5ib2R5IHtcclxuICAgIGJhY2tncm91bmQ6ICNGNUY1RjU7XHJcbn1cclxuXHJcbmJ1dHRvbiB7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXIgIWltcG9ydGFudDtcclxufSJdfQ== */", '', '']]
 
 /***/ }),
 
