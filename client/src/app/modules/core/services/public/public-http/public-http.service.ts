@@ -10,11 +10,18 @@ export class PublicHttpService {
 
   constructor(private http: HttpClient) { }
 
-  get(url) {
+  get(url, httpOptions = {}) {
     const requestUrl = !!url ? url : null;
-
+    // if(httpOptions.hasOwnProperty('user-token') && httpOptions.hasOwnProperty('contentType')){
+      if(HttpClient){
+      httpOptions = {
+      // 'user-token': httpOptions['user-token'],
+      // 'contentType': httpOptions['contentType']
+      "Access-Control-Allow-Origin" : httpOptions['Access-Control-Allow-Origin']
+      }
+    }
     if (!!requestUrl) {
-      return this.http.get(requestUrl);
+      return this.http.get(requestUrl, httpOptions);
     } else {
       console.error('No url provided for get request');
       return throwError('No url provided');

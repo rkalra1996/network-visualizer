@@ -751,11 +751,11 @@ var createRelation = (request) => {
     let data = request.body;
 
     if (!data.hasOwnProperty('type')) {
-        console.log('API : node/create | ERROR encountered while reading data for creating a relation -> type key missing');
+        console.log('API : relation/create | ERROR encountered while reading data for creating a relation -> type key missing');
         return Promise.reject({ error: messages.error.server.m001 });
     } else {
         if (!data.hasOwnProperty('from') || !data.hasOwnProperty('to')) {
-            console.log('API : node/create | ERROR encountered while reading data for creating a relation -> either of "to"  or "from" key missing');
+            console.log('API : relation/create | ERROR encountered while reading data for creating a relation -> either of "to"  or "from" key missing');
             return Promise.reject({ error: 'Cannot create a relation without a source or target node' });
         } else {
             // data has all three, now proceed
