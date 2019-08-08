@@ -48,6 +48,8 @@ var Neo4JtoVisFormat = (data) => {
         try {
             seperateNodes = processNodes(seperateNodes);
             seperateEdges = processEdges(seperateEdges);
+            seperateNodes = _.uniqBy(seperateNodes, 'id');
+            seperateEdges = _.uniqBy(seperateEdges, (edge) => { return [edge.from, edge.to, edge.label].join(); });
         } catch (e) {
             console.error('An error occured while serializing the edges accordingly', e);
         }
@@ -83,14 +85,14 @@ function processNodes(nodeArray) {
                     node.properties['Type'] = node.labels[0];
                 }
                 preprocessedNode = {
-                    properties: node.properties || null,
-                    type: node.labels || null,
-                    id: node.identity.low,
-                    label: node.properties.Name || 'No Name',
-                    font: { align: 'middle' },
-                    value: 30
-                }
-                // remove the deleted property as it is not required in the frontend
+                        properties: node.properties || null,
+                        type: node.labels || null,
+                        id: node.identity.low,
+                        label: node.properties.Name || 'No Name',
+                        font: { align: 'middle' },
+                        value: 30
+                    }
+                    // remove the deleted property as it is not required in the frontend
                 if (preprocessedNode.properties.hasOwnProperty('deleted')) {
                     delete preprocessedNode.properties.deleted;
                 }
@@ -154,17 +156,15 @@ var processRelations = (relations) => {
             let extractedData = [];
             data.forEach(record => {
                 if (record.hasOwnProperty('_fields')) {
-                    extractedData.push({type : record._fields[0], properties : record._fields[1]});
+                    extractedData.push({ type: record._fields[0], properties: record._fields[1] });
                 }
             });
             return extractedData;
-        }
-        catch (e) {
+        } catch (e) {
             // Error occured while parsing the data
             console.error('Error occured while parsing the relations data in processRelations() ->', e);
         }
-    }
-    else {
+    } else {
         // the relations string is empty
         console.error('Cannot parse an empty string ---> error in processRelations()');
     }
