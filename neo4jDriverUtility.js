@@ -354,7 +354,7 @@ var getDataV2 = (query) => {
     }
     return runQuery(query)
         .then(result => {
-            let serializedData = serializerv2.Neo4JtoVisFormat(JSON.stringify(result.records));
+            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
             console.log('serialized data is ', serializedData.seperateNodes.length, serializedData.seperateEdges.length);
             neo4Jdriver.close();
             return new Promise((res, rej) => {
