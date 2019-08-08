@@ -13,12 +13,13 @@ export class GraphExporterComponent implements OnInit {
 
   ngOnInit() {
   }
-  exportGraph(format){
-    this.fileService.getExportFormat(format).subscribe(result => {
-      console.log("graph-exporter : exportGraph - ",result);
-      this.excelService.exportAsExcelFile(result['seperateNodes'], 'graph_data');
-    }, err => {
-    console.error('An error occured while retrieving graph data as specified format', err);
-  });
+  exportAsCsv(){
+  //   this.fileService.getExportFormat(format).subscribe(result => {
+  //     console.log("graph-exporter : exportGraph - ",result);
+  //     this.excelService.exportAsExcelFile(result['seperateNodes'], 'graph_data');
+  //   }, err => {
+  //   console.error('An error occured while retrieving graph data as specified format', err);
+  // });
+  this.excelService.exportAsExcelFile();
 }
 }
