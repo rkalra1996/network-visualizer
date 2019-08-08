@@ -464,7 +464,8 @@ var GraphDataService = /** @class */ (function () {
         }));
     };
     GraphDataService.prototype.getNodeLabelData = function () {
-        var url = 'http://localhost:3050/api/graph/labeldata';
+        // const url = 'http://localhost:3050/api/graph/labeldata';
+        var url = '/api/graph/labeldata';
         return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
             if (!!data) {
                 return data;
