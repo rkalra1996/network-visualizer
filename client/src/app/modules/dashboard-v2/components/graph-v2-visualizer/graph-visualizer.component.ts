@@ -13,6 +13,7 @@ export class GraphVisualizerComponent implements OnInit {
 
   @Input() event: String;
   @Input() totalTypesArray = [];
+  @Output() newNodeCreated = new EventEmitter<string>();
   public requestedNodeDetails = null;
   public graphData = {};
   public errorMessage = '';
@@ -281,6 +282,8 @@ export class GraphVisualizerComponent implements OnInit {
             // make a request to create a node, if it succeedes only then show in the graph
             this.graphService.createNewNode(newNodeData).subscribe(response => {
               console.log(response);
+              //update sidebar dropdown
+              this.newNodeCreated.emit("NewNodeCreated");
               // add additional data for vis layout
               // newNodeForVis = this.addData(newNodeForVis, clickEvent, event);
               try {
