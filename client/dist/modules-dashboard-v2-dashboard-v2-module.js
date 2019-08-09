@@ -10635,16 +10635,56 @@ var GraphExportService = /** @class */ (function () {
         this.publicHttp = publicHttp;
     }
     GraphExportService.prototype.getExportFormat = function (format) {
+        var _this = this;
+        /**
+         * The main purpose of this function is to get the export data in the specified format
+         * Currently supports only csv and excel formats
+         */
         if (format) {
-            var url = '/file/graph/export/' + format;
-            return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
-                if (!!data) {
-                    return data;
-                }
-                else {
-                    return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])({});
-                }
-            }));
+            var url = "/file/graph/export/" + format;
+            try {
+                return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+                    if (!!data) {
+                        var convertedData = _this.convertFileDataToBlob(data);
+                        return convertedData;
+                    }
+                    else {
+                        console.warn('did not recieve any data when retrieving export');
+                        return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])({});
+                    }
+                }));
+            }
+            catch (e) {
+                var convertedData = this.convertFileDataToBlob(e['text']);
+                return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])(convertedData);
+            }
+        }
+    };
+    // utility function to convert raw data into blob
+    GraphExportService.prototype.convertFileDataToBlob = function (rawData) {
+        try {
+            var data = rawData['data'];
+            var blob = new Blob([data], { type: 'data:application/vnd.ms-excel' });
+            var downloadUrl = URL.createObjectURL(blob);
+            var fileName = "Database.xlsx";
+            return { data: blob, url: downloadUrl, fileName: fileName };
+        }
+        catch (err) {
+            // handle any error occured during blob creation
+            console.error('An error occured while creating a blob for xport functionality');
+            return { data: null, url: null, fileName: null };
+        }
+    };
+    GraphExportService.prototype.initiateDownload = function (elementType, data) {
+        if (data === void 0) { data = {}; }
+        if (!!elementType) {
+            var element = document.createElement(elementType);
+            element.href = data['url'];
+            element.download = "" + data['fileName'];
+            return element;
+        }
+        else {
+            return null;
         }
     };
     GraphExportService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -11954,7 +11994,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n    <p (click)=\"exportAsCsv()\" class=\"exportas\">Export As CSV</p>\n</div>"
+module.exports = "<div class=\"container-fluid export-btn\">\n    <button (click)=\"exportAsCsv('csv')\" class=\"btn exportas\">Export As CSV</button>\n</div>"
 
 /***/ }),
 
@@ -11965,7 +12005,7 @@ module.exports = "<div class=\"container\">\n    <p (click)=\"exportAsCsv()\" cl
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".exportas {\n  margin-top: 20px;\n  cursor: pointer; }\n\n.exportas:hover {\n  text-decoration: underline; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2dyYXBoLWV4cG9ydGVyL2dyYXBoLWV4cG9ydGVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksZ0JBQWdCO0VBQ2hCLGVBQWUsRUFBQTs7QUFHbkI7RUFDSSwwQkFBMEIsRUFBQSIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvZGFzaGJvYXJkLXYyL2NvbXBvbmVudHMvZ3JhcGgtZXhwb3J0ZXIvZ3JhcGgtZXhwb3J0ZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZXhwb3J0YXMge1xuICAgIG1hcmdpbi10b3A6IDIwcHg7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xufVxuXG4uZXhwb3J0YXM6aG92ZXIge1xuICAgIHRleHQtZGVjb3JhdGlvbjogdW5kZXJsaW5lO1xufSJdfQ== */"
+module.exports = ".export-btn button {\n  border-radius: 0;\n  background: #e4e4e4;\n  color: #000;\n  box-shadow: -4px 4px 14px -9px rgba(0, 0, 0, 0.75); }\n\n.export-btn button:active {\n  box-shadow: none;\n  transition: 0.5s; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2dyYXBoLWV4cG9ydGVyL2dyYXBoLWV4cG9ydGVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBRVEsZ0JBQWdCO0VBQ2hCLG1CQUFtQjtFQUNuQixXQUFXO0VBR1gsa0RBQWtELEVBQUE7O0FBUDFEO0VBVVEsZ0JBQWdCO0VBQ2hCLGdCQUFnQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9ncmFwaC1leHBvcnRlci9ncmFwaC1leHBvcnRlci5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5leHBvcnQtYnRuIHtcbiAgICBidXR0b24ge1xuICAgICAgICBib3JkZXItcmFkaXVzOiAwO1xuICAgICAgICBiYWNrZ3JvdW5kOiAjZTRlNGU0O1xuICAgICAgICBjb2xvcjogIzAwMDtcbiAgICAgICAgLXdlYmtpdC1ib3gtc2hhZG93OiAtNHB4IDRweCAxNHB4IC05cHggcmdiYSgwLCAwLCAwLCAwLjc1KTtcbiAgICAgICAgLW1vei1ib3gtc2hhZG93OiAtNHB4IDRweCAxNHB4IC05cHggcmdiYSgwLCAwLCAwLCAwLjc1KTtcbiAgICAgICAgYm94LXNoYWRvdzogLTRweCA0cHggMTRweCAtOXB4IHJnYmEoMCwgMCwgMCwgMC43NSk7XG4gICAgfVxuICAgIGJ1dHRvbjphY3RpdmUge1xuICAgICAgICBib3gtc2hhZG93OiBub25lO1xuICAgICAgICB0cmFuc2l0aW9uOiAwLjVzO1xuICAgIH1cbn0iXX0= */"
 
 /***/ }),
 
@@ -11994,14 +12034,24 @@ var GraphExporterComponent = /** @class */ (function () {
     }
     GraphExporterComponent.prototype.ngOnInit = function () {
     };
-    GraphExporterComponent.prototype.exportAsCsv = function () {
-        //   this.fileService.getExportFormat(format).subscribe(result => {
-        //     console.log("graph-exporter : exportGraph - ",result);
-        //     this.excelService.exportAsExcelFile(result['seperateNodes'], 'graph_data');
-        //   }, err => {
-        //   console.error('An error occured while retrieving graph data as specified format', err);
-        // });
-        this.excelService.exportAsExcelFile();
+    GraphExporterComponent.prototype.exportAsCsv = function (format) {
+        var _this = this;
+        this.fileService.getExportFormat(format)
+            .subscribe(function (fileData) {
+            var element = _this.fileService.initiateDownload('a', fileData);
+            // initiate download
+            element.click();
+        }, function (error) {
+            //check for ok and status
+            if (error.ok === false && error.status === 200) {
+                var element = _this.fileService.initiateDownload('a', error['text']);
+                // initiate download
+                element.click();
+            }
+            else {
+                console.error('An error occured while getting file content from the service ', error);
+            }
+        });
     };
     GraphExporterComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -12036,7 +12086,7 @@ module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\n<app
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".graph-container {\n  background: #F5F5F5;\n  height: 81vh;\n  width: 80%;\n  float: right; }\n\n.selected-count {\n  background: #F5F5F5;\n  word-break: break-all;\n  cursor: pointer;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  color: #30333a;\n  border-radius: 3px;\n  padding: 1em;\n  float: left; }\n\n.wrapper-countlimit {\n  width: 80%;\n  float: right; }\n\n.nodeLimit {\n  max-width: 200px;\n  top: 50px;\n  float: left;\n  border-radius: 3px;\n  padding: 1em;\n  background: #F5F5F5;\n  outline: none; }\n\n.creationToolbar {\n  top: 50px;\n  float: left;\n  padding: 1em;\n  outline: none; }\n\n.nodeLimit input {\n  width: 35%;\n  border: 0.3px solid #000;\n  padding: 5px;\n  border-radius: 2px; }\n\n.nodeLimit:focus {\n  outline: none; }\n\n.nodelimit-head {\n  display: inline;\n  margin-right: 3px; }\n\n@media screen and (max-width: 1100px) {\n  .graph-container,\n  .selected-count {\n    width: 75%; } }\n\n.export {\n  float: left; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2dyYXBoLXYyLXZpc3VhbGl6ZXIvZ3JhcGgtdmlzdWFsaXplci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLG1CQUFtQjtFQUNuQixZQUFZO0VBQ1osVUFBVTtFQUNWLFlBQVksRUFBQTs7QUFHaEI7RUFDSSxtQkFBbUI7RUFDbkIscUJBQXFCO0VBQ3JCLGVBQWU7RUFDZiwyREFBMkQ7RUFDM0QsZUFBZTtFQUNmLGNBQWM7RUFDZCxrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLFdBQVcsRUFBQTs7QUFHZjtFQUNJLFVBQVU7RUFDVixZQUFZLEVBQUE7O0FBR2hCO0VBQ0ksZ0JBQWlCO0VBQ2pCLFNBQVM7RUFDVCxXQUFXO0VBQ1gsa0JBQWtCO0VBQ2xCLFlBQVk7RUFDWixtQkFBbUI7RUFDbkIsYUFBYSxFQUFBOztBQUdqQjtFQUNJLFNBQVU7RUFDVixXQUFXO0VBQ1gsWUFBYTtFQUNiLGFBQWMsRUFBQTs7QUFHbEI7RUFDSSxVQUFVO0VBQ1Ysd0JBQXdCO0VBQ3hCLFlBQVk7RUFDWixrQkFBa0IsRUFBQTs7QUFHdEI7RUFDSSxhQUFhLEVBQUE7O0FBR2pCO0VBQ0ksZUFBZTtFQUNmLGlCQUFpQixFQUFBOztBQUdyQjtFQUNJOztJQUVJLFVBQVUsRUFBQSxFQUNiOztBQUdMO0VBQ0ksV0FBVyxFQUFBIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9ncmFwaC12Mi12aXN1YWxpemVyL2dyYXBoLXZpc3VhbGl6ZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZ3JhcGgtY29udGFpbmVyIHtcbiAgICBiYWNrZ3JvdW5kOiAjRjVGNUY1O1xuICAgIGhlaWdodDogODF2aDtcbiAgICB3aWR0aDogODAlO1xuICAgIGZsb2F0OiByaWdodDtcbn1cblxuLnNlbGVjdGVkLWNvdW50IHtcbiAgICBiYWNrZ3JvdW5kOiAjRjVGNUY1O1xuICAgIHdvcmQtYnJlYWs6IGJyZWFrLWFsbDtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgZm9udC1mYW1pbHk6IFwiSGVsdmV0aWNhIE5ldWVcIiwgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjtcbiAgICBmb250LXNpemU6IDE2cHg7XG4gICAgY29sb3I6ICMzMDMzM2E7XG4gICAgYm9yZGVyLXJhZGl1czogM3B4O1xuICAgIHBhZGRpbmc6IDFlbTtcbiAgICBmbG9hdDogbGVmdDtcbn1cblxuLndyYXBwZXItY291bnRsaW1pdCB7XG4gICAgd2lkdGg6IDgwJTtcbiAgICBmbG9hdDogcmlnaHQ7XG59XG5cbi5ub2RlTGltaXQge1xuICAgIG1heC13aWR0aCA6IDIwMHB4O1xuICAgIHRvcDogNTBweDtcbiAgICBmbG9hdDogbGVmdDtcbiAgICBib3JkZXItcmFkaXVzOiAzcHg7XG4gICAgcGFkZGluZzogMWVtO1xuICAgIGJhY2tncm91bmQ6ICNGNUY1RjU7XG4gICAgb3V0bGluZTogbm9uZTtcbn1cblxuLmNyZWF0aW9uVG9vbGJhciB7XG4gICAgdG9wIDogNTBweDtcbiAgICBmbG9hdDogbGVmdDtcbiAgICBwYWRkaW5nIDogMWVtO1xuICAgIG91dGxpbmUgOiBub25lO1xufVxuXG4ubm9kZUxpbWl0IGlucHV0IHtcbiAgICB3aWR0aDogMzUlO1xuICAgIGJvcmRlcjogMC4zcHggc29saWQgIzAwMDtcbiAgICBwYWRkaW5nOiA1cHg7XG4gICAgYm9yZGVyLXJhZGl1czogMnB4O1xufVxuXG4ubm9kZUxpbWl0OmZvY3VzIHtcbiAgICBvdXRsaW5lOiBub25lO1xufVxuXG4ubm9kZWxpbWl0LWhlYWQge1xuICAgIGRpc3BsYXk6IGlubGluZTtcbiAgICBtYXJnaW4tcmlnaHQ6IDNweDtcbn1cblxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogJzExMDBweCcpIHtcbiAgICAuZ3JhcGgtY29udGFpbmVyLFxuICAgIC5zZWxlY3RlZC1jb3VudCB7XG4gICAgICAgIHdpZHRoOiA3NSU7XG4gICAgfVxufVxuXG4uZXhwb3J0IHtcbiAgICBmbG9hdDogbGVmdDtcbn0iXX0= */"
+module.exports = ".graph-container {\n  background: #F5F5F5;\n  height: 81vh;\n  width: 80%;\n  float: right; }\n\n.selected-count {\n  background: #F5F5F5;\n  word-break: break-all;\n  cursor: pointer;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  color: #30333a;\n  border-radius: 3px;\n  padding: 1em;\n  float: left; }\n\n.wrapper-countlimit {\n  width: 80%;\n  float: right; }\n\n.nodeLimit {\n  max-width: 200px;\n  top: 50px;\n  float: left;\n  border-radius: 3px;\n  padding: 1em;\n  background: #F5F5F5;\n  outline: none; }\n\n.creationToolbar {\n  top: 50px;\n  float: left;\n  padding: 1em;\n  outline: none; }\n\n.nodeLimit input {\n  width: 35%;\n  border: 0.3px solid #000;\n  padding: 5px;\n  border-radius: 2px; }\n\n.nodeLimit:focus {\n  outline: none; }\n\n.nodelimit-head {\n  display: inline;\n  margin-right: 3px; }\n\n@media screen and (max-width: 1100px) {\n  .graph-container,\n  .selected-count {\n    width: 75%; } }\n\n.export {\n  float: right;\n  margin-top: 15px;\n  margin-right: 170px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2dyYXBoLXYyLXZpc3VhbGl6ZXIvZ3JhcGgtdmlzdWFsaXplci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLG1CQUFtQjtFQUNuQixZQUFZO0VBQ1osVUFBVTtFQUNWLFlBQVksRUFBQTs7QUFHaEI7RUFDSSxtQkFBbUI7RUFDbkIscUJBQXFCO0VBQ3JCLGVBQWU7RUFDZiwyREFBMkQ7RUFDM0QsZUFBZTtFQUNmLGNBQWM7RUFDZCxrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLFdBQVcsRUFBQTs7QUFHZjtFQUNJLFVBQVU7RUFDVixZQUFZLEVBQUE7O0FBR2hCO0VBQ0ksZ0JBQWdCO0VBQ2hCLFNBQVM7RUFDVCxXQUFXO0VBQ1gsa0JBQWtCO0VBQ2xCLFlBQVk7RUFDWixtQkFBbUI7RUFDbkIsYUFBYSxFQUFBOztBQUdqQjtFQUNJLFNBQVM7RUFDVCxXQUFXO0VBQ1gsWUFBWTtFQUNaLGFBQWEsRUFBQTs7QUFHakI7RUFDSSxVQUFVO0VBQ1Ysd0JBQXdCO0VBQ3hCLFlBQVk7RUFDWixrQkFBa0IsRUFBQTs7QUFHdEI7RUFDSSxhQUFhLEVBQUE7O0FBR2pCO0VBQ0ksZUFBZTtFQUNmLGlCQUFpQixFQUFBOztBQUdyQjtFQUNJOztJQUVJLFVBQVUsRUFBQSxFQUNiOztBQUdMO0VBRUksWUFBWTtFQUNaLGdCQUFnQjtFQUNoQixtQkFBbUIsRUFBQSIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvZGFzaGJvYXJkLXYyL2NvbXBvbmVudHMvZ3JhcGgtdjItdmlzdWFsaXplci9ncmFwaC12aXN1YWxpemVyLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmdyYXBoLWNvbnRhaW5lciB7XG4gICAgYmFja2dyb3VuZDogI0Y1RjVGNTtcbiAgICBoZWlnaHQ6IDgxdmg7XG4gICAgd2lkdGg6IDgwJTtcbiAgICBmbG9hdDogcmlnaHQ7XG59XG5cbi5zZWxlY3RlZC1jb3VudCB7XG4gICAgYmFja2dyb3VuZDogI0Y1RjVGNTtcbiAgICB3b3JkLWJyZWFrOiBicmVhay1hbGw7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGZvbnQtZmFtaWx5OiBcIkhlbHZldGljYSBOZXVlXCIsIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7XG4gICAgZm9udC1zaXplOiAxNnB4O1xuICAgIGNvbG9yOiAjMzAzMzNhO1xuICAgIGJvcmRlci1yYWRpdXM6IDNweDtcbiAgICBwYWRkaW5nOiAxZW07XG4gICAgZmxvYXQ6IGxlZnQ7XG59XG5cbi53cmFwcGVyLWNvdW50bGltaXQge1xuICAgIHdpZHRoOiA4MCU7XG4gICAgZmxvYXQ6IHJpZ2h0O1xufVxuXG4ubm9kZUxpbWl0IHtcbiAgICBtYXgtd2lkdGg6IDIwMHB4O1xuICAgIHRvcDogNTBweDtcbiAgICBmbG9hdDogbGVmdDtcbiAgICBib3JkZXItcmFkaXVzOiAzcHg7XG4gICAgcGFkZGluZzogMWVtO1xuICAgIGJhY2tncm91bmQ6ICNGNUY1RjU7XG4gICAgb3V0bGluZTogbm9uZTtcbn1cblxuLmNyZWF0aW9uVG9vbGJhciB7XG4gICAgdG9wOiA1MHB4O1xuICAgIGZsb2F0OiBsZWZ0O1xuICAgIHBhZGRpbmc6IDFlbTtcbiAgICBvdXRsaW5lOiBub25lO1xufVxuXG4ubm9kZUxpbWl0IGlucHV0IHtcbiAgICB3aWR0aDogMzUlO1xuICAgIGJvcmRlcjogMC4zcHggc29saWQgIzAwMDtcbiAgICBwYWRkaW5nOiA1cHg7XG4gICAgYm9yZGVyLXJhZGl1czogMnB4O1xufVxuXG4ubm9kZUxpbWl0OmZvY3VzIHtcbiAgICBvdXRsaW5lOiBub25lO1xufVxuXG4ubm9kZWxpbWl0LWhlYWQge1xuICAgIGRpc3BsYXk6IGlubGluZTtcbiAgICBtYXJnaW4tcmlnaHQ6IDNweDtcbn1cblxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogJzExMDBweCcpIHtcbiAgICAuZ3JhcGgtY29udGFpbmVyLFxuICAgIC5zZWxlY3RlZC1jb3VudCB7XG4gICAgICAgIHdpZHRoOiA3NSU7XG4gICAgfVxufVxuXG4uZXhwb3J0IHtcbiAgICAvL3Bvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICBmbG9hdDogcmlnaHQ7XG4gICAgbWFyZ2luLXRvcDogMTVweDtcbiAgICBtYXJnaW4tcmlnaHQ6IDE3MHB4O1xufSJdfQ== */"
 
 /***/ }),
 

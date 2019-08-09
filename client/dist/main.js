@@ -887,9 +887,7 @@ var PublicHttpService = /** @class */ (function () {
         // if(httpOptions.hasOwnProperty('user-token') && httpOptions.hasOwnProperty('contentType')){
         if (_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]) {
             httpOptions = {
-                // 'user-token': httpOptions['user-token'],
-                // 'contentType': httpOptions['contentType']
-                "Access-Control-Allow-Origin": httpOptions['Access-Control-Allow-Origin']
+                'Access-Control-Allow-Origin': httpOptions['Access-Control-Allow-Origin']
             };
         }
         if (!!requestUrl) {
