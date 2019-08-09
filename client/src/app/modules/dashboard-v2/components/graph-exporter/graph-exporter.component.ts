@@ -9,17 +9,18 @@ import { ExcelService } from 'src/app/modules/shared/services/export-service/exc
 })
 export class GraphExporterComponent implements OnInit {
 
-  constructor(private fileService : GraphExportService, private excelService : ExcelService) { }
+  constructor(private fileService: GraphExportService, private excelService : ExcelService) { }
 
   ngOnInit() {
   }
-  exportAsCsv(){
-  //   this.fileService.getExportFormat(format).subscribe(result => {
-  //     console.log("graph-exporter : exportGraph - ",result);
-  //     this.excelService.exportAsExcelFile(result['seperateNodes'], 'graph_data');
-  //   }, err => {
-  //   console.error('An error occured while retrieving graph data as specified format', err);
-  // });
-  this.excelService.exportAsExcelFile();
+  exportAsCsv(format) {
+  this.fileService.getExportFormat(format)
+  .subscribe(fileData => {
+    const element = this.fileService.initiateDownload('a', fileData);
+    // initiate download
+    element.click();
+  }, error => {
+    console.error('An error occured while getting file content from the service ', error);
+  });
 }
 }
