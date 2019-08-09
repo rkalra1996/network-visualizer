@@ -18,15 +18,20 @@ export class GraphExportService {
    */
     if (format) {
       const url = `/file/graph/export/${format}`;
-      return this.publicHttp.get(url).pipe(map(data => {
-        if (!!data) {
-          const convertedData = this.convertFileDataToBlob(data);
-          return convertedData;
-        } else {
-          console.warn('did not recieve any data when retrieving export');
-          return of({});
-        }
-      }));
+      try {
+        return this.publicHttp.get(url).pipe(map(data => {
+          if (!!data) {
+            const convertedData = this.convertFileDataToBlob(data);
+            return convertedData;
+          } else {
+            console.warn('did not recieve any data when retrieving export');
+            return of({});
+          }
+        }));
+      } catch (e) {
+        const convertedData = this.convertFileDataToBlob(e['text']);
+            return of(convertedData);
+      }
     }
   }
 
@@ -35,7 +40,8 @@ export class GraphExportService {
   // utility function to convert raw data into blob
   convertFileDataToBlob(rawData) {
     try {
-      const blob = new Blob([rawData], { type: 'data:application/vnd.ms-excel' });
+      let data = rawData['data'];
+      const blob = new Blob([data], { type: 'data:application/vnd.ms-excel' });
       const downloadUrl = URL.createObjectURL(blob);
       const fileName = `Database.xlsx`;
       return { data: blob, url: downloadUrl, fileName };
