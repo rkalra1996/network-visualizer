@@ -1,15 +1,18 @@
-//setup the neo4J data driver
-const neo4j = require('./../neo4jDriverUtility');
+// import request to  make new API requests
+const request = require('request-promise');
 
-var fileExport = (format) => {
-    return neo4j.neo4jRunQuery("MATCH (p) OPTIONAL MATCH (p)-[r]-(q) return p,r,q")
-        .then(response => {
-            return Promise.resolve(response);
-        })
-        .catch(err => {
-            console.log('err occured while run initial query', err);
-            return Promise.reject("error occured while retriving data from database");
-        });
+
+var dataExport = (format) => {
+    // hit the url which will give you the export data and then simply send it back
+    return request.get('http://localhost:9000/v1/data/read')
+    .then(response => {
+        return Promise.resolve(response);
+    })
+    .catch(error => {
+        console.log('An error occured while fetching export data from remote API');
+        console.log(error);
+        return Promise.reject('Error occured while hitting remote API for file export');
+    });
 }
 
-module.exports = { fileExport }
+module.exports = { dataExport }

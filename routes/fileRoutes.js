@@ -10,7 +10,7 @@ router.get('/graph/export/:type', (req, res) => {
     console.log('graph export');
     let format_type = req.params.type;
     // file export as specified by user
-    file_utility.fileExport(format_type)
+    file_utility.dataExport(format_type)
         .then(response => {
             res.send(response);
         })

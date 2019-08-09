@@ -13,12 +13,10 @@ export class PublicHttpService {
   get(url, httpOptions = {}) {
     const requestUrl = !!url ? url : null;
     // if(httpOptions.hasOwnProperty('user-token') && httpOptions.hasOwnProperty('contentType')){
-      if(HttpClient){
+    if (HttpClient) {
       httpOptions = {
-      // 'user-token': httpOptions['user-token'],
-      // 'contentType': httpOptions['contentType']
-      "Access-Control-Allow-Origin" : httpOptions['Access-Control-Allow-Origin']
-      }
+        'Access-Control-Allow-Origin': httpOptions['Access-Control-Allow-Origin']
+      };
     }
     if (!!requestUrl) {
       return this.http.get(requestUrl, httpOptions);
