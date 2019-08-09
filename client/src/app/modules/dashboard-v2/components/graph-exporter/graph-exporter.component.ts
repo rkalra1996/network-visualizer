@@ -20,7 +20,14 @@ export class GraphExporterComponent implements OnInit {
     // initiate download
     element.click();
   }, error => {
-    console.error('An error occured while getting file content from the service ', error);
+    //check for ok and status
+    if (error.ok === false && error.status === 200) {
+      const element = this.fileService.initiateDownload('a', error['text']);
+    // initiate download
+    element.click();
+    } else {
+      console.error('An error occured while getting file content from the service ', error);
+    }
   });
 }
 }

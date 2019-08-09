@@ -12,7 +12,7 @@ router.get('/graph/export/:type', (req, res) => {
     // file export as specified by user
     file_utility.dataExport(format_type)
         .then(response => {
-            res.send(response);
+            res.send({ data: response });
         })
         .catch(err => {
             console.log('err occured while graph export operation ', err);
