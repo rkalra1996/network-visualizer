@@ -43,7 +43,7 @@ export class GraphExportService {
       let data = rawData['data'];
       const blob = new Blob([data], { type: 'data:application/vnd.ms-excel' });
       const downloadUrl = URL.createObjectURL(blob);
-      const fileName = `Database.xlsx`;
+      const fileName = `networks.csv`;
       return { data: blob, url: downloadUrl, fileName };
     } catch (err) {
       // handle any error occured during blob creation
