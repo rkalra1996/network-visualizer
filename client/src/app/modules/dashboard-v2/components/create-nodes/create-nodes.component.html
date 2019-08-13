@@ -1,27 +1,10 @@
 <div class="container-fluid">
-    <!--<a href="#" class="deleteLink"><span class="fas fa-plus-circle">&nbsp;Delete Node</span></a> -->
     <div class="btn-group nodes">
-        <!-- <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Node
-    </button>
-    <div class="dropdown-menu">
-      <a class="dropdown-item create" (click)="createNode()" data-toggle="modal" data-target="#createNodeModal"><span class="fas fa-plus-circle"></span>Create Node</a>
-      <a class="dropdown-item edit" (click)="editNode()"><span class="far fa-edit"></span>Edit Node</a>
-      <a class="dropdown-item delete" (click)="deleteNode()"><span class="far fa-trash-alt"></span>Delete Node</a>
-    </div> -->
         <button type="button" (click)="createNode()" data-toggle="modal" data-target="#createNodeModal" class="btn" aria-expanded="false">
       Create Element
     </button>
     </div>
     <div class="btn-group relationships">
-        <!-- <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Relationships
-    </button>
-    <div class="dropdown-menu">
-      <a class="dropdown-item create" (click)="createRelation()" data-toggle="modal" data-target="#createRelationModal"><span class="fas fa-plus-circle"></span>Create Relationship</a>
-      <a class="dropdown-item edit" (click)="editRelation()"><span class="far fa-edit"></span>Edit Relationship</a>
-      <a class="dropdown-item delete" (click)="deleteRelation()"><span class="far fa-trash-alt"></span>Delete Relationship</a>
-    </div> -->
         <button type="button" (click)="createRelation()" data-toggle="modal" data-target="#createRelationModal" class="btn" aria-expanded="false">
       Create Relationship
     </button>
@@ -44,18 +27,6 @@
                         Type
                     </p>
                     <span class="inputSpan">
-              <!-- <sui-multi-select [(ngModel)]="selectedType" (ngModelChange)="updateProperties($event)" [options]="typeOptions" [maxSelected]="1" #type>
-                  <div class="ui icon search input">
-                      <i class="search icon"></i>
-                      <input suiSelectSearch type="text" placeholder="Search Type...">
-                  </div>
-                  <div class="scrolling menu">
-                      <sui-select-option *ngFor="let o of type.filteredOptions" [value]="o">
-
-                      </sui-select-option>
-
-                  </div>
-              </sui-multi-select> -->
               <sui-select class="selection"
               [(ngModel)]="selectedType"
               (ngModelChange)="updateProperties($event)"
@@ -77,15 +48,37 @@
                         <div class="modalItem">
                             <p class="sectionName">{{data}}</p>
                             <span class="inputSpan"><input type="text" id="id_{{data}}"></span>
+                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name'" (click)="deleteProperty(data)"><i class="far fa-trash-alt"></i></span>
+                            <span class="supportIcons nameKey" *ngIf="(data?.length > 0) && data === 'Name'">
+                                <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="right" [title]="'Name is mandatory and cannot be deleted'"></i>
+                            </span>
                         </div>
                     </ng-container>
+                    <ng-container *ngIf="enableNewTemplate">
+                        <form id="NewPropertyGroup">
+                            <div class="modalItem">
+                                <div class="ui divider"></div>
+                                <p class="sectionName">Property Name</p>
+                                <span class="inputSpan newTemplate">
+                                    <div class="ui input focus">
+                                        <input type="text" placeholder="Property Value" id="propertyKey">
+                                    </div>
+                                </span>
+                                <span class="supportIcons customDelete" (click)="enableNewTemplate = false"><i class="far fa-trash-alt"></i></span>
+                                <br>
+                                <div class="ui divider"></div>
+                            </div>
+                        </form>
+                    </ng-container>
                 </div>
+                <a class="newLink" *ngIf="selectedType?.length > 0 && !enableNewTemplate" (click)="addNewProperty('node')">Add New Property</a>
+                <a class="newLink" *ngIf="selectedType?.length > 0 && enableNewTemplate" (click)="saveNewProperty('node')">Save Property</a>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger deleteBtn" *ngIf="popupConfig.editNodePopup === true" style="color: white;" (click)="activateDelete('deleteModal', 'node')">Delete</button>
                 <a class="mailBtn" *ngIf="popupConfig.editNodePopup === true" >Send Mail</a>
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
-                <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true">Create</button>
+                <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true" [disabled]="selectedType?.length <= 0">Create</button>
                 <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true" id="edit_btn">Update</button>
             </div>
         </div>
@@ -132,12 +125,36 @@
                         <div class="modalItem">
                             <p class="sectionName">{{data}}</p>
                             <span class="inputSpan"><input type="text" id="id_{{data}}"></span>
+                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name'" (click)="deleteProperty(data, 'relation')"><i class="far fa-trash-alt"></i></span>
+                            <span class="supportIcons nameKey" *ngIf="(data?.length > 0) && data === 'Name'">
+                                <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="right" [title]="'Name is mandatory and cannot be deleted'"></i>
+                            </span>
                         </div>
                     </ng-container>
+                    <ng-container *ngIf="enableNewTemplate">
+                            <form id="NewPropertyGroupRel">
+                                <div class="modalItem">
+                                    <div class="ui divider"></div>
+                                    <p class="sectionName">Property Name</p>
+                                    <span class="inputSpan newTemplate">
+                                        <div class="ui input focus">
+                                            <input type="text" placeholder="Property Name" id="propertyKeyRel">
+                                        </div>
+                                    </span>
+                                    <span class="supportIcons customDelete" (click)="enableNewTemplate = false"><i class="far fa-trash-alt"></i></span>
+                                    <br/>
+                                    <div class="ui divider lower"></div>
+                                </div>
+                            </form>
+                        </ng-container>
                 </div>
-                <h5 class="propertyLabel">
-                    Connection <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
-                </h5>
+                <div class="modalItem buttonContainer">
+                    <a class="newLink2" *ngIf="selectedType?.length > 0 && !enableNewTemplate" (click)="addNewProperty('relation')">Add New Property</a>
+                    <a class="newLink2" *ngIf="enableNewTemplate" (click)="saveNewProperty('relation')">Save Property</a>
+                    <h5 class="propertyLabel">
+                            Connection <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
+                        </h5>
+                </div>
                 <div class="relationScope">
                     <div class="modalItem">
                         <p class="sectionName">From</p>
@@ -176,7 +193,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger deleteBtn left" *ngIf="popupConfig.editRelationPopup === true" style="color: white;" (click)="activateDelete('deleteModal', 'relation')">Delete</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
-                <button type="button" class="btn btn-primary create" (click)="submitRelModal()" *ngIf="popupConfig.createRelationPopup === true">Create</button>
+                <button type="button" class="btn btn-primary create" (click)="submitRelModal()" *ngIf="popupConfig.createRelationPopup === true" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0">Create</button>
                 <button type="button" class="btn btn-primary create" (click)="submitRelModal('edit')" *ngIf="popupConfig.editRelationPopup === true" id="edit_btn">Update</button>
             </div>
         </div>

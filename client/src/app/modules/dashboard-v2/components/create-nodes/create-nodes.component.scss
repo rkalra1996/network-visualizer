@@ -64,6 +64,10 @@
     }
 }
 
+.modalItem.buttonContainer {
+    position: relative;
+}
+
 .sectionName {
     display: inline-block;
     margin: 0;
@@ -84,10 +88,62 @@
     padding-bottom: 13px;
     text-align: center;
 }
+.supportIcons {
+    position: absolute;
+    right : 10%;
+    cursor: pointer;
+    cursor: pointer;
+    color : red;
+}
+
+.supportIcons.customDelete {
+    font-size: 20px;
+}
+
+input#propertyKey {
+    height : 30px;
+}
+.newLink {
+    float: right;
+    padding : 5px 7px;
+}
+
+.newLink2 {
+    position: absolute;
+    right : 0;
+    top : -2px;
+    padding : 5px 7px;
+}
+.lower {
+    margin-top : 30px;
+}
+.newLink:hover, .newLink2:hover {
+    background-color: #5f5f5f;
+    color : white !important;
+    transition : .5s;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.newTemplate {
+    max-width: 33% !important;
+    div {
+        max-width: 100%;
+    }
+}
+
+i.fas.fa-info-circle {
+    color : black !important;
+}
 
 input[disabled="true"] {
     cursor: not-allowed;
 }
+
+button:disabled {
+    cursor: not-allowed;
+    pointer-events: all !important;
+  }
 
 .deleteBtn, .mailBtn {
     cursor: pointer !important;

@@ -2,12 +2,12 @@ import { Component, OnInit, EventEmitter, Output, Input, OnChanges, SimpleChange
 import {SearchService} from './../../../shared/services/search-service/search.service';
 import * as _ from 'lodash';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
-import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 import {SharedGraphService} from './../../../core/services/shared-graph.service';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
-declare var $:any;
+declare var $: any;
 
 @Component({
   selector: 'app-create-nodes',
@@ -20,6 +20,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   @Output() nodeBtnEvent = new EventEmitter<any>();
   public disabledBox = false;
   public deleteContext = 'Node';
+  public enableNewTemplate = false;
   public clickedNodeID = null;
   public clickedRelationID = null;
   public disabledFromBox = false;
@@ -63,7 +64,11 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   @Input() editRelData: any;
   @Input() hideDelModal: any;
 
-  constructor(private SharedSrvc: SearchService, private graphSrvc: GraphDataService, private sharedGraphSrvc: SharedGraphService) {
+  constructor(
+    private SharedSrvc: SearchService, 
+    private graphSrvc: GraphDataService,
+    private sharedGraphSrvc: SharedGraphService, 
+    private fb: FormBuilder) {
   }
 
   ngOnInit() {
@@ -74,6 +79,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   createNode() {
     this.popupConfig.createNodePopup = true;
     this.disabledBox = false;
+    this.enableNewTemplate = false;
     /* this.SharedSrvc.runQuery(this.queryObj).subscribe(data => {
       console.log('recieved label data from service ', data);
       this.processedData = this.processData(data);
@@ -102,6 +108,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   }
   createRelation() {
     this.popupConfig.createRelationPopup = true;
+    this.enableNewTemplate = false;
     this.disabledBox = false;
     this.getRelationTypes().subscribe(data => {});
   }
@@ -126,8 +133,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   getRelationTypes() {
     return this.graphSrvc.getGraphRelations().pipe(map(response => {
-      this.relationsData = response;
-      const extractedTypes = this.extractTypes(response);
+
+      this.relationsData = this.filterRelationsData(response);
+      const extractedTypes = this.extractTypes(this.relationsData);
       // pass it into the options for dropdown
       this.relationTypeOptions = _.cloneDeep(extractedTypes);
       return true;
@@ -135,6 +143,43 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       console.error('An error occured while fetching relations ', err);
       throw Error();
     }));
+  }
+
+  filterRelationsData(response) {
+    let filteredObjectArray = [];
+    filteredObjectArray.push(response[0]);
+    response.splice(0, 1);
+    // clear relations response as there are duplicates inside
+    // steps to clear, process each relation type
+    // find all the keys which are of this type and collect its properties into a unique array of objects
+    let i = 0;
+    while (i <= response.length) {
+      if (response.length === 0) {
+        i = 1;
+      } else {
+        let matched = false;
+        filteredObjectArray.forEach(firstObj => {
+          if (firstObj.type === response[i].type) {
+            console.log('found type');
+            matched = true;
+            firstObj['properties'].push(...response[i].properties);
+          }
+        });
+        if (matched) {
+          response.splice(i,1);
+          i = 0;
+        } else {
+          filteredObjectArray.push(response[i]);
+          response.splice(i, 1);
+        }
+      }
+    }
+    // make the properties of each type as unique
+    filteredObjectArray.map(typeObj => {
+      typeObj['properties'] = _.uniq(typeObj['properties']);
+      return typeObj;
+    });
+    return filteredObjectArray;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -152,15 +197,11 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
     $('#createNodeModal').on('hidden.bs.modal', (e) => {
       // this event will reset the popupConfig object so that everytime correct data is accessed
-      this.setAllToFalse();
-      this.disabledBox = false;
+      this.setAllToFalse('node');
     });
     $('#createRelationModal').on('hidden.bs.modal', (e) => {
       // this event will reset the popupConfig object so that everytime correct data is accessed
-      this.setAllToFalse();
-      this.disabledBox = false;
-      this.disabledFromBox = false;
-      this.disabledToBox = false;
+      this.setAllToFalse('relation');
     });
 
     if ((!!this.editData && !!this.editData.length) || (!!this.editData && !!Object.keys(this.editData).length)) {
@@ -178,7 +219,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         this.typeOptions = _.cloneDeep(data);
         this.selectedType = this.editNodeConfig['type'];
         // trigger update properties to show data before hand
-        this.updateProperties(this.selectedType);
+        this.updateProperties(this.selectedType, this.editNodeConfig);
         const prefilledInfo = this.recreatePrefilledData(this.editData['properties']);
         if (!!prefilledInfo) {
           // console.log('recieved some prefilled info ', prefilledInfo);
@@ -210,7 +251,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       // once types are loaded, set a default type which is the type of selected relation
       // relationTypeOptions are already set
       this.selectedType = editRelConfig['type'];
-      this.updateRelProperties(this.selectedType);
+      this.updateRelProperties(this.selectedType, editRelConfig);
       const prefilledRelInfo = this.recreatePrefilledData(editRelConfig['properties']);
 
       // disable the from and to boxes
@@ -322,13 +363,24 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     $(`#${modalID}`).modal('hide');
   }
 
-  setAllToFalse() {
+  setAllToFalse(setFor) {
     Object.keys(this.popupConfig).forEach(key => {
       if (this.popupConfig[key]) {
         this.popupConfig[key] = false;
       }
     });
+    // reset common properties
     this.selectedType = _.cloneDeep([]);
+    this.disabledBox = false;
+    this.enableNewTemplate = false;
+
+    if (setFor === 'node') {
+      this.labelProperties = [];
+    } else if (setFor === 'relation') {
+      this.disabledFromBox = false;
+      this.disabledToBox = false;
+      this.typeProperties = [];
+    }
   }
 
   submitModal(type = 'create') {
@@ -421,18 +473,39 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     // console.log('types are ', this.nodeTypes2);
   }
 
-  updateProperties(event) {
+  updateProperties(event, editProperties = null) {
     // fetch the properties of selected label and display it in the dropdown
     // console.log(event)
-    this.labelProperties =  this.getProperties([event]);
+    if (!editProperties || !editProperties.hasOwnProperty('properties')) {
+      editProperties = null;
+    } else {
+      editProperties = editProperties['properties'];
+    }
+    this.labelProperties =  this.getProperties([event], editProperties);
   }
 
-  getProperties(labelName) {
+  getProperties(labelName, editProperties = null) {
     if (labelName.length > 0) {
       let fetchedProperties = [];
-      this.processedData.forEach(labelObj => {
-        if (labelObj.type[0] === labelName[0]) {
-          fetchedProperties = labelObj.properties;
+      // if properties are supplied, use them else fetch from the processed data
+      if (!!editProperties) {
+        Object.keys(editProperties).forEach(property => {
+          if (property !== 'Type') {
+            fetchedProperties.push(property);
+          }
+        });
+      }
+      else {
+        this.processedData.forEach(labelObj => {
+          if (labelObj.type[0] === labelName[0]) {
+            fetchedProperties = labelObj.properties;
+          }
+        });
+      }
+      // put Name property in the first position
+      fetchedProperties.forEach((property, index) => {
+        if (property === 'Name' && index !== 0) {
+          fetchedProperties = this.swap(fetchedProperties, index, 0);
         }
       });
       return fetchedProperties.filter(ele => {
@@ -444,15 +517,29 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
   }
 
+  swap(ArrayForSwapping,swapFromIndex, swapToIndex) {
+    const temp = ArrayForSwapping[swapFromIndex];
+    ArrayForSwapping[swapFromIndex] = ArrayForSwapping[swapToIndex];
+    ArrayForSwapping[swapToIndex] = temp;
+    return ArrayForSwapping;
+  }
+
   removeDirtyData(dataObj) {
     let newPropertyObject = {};
     Object.keys(dataObj.properties).forEach(property => {
-      if (property !== null && dataObj.properties[property] !== null) {
+      if (property !== null && property !== undefined) {
         // remove the id_ prefix in the key
         property = property.split('id_')[1];
         newPropertyObject[property] = dataObj.properties['id_' + property];
+        if (!newPropertyObject[property]) {
+          newPropertyObject[property] = 'not available';
+        }
       }
     });
+    // remove all undefined keys
+    if (newPropertyObject.hasOwnProperty('undefined')) {
+      delete newPropertyObject['undefined'];
+    }
     return newPropertyObject;
   }
 
@@ -494,37 +581,51 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     return typesArray;
   }
 
-  updateRelProperties(event) {
+  updateRelProperties(event, relProperties = null) {
  // fetch the properties of selected type and display it in the dropdown
-    this.typeProperties =  this.getRelProperties([event]);
+  if (!relProperties || !relProperties.hasOwnProperty('properties')) {
+    relProperties = null;
+  } else {
+    relProperties = relProperties['properties'];
+  }
+  this.typeProperties =  this.getRelProperties([event], relProperties);
     // trigger an api to get all the names of the nodes in the graph
-    this.graphSrvc.getNodeLabelData().subscribe(response => {
-      let temname = [];
-      if (response && response.length > 0) {
-        response.forEach(data => {
-          let keyName = Object.keys(data)[0];
-          if(keyName === "Name"){
+  this.graphSrvc.getNodeLabelData().subscribe(response => {
+    let temname = [];
+    if (response && response.length > 0) {
+      response.forEach(data => {
+        let keyName = Object.keys(data)[0];
+        if(keyName === "Name"){
             temname = data['Name'];
           }
         });
-        this.fromNames = _.cloneDeep(temname);
-        this.toNames = _.cloneDeep(temname);
-      }    
+      this.fromNames = _.cloneDeep(temname);
+      this.toNames = _.cloneDeep(temname);
+      }
     }, error => {
       console.log(error);
       this.fromNames = [];
       this.toNames = [];
     });
   }
-  getRelProperties(relType: Array<string>): any {
+  getRelProperties(relType: Array<string>, relProperties = null): any {
     if (relType.length > 0) {
       let fetchedProperties = [];
-      this.relationsData.forEach(Obj => {
-        if (Obj.type === relType[0]) {
-          fetchedProperties = Obj['properties'];
-          return fetchedProperties;
-        }
-      });
+      if (!!relProperties) {
+        Object.keys(relProperties).forEach(property => {
+          if (property !== 'Type') {
+            fetchedProperties.push(property);
+          }
+        });
+      }
+      else {
+        this.relationsData.forEach(Obj => {
+          if (Obj.type === relType[0]) {
+            fetchedProperties = Obj['properties'];
+            return fetchedProperties;
+          }
+        });
+      }
       return fetchedProperties.filter(el => {
         return el !== 'deleted';
       });
@@ -643,5 +744,65 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     } else {
       // nothing
     }
+  }
+
+  addNewProperty() {
+    console.log('add new property');
+    this.enableNewTemplate = true;
+  }
+
+  deleteProperty(propertyName, modalType = 'node') {
+    if (!!propertyName) {
+      // find the property in the labelProperties array and if present, simply remove it
+      if (modalType === 'node') {
+        this.labelProperties.filter((property,index) => {
+          if (property === propertyName) {
+            console.log('found ', property + ' at ' + index);
+            return this.labelProperties.splice(index, 1 );
+          }
+      });
+    } else if (modalType === 'relation') {
+        this.typeProperties.filter((property, index) => {
+          if (property === propertyName) {
+            console.log('found ', property + ' at ' + index);
+            return this.typeProperties.splice(index, 1);
+          }
+        });
+      }
+    }
+  }
+
+  saveNewProperty(modalType) {
+    const modalConfig = {
+      node: 0,
+      relation: 1
+    };
+    console.log('adding new property in ', modalType);
+    let newPropertyForm = (modalType === 'node') ? $(`#NewPropertyGroup :text`) : $(`#NewPropertyGroupRel :text`);
+    let propertyKey = null;
+    // let propertyValue = null;
+    if (newPropertyForm.length) {
+      propertyKey  = $(`[id='${$(newPropertyForm[0]).attr('id')}']`).val();
+      // propertyValue  = $(`[id='${$(newPropertyForm[1]).attr('id')}']`).val();
+      if (!propertyKey) {
+        alert('Cannot add a property without a Name');
+      } else {
+        /* if (!propertyValue) {
+          propertyValue = "null";
+        } */
+        // console.log(propertyKey + '  ' + propertyValue);
+        if (modalType === 'node') {
+          this.labelProperties.push(propertyKey);
+          this.labelProperties = _.uniq(this.labelProperties);
+        }
+        else if (modalType === 'relation') {
+          this.typeProperties.push(propertyKey);
+          this.typeProperties = _.uniq(this.typeProperties);
+        }
+      }
+    }
+  // clear the property box
+    $('#propertyKey').val('');
+    $('#propertyKeyRel').val('');
   }
 }

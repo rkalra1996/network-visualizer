@@ -13,12 +13,14 @@ import { ColorPanelComponent } from './components/color-panel/color-panel/color-
 import { CreateNodesComponent } from './components/create-nodes/create-nodes.component';
 import { GraphExporterComponent } from './components/graph-exporter/graph-exporter.component';
 
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [MainComponent, GraphVisualizerComponent, DashboardSidebarComponent, DashboardHeaderComponent, 
     ColorPanelComponent, CreateNodesComponent, GraphExporterComponent],
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     SuiSelectModule, SuiModule,
     SharedModule,
     DashboardV2RoutingModule
