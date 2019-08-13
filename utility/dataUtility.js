@@ -60,7 +60,7 @@ var createUpdateRelationQuery = (data) => {
     if (data.hasOwnProperty('type') && data.hasOwnProperty('id')) {
         // relation has previous id and type, find the relation using these and update the properties
         let query = `match (source)-[relation:\`${data.type}\`]-(target) 
-        where id(relation) = ${data.id} set`;
+        where id(relation) = ${data.id} set relation = {} with relation set`;
         let subQuery = '';
         let returnQuery = 'return relation';
         // subQuery will store the properties of relation

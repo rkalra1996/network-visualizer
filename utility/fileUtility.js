@@ -5,7 +5,7 @@ const request = require('request-promise');
 var dataExport = (format) => {
     // hit the url which will give you the export data and then simply send it back
     let options = {
-        url: 'http://localhost:9000/v1/data/read',
+        url: 'http://localhost:9393/v1/data/read',
         headers: {
             'content-type': 'text/csv'
         }
