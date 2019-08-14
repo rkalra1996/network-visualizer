@@ -62,6 +62,9 @@ export class GraphVisualizerComponent implements OnInit {
   public hideDelModal = false;
   private graphOptions = {
     physics: false,
+    interaction: {
+      navigationButtons: true
+  },
     edges: {
       smooth: {
         type: 'dynamic'
