@@ -221,4 +221,27 @@
             </div>
         </div>
     </div>
+</div>
     <!--Delete modal end-->
+
+<!--create new relationship after node modal-->
+<div class="modal fade" id="RelAfterNodeModal" tabindex="-1" role="dialog" aria-labelledby="RelAfterNode" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="RelAfterNodeModalTitle">New Relation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <b class="modal-text" style="font-size: 17px; font-weight:300;">Do you wish to create a new relationship with respect to <span style="font-weight: 500;">{{newNodeName}}</span> ?</b>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-target="RelAfterNodeModal" data-dismiss="modal" style="color: red;">Not Now</button>
+                <button type="button" class="btn btn-primary" (click)="promptRelation()" id="rel_yes_btn" data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+    </div>
+<!--create new relationship after node modal end-->

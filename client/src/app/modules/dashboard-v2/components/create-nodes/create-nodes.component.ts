@@ -6,6 +6,7 @@ import { map, filter } from 'rxjs/operators';
 
 import {SharedGraphService} from './../../../core/services/shared-graph.service';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { Observable, of } from 'rxjs';
 
 declare var $: any;
 
@@ -19,7 +20,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   @Output() nodeBtnEvent = new EventEmitter<any>();
   public disabledBox = false;
-  public deleteContext = 'Node';
+  public newNodeName = 'Not Available';
+  public deleteContext = 'node';
   public enableNewTemplate = false;
   public clickedNodeID = null;
   public clickedRelationID = null;
@@ -30,6 +32,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   @Output() edgeBtnEvent = new EventEmitter<any>();
 
   @Input() nodeTypes: Array<any> = [];
+  @Input() newNodeCreated: object | null = null;
   public nodeTypes2: Array<any> = [];
   public selectedType: any = [];
   public typeOptions: Array<any> = [];
@@ -80,15 +83,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     this.popupConfig.createNodePopup = true;
     this.disabledBox = false;
     this.enableNewTemplate = false;
-    /* this.SharedSrvc.runQuery(this.queryObj).subscribe(data => {
-      console.log('recieved label data from service ', data);
-      this.processedData = this.processData(data);
-      // extract types from the array
-      this.extractLabels(this.processedData);
-      this.typeOptions = _.cloneDeep(this.nodeTypes2);
-    }, err => {
-      console.log('An error occured while reading label data from the database');
-    }); */
+
     this.getNodeTypes().subscribe(data => {
       this.typeOptions = _.cloneDeep(data);
     }, err => {
@@ -101,11 +96,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     // this will send the edit event and then the app will wait for the node click event sent back to this component
     this.nodeBtnEvent.emit({ type: 'click', action: 'edit' });
   }
-  deleteNode() {
-    // gather the information to delete node and send to the graph
 
-    this.nodeBtnEvent.emit({ type: 'click', action: 'delete' });
-  }
   createRelation() {
     this.popupConfig.createRelationPopup = true;
     this.enableNewTemplate = false;
@@ -115,9 +106,6 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   editRelation() {
     this.edgeBtnEvent.emit({ type: 'click', action: 'edit' });
-  }
-  deleteRelation() {
-    this.edgeBtnEvent.emit({ type: 'click', action: 'delete' });
   }
 
   getNodeTypes() {
@@ -183,18 +171,19 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('hideDelModal is ', this.hideDelModal);
     if (this.hideDelModal === true) {
       // hide the delete modal
-      console.log('hide event recieved');
       this.hideModal('deleteModal');
       this.hideModal('createNodeModal');
       this.hideModal('createRelationModal');
       this.editData = null;
       this.editRelData = null;
-      console.log('post hide event is ', this.hideDelModal);
 
     }
+    $('#RelAfterNodeModal').on('hidden.bs.modal', (e) => {
+      this.newNodeCreated = null;
+      this.newNodeName = null;
+    });
     $('#createNodeModal').on('hidden.bs.modal', (e) => {
       // this event will reset the popupConfig object so that everytime correct data is accessed
       this.setAllToFalse('node');
@@ -282,6 +271,20 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       // open the edit modal
       this.disabledBox = true;
       this.showModal('createRelationModal');
+    }
+    // detect if a new node is entered into the graph, prompt user to create a relationship
+    if (!!this.newNodeCreated && Object.keys(this.newNodeCreated).length) {
+      // new node has been created, prompt the user
+      // Do you wish to create a new relationship with respect to {{node_name}} ?
+      if (this.newNodeCreated.hasOwnProperty('created') && this.newNodeCreated['created']) {
+        if (this.newNodeCreated.hasOwnProperty('node')) {
+          this.newNodeName = this.newNodeCreated['node']['label'] || 'Not Available';
+          // enable the prompt
+          this.setAllToFalse('node');
+          this.setAllToFalse('relation');
+          this.showModal('RelAfterNodeModal');
+        }
+      }
     }
   }
 
@@ -379,12 +382,13 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     } else if (setFor === 'relation') {
       this.disabledFromBox = false;
       this.disabledToBox = false;
+      this.selectedNodeNameSource = null;
+      this.selectedNodeNameTarget = null;
       this.typeProperties = [];
     }
   }
 
   submitModal(type = 'create') {
-    console.log(type);
     let nodeData = {
       id: null,
       properties: {},
@@ -401,15 +405,13 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       // hide the modal once the data is created properly
       $('#createNodeModal').modal('hide');
       if (type === 'create') {
-        console.log('node created is ', nodeData);
         this.nodeBtnEvent.emit({ type: 'click', action: 'create', data: nodeData });
         this.popupConfig.createNodePopup = false;
       } else if (type === 'edit') {
         this.nodeBtnEvent.emit({ type: 'click', action: 'edit', data: nodeData, process : 'complete' });
         this.popupConfig.editNodePopup = false;
       }
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e);
     }
   }
@@ -435,23 +437,19 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       if (relationObj.hasOwnProperty('type') && relationObj.type.length > 0) {
         if (relationObj.hasOwnProperty('properties') && Object.keys(relationObj.properties).length > 0) {
           return this.cleanRelationshipData(relationObj);
-        }
-        else {
+        } else {
           // user did not specify any properties, its okay
         }
-
-      }
-      else {
+      } else {
         throw new Error('Cannot create a relation with no Type');
       }
-    }
-    else {
+    } else {
       throw new Error ('cannot create a relation with no details');
     }
   }
 
   generateID() {
-    // this function generates a new id for a the node which will be unique
+    // this function generates a new id for a the node which will be unique, currently deprecated
     return Math.floor(Date.now() + Math.random());
   }
 
@@ -804,5 +802,12 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   // clear the property box
     $('#propertyKey').val('');
     $('#propertyKeyRel').val('');
+  }
+
+  promptRelation() {
+    // call create relation procedure
+    this.hideModal('RelAfterNode');
+    this.showModal('createRelationModal');
+    this.createRelation();
   }
 }

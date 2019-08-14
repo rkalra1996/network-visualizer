@@ -14,6 +14,7 @@ export class GraphVisualizerComponent implements OnInit {
   @Input() event: String;
   @Input() totalTypesArray = [];
   @Output() newNodeCreated = new EventEmitter<string>();
+  public promptRelationCreateAfterNode = null;
   public requestedNodeDetails = null;
   public graphData = {};
   public errorMessage = '';
@@ -263,7 +264,6 @@ export class GraphVisualizerComponent implements OnInit {
             // let newNodeForVis = _.cloneDeep(newNodeData);
             // make a request to create a node, if it succeedes only then show in the graph
             this.graphService.createNewNode(newNodeData).subscribe(response => {
-              console.log(response);
               //update sidebar dropdown
               this.newNodeCreated.emit("NodeEvent_create"+response['seperateNodes'][0].id);
               // add additional data for vis layout
@@ -272,6 +272,9 @@ export class GraphVisualizerComponent implements OnInit {
                 let visNode = this.addData(response['seperateNodes'][0], clickEvent, event);
                 // add the new node to the vis
                 this.graphData['nodes'].add([visNode]);
+                // emit the createNodes component that a node has been put into the graph, prompt user to create a relation
+                // send the data of new node for relationPrompt
+                this.promptRelationCreateAfterNode = _.cloneDeep({created: true, node: visNode});
               } catch (addErr) {
                 console.error('Error while adding the data node to vis ', addErr['message']);
               }
