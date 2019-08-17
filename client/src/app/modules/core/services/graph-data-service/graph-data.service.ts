@@ -2,12 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable, of, pipe, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PublicHttpService } from '../public/public-http/public-http.service';
-import { HttpHeaders } from '@angular/common/http';
 
 import {throwError} from 'rxjs';
 import * as _ from 'lodash';
-
-// import {PublicHttpService} from '@network-visualizer-core/public-http/PublicHttpService';
 
 @Injectable({
   providedIn: 'root'
@@ -359,8 +356,7 @@ export class GraphDataService {
           return {response: 'empty'};
       }
       }));
-    }
-    else {
+    } else {
       return throwError('Invalid data provided');
     }
   }

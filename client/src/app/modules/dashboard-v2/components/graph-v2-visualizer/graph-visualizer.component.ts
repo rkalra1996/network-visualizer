@@ -15,45 +15,49 @@ export class GraphVisualizerComponent implements OnInit {
   @Input() totalTypesArray = [];
   @Output() newNodeCreated = new EventEmitter<string>();
   @Output() nodeLimitEvent = new EventEmitter<string | null>();
+  private showDeletedData = null;
   public promptRelationCreateAfterNode = null;
   public requestedNodeDetails = null;
   public graphData = {};
   public errorMessage = '';
   public loader = true;
-  public defaultNodeLimit: number = 149;
+  public defaultNodeLimit = 149;
   selectedCount;
   public nodeLimit: any = 149;
-  public emptyNodeLimit: number = 179;
+  public emptyNodeLimit = 179;
   public colorConfig = {
     defaultColor: {
-      "Academia": '#ff4444',
-      "Consulting": '#ffbb33',
-      "Government": '#00C851',
-      "Impact Investor": '#33b5e5',
-      "International Agency": '#CC0000',
-      "Media": '#FF8800',
-      "NGO/CBO": '#007E33',
-      "People": '#0099CC',
-      "Philanthropy": '#9933CC',
-      "Platform": '#0d47a1',
-      "Private Sector": '#2BBBAD',
-      "Research Institute": '#c51162'
+      Academia: '#ff4444',
+      Consulting: '#ffbb33',
+      Government: '#00C851',
+      'Impact Investor': '#33b5e5',
+      'International Agency': '#CC0000',
+      Media: '#FF8800',
+      'NGO/CBO': '#007E33',
+      People: '#0099CC',
+      Philanthropy: '#9933CC',
+      Platform: '#0d47a1',
+      'Private Sector': '#2BBBAD',
+      'Research Institute': '#c51162'
 
     },
     selectedColor: {
-      "Academia": '#ff4444',
-      "Consulting": '#ffbb33',
-      "Government": '#00C851',
-      "Impact Investor": '#33b5e5',
-      "International Agency": '#CC0000',
-      "Media": '#FF8800',
-      "NGO/CBO": '#007E33',
-      "People": '#0099CC',
-      "Philanthropy": '#9933CC',
-      "Platform": '#0d47a1',
-      "Private Sector": '#2BBBAD',
-      "Research Institute": '#c51162'
+      Academia: '#ff4444',
+      Consulting: '#ffbb33',
+      Government: '#00C851',
+      'Impact Investor': '#33b5e5',
+      'International Agency': '#CC0000',
+      Media: '#FF8800',
+      'NGO/CBO': '#007E33',
+      People: '#0099CC',
+      Philanthropy: '#9933CC',
+      Platform: '#0d47a1',
+      'Private Sector': '#2BBBAD',
+      'Research Institute': '#c51162'
 
+    },
+    deletedColor: {
+      colorCode : '#C0C0C0'
     }
   };
 
@@ -62,6 +66,7 @@ export class GraphVisualizerComponent implements OnInit {
   public network: any;
   @Output() networkInstance = new EventEmitter<any>();
   public hideDelModal = false;
+  // graph options to change the visualization configuration of visjs
   private graphOptions = {
     physics: false,
     interaction: {
@@ -96,6 +101,25 @@ export class GraphVisualizerComponent implements OnInit {
       console.log('processed data now is  ', nodesByIDs);
       this.sharedGraphService.sendNodeDetails(nodesByIDs);
     }, err => {});
+
+    // subscribe to showDeletedData so that appropriate data can be fetched
+    this.sharedGraphService.showDeletedData.subscribe(toggle => {
+      if (toggle !== null && (toggle.toString() === 'true' || toggle.toString() === 'false')) {
+        this.loader = true;
+        // if the toggle variable is  only true and false and nothing else
+        this.showDeletedData = toggle;
+        // console.log('recieved toggle', toggle);
+      } else {
+        // set to false by default
+        this.showDeletedData = false;
+      }
+      this.displayInitialGraph();
+    }, err => {
+      // set to false by default
+      console.error('An error occured while subscribing to the toggle for deleted data', err);
+      this.showDeletedData = false;
+      this.displayInitialGraph();
+    });
   }
 
   displayInitialGraph() {
@@ -118,8 +142,10 @@ export class GraphVisualizerComponent implements OnInit {
       this.network = new Network(container, this.graphData, this.graphOptions);
 
       // activating double click event for editing node or relationship
+      console.log('registering double click');
       this.network.on('doubleClick', (event) => {
         this.hideDelModal = false;
+        console.log('double click');
         this.doubleClickHandler(event);
       });
     }, err => {
@@ -135,7 +161,7 @@ export class GraphVisualizerComponent implements OnInit {
     this.changeNodeColor();
   }
   changeNodeColor() {
-    if (this.event == 'search1' || this.event === 'search2') {
+    if (this.event === 'search1' || this.event === 'search2') {
       this.loader = true;
       this.showGraphData();
     } else if (this.event === 'reset') {
@@ -146,15 +172,15 @@ export class GraphVisualizerComponent implements OnInit {
       const previousData = _.cloneDeep(this.graphData);
       // tslint:disable-next-line: no-string-literal
       if (!!this.graphData['nodes']) {
-        var temgraph = this.graphData['nodes'].map(node => {
-          if (this.event == node.type[0]) {
+        let temgraph = this.graphData['nodes'].map(node => {
+          if (this.event === node.type[0]) {
             // node.color = this.colorConfig.defaultColor[node.type[0]];
           } else {
             // node.color='#95BFF8';
             return node;
           }
           return node;
-        })
+        });
         previousData.nodes.clear();
         previousData.nodes = new DataSet(_.cloneDeep(temgraph));
         this.graphData = previousData;
@@ -211,10 +237,14 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   addColors(nodeObj) {
-    // console.log(nodeObj);
+    // if the user opted for deleted data, simply set deleted default color to all the nodes
     nodeObj.forEach(node => {
       if (node.hasOwnProperty('type') && node.type.length > 0) {
-        node['color'] = this.colorConfig.defaultColor[node.type[0]];
+        node['color'] = this.showDeletedData ? this.colorConfig.deletedColor.colorCode : this.colorConfig.defaultColor[node.type[0]];
+        // temporary fix, add exception for societal platform
+        if (node.label === 'Societal Platform Team') {
+          node['color'] = this.colorConfig.defaultColor[node.type[0]];
+        }
       }
     });
     // console.log(nodeObj);

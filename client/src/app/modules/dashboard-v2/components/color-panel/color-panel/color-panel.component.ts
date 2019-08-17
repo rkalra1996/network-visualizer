@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import {ColorServiceService} from './../../../services/colorService/color-service.service';
+import {SharedGraphService} from './../../../../core/services/shared-graph.service';
 
 @Component({
   selector: 'app-color-panel',
@@ -10,10 +11,11 @@ import {ColorServiceService} from './../../../services/colorService/color-servic
 export class ColorPanelComponent implements OnInit {
 
   public colorObject = undefined;
+  public showDeletedData = false;
   public objectKeys = [];
   public colorData = [];
   public showDropDown = true;
-  constructor(private colorSrvc: ColorServiceService) { }
+  constructor(private colorSrvc: ColorServiceService, private sharedGraphSrvc: SharedGraphService) { }
 
   ngOnInit() {
     // get color panel details
@@ -24,6 +26,18 @@ export class ColorPanelComponent implements OnInit {
 
       this.processColors(this.objectKeys, this.colorObject);
       // console.log('processed color data is ', this.colorData);
+    });
+
+    // to monitor toggle status
+    this.sharedGraphSrvc.showDeletedData.subscribe(toggle => {
+      // console.log('recieved toggle', toggle);
+      if (toggle !== null && (toggle.toString() === 'true' || toggle.toString() === 'false')) {
+        // if the toggle variable is  only true and false and nothing else
+        this.showDeletedData = toggle;
+      } else {
+        // set to false by default
+        this.showDeletedData = false;
+      }
     });
   }
 

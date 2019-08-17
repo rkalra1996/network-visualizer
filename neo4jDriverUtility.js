@@ -348,9 +348,15 @@ var searchQuery = (requestBody, raw = false) => {
     });
 
 }
-var getDataV2 = (query) => {
-    if (!query || query.length <= 0) {
-        query = neoConfig.initial_query_v2
+var getDataV2 = (queryObj) => {
+    let query = "";
+    if (!queryObj.query || queryObj.query.length <= 0) {
+        queryObj.query = neoConfig.initial_query_v2
+    }
+    if (queryObj.showDeleted) {
+        query = `MATCH (p)-[r]-(q) where p.deleted in [${queryObj.showDeleted}, "${queryObj.showDeleted}"] and r.deleted in [${queryObj.showDeleted}, "${queryObj.showDeleted}"] return p,r,q limit 149`
+    } else {
+        query = `MATCH (p) OPTIONAL MATCH (p)-[r]-(q) where p.deleted IN [${queryObj.showDeleted}, "${queryObj.showDeleted}"] and r.deleted IN [${queryObj.showDeleted}, "${queryObj.showDeleted}"] and q.deleted IN [${queryObj.showDeleted}, "${queryObj.showDeleted}"] return p,r,q limit 149`
     }
     return runQuery(query)
         .then(result => {
@@ -393,16 +399,16 @@ var getGraphDataV2 = (req) => {
     if (req.body.hasOwnProperty('nodes') && req.body.nodes.length >= 0) {
         // data for nodes is present, get all the relevant information
         if (req.body.nodes.length == 1) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 1, limit: req.body.limit });
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 1, limit: req.body.limit, showDeleted : req.showDeleted });
         } else if (req.body.nodes.length == 2) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 2, limit: req.body.limit })
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 2, limit: req.body.limit , showDeleted : req.showDeleted})
         } else if (req.body.nodes.length === 3) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 3, limit: req.body.limit })
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 3, limit: req.body.limit , showDeleted : req.showDeleted})
         } else {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 0, limit: req.body.limit })
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 0, limit: req.body.limit, showDeleted : req.showDeleted })
         }
     } else if (req.body.hasOwnProperty('limit')) {
-        return limitBasedInitGraphShow({ limit: req.body.limit });
+        return limitBasedInitGraphShow({ limit: req.body.limit, showDeleted : req.body.showDeleted });
     } else {
         return new Promise((resolve, reject) => {
             // send back the data 
@@ -640,9 +646,15 @@ function limitBasedInitGraphShow(limitObj) {
     // check for limit empty or undefined
     limitObj.limit = getLimit(limitObj.limit);
     let queryStatement = '';
+    // add the showDeleted toggle value
+    let showDeleted = !!limitObj.showDeleted ? true : false;
 
-    queryStatement = `match (p) -[r]-> (q) return p,q,r limit ${limitObj.limit}`;
-
+    if (showDeleted) {
+    queryStatement = `match (p) -[r]-> (q) where p.deleted IN [${showDeleted}, "${showDeleted}"] or q.deleted IN [${showDeleted}, "${showDeleted}"] and r.deleted IN [${showDeleted}, "${showDeleted}"] return p,q,r limit ${limitObj.limit}`;
+    }
+    else {
+        queryStatement = `match (p) -[r]-> (q) return p,r,q limit ${limitObj.limit}`;
+    }
     console.log('query created by graphDataV2 is ', queryStatement);
     return runQuery(queryStatement).then(result => {
         let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));

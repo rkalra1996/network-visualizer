@@ -426,5 +426,6 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     } catch (e) {
       this.showDisabled = false;
     }
+    this.sharedGraphData.sendToogleStatus(this.showDisabled);
     }
 }

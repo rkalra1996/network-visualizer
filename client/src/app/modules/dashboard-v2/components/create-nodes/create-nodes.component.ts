@@ -74,17 +74,34 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   public selectedNodeNameTarget: any;
   public editNodeConfig = {};
   public deleteNodeConfig = {};
+  public showDeletedData = false;
 
   constructor(
-    private SharedSrvc: SearchService, 
+    private SharedSrvc: SearchService,
     private graphSrvc: GraphDataService,
-    private sharedGraphSrvc: SharedGraphService, 
+    private sharedGraphSrvc: SharedGraphService,
     private fb: FormBuilder) {
   }
 
   ngOnInit() {
     this.toolTipText = 'The Properties section can be left blank to set a default Node';
     $('.toolTipText').tooltip();
+
+    // subscribe to showDeletedData so that appropriate data can be fetched
+    this.sharedGraphSrvc.showDeletedData.subscribe(toggle => {
+      if (toggle !== null && (toggle.toString() === 'true' || toggle.toString() === 'false')) {
+        // if the toggle variable is  only true and false and nothing else
+        this.showDeletedData = toggle;
+        // console.log('recieved toggle in create nodes', toggle);
+      } else {
+        // set to false by default
+        this.showDeletedData = false;
+      }
+    }, err => {
+      // set to false by default
+      console.error('An error occured while subscribing to the toggle for deleted data', err);
+      this.showDeletedData = false;
+    });
   }
 
   createNode() {
