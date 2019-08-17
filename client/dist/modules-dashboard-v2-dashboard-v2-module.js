@@ -11873,18 +11873,18 @@ var DashboardSidebarComponent = /** @class */ (function () {
             }
         };
         this.defaultColor = {
-            "Academia": 'c_ff4444',
-            "Consulting": 'c_ffbb33',
-            "Government": 'c_00C851',
-            "Impact Investor": 'c_33b5e5',
-            "International Agency": 'c_CC0000',
-            "Media": 'c_FF8800',
-            "NGO/CBO": 'c_007E33',
-            "People": 'c_0099CC',
-            "Philanthropy": 'c_9933CC',
-            "Platform": 'c_0d47a1',
-            "Private Sector": 'c_2BBBAD',
-            "Research Institute": 'c_c51162'
+            Academia: 'c_ff4444',
+            Consulting: 'c_ffbb33',
+            Government: 'c_00C851',
+            'Impact Investor': 'c_33b5e5',
+            'International Agency': 'c_CC0000',
+            Media: 'c_FF8800',
+            'NGO/CBO': 'c_007E33',
+            People: 'c_0099CC',
+            Philanthropy: 'c_9933CC',
+            Platform: 'c_0d47a1',
+            'Private Sector': 'c_2BBBAD',
+            'Research Institute': 'c_c51162'
         };
         this.eventClicked = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.nodeTypesEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
