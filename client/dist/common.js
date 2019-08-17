@@ -20,6 +20,7 @@ var SharedGraphService = /** @class */ (function () {
     function SharedGraphService() {
         this.nodeDetails = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
         this.getNodeByIDs = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
+        this.showDeletedData = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
     }
     SharedGraphService.prototype.setGraphData = function (graphdata) {
         this.graphData = graphdata;
@@ -32,6 +33,11 @@ var SharedGraphService = /** @class */ (function () {
     };
     SharedGraphService.prototype.sendNodeDetails = function (nodeDetailsArray) {
         this.nodeDetails.next(nodeDetailsArray);
+    };
+    // function to send the deleted toggle info whenever needed
+    SharedGraphService.prototype.sendToogleStatus = function (status) {
+        console.log('sending new status for toggle ', status);
+        this.showDeletedData.next(status);
     };
     SharedGraphService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({

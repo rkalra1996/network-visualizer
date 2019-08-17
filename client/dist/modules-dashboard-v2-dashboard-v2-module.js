@@ -10707,7 +10707,7 @@ var GraphExportService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"wrapper\">\r\n    <div class=\"panel\">\r\n        <p class=\"panelTitle\">Legend</p>\r\n        <div class=\"panelbody\" *ngIf=\"showDropDown\">\r\n            <ul class=\"panelList\" type=\"none\">\r\n                <ng-container *ngFor=\"let item of colorData\">\r\n                    <li class=\"item\" [ngStyle]=\"{color: item.color}\"><span class=\"circle\" [ngStyle]=\"{background: item.color}\"></span>{{item?.name}}</li>\r\n                </ng-container>\r\n            </ul>\r\n        </div>\r\n        <div class=\"dropDown\" (click)=\"toggleDropdown()\">\r\n            <i class=\"fas fa-chevron-up\" *ngIf=\"showDropDown\"></i>\r\n            <i class=\"fas fa-chevron-down\" *ngIf=\"!showDropDown\"></i>\r\n        </div>\r\n    </div>\r\n</div>"
+module.exports = "<div class=\"wrapper\" *ngIf=\"!showDeletedData\">\r\n    <div class=\"panel\">\r\n        <p class=\"panelTitle\">Legend</p>\r\n        <div class=\"panelbody\" *ngIf=\"showDropDown\">\r\n            <ul class=\"panelList\" type=\"none\">\r\n                <ng-container *ngFor=\"let item of colorData\">\r\n                    <li class=\"item\" [ngStyle]=\"{color: item.color}\"><span class=\"circle\" [ngStyle]=\"{background: item.color}\"></span>{{item?.name}}</li>\r\n                </ng-container>\r\n            </ul>\r\n        </div>\r\n        <div class=\"dropDown\" (click)=\"toggleDropdown()\">\r\n            <i class=\"fas fa-chevron-up\" *ngIf=\"showDropDown\"></i>\r\n            <i class=\"fas fa-chevron-down\" *ngIf=\"!showDropDown\"></i>\r\n        </div>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -10735,13 +10735,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _services_colorService_color_service_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../../../services/colorService/color-service.service */ "./src/app/modules/dashboard-v2/services/colorService/color-service.service.ts");
+/* harmony import */ var _core_services_shared_graph_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../../../../core/services/shared-graph.service */ "./src/app/modules/core/services/shared-graph.service.ts");
+
 
 
 
 var ColorPanelComponent = /** @class */ (function () {
-    function ColorPanelComponent(colorSrvc) {
+    function ColorPanelComponent(colorSrvc, sharedGraphSrvc) {
         this.colorSrvc = colorSrvc;
+        this.sharedGraphSrvc = sharedGraphSrvc;
         this.colorObject = undefined;
+        this.showDeletedData = false;
         this.objectKeys = [];
         this.colorData = [];
         this.showDropDown = true;
@@ -10755,6 +10759,18 @@ var ColorPanelComponent = /** @class */ (function () {
             _this.objectKeys = Object.keys(_this.colorObject);
             _this.processColors(_this.objectKeys, _this.colorObject);
             // console.log('processed color data is ', this.colorData);
+        });
+        // to monitor toggle status
+        this.sharedGraphSrvc.showDeletedData.subscribe(function (toggle) {
+            // console.log('recieved toggle', toggle);
+            if (toggle !== null && (toggle.toString() === 'true' || toggle.toString() === 'false')) {
+                // if the toggle variable is  only true and false and nothing else
+                _this.showDeletedData = toggle;
+            }
+            else {
+                // set to false by default
+                _this.showDeletedData = false;
+            }
         });
     };
     ColorPanelComponent.prototype.processColors = function (keyArray, colorObj) {
@@ -10780,7 +10796,7 @@ var ColorPanelComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./color-panel.component.html */ "./src/app/modules/dashboard-v2/components/color-panel/color-panel/color-panel.component.html"),
             styles: [__webpack_require__(/*! ./color-panel.component.scss */ "./src/app/modules/dashboard-v2/components/color-panel/color-panel/color-panel.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_colorService_color_service_service__WEBPACK_IMPORTED_MODULE_2__["ColorServiceService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_colorService_color_service_service__WEBPACK_IMPORTED_MODULE_2__["ColorServiceService"], _core_services_shared_graph_service__WEBPACK_IMPORTED_MODULE_3__["SharedGraphService"]])
     ], ColorPanelComponent);
     return ColorPanelComponent;
 }());
@@ -10796,7 +10812,7 @@ var ColorPanelComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\">\r\n    <div class=\"btn-group nodes\">\r\n        <button type=\"button\" (click)=\"createNode()\" data-toggle=\"modal\" data-target=\"#createNodeModal\" class=\"btn\" aria-expanded=\"false\">\r\n      Create Element\r\n    </button>\r\n    </div>\r\n    <div class=\"btn-group relationships\">\r\n        <button type=\"button\" (click)=\"createRelation()\" data-toggle=\"modal\" data-target=\"#createRelationModal\" class=\"btn\" aria-expanded=\"false\">\r\n      Create Relationship\r\n    </button>\r\n    </div>\r\n</div>\r\n<!--modal template to show when node is to be created-->\r\n<div class=\"modal fade\" id=\"createNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"NodeModalLabel\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.createNodePopup === true\">Create Element</h5>\r\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.editNodePopup === true\">Element Details</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n          </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <div class=\"modalItem\">\r\n                    <p class=\"sectionName\">\r\n                        {{TYPE_TEXT}}\r\n                    </p>\r\n                    <span class=\"inputSpan\">\r\n                        <ng-container *ngIf=\"selectedType !== ADD_NEW_LABEL\">\r\n                                <sui-select class=\"selection\"\r\n                                [(ngModel)]=\"selectedType\"\r\n                                (ngModelChange)=\"updateProperties($event)\"\r\n                                [options]=\"typeOptions\"\r\n                                [isSearchable]=\"searchable\"\r\n                                [isDisabled]=\"disabledBox\"\r\n                                #select>\r\n                        <sui-select-option *ngFor=\"let option of select.filteredOptions\"\r\n                                           [value]=\"option\">\r\n                        </sui-select-option>\r\n                                  </sui-select>\r\n                        </ng-container>\r\n                        <ng-container *ngIf=\"selectedType === ADD_NEW_LABEL\">\r\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_newLabelNode\"></span>\r\n                        </ng-container>\r\n            </span>\r\n                </div>\r\n                <div class=\"modalItem\" *ngIf=\"labelProperties?.length > 0 && selectedType?.length > 0\">\r\n                    <h5 class=\"propertyLabel\">\r\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                    </h5>\r\n                    <ng-container *ngFor=\"let data of labelProperties\">\r\n                        <div class=\"modalItem\">\r\n                            <p class=\"sectionName\">{{data}}</p>\r\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_{{data}}\"></span>\r\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name'\" (click)=\"deleteProperty(data)\"><i class=\"far fa-trash-alt\"></i></span>\r\n                            <span class=\"supportIcons nameKey\" *ngIf=\"(data?.length > 0) && data === 'Name'\">\r\n                                <i class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"right\" [title]=\"'Name is mandatory and cannot be deleted'\"></i>\r\n                            </span>\r\n                        </div>\r\n                    </ng-container>\r\n                    <ng-container *ngIf=\"enableNewTemplate\">\r\n                        <form id=\"NewPropertyGroup\">\r\n                            <div class=\"modalItem\">\r\n                                <div class=\"ui divider\"></div>\r\n                                <p class=\"sectionName\">Property Name</p>\r\n                                <span class=\"inputSpan newTemplate\">\r\n                                    <div class=\"ui input focus\">\r\n                                        <input type=\"text\" placeholder=\"Property Value\" id=\"propertyKey\">\r\n                                    </div>\r\n                                </span>\r\n                                <span class=\"supportIcons customDelete\" (click)=\"enableNewTemplate = false\"><i class=\"far fa-trash-alt\"></i></span>\r\n                                <br>\r\n                                <div class=\"ui divider\"></div>\r\n                            </div>\r\n                        </form>\r\n                    </ng-container>\r\n                </div>\r\n                <a class=\"newLink\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && !enableNewTemplate\" (click)=\"addNewProperty('node')\">Add New Property</a>\r\n                <a class=\"newLink\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && enableNewTemplate\" (click)=\"saveNewProperty('node')\">Save Property</a>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType !== ADD_NEW_LABEL\">\r\n                <button type=\"button\" class=\"btn btn-danger deleteBtn\" *ngIf=\"popupConfig.editNodePopup === true\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'node')\">Delete</button>\r\n                <a class=\"mailBtn\" *ngIf=\"popupConfig.editNodePopup === true\" >Send Mail</a>\r\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal()\" *ngIf=\"popupConfig.createNodePopup === true\" [disabled]=\"selectedType?.length <= 0\">Create</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal('edit')\" *ngIf=\"popupConfig.editNodePopup === true\" id=\"edit_btn\">Update</button>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType === ADD_NEW_LABEL\">\r\n                    <button type=\"button\" class=\"btn btn-primary create\" id=\"edit_btn\" (click)=\"addNewLabel('node')\">Add Label</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!--modal node create end-->\r\n\r\n\r\n<!--modal relationship start-->\r\n<div class=\"modal fade\" id=\"createRelationModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelModalLabel\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"popupConfig.createRelationPopup === true\">Create Relationship</h5>\r\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"popupConfig.editRelationPopup === true\">Relationship Details</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n          </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <div class=\"modalItem\">\r\n                    <p class=\"sectionName\">\r\n                        {{TYPE_TEXT}}\r\n                    </p>\r\n                    <ng-container *ngIf=\"selectedType !== ADD_NEW_TYPE\">\r\n                            <span class=\"inputSpan\">\r\n                                    <sui-select class=\"selection\"\r\n                                    [(ngModel)]=\"selectedType\"\r\n                                    (ngModelChange)=\"updateRelProperties($event)\"\r\n                                    [options]=\"relationTypeOptions\"\r\n                                    [isSearchable]=\"true\"\r\n                                    [isDisabled]=\"disabledBox\"\r\n                                    #selectRelationBox>\r\n                            <sui-select-option *ngFor=\"let option of selectRelationBox.filteredOptions\"\r\n                                               [value]=\"option\">\r\n                            </sui-select-option>\r\n                        </sui-select>\r\n                                          </span>\r\n                    </ng-container>\r\n                    <ng-container *ngIf=\"selectedType === ADD_NEW_TYPE\">\r\n                        <span class=\"inputSpan\"><input type=\"text\" id=\"id_newLabelRelation\"></span>\r\n                        </ng-container>\r\n                </div>\r\n                <div class=\"modalItem\" *ngIf=\"typeProperties.length > 0 || enableNewTemplate\">\r\n                    <h5 class=\"propertyLabel\">\r\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                    </h5>\r\n                    <ng-container *ngFor=\"let data of typeProperties\">\r\n                        <div class=\"modalItem\">\r\n                            <p class=\"sectionName\">{{data}}</p>\r\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_{{data}}\"></span>\r\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name'\" (click)=\"deleteProperty(data, 'relation')\"><i class=\"far fa-trash-alt\"></i></span>\r\n                            <span class=\"supportIcons nameKey\" *ngIf=\"(data?.length > 0) && data === 'Name'\">\r\n                                <i class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"right\" [title]=\"'Name is mandatory and cannot be deleted'\"></i>\r\n                            </span>\r\n                        </div>\r\n                    </ng-container>\r\n                    <ng-container *ngIf=\"enableNewTemplate\">\r\n                            <form id=\"NewPropertyGroupRel\">\r\n                                <div class=\"modalItem\">\r\n                                    <div class=\"ui divider\"></div>\r\n                                    <p class=\"sectionName\">Property Name</p>\r\n                                    <span class=\"inputSpan newTemplate\">\r\n                                        <div class=\"ui input focus\">\r\n                                            <input type=\"text\" placeholder=\"Property Name\" id=\"propertyKeyRel\">\r\n                                        </div>\r\n                                    </span>\r\n                                    <span class=\"supportIcons customDelete\" (click)=\"enableNewTemplate = false\"><i class=\"far fa-trash-alt\"></i></span>\r\n                                    <br/>\r\n                                    <div class=\"ui divider lower\"></div>\r\n                                </div>\r\n                            </form>\r\n                        </ng-container>\r\n                </div>\r\n                <div class=\"modalItem buttonContainer\">\r\n                    <a class=\"newLink2\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && !enableNewTemplate\" (click)=\"addNewProperty('relation')\">Add New Property</a>\r\n                    <a class=\"newLink2\" *ngIf=\"selectedType !== ADD_NEW_TYPE && enableNewTemplate\" (click)=\"saveNewProperty('relation')\">Save Property</a>\r\n                    <h5 class=\"propertyLabel\">\r\n                            Connection <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                        </h5>\r\n                </div>\r\n                <div class=\"relationScope\">\r\n                    <div class=\"modalItem\">\r\n                        <p class=\"sectionName\">From</p>\r\n                        <span class=\"inputSpan\">\r\n              <sui-select class=\"selection\"\r\n              [(ngModel)]=\"selectedNodeNameSource\"\r\n              (ngModelChange)=\"updateList('to',[selectedNodeNameSource])\"\r\n              [options]=\"fromNames\"\r\n              [isSearchable]=\"true\"\r\n              [isDisabled]=\"disabledFromBox\"\r\n              #NodeFromName>\r\n      <sui-select-option *ngFor=\"let option of NodeFromName.filteredOptions\"\r\n                         [value]=\"option\">\r\n      </sui-select-option>\r\n      </sui-select>\r\n            </span>\r\n                    </div>\r\n                    <div class=\"modalItem\">\r\n                        <p class=\"sectionName\">To</p>\r\n                        <span class=\"inputSpan\">\r\n            <sui-select class=\"selection\"\r\n            [(ngModel)]=\"selectedNodeNameTarget\"\r\n            (ngModelChange)=\"updateList('from',[selectedNodeNameTarget])\"\r\n            [options]=\"toNames\"\r\n            [isSearchable]=\"true\"\r\n            [isDisabled]=\"disabledToBox\"\r\n            #NodeToName>\r\n    <sui-select-option *ngFor=\"let option of NodeToName.filteredOptions\"\r\n                       [value]=\"option\">\r\n    </sui-select-option>\r\n    </sui-select> \r\n          </span>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType !== ADD_NEW_TYPE\">\r\n                <button type=\"button\" class=\"btn btn-danger deleteBtn left\" *ngIf=\"popupConfig.editRelationPopup === true\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'relation')\">Delete</button>\r\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal()\" *ngIf=\"popupConfig.createRelationPopup === true\" [disabled]=\"selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0\">Create</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal('edit')\" *ngIf=\"popupConfig.editRelationPopup === true\" id=\"edit_btn\">Update</button>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType === ADD_NEW_TYPE\">\r\n                <button type=\"button\" class=\"btn btn-primary create\" id=\"edit_btn\" (click)=\"addNewLabel('relation')\">Add Type</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!--modal relationship end-->\r\n\r\n<!-- Delete modal -->\r\n<div class=\"modal fade\" id=\"deleteModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"deleteModal\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"deleteModalTitle\">Delete</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n          <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:500;\">Are you sure you want to delete this {{deleteContext}} ?</b>\r\n                <h6 *ngIf=\"deleteContext === 'node'\" style=\"font-size: 14px; padding-top: 15px; font-weight: 400;\">[NOTE] : Deleting a node will also delete the relationships connected with the node. <span style=\"color: red;\">Proceed with caution</span></h6>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn ui-button-text later\" data-dismiss=\"modal\">Maybe Later</button>\r\n                <button type=\"button\" class=\"btn btn-danger\" (click)=\"submitDelete(deleteContext)\" id=\"del_btn\">Delete</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n    <!--Delete modal end-->\r\n\r\n<!--create new relationship after node modal-->\r\n<div class=\"modal fade\" id=\"RelAfterNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelAfterNode\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"RelAfterNodeModalTitle\">New Relation</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n          <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:300;\">Do you wish to create a new relationship with respect to <span style=\"font-weight: 500;\">{{newNodeName}}</span> ?</b>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn btn-default\" data-target=\"RelAfterNodeModal\" data-dismiss=\"modal\" style=\"color: red;\">Not Now</button>\r\n                <button type=\"button\" class=\"btn btn-primary\" (click)=\"promptRelation()\" id=\"rel_yes_btn\" data-dismiss=\"modal\">Yes</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    </div>\r\n<!--create new relationship after node modal end-->"
+module.exports = "<div class=\"container-fluid\" *ngIf=\"!showDeletedData\">\r\n    <div class=\"btn-group nodes\">\r\n        <button type=\"button\" (click)=\"createNode()\" data-toggle=\"modal\" data-target=\"#createNodeModal\" class=\"btn\" aria-expanded=\"false\">\r\n      Create Element\r\n    </button>\r\n    </div>\r\n    <div class=\"btn-group relationships\">\r\n        <button type=\"button\" (click)=\"createRelation()\" data-toggle=\"modal\" data-target=\"#createRelationModal\" class=\"btn\" aria-expanded=\"false\">\r\n      Create Relationship\r\n    </button>\r\n    </div>\r\n</div>\r\n<!--modal template to show when node is to be created-->\r\n<div class=\"modal fade\" id=\"createNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"NodeModalLabel\" aria-hidden=\"true\" *ngIf=\"!showDeletedData\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.createNodePopup === true\">Create Element</h5>\r\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.editNodePopup === true\">Element Details</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n          </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <div class=\"modalItem\">\r\n                    <p class=\"sectionName\">\r\n                        {{TYPE_TEXT}}\r\n                    </p>\r\n                    <span class=\"inputSpan\">\r\n                        <ng-container *ngIf=\"selectedType !== ADD_NEW_LABEL\">\r\n                                <sui-select class=\"selection\"\r\n                                [(ngModel)]=\"selectedType\"\r\n                                (ngModelChange)=\"updateProperties($event)\"\r\n                                [options]=\"typeOptions\"\r\n                                [isSearchable]=\"searchable\"\r\n                                [isDisabled]=\"disabledBox\"\r\n                                #select>\r\n                        <sui-select-option *ngFor=\"let option of select.filteredOptions\"\r\n                                           [value]=\"option\">\r\n                        </sui-select-option>\r\n                                  </sui-select>\r\n                        </ng-container>\r\n                        <ng-container *ngIf=\"selectedType === ADD_NEW_LABEL\">\r\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_newLabelNode\"></span>\r\n                        </ng-container>\r\n            </span>\r\n                </div>\r\n                <div class=\"modalItem\" *ngIf=\"labelProperties?.length > 0 && selectedType?.length > 0\">\r\n                    <h5 class=\"propertyLabel\">\r\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                    </h5>\r\n                    <ng-container *ngFor=\"let data of labelProperties\">\r\n                        <div class=\"modalItem\">\r\n                            <p class=\"sectionName\">{{data}}</p>\r\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_{{data}}\"></span>\r\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name'\" (click)=\"deleteProperty(data)\"><i class=\"far fa-trash-alt\"></i></span>\r\n                            <span class=\"supportIcons nameKey\" *ngIf=\"(data?.length > 0) && data === 'Name'\">\r\n                                <i class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"right\" [title]=\"'Name is mandatory and cannot be deleted'\"></i>\r\n                            </span>\r\n                        </div>\r\n                    </ng-container>\r\n                    <ng-container *ngIf=\"enableNewTemplate\">\r\n                        <form id=\"NewPropertyGroup\">\r\n                            <div class=\"modalItem\">\r\n                                <div class=\"ui divider\"></div>\r\n                                <p class=\"sectionName\">Property Name</p>\r\n                                <span class=\"inputSpan newTemplate\">\r\n                                    <div class=\"ui input focus\">\r\n                                        <input type=\"text\" placeholder=\"Property Value\" id=\"propertyKey\">\r\n                                    </div>\r\n                                </span>\r\n                                <span class=\"supportIcons customDelete\" (click)=\"enableNewTemplate = false\"><i class=\"far fa-trash-alt\"></i></span>\r\n                                <br>\r\n                                <div class=\"ui divider\"></div>\r\n                            </div>\r\n                        </form>\r\n                    </ng-container>\r\n                </div>\r\n                <a class=\"newLink\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && !enableNewTemplate\" (click)=\"addNewProperty('node')\">Add New Property</a>\r\n                <a class=\"newLink\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && enableNewTemplate\" (click)=\"saveNewProperty('node')\">Save Property</a>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType !== ADD_NEW_LABEL\">\r\n                <button type=\"button\" class=\"btn btn-danger deleteBtn\" *ngIf=\"popupConfig.editNodePopup === true\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'node')\">Delete</button>\r\n                <a class=\"mailBtn\" *ngIf=\"popupConfig.editNodePopup === true\" >Send Mail</a>\r\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal()\" *ngIf=\"popupConfig.createNodePopup === true\" [disabled]=\"selectedType?.length <= 0\">Create</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal('edit')\" *ngIf=\"popupConfig.editNodePopup === true\" id=\"edit_btn\">Update</button>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType === ADD_NEW_LABEL\">\r\n                    <button type=\"button\" class=\"btn btn-primary create\" id=\"edit_btn\" (click)=\"addNewLabel('node')\">Add Label</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!--modal node create end-->\r\n\r\n\r\n<!--modal relationship start-->\r\n<div class=\"modal fade\" id=\"createRelationModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelModalLabel\" aria-hidden=\"true\" *ngIf=\"!showDeletedData\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"popupConfig.createRelationPopup === true\">Create Relationship</h5>\r\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"popupConfig.editRelationPopup === true\">Relationship Details</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n          </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <div class=\"modalItem\">\r\n                    <p class=\"sectionName\">\r\n                        {{TYPE_TEXT}}\r\n                    </p>\r\n                    <ng-container *ngIf=\"selectedType !== ADD_NEW_TYPE\">\r\n                            <span class=\"inputSpan\">\r\n                                    <sui-select class=\"selection\"\r\n                                    [(ngModel)]=\"selectedType\"\r\n                                    (ngModelChange)=\"updateRelProperties($event)\"\r\n                                    [options]=\"relationTypeOptions\"\r\n                                    [isSearchable]=\"true\"\r\n                                    [isDisabled]=\"disabledBox\"\r\n                                    #selectRelationBox>\r\n                            <sui-select-option *ngFor=\"let option of selectRelationBox.filteredOptions\"\r\n                                               [value]=\"option\">\r\n                            </sui-select-option>\r\n                        </sui-select>\r\n                                          </span>\r\n                    </ng-container>\r\n                    <ng-container *ngIf=\"selectedType === ADD_NEW_TYPE\">\r\n                        <span class=\"inputSpan\"><input type=\"text\" id=\"id_newLabelRelation\"></span>\r\n                        </ng-container>\r\n                </div>\r\n                <div class=\"modalItem\" *ngIf=\"typeProperties.length > 0 || enableNewTemplate\">\r\n                    <h5 class=\"propertyLabel\">\r\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                    </h5>\r\n                    <ng-container *ngFor=\"let data of typeProperties\">\r\n                        <div class=\"modalItem\">\r\n                            <p class=\"sectionName\">{{data}}</p>\r\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_{{data}}\"></span>\r\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name'\" (click)=\"deleteProperty(data, 'relation')\"><i class=\"far fa-trash-alt\"></i></span>\r\n                            <span class=\"supportIcons nameKey\" *ngIf=\"(data?.length > 0) && data === 'Name'\">\r\n                                <i class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"right\" [title]=\"'Name is mandatory and cannot be deleted'\"></i>\r\n                            </span>\r\n                        </div>\r\n                    </ng-container>\r\n                    <ng-container *ngIf=\"enableNewTemplate\">\r\n                            <form id=\"NewPropertyGroupRel\">\r\n                                <div class=\"modalItem\">\r\n                                    <div class=\"ui divider\"></div>\r\n                                    <p class=\"sectionName\">Property Name</p>\r\n                                    <span class=\"inputSpan newTemplate\">\r\n                                        <div class=\"ui input focus\">\r\n                                            <input type=\"text\" placeholder=\"Property Name\" id=\"propertyKeyRel\">\r\n                                        </div>\r\n                                    </span>\r\n                                    <span class=\"supportIcons customDelete\" (click)=\"enableNewTemplate = false\"><i class=\"far fa-trash-alt\"></i></span>\r\n                                    <br/>\r\n                                    <div class=\"ui divider lower\"></div>\r\n                                </div>\r\n                            </form>\r\n                        </ng-container>\r\n                </div>\r\n                <div class=\"modalItem buttonContainer\">\r\n                    <a class=\"newLink2\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && !enableNewTemplate\" (click)=\"addNewProperty('relation')\">Add New Property</a>\r\n                    <a class=\"newLink2\" *ngIf=\"selectedType !== ADD_NEW_TYPE && enableNewTemplate\" (click)=\"saveNewProperty('relation')\">Save Property</a>\r\n                    <h5 class=\"propertyLabel\">\r\n                            Connection <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                        </h5>\r\n                </div>\r\n                <div class=\"relationScope\">\r\n                    <div class=\"modalItem\">\r\n                        <p class=\"sectionName\">From</p>\r\n                        <span class=\"inputSpan\">\r\n              <sui-select class=\"selection\"\r\n              [(ngModel)]=\"selectedNodeNameSource\"\r\n              (ngModelChange)=\"updateList('to',[selectedNodeNameSource])\"\r\n              [options]=\"fromNames\"\r\n              [isSearchable]=\"true\"\r\n              [isDisabled]=\"disabledFromBox\"\r\n              #NodeFromName>\r\n      <sui-select-option *ngFor=\"let option of NodeFromName.filteredOptions\"\r\n                         [value]=\"option\">\r\n      </sui-select-option>\r\n      </sui-select>\r\n            </span>\r\n                    </div>\r\n                    <div class=\"modalItem\">\r\n                        <p class=\"sectionName\">To</p>\r\n                        <span class=\"inputSpan\">\r\n            <sui-select class=\"selection\"\r\n            [(ngModel)]=\"selectedNodeNameTarget\"\r\n            (ngModelChange)=\"updateList('from',[selectedNodeNameTarget])\"\r\n            [options]=\"toNames\"\r\n            [isSearchable]=\"true\"\r\n            [isDisabled]=\"disabledToBox\"\r\n            #NodeToName>\r\n    <sui-select-option *ngFor=\"let option of NodeToName.filteredOptions\"\r\n                       [value]=\"option\">\r\n    </sui-select-option>\r\n    </sui-select> \r\n          </span>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType !== ADD_NEW_TYPE\">\r\n                <button type=\"button\" class=\"btn btn-danger deleteBtn left\" *ngIf=\"popupConfig.editRelationPopup === true\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'relation')\">Delete</button>\r\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal()\" *ngIf=\"popupConfig.createRelationPopup === true\" [disabled]=\"selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0\">Create</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal('edit')\" *ngIf=\"popupConfig.editRelationPopup === true\" id=\"edit_btn\">Update</button>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType === ADD_NEW_TYPE\">\r\n                <button type=\"button\" class=\"btn btn-primary create\" id=\"edit_btn\" (click)=\"addNewLabel('relation')\">Add Type</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!--modal relationship end-->\r\n\r\n<!-- Delete modal -->\r\n<div class=\"modal fade\" id=\"deleteModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"deleteModal\" aria-hidden=\"true\" *ngIf=\"!showDeletedData\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"deleteModalTitle\">Delete</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n          <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:500;\">Are you sure you want to delete this {{deleteContext}} ?</b>\r\n                <h6 *ngIf=\"deleteContext === 'node'\" style=\"font-size: 14px; padding-top: 15px; font-weight: 400;\">[NOTE] : Deleting a node will also delete the relationships connected with the node. <span style=\"color: red;\">Proceed with caution</span></h6>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn ui-button-text later\" data-dismiss=\"modal\">Maybe Later</button>\r\n                <button type=\"button\" class=\"btn btn-danger\" (click)=\"submitDelete(deleteContext)\" id=\"del_btn\">Delete</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n    <!--Delete modal end-->\r\n\r\n<!--create new relationship after node modal-->\r\n<div class=\"modal fade\" id=\"RelAfterNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelAfterNode\" aria-hidden=\"true\" *ngIf=\"!showDeletedData\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"RelAfterNodeModalTitle\">New Relation</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n          <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:300;\">Do you wish to create a new relationship with respect to <span style=\"font-weight: 500;\">{{newNodeName}}</span> ?</b>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn btn-default\" data-target=\"RelAfterNodeModal\" data-dismiss=\"modal\" style=\"color: red;\">Not Now</button>\r\n                <button type=\"button\" class=\"btn btn-primary\" (click)=\"promptRelation()\" id=\"rel_yes_btn\" data-dismiss=\"modal\">Yes</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    </div>\r\n<!--create new relationship after node modal end-->"
 
 /***/ }),
 
@@ -10890,10 +10906,28 @@ var CreateNodesComponent = /** @class */ (function () {
         this.fromNames = [];
         this.editNodeConfig = {};
         this.deleteNodeConfig = {};
+        this.showDeletedData = false;
     }
     CreateNodesComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.toolTipText = 'The Properties section can be left blank to set a default Node';
         $('.toolTipText').tooltip();
+        // subscribe to showDeletedData so that appropriate data can be fetched
+        this.sharedGraphSrvc.showDeletedData.subscribe(function (toggle) {
+            if (toggle !== null && (toggle.toString() === 'true' || toggle.toString() === 'false')) {
+                // if the toggle variable is  only true and false and nothing else
+                _this.showDeletedData = toggle;
+                // console.log('recieved toggle in create nodes', toggle);
+            }
+            else {
+                // set to false by default
+                _this.showDeletedData = false;
+            }
+        }, function (err) {
+            // set to false by default
+            console.error('An error occured while subscribing to the toggle for deleted data', err);
+            _this.showDeletedData = false;
+        });
     };
     CreateNodesComponent.prototype.createNode = function () {
         var _this = this;
@@ -12240,6 +12274,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
         catch (e) {
             this.showDisabled = false;
         }
+        this.sharedGraphData.sendToogleStatus(this.showDisabled);
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
@@ -12406,6 +12441,7 @@ var GraphVisualizerComponent = /** @class */ (function () {
         this.totalTypesArray = [];
         this.newNodeCreated = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.nodeLimitEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
+        this.showDeletedData = null;
         this.promptRelationCreateAfterNode = null;
         this.requestedNodeDetails = null;
         this.graphData = {};
@@ -12416,38 +12452,42 @@ var GraphVisualizerComponent = /** @class */ (function () {
         this.emptyNodeLimit = 179;
         this.colorConfig = {
             defaultColor: {
-                "Academia": '#ff4444',
-                "Consulting": '#ffbb33',
-                "Government": '#00C851',
-                "Impact Investor": '#33b5e5',
-                "International Agency": '#CC0000',
-                "Media": '#FF8800',
-                "NGO/CBO": '#007E33',
-                "People": '#0099CC',
-                "Philanthropy": '#9933CC',
-                "Platform": '#0d47a1',
-                "Private Sector": '#2BBBAD',
-                "Research Institute": '#c51162'
+                Academia: '#ff4444',
+                Consulting: '#ffbb33',
+                Government: '#00C851',
+                'Impact Investor': '#33b5e5',
+                'International Agency': '#CC0000',
+                Media: '#FF8800',
+                'NGO/CBO': '#007E33',
+                People: '#0099CC',
+                Philanthropy: '#9933CC',
+                Platform: '#0d47a1',
+                'Private Sector': '#2BBBAD',
+                'Research Institute': '#c51162'
             },
             selectedColor: {
-                "Academia": '#ff4444',
-                "Consulting": '#ffbb33',
-                "Government": '#00C851',
-                "Impact Investor": '#33b5e5',
-                "International Agency": '#CC0000',
-                "Media": '#FF8800',
-                "NGO/CBO": '#007E33',
-                "People": '#0099CC',
-                "Philanthropy": '#9933CC',
-                "Platform": '#0d47a1',
-                "Private Sector": '#2BBBAD',
-                "Research Institute": '#c51162'
+                Academia: '#ff4444',
+                Consulting: '#ffbb33',
+                Government: '#00C851',
+                'Impact Investor': '#33b5e5',
+                'International Agency': '#CC0000',
+                Media: '#FF8800',
+                'NGO/CBO': '#007E33',
+                People: '#0099CC',
+                Philanthropy: '#9933CC',
+                Platform: '#0d47a1',
+                'Private Sector': '#2BBBAD',
+                'Research Institute': '#c51162'
+            },
+            deletedColor: {
+                colorCode: '#C0C0C0'
             }
         };
         this.editNodeData = null;
         this.editRelationData = null;
         this.networkInstance = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.hideDelModal = false;
+        // graph options to change the visualization configuration of visjs
         this.graphOptions = {
             physics: false,
             interaction: {
@@ -12481,6 +12521,25 @@ var GraphVisualizerComponent = /** @class */ (function () {
             console.log('processed data now is  ', nodesByIDs);
             _this.sharedGraphService.sendNodeDetails(nodesByIDs);
         }, function (err) { });
+        // subscribe to showDeletedData so that appropriate data can be fetched
+        this.sharedGraphService.showDeletedData.subscribe(function (toggle) {
+            if (toggle !== null && (toggle.toString() === 'true' || toggle.toString() === 'false')) {
+                _this.loader = true;
+                // if the toggle variable is  only true and false and nothing else
+                _this.showDeletedData = toggle;
+                // console.log('recieved toggle', toggle);
+            }
+            else {
+                // set to false by default
+                _this.showDeletedData = false;
+            }
+            _this.displayInitialGraph();
+        }, function (err) {
+            // set to false by default
+            console.error('An error occured while subscribing to the toggle for deleted data', err);
+            _this.showDeletedData = false;
+            _this.displayInitialGraph();
+        });
     };
     GraphVisualizerComponent.prototype.displayInitialGraph = function () {
         var _this = this;
@@ -12502,8 +12561,10 @@ var GraphVisualizerComponent = /** @class */ (function () {
             _this.loader = false;
             _this.network = new vis__WEBPACK_IMPORTED_MODULE_3__["Network"](container, _this.graphData, _this.graphOptions);
             // activating double click event for editing node or relationship
+            console.log('registering double click');
             _this.network.on('doubleClick', function (event) {
                 _this.hideDelModal = false;
+                console.log('double click');
                 _this.doubleClickHandler(event);
             });
         }, function (err) {
@@ -12518,7 +12579,7 @@ var GraphVisualizerComponent = /** @class */ (function () {
     };
     GraphVisualizerComponent.prototype.changeNodeColor = function () {
         var _this = this;
-        if (this.event == 'search1' || this.event === 'search2') {
+        if (this.event === 'search1' || this.event === 'search2') {
             this.loader = true;
             this.showGraphData();
         }
@@ -12532,7 +12593,7 @@ var GraphVisualizerComponent = /** @class */ (function () {
             // tslint:disable-next-line: no-string-literal
             if (!!this.graphData['nodes']) {
                 var temgraph = this.graphData['nodes'].map(function (node) {
-                    if (_this.event == node.type[0]) {
+                    if (_this.event === node.type[0]) {
                         // node.color = this.colorConfig.defaultColor[node.type[0]];
                     }
                     else {
@@ -12599,10 +12660,14 @@ var GraphVisualizerComponent = /** @class */ (function () {
     };
     GraphVisualizerComponent.prototype.addColors = function (nodeObj) {
         var _this = this;
-        // console.log(nodeObj);
+        // if the user opted for deleted data, simply set deleted default color to all the nodes
         nodeObj.forEach(function (node) {
             if (node.hasOwnProperty('type') && node.type.length > 0) {
-                node['color'] = _this.colorConfig.defaultColor[node.type[0]];
+                node['color'] = _this.showDeletedData ? _this.colorConfig.deletedColor.colorCode : _this.colorConfig.defaultColor[node.type[0]];
+                // temporary fix, add exception for societal platform
+                if (node.label === 'Societal Platform Team') {
+                    node['color'] = _this.colorConfig.defaultColor[node.type[0]];
+                }
             }
         });
         // console.log(nodeObj);

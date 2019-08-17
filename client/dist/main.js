@@ -10,12 +10,10 @@
 var map = {
 	"./modules/dashboard-v2/dashboard-v2.module": [
 		"./src/app/modules/dashboard-v2/dashboard-v2.module.ts",
-		"common",
 		"modules-dashboard-v2-dashboard-v2-module"
 	],
 	"./modules/dashboard/dashboard.module": [
 		"./src/app/modules/dashboard/dashboard.module.ts",
-		"common",
 		"modules-dashboard-dashboard-module"
 	]
 };
@@ -28,7 +26,7 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
+	return __webpack_require__.e(ids[1]).then(function() {
 		var id = ids[0];
 		return __webpack_require__(id);
 	});
@@ -383,11 +381,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var _core_routing_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./core-routing.module */ "./src/app/modules/core/core-routing.module.ts");
 /* harmony import */ var _components_graph_visualizer_graph_visualizer_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/graph-visualizer/graph-visualizer.component */ "./src/app/modules/core/components/graph-visualizer/graph-visualizer.component.ts");
+/* harmony import */ var _services_interceptors_core_interceptor_core_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./services/interceptors/core-interceptor/core.service */ "./src/app/modules/core/services/interceptors/core-interceptor/core.service.ts");
 
 
 
 
 
+
+// interceptors
 
 var CoreModule = /** @class */ (function () {
     function CoreModule() {
@@ -399,6 +400,9 @@ var CoreModule = /** @class */ (function () {
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"],
                 _core_routing_module__WEBPACK_IMPORTED_MODULE_4__["CoreRoutingModule"]
+            ],
+            providers: [
+                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HTTP_INTERCEPTORS"], useClass: _services_interceptors_core_interceptor_core_service__WEBPACK_IMPORTED_MODULE_6__["CoreService"], multi: true }
             ],
             exports: [_components_graph_visualizer_graph_visualizer_component__WEBPACK_IMPORTED_MODULE_5__["GraphVisualizerComponent"]]
         })
@@ -434,7 +438,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import {PublicHttpService} from '@network-visualizer-core/public-http/PublicHttpService';
 var GraphDataService = /** @class */ (function () {
     function GraphDataService(publicHttp) {
         this.publicHttp = publicHttp;
@@ -859,6 +862,74 @@ var GraphDataService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/modules/core/services/interceptors/core-interceptor/core.service.ts":
+/*!*************************************************************************************!*\
+  !*** ./src/app/modules/core/services/interceptors/core-interceptor/core.service.ts ***!
+  \*************************************************************************************/
+/*! exports provided: CoreService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CoreService", function() { return CoreService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _shared_graph_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../../shared-graph.service */ "./src/app/modules/core/services/shared-graph.service.ts");
+
+
+// import sharedService so that we can access the toggle response
+
+var CoreService = /** @class */ (function () {
+    function CoreService(sharedService) {
+        var _this = this;
+        this.sharedService = sharedService;
+        this.showDeletedData = false;
+        this.sharedService.showDeletedData.subscribe(function (toggle) {
+            _this.setDeletedDataToggle(toggle);
+        }, function (error) {
+            console.warn('An error occured while subscribing to the toggle event in core interceptor', error);
+        });
+    }
+    CoreService.prototype.intercept = function (req, next) {
+        // update the body with an added parameter to fetch deleted data or not
+        console.log('setting show deleted for req ---> ', req.url + ' to ' + this.showDeletedData);
+        if (req.method === 'POST') {
+            var request = req.clone({ body: tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, req.body, { showDeleted: this.showDeletedData }) });
+            return next.handle(request);
+        }
+        else if (req.method === 'GET') {
+            console.log(req.params);
+            var request = req.clone({ url: req.url + ("?deleted=" + this.showDeletedData) });
+            console.log('new get request created is ', request);
+            return next.handle(request);
+        }
+        return next.handle(req);
+    };
+    // handler to set deleted toggler
+    CoreService.prototype.setDeletedDataToggle = function (toggle) {
+        if (toggle !== null && (toggle.toString() === 'true' || toggle.toString() === 'false')) {
+            // if the toggle variable is  only true and false and nothing else
+            this.showDeletedData = toggle;
+            // console.log('recieved toggle in core interceptor', toggle);
+        }
+        else {
+            // set to false by default
+            this.showDeletedData = false;
+        }
+    };
+    CoreService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_shared_graph_service__WEBPACK_IMPORTED_MODULE_2__["SharedGraphService"]])
+    ], CoreService);
+    return CoreService;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/modules/core/services/public/public-http/public-http.service.ts":
 /*!*********************************************************************************!*\
   !*** ./src/app/modules/core/services/public/public-http/public-http.service.ts ***!
@@ -921,6 +992,58 @@ var PublicHttpService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
     ], PublicHttpService);
     return PublicHttpService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/core/services/shared-graph.service.ts":
+/*!***************************************************************!*\
+  !*** ./src/app/modules/core/services/shared-graph.service.ts ***!
+  \***************************************************************/
+/*! exports provided: SharedGraphService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SharedGraphService", function() { return SharedGraphService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+var SharedGraphService = /** @class */ (function () {
+    function SharedGraphService() {
+        this.nodeDetails = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.getNodeByIDs = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
+        this.showDeletedData = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+    }
+    SharedGraphService.prototype.setGraphData = function (graphdata) {
+        this.graphData = graphdata;
+    };
+    SharedGraphService.prototype.getGraphData = function () {
+        return this.graphData;
+    };
+    SharedGraphService.prototype.getNodeDetails = function (nodeIDs) {
+        this.getNodeByIDs.next(nodeIDs);
+    };
+    SharedGraphService.prototype.sendNodeDetails = function (nodeDetailsArray) {
+        this.nodeDetails.next(nodeDetailsArray);
+    };
+    // function to send the deleted toggle info whenever needed
+    SharedGraphService.prototype.sendToogleStatus = function (status) {
+        console.log('sending new status for toggle ', status);
+        this.showDeletedData.next(status);
+    };
+    SharedGraphService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], SharedGraphService);
+    return SharedGraphService;
 }());
 
 
