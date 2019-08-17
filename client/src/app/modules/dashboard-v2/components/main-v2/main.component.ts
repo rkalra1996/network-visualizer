@@ -8,12 +8,13 @@ import { Component, OnInit } from '@angular/core';
 export class MainComponent implements OnInit {
   public clickedEvent: String;
   public totalTypesArray = [];
+  public nodeLimitValue = null;
   public newNodeCreated: String;
   constructor() { }
 
   ngOnInit() {
   }
-  
+
   childEventClicked(event: String) {
     this.clickedEvent = event;
   }
@@ -23,8 +24,17 @@ export class MainComponent implements OnInit {
 
   sendTypes(event) {
     if (!!event && event.length > 0) {
-      console.log('sending types', event);
       this.totalTypesArray = event;
+    }
+  }
+
+  sendLimitToSidebar(event) {
+    // this  function is responsible to send the nodeLimit value to the sidebar so that apply function can be clicked
+    if (!isNaN(event)) {
+      this.nodeLimitValue = event;
+    } else {
+      console.log('nodelimit is not a number');
+      this.nodeLimitValue = null;
     }
   }
 

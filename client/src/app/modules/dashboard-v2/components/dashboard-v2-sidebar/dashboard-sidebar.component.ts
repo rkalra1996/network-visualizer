@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angular/core';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
 import { Network, DataSet, Node, Edge, IdType } from 'vis';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
@@ -9,9 +9,12 @@ import * as _ from 'lodash';
   templateUrl: './dashboard-sidebar.component.html',
   styleUrls: ['./dashboard-sidebar.component.scss']
 })
-export class DashboardSidebarComponent implements OnInit {
+export class DashboardSidebarComponent implements OnInit, OnChanges {
 
   @Input() newNodeCreated: string;
+  // tslint:disable-next-line: no-input-rename
+  @Input('nodeLimitEnterEvent') nodeLimitOnEnter: any = null;
+  private showDisabled = false;
   public rotateObj = {
     Name: {
       rotate: false,
@@ -91,15 +94,21 @@ export class DashboardSidebarComponent implements OnInit {
     this.getGraph();
   }
 
-  ngOnChanges(){
-    //update all dropdown when new node is created
+   ngOnChanges() {
+    // update all dropdown when new node is created
     // get the createdEvent
-    if(this.newNodeCreated){
-      let nodeEvent = this.newNodeCreated.split('_')[0];
+    if (this.newNodeCreated) {
+      const nodeEvent = this.newNodeCreated.split('_')[0];
 
-      if(nodeEvent === "NodeEvent"){
+      if (nodeEvent === 'NodeEvent') {
         this.getGraph();
       }
+    }
+    // detect if the user hit enter while entering the nodelimit value
+    if (!!this.nodeLimitOnEnter && !isNaN(this.nodeLimitOnEnter)) {
+      // user pressed entered after filling a valid number
+      console.log('enter detected after ', this.nodeLimitOnEnter);
+      this.searchGraph();
     }
     }
 
@@ -181,40 +190,43 @@ export class DashboardSidebarComponent implements OnInit {
 
   searchGraph() {
     let requestBody;
-    if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0) {
+    // tslint:disable-next-line: max-line-length
+    if (
+      this.selectedName.length > 0 || this.selectedType.length > 0 ||
+      this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 ||
+      this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0
+      ) {
       this.selectedGraph = [];
-      if(this.selectedName.length>0){
-        this.selectedGraph.push({ type: "Name", value: this.selectedName });
+      if ( this.selectedName.length > 0 ) {
+        this.selectedGraph.push({ type: 'Name', value: this.selectedName });
       }
-      if(this.selectedType.length>0){
-        this.selectedGraph.push({ type: "Type", value: this.selectedType });
+      if ( this.selectedType.length > 0 ) {
+        this.selectedGraph.push({ type: 'Type', value: this.selectedType });
       }
-      if(this.selectedConnection.length>0){
-        this.selectedGraph.push({ type: "Connection", value: this.selectedConnection });
+      if ( this.selectedConnection.length > 0 ) {
+        this.selectedGraph.push({ type: 'Connection', value: this.selectedConnection });
       }
-      if(this.selectedRepresent.length>0){
-        this.selectedGraph.push({ type: "Represent", value: this.selectedRepresent });
+      if ( this.selectedRepresent.length > 0 ) {
+        this.selectedGraph.push({ type: 'Represent', value: this.selectedRepresent });
       }
-      if(this.selectedStatus.length>0){
-        this.selectedGraph.push({ type: "Status", value: this.selectedStatus });
+      if ( this.selectedStatus.length > 0 ) {
+        this.selectedGraph.push({ type: 'Status', value: this.selectedStatus });
       }
-      if(this.selectedUnderstanding.length>0){
-        this.selectedGraph.push({ type: "Understanding of SP Thinking", value: this.selectedUnderstanding });
+      if ( this.selectedUnderstanding.length > 0 ) {
+        this.selectedGraph.push({ type: 'Understanding of SP Thinking', value: this.selectedUnderstanding });
       }
-      if(this.selectedUrl.length>0){
-        this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
+      if ( this.selectedUrl.length > 0 ) {
+        this.selectedGraph.push({ type: 'Url', value: this.selectedUrl });
       }
       requestBody = { nodes: this.selectedGraph };
-    }else{
-      // if no selected element 
+    } else {
+      // if no selected element
       requestBody = { };
     }
-    
-
-      this.sharedGraphData.setGraphData(requestBody);
-      if (this.count === 1) {
-        this.eventClicked.emit('search' + this.count);
-        this.count = 2;
+    this.sharedGraphData.setGraphData(requestBody);
+    if (this.count === 1) {
+      this.eventClicked.emit('search' + this.count);
+      this.count = 2;
       } else {
         this.eventClicked.emit('search' + this.count);
         this.count = 1;
@@ -324,7 +336,7 @@ export class DashboardSidebarComponent implements OnInit {
   }
 
   // return all nodes with selected relation
-  relationSearchGraph(){
+  relationSearchGraph() {
     let requestBody;
      if (this.selectedRelation.length > 0) {
       this.selectedRelationship = [];
@@ -362,7 +374,7 @@ export class DashboardSidebarComponent implements OnInit {
   }
 
   // this return selected name and type
-  private selectedNodeCheck(){
+  private selectedNodeCheck() {
       if(this.selectedName.length > 0 && this.selectedType.length > 0){
         let temNodeArray = [];
         temNodeArray.push({ type: "Name", value: this.selectedName });
@@ -374,7 +386,7 @@ export class DashboardSidebarComponent implements OnInit {
         return [{ type: "Name", value: this.selectedName }];
       }
   }
-  noderelationSearchGraph(){
+  noderelationSearchGraph() {
     if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0 && this.selectedRelation.length > 0) {
       this.selectedRelationship = [];
       this.selectedRelation.map(rel=>{
@@ -404,4 +416,16 @@ export class DashboardSidebarComponent implements OnInit {
 
 
   networkElementClick(element) {}
+
+
+  //
+  NodeLimitToggleHandler(event) {
+    try {
+      if (event.constructor === Object) {
+        this.showDisabled = event['isOn'];
+      }
+    } catch (e) {
+      this.showDisabled = false;
+    }
+    }
 }

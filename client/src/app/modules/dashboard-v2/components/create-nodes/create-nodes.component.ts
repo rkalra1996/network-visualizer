@@ -18,10 +18,41 @@ declare var $: any;
 
 export class CreateNodesComponent implements OnInit, OnChanges {
 
+  // Output variables for event emitters to parent components
   @Output() nodeBtnEvent = new EventEmitter<any>();
-  public disabledBox = false;
-  public newNodeName = 'Not Available';
+  @Output() edgeBtnEvent = new EventEmitter<any>();
+  // input variables from parent components
+  @Input() editData: any;
+  @Input() editRelData: any;
+  @Input() hideDelModal: any;
+  @Input() nodeTypes: Array<any> = [];
+  @Input() newNodeCreated: object | null = null;
+  // constants
+  public TYPE_TEXT = 'Type';
+  public ADD_NEW_LABEL = 'Add New Label';
+  public ADD_NEW_TYPE = 'Add New Type';
+  public toolTipText = '';
   public deleteContext = 'node';
+  public newNodeName = 'Not Available';
+  // object to handle modals
+  public popupConfig = {
+    createNodePopup : false,
+    editNodePopup : false,
+    deleteNodePopup : false,
+    createRelationPopup : false,
+    editRelationPopup : false,
+    deleteRelationPopup : false
+  };
+  // Query to fetch all labels
+  public queryObj = {
+    raw: true,
+    query: `MATCH (p) WITH DISTINCT keys(p) AS keys,p
+     with DISTINCT labels(p) as label,keys 
+     UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields,label
+     RETURN collect(allfields),label`
+  };
+
+  public disabledBox = false;
   public enableNewTemplate = false;
   public clickedNodeID = null;
   public clickedRelationID = null;
@@ -29,14 +60,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   public disabledToBox = false;
   public relationSourceNode = null;
   public relationTargetNode = null;
-  @Output() edgeBtnEvent = new EventEmitter<any>();
-
-  @Input() nodeTypes: Array<any> = [];
-  @Input() newNodeCreated: object | null = null;
   public nodeTypes2: Array<any> = [];
   public selectedType: any = [];
   public typeOptions: Array<any> = [];
-  public toolTipText = '';
   public processedData;
   public labelProperties = [];
   public relationTypeOptions: Array<any> = [];
@@ -48,24 +74,6 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   public selectedNodeNameTarget: any;
   public editNodeConfig = {};
   public deleteNodeConfig = {};
-  public queryObj = {
-    raw: true,
-    query: `MATCH (p) WITH DISTINCT keys(p) AS keys,p
-     with DISTINCT labels(p) as label,keys 
-     UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields,label
-     RETURN collect(allfields),label`
-  };
-  public popupConfig = {
-    createNodePopup : false,
-    editNodePopup : false,
-    deleteNodePopup : false,
-    createRelationPopup : false,
-    editRelationPopup : false,
-    deleteRelationPopup : false
-  };
-  @Input() editData: any;
-  @Input() editRelData: any;
-  @Input() hideDelModal: any;
 
   constructor(
     private SharedSrvc: SearchService, 
@@ -85,11 +93,28 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     this.enableNewTemplate = false;
 
     this.getNodeTypes().subscribe(data => {
-      this.typeOptions = _.cloneDeep(data);
+      let newOptions = data;
+      newOptions = this.pushOnTop(this.ADD_NEW_LABEL, newOptions);
+      this.typeOptions = _.cloneDeep(newOptions);
+      // add the option to add a new label on top
     }, err => {
       console.log('An error occured while reading label data from the database', err);
       this.typeOptions = _.cloneDeep([]);
     });
+  }
+
+  pushOnTop(valueToAdd = 'null', ArrayToUse, index = 0) {
+    // this function will push the given value in the array at specified index, default for 0
+    if (ArrayToUse.length <= 0) {
+      return [];
+    }
+    if (valueToAdd === 'null' && ArrayToUse.length > 0) {
+      return ArrayToUse;
+    }
+    if (valueToAdd !== 'null' && ArrayToUse.length >= 0) {
+      ArrayToUse.splice(index, 0, valueToAdd);
+      return ArrayToUse;
+    }
   }
   editNode() {
     this.disabledBox = true;
@@ -123,7 +148,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     return this.graphSrvc.getGraphRelations().pipe(map(response => {
 
       this.relationsData = this.filterRelationsData(response);
-      const extractedTypes = this.extractTypes(this.relationsData);
+      let extractedTypes = this.extractTypes(this.relationsData);
+      // add the new type option on top
+      extractedTypes = this.pushOnTop(this.ADD_NEW_TYPE, extractedTypes);
       // pass it into the options for dropdown
       this.relationTypeOptions = _.cloneDeep(extractedTypes);
       return true;
@@ -148,7 +175,6 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         let matched = false;
         filteredObjectArray.forEach(firstObj => {
           if (firstObj.type === response[i].type) {
-            console.log('found type');
             matched = true;
             firstObj['properties'].push(...response[i].properties);
           }
@@ -167,6 +193,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       typeObj['properties'] = _.uniq(typeObj['properties']);
       return typeObj;
     });
+    console.log('final fetched types for relation is ', filteredObjectArray);
     return filteredObjectArray;
   }
 
@@ -246,16 +273,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       // disable the from and to boxes
       this.disabledFromBox = true;
       this.disabledToBox = true;
-
-      if (!!prefilledRelInfo) {
-        // console.log('recieved some prefilled info ', prefilledRelInfo);
-        // set the data into the modal
-        this.prefillData('createRelationModal', prefilledRelInfo, editRelConfig['id'], 'relation');
-      } else {
-        // will allow the modal to be visible anyway
-        console.error('An error occured while prefilling the relation data, did not recieve anyhting');
-      }
-
+      this.prefillData('createRelationModal', prefilledRelInfo, editRelConfig['id'], 'relation');
       // prefill the connected nodes names for the selected relationship modal
       this.prefillConnectedNodes(editRelConfig);
       this.sharedGraphSrvc.nodeDetails.subscribe(nodeDetailsArray => {
@@ -309,25 +327,29 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   prefillData(modalID, dataToFill, IDToSupply, type = 'node') {
     if (!modalID) {
       console.warn('cannot prefill data as modal id is not supplied');
-    } else if (!Object.keys(dataToFill).length) {
-      console.warn('Did not recieve any data to prefill');
-    } else {
+    }  else {
       // both are supplied, time to prefill the modal
       if ($(`#${modalID}`).length) {
-        this.popupConfig.editNodePopup = true;
+        if (type === 'node') {
+          this.popupConfig.editNodePopup = true;
+        } else if (type === 'relation') {
+          this.popupConfig.editRelationPopup = true;
+        }
         this.showModal(modalID);
         // found the modal
         $(`#${modalID}`).on('shown.bs.modal', (event) => {
           // capture the modal text boxes once it is visible
           $(`#${modalID} :text`).each(function() {
             let key = $(this).attr('id') || null;
-            if (Object.keys(dataToFill).indexOf(key) > -1) {
-              // assign this text box a prefilled value from dataToFill
-              $(`[id='${key}']`).val(dataToFill[key]);
-              // disable the Name box since it is unique fot the database
-              /* if (key === 'id_Name') {
-                $(`[id='${key}']`).attr('disabled', 'disabled');
-              } */
+            if (!!dataToFill) {
+              if (Object.keys(dataToFill).indexOf(key) > -1) {
+                // assign this text box a prefilled value from dataToFill
+                $(`[id='${key}']`).val(dataToFill[key]);
+                // disable the Name box since it is unique fot the database
+                /* if (key === 'id_Name') {
+                  $(`[id='${key}']`).attr('disabled', 'disabled');
+                } */
+              }
             }
           });
           // add id of the node to the modal
@@ -474,12 +496,19 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   updateProperties(event, editProperties = null) {
     // fetch the properties of selected label and display it in the dropdown
     // console.log(event)
-    if (!editProperties || !editProperties.hasOwnProperty('properties')) {
-      editProperties = null;
-    } else {
-      editProperties = editProperties['properties'];
+    if (event === this.ADD_NEW_LABEL) {
+      this.TYPE_TEXT = 'New Type';
+      console.log('user wants to add a new label');
     }
-    this.labelProperties =  this.getProperties([event], editProperties);
+    else {
+      this.TYPE_TEXT = 'Type';
+      if (!editProperties || !editProperties.hasOwnProperty('properties')) {
+        editProperties = null;
+      } else {
+        editProperties = editProperties['properties'];
+      }
+      this.labelProperties =  this.getProperties([event], editProperties);
+    }
   }
 
   getProperties(labelName, editProperties = null) {
@@ -499,6 +528,12 @@ export class CreateNodesComponent implements OnInit, OnChanges {
             fetchedProperties = labelObj.properties;
           }
         });
+        // if fetched properties is empty, means this is a new Type the user has selected
+        // Add 2 properties to this TYPE : Name and deeted with deleted = false by default
+        if (!fetchedProperties.length) {
+          fetchedProperties.push('Name');
+          fetchedProperties.push('deleted');
+        }
       }
       // put Name property in the first position
       fetchedProperties.forEach((property, index) => {
@@ -662,7 +697,6 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       let value = $(this).val() || null;
       relationData.properties[key] = value;
       });
-      console.log(relationData);
 
     try {
       relationData = this.validateRelationData(relationData);
@@ -804,10 +838,46 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     $('#propertyKeyRel').val('');
   }
 
+  getPropertyValues() {
+    // get the label information from the graph and then seperate different keys and their already filled options
+    this.graphSrvc.getNodeLabelData().pipe(map(data => {
+      if (!data.length) {
+        return of({});
+      }
+      // recieveing some data, filter out the name and labels key and send the rest
+      console.log('label data is ', data);
+      return of(data);
+    }));
+  }
+
   promptRelation() {
     // call create relation procedure
     this.hideModal('RelAfterNode');
     this.showModal('createRelationModal');
     this.createRelation();
+  }
+
+  addNewLabel(labelFor = null) {
+    let val = null;
+    if (labelFor === 'node') {
+      val = $(`#id_newLabelNode`).val();
+      if (!!val) {
+        // push it in the typeOptions
+        let newTypes = _.cloneDeep(this.typeOptions);
+        newTypes = _.cloneDeep(this.pushOnTop(val, newTypes, 1));
+        newTypes = _.uniq(newTypes);
+        this.typeOptions = _.cloneDeep(newTypes);
+      }
+    } else if (labelFor === 'relation') {
+      val = $(`#id_newLabelRelation`).val();
+      if (!!val) {
+        let newTypesRel = _.cloneDeep(this.relationTypeOptions);
+        newTypesRel = _.cloneDeep(this.pushOnTop(val,newTypesRel,1));
+        newTypesRel = _.uniq(newTypesRel);
+        this.relationTypeOptions = _.cloneDeep(newTypesRel);
+      }
+    }
+    console.log(val);
+    this.selectedType = null;
   }
 }

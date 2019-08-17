@@ -251,6 +251,11 @@ span.ele-count.count-org {
     background-color: '#c51162'
 }
 
+.spanWrapper {
+    font-family: 'Kanit', sans-serif;
+    font-weight: bold;
+    max-width : 135px;
+}
 // an attempt to make it a bit responsive
 @media screen and (max-width: '1100px') {
     .sidebar-wrapper {

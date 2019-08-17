@@ -24,20 +24,25 @@
             <div class="modal-body">
                 <div class="modalItem">
                     <p class="sectionName">
-                        Type
+                        {{TYPE_TEXT}}
                     </p>
                     <span class="inputSpan">
-              <sui-select class="selection"
-              [(ngModel)]="selectedType"
-              (ngModelChange)="updateProperties($event)"
-              [options]="typeOptions"
-              [isSearchable]="searchable"
-              [isDisabled]="disabledBox"
-              #select>
-      <sui-select-option *ngFor="let option of select.filteredOptions"
-                         [value]="option">
-      </sui-select-option>
-  </sui-select>
+                        <ng-container *ngIf="selectedType !== ADD_NEW_LABEL">
+                                <sui-select class="selection"
+                                [(ngModel)]="selectedType"
+                                (ngModelChange)="updateProperties($event)"
+                                [options]="typeOptions"
+                                [isSearchable]="searchable"
+                                [isDisabled]="disabledBox"
+                                #select>
+                        <sui-select-option *ngFor="let option of select.filteredOptions"
+                                           [value]="option">
+                        </sui-select-option>
+                                  </sui-select>
+                        </ng-container>
+                        <ng-container *ngIf="selectedType === ADD_NEW_LABEL">
+                            <span class="inputSpan"><input type="text" id="id_newLabelNode"></span>
+                        </ng-container>
             </span>
                 </div>
                 <div class="modalItem" *ngIf="labelProperties?.length > 0 && selectedType?.length > 0">
@@ -71,15 +76,18 @@
                         </form>
                     </ng-container>
                 </div>
-                <a class="newLink" *ngIf="selectedType?.length > 0 && !enableNewTemplate" (click)="addNewProperty('node')">Add New Property</a>
-                <a class="newLink" *ngIf="selectedType?.length > 0 && enableNewTemplate" (click)="saveNewProperty('node')">Save Property</a>
+                <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && !enableNewTemplate" (click)="addNewProperty('node')">Add New Property</a>
+                <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && enableNewTemplate" (click)="saveNewProperty('node')">Save Property</a>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" *ngIf="selectedType !== ADD_NEW_LABEL">
                 <button type="button" class="btn btn-danger deleteBtn" *ngIf="popupConfig.editNodePopup === true" style="color: white;" (click)="activateDelete('deleteModal', 'node')">Delete</button>
                 <a class="mailBtn" *ngIf="popupConfig.editNodePopup === true" >Send Mail</a>
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
                 <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true" [disabled]="selectedType?.length <= 0">Create</button>
                 <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true" id="edit_btn">Update</button>
+            </div>
+            <div class="modal-footer" *ngIf="selectedType === ADD_NEW_LABEL">
+                    <button type="button" class="btn btn-primary create" id="edit_btn" (click)="addNewLabel('node')">Add Label</button>
             </div>
         </div>
     </div>
@@ -101,23 +109,28 @@
             <div class="modal-body">
                 <div class="modalItem">
                     <p class="sectionName">
-                        Type
+                        {{TYPE_TEXT}}
                     </p>
-                    <span class="inputSpan">
-              <sui-select class="selection"
-              [(ngModel)]="selectedType"
-              (ngModelChange)="updateRelProperties($event)"
-              [options]="relationTypeOptions"
-              [isSearchable]="true"
-              [isDisabled]="disabledBox"
-              #selectRelationBox>
-      <sui-select-option *ngFor="let option of selectRelationBox.filteredOptions"
-                         [value]="option">
-      </sui-select-option>
-  </sui-select>
-            </span>
+                    <ng-container *ngIf="selectedType !== ADD_NEW_TYPE">
+                            <span class="inputSpan">
+                                    <sui-select class="selection"
+                                    [(ngModel)]="selectedType"
+                                    (ngModelChange)="updateRelProperties($event)"
+                                    [options]="relationTypeOptions"
+                                    [isSearchable]="true"
+                                    [isDisabled]="disabledBox"
+                                    #selectRelationBox>
+                            <sui-select-option *ngFor="let option of selectRelationBox.filteredOptions"
+                                               [value]="option">
+                            </sui-select-option>
+                        </sui-select>
+                                          </span>
+                    </ng-container>
+                    <ng-container *ngIf="selectedType === ADD_NEW_TYPE">
+                        <span class="inputSpan"><input type="text" id="id_newLabelRelation"></span>
+                        </ng-container>
                 </div>
-                <div class="modalItem" *ngIf="typeProperties.length > 0">
+                <div class="modalItem" *ngIf="typeProperties.length > 0 || enableNewTemplate">
                     <h5 class="propertyLabel">
                         Properties <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
                     </h5>
@@ -149,8 +162,8 @@
                         </ng-container>
                 </div>
                 <div class="modalItem buttonContainer">
-                    <a class="newLink2" *ngIf="selectedType?.length > 0 && !enableNewTemplate" (click)="addNewProperty('relation')">Add New Property</a>
-                    <a class="newLink2" *ngIf="enableNewTemplate" (click)="saveNewProperty('relation')">Save Property</a>
+                    <a class="newLink2" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && !enableNewTemplate" (click)="addNewProperty('relation')">Add New Property</a>
+                    <a class="newLink2" *ngIf="selectedType !== ADD_NEW_TYPE && enableNewTemplate" (click)="saveNewProperty('relation')">Save Property</a>
                     <h5 class="propertyLabel">
                             Connection <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
                         </h5>
@@ -190,11 +203,14 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" *ngIf="selectedType !== ADD_NEW_TYPE">
                 <button type="button" class="btn btn-danger deleteBtn left" *ngIf="popupConfig.editRelationPopup === true" style="color: white;" (click)="activateDelete('deleteModal', 'relation')">Delete</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
                 <button type="button" class="btn btn-primary create" (click)="submitRelModal()" *ngIf="popupConfig.createRelationPopup === true" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0">Create</button>
                 <button type="button" class="btn btn-primary create" (click)="submitRelModal('edit')" *ngIf="popupConfig.editRelationPopup === true" id="edit_btn">Update</button>
+            </div>
+            <div class="modal-footer" *ngIf="selectedType === ADD_NEW_TYPE">
+                <button type="button" class="btn btn-primary create" id="edit_btn" (click)="addNewLabel('relation')">Add Type</button>
             </div>
         </div>
     </div>

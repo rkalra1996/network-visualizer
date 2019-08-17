@@ -4,13 +4,14 @@ var processProperties = (objectName, dataProperties, addBrackets = false) => {
         if (!!objectName) {
             let query = [];
             Object.keys(dataProperties).forEach(key => {
-                if (dataProperties[key].constructor === Boolean) {
+                /* if (dataProperties[key].constructor === Boolean) {
                     // if a value of property is boolean, set it as boolean and not a string
                     // example : hello : true should convert to ObjectName.hello = true and not ObjectName.hello = "true"
                     query.push(`${objectName}.\`${key}\` = ${dataProperties[key]}`)
                 } else {
                     query.push(`${objectName}.\`${key}\` = "${dataProperties[key]}"`)
-                }
+                } */
+                query.push(`${objectName}.\`${key}\` = "${dataProperties[key]}"`);
             });
             // join all the sub queries
             let completeQuery = query.join(',');
@@ -47,6 +48,8 @@ var createUpdateNodeQuery = (data) => {
         let query = `match (targetNode : \`${data.type[0]}\` ) where id(targetNode) = ${data.id} set targetNode = {} with targetNode set`;
         let subQuery = '';
         let returnQuery = 'return targetNode';
+        // add the default deleted to false here
+        data.properties['deleted'] = false;
         // subquery will store the data of properties to update
         subQuery = processProperties('targetNode',data.properties);
         // join all the queries
@@ -63,6 +66,8 @@ var createUpdateRelationQuery = (data) => {
         where id(relation) = ${data.id} set relation = {} with relation set`;
         let subQuery = '';
         let returnQuery = 'return relation';
+        // add the default deleted to false here
+        data.properties['deleted'] = false;
         // subQuery will store the properties of relation
         subQuery = processProperties('relation', data.properties);
         // join all the queries

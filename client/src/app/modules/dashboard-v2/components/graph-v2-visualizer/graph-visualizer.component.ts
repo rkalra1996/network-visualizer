@@ -14,6 +14,7 @@ export class GraphVisualizerComponent implements OnInit {
   @Input() event: String;
   @Input() totalTypesArray = [];
   @Output() newNodeCreated = new EventEmitter<string>();
+  @Output() nodeLimitEvent = new EventEmitter<string | null>();
   public promptRelationCreateAfterNode = null;
   public requestedNodeDetails = null;
   public graphData = {};
@@ -240,6 +241,14 @@ export class GraphVisualizerComponent implements OnInit {
 
   }
 
+  sendLimit(event, nodeLimit) {
+    if (event['key'] === 'Enter') {
+      this.nodeLimitEvent.emit(this.nodeLimit);
+    } else {
+      this.nodeLimitEvent.emit(null);
+    }
+  }
+
   nodeEventCapture(event) {
     if (Object.keys(event).length > 0) {
 
@@ -311,7 +320,7 @@ export class GraphVisualizerComponent implements OnInit {
         this.graphService.updateNode(newNodeData).subscribe(response => {
           console.log('response from update node ', response);
           try {
-            let updatedNode = response['seperateNodes'][0];
+            const updatedNode = response['seperateNodes'][0];
             // logic to update node in vis data set
             let visNode = this.graphData['nodes'].get(updatedNode['id']);
             // update everything except color and id
@@ -324,7 +333,7 @@ export class GraphVisualizerComponent implements OnInit {
               // node was present, simply update it now
               this.graphData['nodes'].update(visNode);
               //update sidebar dropdown
-              this.newNodeCreated.emit("NodeEvent_update"+response['seperateNodes'][0].id);
+              this.newNodeCreated.emit('NodeEvent_update' + response['seperateNodes'][0].id);
             }
             console.log(visNode);
 
@@ -337,28 +346,26 @@ export class GraphVisualizerComponent implements OnInit {
         });
       } else if (event.action === 'delete') {
         console.log('Node delete has been clicked', event.data);
-        let nodeID = event.data.id;
+        const nodeID = event.data.id;
         // get the list of relation ids which are connected to this node
-        let connectedEdgeIDs = this.network.getConnectedEdges(nodeID);
+        const connectedEdgeIDs = this.network.getConnectedEdges(nodeID);
         // hit the delete node api
         let requestOption = {
           id : nodeID,
           relations : connectedEdgeIDs
         }
         this.graphService.deleteNode(requestOption).subscribe(response => {
-          console.log('recieved some response', response);
           // remove the node in vis graph and connected edges, if any
-          let removedNode = response['seperateNodes'];
+          const removedNode = response['seperateNodes'];
           if (response['seperateEdges'].length > 0) {
-            let removedEdges = response['seperateEdges'];
+            const removedEdges = response['seperateEdges'];
             this.graphData['edges'].remove(removedEdges);
           }
           // remove the node
           this.graphData['nodes'].remove(removedNode);
-          console.log('changing hideDelModal value');
           this.hideDelModal = _.cloneDeep(true);
           //update sidebar dropdown
-          this.newNodeCreated.emit("NodeEvent_delete"+response['seperateNodes'][0].id);
+          this.newNodeCreated.emit('NodeEvent_delete' + response['seperateNodes'][0].id);
         }, err => {
           console.error('An error occured while reading response for node delete ', err);
         });
@@ -403,30 +410,12 @@ export class GraphVisualizerComponent implements OnInit {
       } else if (event.action === 'edit') {
         // capture the details of the relationship clicked by the user, clean it if needed and send for use
         console.log('Relation edit is being clicked');
-        /* this.network.once('click', (clickEvent) => {
-          console.log(clickEvent);
-          if (clickEvent.nodes.length > 0) {
-            // user clicked on node despite selecting 'edit edge' feature
-            alert('Please click on an edge not a node');
-          } else {
-            console.log('edge click ok');
-            let clickedEdge = this.graphData['edges'].get(clickEvent.edges[0]);
-          // if there are multiple nodes one above another, always select the top most one
-            if (clickedEdge.length > 0) {
-              clickedEdge = _.cloneDeep(clickedEdge[0]);
-            }
-            console.log('clicked Edge is ', clickedEdge);
-            // emit data for edge
-            this.startEditProcess(clickedEdge, 'edge');
-          }
-        }); */
         // hit the update relation service and updae it in visJS too
-        let relationData = _.cloneDeep(event.data);
+        const relationData = _.cloneDeep(event.data);
         if (relationData.hasOwnProperty('id') && relationData.hasOwnProperty('type')) {
           // object has atleast id and type key, move ahead
           this.graphService.updateRelation(relationData).subscribe(response => {
-            let newRelation = response['seperateEdges'][0];
-            console.log('new relation data is ', newRelation);
+            const newRelation = response['seperateEdges'][0];
             this.updateRelationinVIS(newRelation);
           }, err => {
             console.error('An error occured while reading the updated relation data', err);
@@ -477,28 +466,25 @@ export class GraphVisualizerComponent implements OnInit {
                 // if the key has an integer value then set the low value of it
                 propertyObject[key] = propertyObject[key]['low']
             }
-            finalString += `<strong>${key} :</strong> ${propertyObject[key]} <br>`
+            finalString += `<strong>${key} :</strong> ${propertyObject[key]} <br>`;
         });
         return finalString;
-    } else return null
+    } else {return null;}
 }
 
   addData(node, clickEvent, event) {
     node['x'] = clickEvent.pointer.canvas.x;
     node['y'] = clickEvent.pointer.canvas.y;
-    // node['title'] = this.serializeProperties(event.data.properties);
     node['color'] = this.colorConfig.defaultColor[event.data.type];
-    console.log('final node is ', node);
     return node;
   }
 
   addNodeColor(node) {
-    let colorCode = this.colorConfig.defaultColor[node.type[0]] || null;
+    const colorCode = this.colorConfig.defaultColor[node.type[0]] || null;
     if (colorCode) {
       node['color'] = colorCode;
       return node;
-    }
-    else {
+    } else {
       console.warn('Error while adding color to the node ', node['label']);
       return node;
     }
@@ -510,8 +496,7 @@ export class GraphVisualizerComponent implements OnInit {
     if (typeProcess === 'node') {
       this.editRelationData = null;
       this.editNodeData = clickedData;
-    }
-    else if (typeProcess === 'edge') {
+    } else if (typeProcess === 'edge') {
       this.editNodeData = null;
       this.editRelationData = clickedData;
     }
@@ -519,10 +504,9 @@ export class GraphVisualizerComponent implements OnInit {
 
   getNodeDetails(nodeIDs) {
     // process node IDs and send back
-    let changedNodeIDs = nodeIDs.map(nodeID => {
+    const changedNodeIDs = nodeIDs.map(nodeID => {
       return this.graphData['nodes'].get(nodeID);
     });
-    console.log('post processing ', changedNodeIDs);
     return changedNodeIDs;
   }
 
@@ -538,8 +522,7 @@ export class GraphVisualizerComponent implements OnInit {
         }
         console.log('clicked Node is ', clickedNode);
         this.startEditProcess(clickedNode);
-      }
-      else if (!!event.edges.length) {
+      } else if (!!event.edges.length) {
         // emit edge edit event data
         if (event.nodes.length > 0) {
           // user clicked on node despite selecting 'edit edge' feature

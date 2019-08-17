@@ -733,6 +733,7 @@ var updateNode = (request) => {
         return Promise.reject({ error: 'Cannot update a node without a type' });
     } else {
         let query = dataUtility.createUpdateNodeQuery(data);
+        console.log('update node query is ', query);
         // run the query
         return runQuery(query)
             .then(response => {
@@ -873,6 +874,7 @@ var deleteRelationhip = (request) => {
         // find the node with id
         // set the deleted property to true
         let query = dataUtility.createDeleteRelationQuery(data.id);
+        console.log('delete relation query is ', query);
         return runQuery(query).then(response => {
                 let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
                 // select only one from the two  responses which comes in case of bi directional relations

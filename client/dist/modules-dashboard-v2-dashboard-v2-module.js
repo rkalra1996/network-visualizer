@@ -10796,7 +10796,7 @@ var ColorPanelComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\">\r\n    <!--<a href=\"#\" class=\"deleteLink\"><span class=\"fas fa-plus-circle\">&nbsp;Delete Node</span></a> -->\r\n    <div class=\"btn-group nodes\">\r\n        <!-- <button type=\"button\" class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n      Node\r\n    </button>\r\n    <div class=\"dropdown-menu\">\r\n      <a class=\"dropdown-item create\" (click)=\"createNode()\" data-toggle=\"modal\" data-target=\"#createNodeModal\"><span class=\"fas fa-plus-circle\"></span>Create Node</a>\r\n      <a class=\"dropdown-item edit\" (click)=\"editNode()\"><span class=\"far fa-edit\"></span>Edit Node</a>\r\n      <a class=\"dropdown-item delete\" (click)=\"deleteNode()\"><span class=\"far fa-trash-alt\"></span>Delete Node</a>\r\n    </div> -->\r\n        <button type=\"button\" (click)=\"createNode()\" data-toggle=\"modal\" data-target=\"#createNodeModal\" class=\"btn\" aria-expanded=\"false\">\r\n      Create Element\r\n    </button>\r\n    </div>\r\n    <div class=\"btn-group relationships\">\r\n        <!-- <button type=\"button\" class=\"btn btn-success dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\r\n      Relationships\r\n    </button>\r\n    <div class=\"dropdown-menu\">\r\n      <a class=\"dropdown-item create\" (click)=\"createRelation()\" data-toggle=\"modal\" data-target=\"#createRelationModal\"><span class=\"fas fa-plus-circle\"></span>Create Relationship</a>\r\n      <a class=\"dropdown-item edit\" (click)=\"editRelation()\"><span class=\"far fa-edit\"></span>Edit Relationship</a>\r\n      <a class=\"dropdown-item delete\" (click)=\"deleteRelation()\"><span class=\"far fa-trash-alt\"></span>Delete Relationship</a>\r\n    </div> -->\r\n        <button type=\"button\" (click)=\"createRelation()\" data-toggle=\"modal\" data-target=\"#createRelationModal\" class=\"btn\" aria-expanded=\"false\">\r\n      Create Relationship\r\n    </button>\r\n    </div>\r\n</div>\r\n<!--modal template to show when node is to be created-->\r\n<div class=\"modal fade\" id=\"createNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"NodeModalLabel\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.createNodePopup === true\">Create Element</h5>\r\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.editNodePopup === true\">Element Details</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n          </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <div class=\"modalItem\">\r\n                    <p class=\"sectionName\">\r\n                        Type\r\n                    </p>\r\n                    <span class=\"inputSpan\">\r\n              <!-- <sui-multi-select [(ngModel)]=\"selectedType\" (ngModelChange)=\"updateProperties($event)\" [options]=\"typeOptions\" [maxSelected]=\"1\" #type>\r\n                  <div class=\"ui icon search input\">\r\n                      <i class=\"search icon\"></i>\r\n                      <input suiSelectSearch type=\"text\" placeholder=\"Search Type...\">\r\n                  </div>\r\n                  <div class=\"scrolling menu\">\r\n                      <sui-select-option *ngFor=\"let o of type.filteredOptions\" [value]=\"o\">\r\n\r\n                      </sui-select-option>\r\n\r\n                  </div>\r\n              </sui-multi-select> -->\r\n              <sui-select class=\"selection\"\r\n              [(ngModel)]=\"selectedType\"\r\n              (ngModelChange)=\"updateProperties($event)\"\r\n              [options]=\"typeOptions\"\r\n              [isSearchable]=\"searchable\"\r\n              [isDisabled]=\"disabledBox\"\r\n              #select>\r\n      <sui-select-option *ngFor=\"let option of select.filteredOptions\"\r\n                         [value]=\"option\">\r\n      </sui-select-option>\r\n  </sui-select>\r\n            </span>\r\n                </div>\r\n                <div class=\"modalItem\" *ngIf=\"labelProperties?.length > 0 && selectedType?.length > 0\">\r\n                    <h5 class=\"propertyLabel\">\r\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                    </h5>\r\n                    <ng-container *ngFor=\"let data of labelProperties\">\r\n                        <div class=\"modalItem\">\r\n                            <p class=\"sectionName\">{{data}}</p>\r\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_{{data}}\"></span>\r\n                        </div>\r\n                    </ng-container>\r\n                </div>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn btn-danger deleteBtn\" *ngIf=\"popupConfig.editNodePopup === true\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'node')\">Delete</button>\r\n                <a class=\"mailBtn\" *ngIf=\"popupConfig.editNodePopup === true\" >Send Mail</a>\r\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal()\" *ngIf=\"popupConfig.createNodePopup === true\">Create</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal('edit')\" *ngIf=\"popupConfig.editNodePopup === true\" id=\"edit_btn\">Update</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!--modal node create end-->\r\n\r\n\r\n<!--modal relationship start-->\r\n<div class=\"modal fade\" id=\"createRelationModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelModalLabel\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"popupConfig.createRelationPopup === true\">Create Relationship</h5>\r\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"popupConfig.editRelationPopup === true\">Relationship Details</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n          </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <div class=\"modalItem\">\r\n                    <p class=\"sectionName\">\r\n                        Type\r\n                    </p>\r\n                    <span class=\"inputSpan\">\r\n              <sui-select class=\"selection\"\r\n              [(ngModel)]=\"selectedType\"\r\n              (ngModelChange)=\"updateRelProperties($event)\"\r\n              [options]=\"relationTypeOptions\"\r\n              [isSearchable]=\"true\"\r\n              [isDisabled]=\"disabledBox\"\r\n              #selectRelationBox>\r\n      <sui-select-option *ngFor=\"let option of selectRelationBox.filteredOptions\"\r\n                         [value]=\"option\">\r\n      </sui-select-option>\r\n  </sui-select>\r\n            </span>\r\n                </div>\r\n                <div class=\"modalItem\" *ngIf=\"typeProperties.length > 0\">\r\n                    <h5 class=\"propertyLabel\">\r\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                    </h5>\r\n                    <ng-container *ngFor=\"let data of typeProperties\">\r\n                        <div class=\"modalItem\">\r\n                            <p class=\"sectionName\">{{data}}</p>\r\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_{{data}}\"></span>\r\n                        </div>\r\n                    </ng-container>\r\n                </div>\r\n                <h5 class=\"propertyLabel\">\r\n                    Connection <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                </h5>\r\n                <div class=\"relationScope\">\r\n                    <div class=\"modalItem\">\r\n                        <p class=\"sectionName\">From</p>\r\n                        <span class=\"inputSpan\">\r\n              <sui-select class=\"selection\"\r\n              [(ngModel)]=\"selectedNodeNameSource\"\r\n              (ngModelChange)=\"updateList('to',[selectedNodeNameSource])\"\r\n              [options]=\"fromNames\"\r\n              [isSearchable]=\"true\"\r\n              [isDisabled]=\"disabledFromBox\"\r\n              #NodeFromName>\r\n      <sui-select-option *ngFor=\"let option of NodeFromName.filteredOptions\"\r\n                         [value]=\"option\">\r\n      </sui-select-option>\r\n      </sui-select>\r\n            </span>\r\n                    </div>\r\n                    <div class=\"modalItem\">\r\n                        <p class=\"sectionName\">To</p>\r\n                        <span class=\"inputSpan\">\r\n            <sui-select class=\"selection\"\r\n            [(ngModel)]=\"selectedNodeNameTarget\"\r\n            (ngModelChange)=\"updateList('from',[selectedNodeNameTarget])\"\r\n            [options]=\"toNames\"\r\n            [isSearchable]=\"true\"\r\n            [isDisabled]=\"disabledToBox\"\r\n            #NodeToName>\r\n    <sui-select-option *ngFor=\"let option of NodeToName.filteredOptions\"\r\n                       [value]=\"option\">\r\n    </sui-select-option>\r\n    </sui-select> \r\n          </span>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn btn-danger deleteBtn left\" *ngIf=\"popupConfig.editRelationPopup === true\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'relation')\">Delete</button>\r\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal()\" *ngIf=\"popupConfig.createRelationPopup === true\">Create</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal('edit')\" *ngIf=\"popupConfig.editRelationPopup === true\" id=\"edit_btn\">Update</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!--modal relationship end-->\r\n\r\n<!-- Delete modal -->\r\n<div class=\"modal fade\" id=\"deleteModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"deleteModal\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"deleteModalTitle\">Delete</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n          <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:500;\">Are you sure you want to delete this {{deleteContext}} ?</b>\r\n                <h6 *ngIf=\"deleteContext === 'node'\" style=\"font-size: 14px; padding-top: 15px; font-weight: 400;\">[NOTE] : Deleting a node will also delete the relationships connected with the node. <span style=\"color: red;\">Proceed with caution</span></h6>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn ui-button-text later\" data-dismiss=\"modal\">Maybe Later</button>\r\n                <button type=\"button\" class=\"btn btn-danger\" (click)=\"submitDelete(deleteContext)\" id=\"del_btn\">Delete</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <!--Delete modal end-->"
+module.exports = "<div class=\"container-fluid\">\r\n    <div class=\"btn-group nodes\">\r\n        <button type=\"button\" (click)=\"createNode()\" data-toggle=\"modal\" data-target=\"#createNodeModal\" class=\"btn\" aria-expanded=\"false\">\r\n      Create Element\r\n    </button>\r\n    </div>\r\n    <div class=\"btn-group relationships\">\r\n        <button type=\"button\" (click)=\"createRelation()\" data-toggle=\"modal\" data-target=\"#createRelationModal\" class=\"btn\" aria-expanded=\"false\">\r\n      Create Relationship\r\n    </button>\r\n    </div>\r\n</div>\r\n<!--modal template to show when node is to be created-->\r\n<div class=\"modal fade\" id=\"createNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"NodeModalLabel\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.createNodePopup === true\">Create Element</h5>\r\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.editNodePopup === true\">Element Details</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n          </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <div class=\"modalItem\">\r\n                    <p class=\"sectionName\">\r\n                        {{TYPE_TEXT}}\r\n                    </p>\r\n                    <span class=\"inputSpan\">\r\n                        <ng-container *ngIf=\"selectedType !== ADD_NEW_LABEL\">\r\n                                <sui-select class=\"selection\"\r\n                                [(ngModel)]=\"selectedType\"\r\n                                (ngModelChange)=\"updateProperties($event)\"\r\n                                [options]=\"typeOptions\"\r\n                                [isSearchable]=\"searchable\"\r\n                                [isDisabled]=\"disabledBox\"\r\n                                #select>\r\n                        <sui-select-option *ngFor=\"let option of select.filteredOptions\"\r\n                                           [value]=\"option\">\r\n                        </sui-select-option>\r\n                                  </sui-select>\r\n                        </ng-container>\r\n                        <ng-container *ngIf=\"selectedType === ADD_NEW_LABEL\">\r\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_newLabelNode\"></span>\r\n                        </ng-container>\r\n            </span>\r\n                </div>\r\n                <div class=\"modalItem\" *ngIf=\"labelProperties?.length > 0 && selectedType?.length > 0\">\r\n                    <h5 class=\"propertyLabel\">\r\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                    </h5>\r\n                    <ng-container *ngFor=\"let data of labelProperties\">\r\n                        <div class=\"modalItem\">\r\n                            <p class=\"sectionName\">{{data}}</p>\r\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_{{data}}\"></span>\r\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name'\" (click)=\"deleteProperty(data)\"><i class=\"far fa-trash-alt\"></i></span>\r\n                            <span class=\"supportIcons nameKey\" *ngIf=\"(data?.length > 0) && data === 'Name'\">\r\n                                <i class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"right\" [title]=\"'Name is mandatory and cannot be deleted'\"></i>\r\n                            </span>\r\n                        </div>\r\n                    </ng-container>\r\n                    <ng-container *ngIf=\"enableNewTemplate\">\r\n                        <form id=\"NewPropertyGroup\">\r\n                            <div class=\"modalItem\">\r\n                                <div class=\"ui divider\"></div>\r\n                                <p class=\"sectionName\">Property Name</p>\r\n                                <span class=\"inputSpan newTemplate\">\r\n                                    <div class=\"ui input focus\">\r\n                                        <input type=\"text\" placeholder=\"Property Value\" id=\"propertyKey\">\r\n                                    </div>\r\n                                </span>\r\n                                <span class=\"supportIcons customDelete\" (click)=\"enableNewTemplate = false\"><i class=\"far fa-trash-alt\"></i></span>\r\n                                <br>\r\n                                <div class=\"ui divider\"></div>\r\n                            </div>\r\n                        </form>\r\n                    </ng-container>\r\n                </div>\r\n                <a class=\"newLink\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && !enableNewTemplate\" (click)=\"addNewProperty('node')\">Add New Property</a>\r\n                <a class=\"newLink\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && enableNewTemplate\" (click)=\"saveNewProperty('node')\">Save Property</a>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType !== ADD_NEW_LABEL\">\r\n                <button type=\"button\" class=\"btn btn-danger deleteBtn\" *ngIf=\"popupConfig.editNodePopup === true\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'node')\">Delete</button>\r\n                <a class=\"mailBtn\" *ngIf=\"popupConfig.editNodePopup === true\" >Send Mail</a>\r\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal()\" *ngIf=\"popupConfig.createNodePopup === true\" [disabled]=\"selectedType?.length <= 0\">Create</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal('edit')\" *ngIf=\"popupConfig.editNodePopup === true\" id=\"edit_btn\">Update</button>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType === ADD_NEW_LABEL\">\r\n                    <button type=\"button\" class=\"btn btn-primary create\" id=\"edit_btn\" (click)=\"addNewLabel('node')\">Add Label</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!--modal node create end-->\r\n\r\n\r\n<!--modal relationship start-->\r\n<div class=\"modal fade\" id=\"createRelationModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelModalLabel\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"popupConfig.createRelationPopup === true\">Create Relationship</h5>\r\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"popupConfig.editRelationPopup === true\">Relationship Details</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n          </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <div class=\"modalItem\">\r\n                    <p class=\"sectionName\">\r\n                        {{TYPE_TEXT}}\r\n                    </p>\r\n                    <ng-container *ngIf=\"selectedType !== ADD_NEW_TYPE\">\r\n                            <span class=\"inputSpan\">\r\n                                    <sui-select class=\"selection\"\r\n                                    [(ngModel)]=\"selectedType\"\r\n                                    (ngModelChange)=\"updateRelProperties($event)\"\r\n                                    [options]=\"relationTypeOptions\"\r\n                                    [isSearchable]=\"true\"\r\n                                    [isDisabled]=\"disabledBox\"\r\n                                    #selectRelationBox>\r\n                            <sui-select-option *ngFor=\"let option of selectRelationBox.filteredOptions\"\r\n                                               [value]=\"option\">\r\n                            </sui-select-option>\r\n                        </sui-select>\r\n                                          </span>\r\n                    </ng-container>\r\n                    <ng-container *ngIf=\"selectedType === ADD_NEW_TYPE\">\r\n                        <span class=\"inputSpan\"><input type=\"text\" id=\"id_newLabelRelation\"></span>\r\n                        </ng-container>\r\n                </div>\r\n                <div class=\"modalItem\" *ngIf=\"typeProperties.length > 0 || enableNewTemplate\">\r\n                    <h5 class=\"propertyLabel\">\r\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                    </h5>\r\n                    <ng-container *ngFor=\"let data of typeProperties\">\r\n                        <div class=\"modalItem\">\r\n                            <p class=\"sectionName\">{{data}}</p>\r\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_{{data}}\"></span>\r\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name'\" (click)=\"deleteProperty(data, 'relation')\"><i class=\"far fa-trash-alt\"></i></span>\r\n                            <span class=\"supportIcons nameKey\" *ngIf=\"(data?.length > 0) && data === 'Name'\">\r\n                                <i class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"right\" [title]=\"'Name is mandatory and cannot be deleted'\"></i>\r\n                            </span>\r\n                        </div>\r\n                    </ng-container>\r\n                    <ng-container *ngIf=\"enableNewTemplate\">\r\n                            <form id=\"NewPropertyGroupRel\">\r\n                                <div class=\"modalItem\">\r\n                                    <div class=\"ui divider\"></div>\r\n                                    <p class=\"sectionName\">Property Name</p>\r\n                                    <span class=\"inputSpan newTemplate\">\r\n                                        <div class=\"ui input focus\">\r\n                                            <input type=\"text\" placeholder=\"Property Name\" id=\"propertyKeyRel\">\r\n                                        </div>\r\n                                    </span>\r\n                                    <span class=\"supportIcons customDelete\" (click)=\"enableNewTemplate = false\"><i class=\"far fa-trash-alt\"></i></span>\r\n                                    <br/>\r\n                                    <div class=\"ui divider lower\"></div>\r\n                                </div>\r\n                            </form>\r\n                        </ng-container>\r\n                </div>\r\n                <div class=\"modalItem buttonContainer\">\r\n                    <a class=\"newLink2\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && !enableNewTemplate\" (click)=\"addNewProperty('relation')\">Add New Property</a>\r\n                    <a class=\"newLink2\" *ngIf=\"selectedType !== ADD_NEW_TYPE && enableNewTemplate\" (click)=\"saveNewProperty('relation')\">Save Property</a>\r\n                    <h5 class=\"propertyLabel\">\r\n                            Connection <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\r\n                        </h5>\r\n                </div>\r\n                <div class=\"relationScope\">\r\n                    <div class=\"modalItem\">\r\n                        <p class=\"sectionName\">From</p>\r\n                        <span class=\"inputSpan\">\r\n              <sui-select class=\"selection\"\r\n              [(ngModel)]=\"selectedNodeNameSource\"\r\n              (ngModelChange)=\"updateList('to',[selectedNodeNameSource])\"\r\n              [options]=\"fromNames\"\r\n              [isSearchable]=\"true\"\r\n              [isDisabled]=\"disabledFromBox\"\r\n              #NodeFromName>\r\n      <sui-select-option *ngFor=\"let option of NodeFromName.filteredOptions\"\r\n                         [value]=\"option\">\r\n      </sui-select-option>\r\n      </sui-select>\r\n            </span>\r\n                    </div>\r\n                    <div class=\"modalItem\">\r\n                        <p class=\"sectionName\">To</p>\r\n                        <span class=\"inputSpan\">\r\n            <sui-select class=\"selection\"\r\n            [(ngModel)]=\"selectedNodeNameTarget\"\r\n            (ngModelChange)=\"updateList('from',[selectedNodeNameTarget])\"\r\n            [options]=\"toNames\"\r\n            [isSearchable]=\"true\"\r\n            [isDisabled]=\"disabledToBox\"\r\n            #NodeToName>\r\n    <sui-select-option *ngFor=\"let option of NodeToName.filteredOptions\"\r\n                       [value]=\"option\">\r\n    </sui-select-option>\r\n    </sui-select> \r\n          </span>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType !== ADD_NEW_TYPE\">\r\n                <button type=\"button\" class=\"btn btn-danger deleteBtn left\" *ngIf=\"popupConfig.editRelationPopup === true\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'relation')\">Delete</button>\r\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal()\" *ngIf=\"popupConfig.createRelationPopup === true\" [disabled]=\"selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0\">Create</button>\r\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal('edit')\" *ngIf=\"popupConfig.editRelationPopup === true\" id=\"edit_btn\">Update</button>\r\n            </div>\r\n            <div class=\"modal-footer\" *ngIf=\"selectedType === ADD_NEW_TYPE\">\r\n                <button type=\"button\" class=\"btn btn-primary create\" id=\"edit_btn\" (click)=\"addNewLabel('relation')\">Add Type</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<!--modal relationship end-->\r\n\r\n<!-- Delete modal -->\r\n<div class=\"modal fade\" id=\"deleteModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"deleteModal\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"deleteModalTitle\">Delete</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n          <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:500;\">Are you sure you want to delete this {{deleteContext}} ?</b>\r\n                <h6 *ngIf=\"deleteContext === 'node'\" style=\"font-size: 14px; padding-top: 15px; font-weight: 400;\">[NOTE] : Deleting a node will also delete the relationships connected with the node. <span style=\"color: red;\">Proceed with caution</span></h6>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn ui-button-text later\" data-dismiss=\"modal\">Maybe Later</button>\r\n                <button type=\"button\" class=\"btn btn-danger\" (click)=\"submitDelete(deleteContext)\" id=\"del_btn\">Delete</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n    <!--Delete modal end-->\r\n\r\n<!--create new relationship after node modal-->\r\n<div class=\"modal fade\" id=\"RelAfterNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelAfterNode\" aria-hidden=\"true\">\r\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n            <div class=\"modal-header\">\r\n                <h5 class=\"modal-title\" id=\"RelAfterNodeModalTitle\">New Relation</h5>\r\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n          <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n            </div>\r\n            <div class=\"modal-body\">\r\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:300;\">Do you wish to create a new relationship with respect to <span style=\"font-weight: 500;\">{{newNodeName}}</span> ?</b>\r\n            </div>\r\n            <div class=\"modal-footer\">\r\n                <button type=\"button\" class=\"btn btn-default\" data-target=\"RelAfterNodeModal\" data-dismiss=\"modal\" style=\"color: red;\">Not Now</button>\r\n                <button type=\"button\" class=\"btn btn-primary\" (click)=\"promptRelation()\" id=\"rel_yes_btn\" data-dismiss=\"modal\">Yes</button>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    </div>\r\n<!--create new relationship after node modal end-->"
 
 /***/ }),
 
@@ -10807,7 +10807,7 @@ module.exports = "<div class=\"container-fluid\">\r\n    <!--<a href=\"#\" class
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".container-fluid .btn-group {\n  margin-right: 20px; }\n  .container-fluid .btn-group button {\n    border-radius: 0;\n    background: #e4e4e4;\n    color: #000;\n    box-shadow: 2px 9px 17px -1px #cccccc; }\n  .container-fluid .btn-group button:active {\n    box-shadow: none;\n    transition: 0.5s; }\n  .btn-group:active {\n  outline: none;\n  text-decoration: none; }\n  .createLink,\n.editLink,\n.deleteLink {\n  text-decoration: none;\n  font-size: 12px; }\n  .dropdown-menu .dropdown-item {\n  cursor: pointer; }\n  .dropdown-menu .dropdown-item span {\n    margin-right: 8px; }\n  .dropdown-menu .dropdown-item:active {\n  background-color: white; }\n  .dropdown-menu .create:hover {\n  color: blue; }\n  .dropdown-menu .edit:hover {\n  color: green; }\n  .dropdown-menu .delete:hover {\n  color: red; }\n  .modal-header {\n  background: #5f5f5f;\n  color: white;\n  border-color: #5f5f5f; }\n  .modal-header button.close {\n    color: white; }\n  .modalItem {\n  padding: 10px; }\n  .modalItem .fa-info-circle {\n    font-size: 14px;\n    cursor: pointer; }\n  .sectionName {\n  display: inline-block;\n  margin: 0;\n  max-width: 50%; }\n  .inputSpan {\n  position: absolute;\n  left: 50%; }\n  .inputSpan input {\n    border: 1px solid #acacac;\n    outline: none; }\n  .propertyLabel {\n  padding-top: 13px;\n  padding-bottom: 13px;\n  text-align: center; }\n  input[disabled=\"true\"] {\n  cursor: not-allowed; }\n  .deleteBtn, .mailBtn {\n  cursor: pointer !important; }\n  .later {\n  text-decoration: none;\n  cursor: pointer; }\n  .later:hover {\n  background-color: #5f5f5f;\n  color: white; }\n  .mailBtn, .left {\n  margin-right: auto; }\n  .mailBtn {\n  padding: 5px 8px; }\n  .mailBtn:hover {\n  transition: 0.5s;\n  background: #e4e4e4;\n  border-radius: .25rem;\n  color: #000;\n  box-shadow: 2px 9px 17px -1px #cccccc; }\n  .mailBtn:active {\n  box-shadow: none;\n  transition: .5s; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9jcmVhdGUtbm9kZXMvRDpcXG5lbzRqLWNvbW11bml0eS0zLjMuOVxcZGV2ZWxvcG1lbnRfcHJvamVjdHNcXG5lbzRqRGF0YURyaXZlclxcY2xpZW50L3NyY1xcYXBwXFxtb2R1bGVzXFxkYXNoYm9hcmQtdjJcXGNvbXBvbmVudHNcXGNyZWF0ZS1ub2Rlc1xcY3JlYXRlLW5vZGVzLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksa0JBQW1CLEVBQUE7RUFEdkI7SUFHUSxnQkFBZ0I7SUFDaEIsbUJBQW1CO0lBQ25CLFdBQVc7SUFHWCxxQ0FBb0QsRUFBQTtFQVI1RDtJQVdRLGdCQUFnQjtJQUNoQixnQkFBZ0IsRUFBQTtFQUl4QjtFQUNJLGFBQWE7RUFDYixxQkFBcUIsRUFBQTtFQUd6Qjs7O0VBR0kscUJBQXFCO0VBQ3JCLGVBQWUsRUFBQTtFQUduQjtFQUVRLGVBQWUsRUFBQTtFQUZ2QjtJQUlZLGlCQUFpQixFQUFBO0VBSjdCO0VBUVEsdUJBQXVCLEVBQUE7RUFSL0I7RUFXUSxXQUFXLEVBQUE7RUFYbkI7RUFjUSxZQUFZLEVBQUE7RUFkcEI7RUFpQlEsVUFBVSxFQUFBO0VBSWxCO0VBQ0ksbUJBQW1CO0VBQ25CLFlBQVk7RUFDWixxQkFBcUIsRUFBQTtFQUh6QjtJQUtRLFlBQVksRUFBQTtFQUlwQjtFQUNJLGFBQWEsRUFBQTtFQURqQjtJQUdRLGVBQWU7SUFDZixlQUFlLEVBQUE7RUFJdkI7RUFDSSxxQkFBcUI7RUFDckIsU0FBUztFQUNULGNBQWMsRUFBQTtFQUdsQjtFQUNJLGtCQUFrQjtFQUNsQixTQUFTLEVBQUE7RUFGYjtJQUlRLHlCQUF5QjtJQUN6QixhQUFhLEVBQUE7RUFJckI7RUFDSSxpQkFBaUI7RUFDakIsb0JBQW9CO0VBQ3BCLGtCQUFrQixFQUFBO0VBR3RCO0VBQ0ksbUJBQW1CLEVBQUE7RUFHdkI7RUFDSSwwQkFBMEIsRUFBQTtFQUc5QjtFQUNJLHFCQUFxQjtFQUNyQixlQUFlLEVBQUE7RUFHbkI7RUFDSSx5QkFBeUI7RUFDekIsWUFBWSxFQUFBO0VBR2hCO0VBQ0Esa0JBQWtCLEVBQUE7RUFHbEI7RUFDSSxnQkFBaUIsRUFBQTtFQUdyQjtFQUNJLGdCQUFnQjtFQUNoQixtQkFBbUI7RUFDbkIscUJBQXNCO0VBQ3RCLFdBQVc7RUFDWCxxQ0FBcUMsRUFBQTtFQUd6QztFQUNJLGdCQUFnQjtFQUNoQixlQUFlLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2NyZWF0ZS1ub2Rlcy9jcmVhdGUtbm9kZXMuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY29udGFpbmVyLWZsdWlkIC5idG4tZ3JvdXAge1xyXG4gICAgbWFyZ2luLXJpZ2h0IDogMjBweDtcclxuICAgIGJ1dHRvbiB7XHJcbiAgICAgICAgYm9yZGVyLXJhZGl1czogMDtcclxuICAgICAgICBiYWNrZ3JvdW5kOiAjZTRlNGU0O1xyXG4gICAgICAgIGNvbG9yOiAjMDAwO1xyXG4gICAgICAgIC13ZWJraXQtYm94LXNoYWRvdzogMnB4IDlweCAxN3B4IC0xcHggcmdiYSgyMDQsIDIwNCwgMjA0LCAxKTtcclxuICAgICAgICAtbW96LWJveC1zaGFkb3c6IDJweCA5cHggMTdweCAtMXB4IHJnYmEoMjA0LCAyMDQsIDIwNCwgMSk7XHJcbiAgICAgICAgYm94LXNoYWRvdzogMnB4IDlweCAxN3B4IC0xcHggcmdiYSgyMDQsIDIwNCwgMjA0LCAxKTtcclxuICAgIH1cclxuICAgIGJ1dHRvbjphY3RpdmUge1xyXG4gICAgICAgIGJveC1zaGFkb3c6IG5vbmU7XHJcbiAgICAgICAgdHJhbnNpdGlvbjogMC41cztcclxuICAgIH1cclxufVxyXG5cclxuLmJ0bi1ncm91cDphY3RpdmUge1xyXG4gICAgb3V0bGluZTogbm9uZTtcclxuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcclxufVxyXG5cclxuLmNyZWF0ZUxpbmssXHJcbi5lZGl0TGluayxcclxuLmRlbGV0ZUxpbmsge1xyXG4gICAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xyXG4gICAgZm9udC1zaXplOiAxMnB4O1xyXG59XHJcblxyXG4uZHJvcGRvd24tbWVudSB7XHJcbiAgICAuZHJvcGRvd24taXRlbSB7XHJcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgICAgIHNwYW4ge1xyXG4gICAgICAgICAgICBtYXJnaW4tcmlnaHQ6IDhweDtcclxuICAgICAgICB9XHJcbiAgICB9XHJcbiAgICAuZHJvcGRvd24taXRlbTphY3RpdmUge1xyXG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xyXG4gICAgfVxyXG4gICAgLmNyZWF0ZTpob3ZlciB7XHJcbiAgICAgICAgY29sb3I6IGJsdWU7XHJcbiAgICB9XHJcbiAgICAuZWRpdDpob3ZlciB7XHJcbiAgICAgICAgY29sb3I6IGdyZWVuO1xyXG4gICAgfVxyXG4gICAgLmRlbGV0ZTpob3ZlciB7XHJcbiAgICAgICAgY29sb3I6IHJlZDtcclxuICAgIH1cclxufVxyXG5cclxuLm1vZGFsLWhlYWRlciB7XHJcbiAgICBiYWNrZ3JvdW5kOiAjNWY1ZjVmO1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gICAgYm9yZGVyLWNvbG9yOiAjNWY1ZjVmO1xyXG4gICAgYnV0dG9uLmNsb3NlIHtcclxuICAgICAgICBjb2xvcjogd2hpdGU7XHJcbiAgICB9XHJcbn1cclxuXHJcbi5tb2RhbEl0ZW0ge1xyXG4gICAgcGFkZGluZzogMTBweDtcclxuICAgIC5mYS1pbmZvLWNpcmNsZSB7XHJcbiAgICAgICAgZm9udC1zaXplOiAxNHB4O1xyXG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgIH1cclxufVxyXG5cclxuLnNlY3Rpb25OYW1lIHtcclxuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxuICAgIG1hcmdpbjogMDtcclxuICAgIG1heC13aWR0aDogNTAlO1xyXG59XHJcblxyXG4uaW5wdXRTcGFuIHtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICAgIGxlZnQ6IDUwJTtcclxuICAgIGlucHV0IHtcclxuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCAjYWNhY2FjO1xyXG4gICAgICAgIG91dGxpbmU6IG5vbmU7XHJcbiAgICB9XHJcbn1cclxuXHJcbi5wcm9wZXJ0eUxhYmVsIHtcclxuICAgIHBhZGRpbmctdG9wOiAxM3B4O1xyXG4gICAgcGFkZGluZy1ib3R0b206IDEzcHg7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbn1cclxuXHJcbmlucHV0W2Rpc2FibGVkPVwidHJ1ZVwiXSB7XHJcbiAgICBjdXJzb3I6IG5vdC1hbGxvd2VkO1xyXG59XHJcblxyXG4uZGVsZXRlQnRuLCAubWFpbEJ0biB7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXIgIWltcG9ydGFudDtcclxufVxyXG5cclxuLmxhdGVyIHtcclxuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcclxuICAgIGN1cnNvcjogcG9pbnRlcjtcclxufVxyXG5cclxuLmxhdGVyOmhvdmVyIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICM1ZjVmNWY7XHJcbiAgICBjb2xvcjogd2hpdGU7XHJcbn1cclxuXHJcbi5tYWlsQnRuLCAubGVmdCB7XHJcbm1hcmdpbi1yaWdodDogYXV0bztcclxufVxyXG5cclxuLm1haWxCdG4ge1xyXG4gICAgcGFkZGluZyA6IDVweCA4cHg7XHJcbn1cclxuXHJcbi5tYWlsQnRuOmhvdmVyIHtcclxuICAgIHRyYW5zaXRpb246IDAuNXM7XHJcbiAgICBiYWNrZ3JvdW5kOiAjZTRlNGU0O1xyXG4gICAgYm9yZGVyLXJhZGl1cyA6IC4yNXJlbTtcclxuICAgIGNvbG9yOiAjMDAwO1xyXG4gICAgYm94LXNoYWRvdzogMnB4IDlweCAxN3B4IC0xcHggI2NjY2NjYztcclxufVxyXG5cclxuLm1haWxCdG46YWN0aXZlIHtcclxuICAgIGJveC1zaGFkb3c6IG5vbmU7XHJcbiAgICB0cmFuc2l0aW9uOiAuNXM7XHJcbn0iXX0= */"
+module.exports = ".container-fluid .btn-group {\n  margin-right: 20px; }\n  .container-fluid .btn-group button {\n    border-radius: 0;\n    background: #e4e4e4;\n    color: #000;\n    box-shadow: 2px 9px 17px -1px #cccccc; }\n  .container-fluid .btn-group button:active {\n    box-shadow: none;\n    transition: 0.5s; }\n  .btn-group:active {\n  outline: none;\n  text-decoration: none; }\n  .createLink,\n.editLink,\n.deleteLink {\n  text-decoration: none;\n  font-size: 12px; }\n  .dropdown-menu .dropdown-item {\n  cursor: pointer; }\n  .dropdown-menu .dropdown-item span {\n    margin-right: 8px; }\n  .dropdown-menu .dropdown-item:active {\n  background-color: white; }\n  .dropdown-menu .create:hover {\n  color: blue; }\n  .dropdown-menu .edit:hover {\n  color: green; }\n  .dropdown-menu .delete:hover {\n  color: red; }\n  .modal-header {\n  background: #5f5f5f;\n  color: white;\n  border-color: #5f5f5f; }\n  .modal-header button.close {\n    color: white; }\n  .modalItem {\n  padding: 10px; }\n  .modalItem .fa-info-circle {\n    font-size: 14px;\n    cursor: pointer; }\n  .modalItem.buttonContainer {\n  position: relative; }\n  .sectionName {\n  display: inline-block;\n  margin: 0;\n  max-width: 50%; }\n  .inputSpan {\n  position: absolute;\n  left: 50%; }\n  .inputSpan input {\n    border: 1px solid #acacac;\n    outline: none; }\n  .propertyLabel {\n  padding-top: 13px;\n  padding-bottom: 13px;\n  text-align: center; }\n  .supportIcons {\n  position: absolute;\n  right: 10%;\n  cursor: pointer;\n  cursor: pointer;\n  color: red; }\n  .supportIcons.customDelete {\n  font-size: 20px; }\n  input#propertyKey {\n  height: 30px; }\n  .newLink {\n  float: right;\n  padding: 5px 7px; }\n  .newLink2 {\n  position: absolute;\n  right: 0;\n  top: -2px;\n  padding: 5px 7px; }\n  .lower {\n  margin-top: 30px; }\n  .newLink:hover, .newLink2:hover {\n  background-color: #5f5f5f;\n  color: white !important;\n  transition: .5s;\n  cursor: pointer;\n  border-radius: 5px; }\n  .newTemplate {\n  max-width: 33% !important; }\n  .newTemplate div {\n    max-width: 100%; }\n  i.fas.fa-info-circle {\n  color: black !important; }\n  input[disabled=\"true\"] {\n  cursor: not-allowed; }\n  button:disabled {\n  cursor: not-allowed;\n  pointer-events: all !important; }\n  .deleteBtn, .mailBtn {\n  cursor: pointer !important; }\n  .later {\n  text-decoration: none;\n  cursor: pointer; }\n  .later:hover {\n  background-color: #5f5f5f;\n  color: white; }\n  .mailBtn, .left {\n  margin-right: auto; }\n  .mailBtn {\n  padding: 5px 8px; }\n  .mailBtn:hover {\n  transition: 0.5s;\n  background: #e4e4e4;\n  border-radius: .25rem;\n  color: #000;\n  box-shadow: 2px 9px 17px -1px #cccccc; }\n  .mailBtn:active {\n  box-shadow: none;\n  transition: .5s; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9jcmVhdGUtbm9kZXMvRDpcXG5lbzRqLWNvbW11bml0eS0zLjMuOVxcZGV2ZWxvcG1lbnRfcHJvamVjdHNcXG5lbzRqRGF0YURyaXZlclxcY2xpZW50L3NyY1xcYXBwXFxtb2R1bGVzXFxkYXNoYm9hcmQtdjJcXGNvbXBvbmVudHNcXGNyZWF0ZS1ub2Rlc1xcY3JlYXRlLW5vZGVzLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksa0JBQW1CLEVBQUE7RUFEdkI7SUFHUSxnQkFBZ0I7SUFDaEIsbUJBQW1CO0lBQ25CLFdBQVc7SUFHWCxxQ0FBb0QsRUFBQTtFQVI1RDtJQVdRLGdCQUFnQjtJQUNoQixnQkFBZ0IsRUFBQTtFQUl4QjtFQUNJLGFBQWE7RUFDYixxQkFBcUIsRUFBQTtFQUd6Qjs7O0VBR0kscUJBQXFCO0VBQ3JCLGVBQWUsRUFBQTtFQUduQjtFQUVRLGVBQWUsRUFBQTtFQUZ2QjtJQUlZLGlCQUFpQixFQUFBO0VBSjdCO0VBUVEsdUJBQXVCLEVBQUE7RUFSL0I7RUFXUSxXQUFXLEVBQUE7RUFYbkI7RUFjUSxZQUFZLEVBQUE7RUFkcEI7RUFpQlEsVUFBVSxFQUFBO0VBSWxCO0VBQ0ksbUJBQW1CO0VBQ25CLFlBQVk7RUFDWixxQkFBcUIsRUFBQTtFQUh6QjtJQUtRLFlBQVksRUFBQTtFQUlwQjtFQUNJLGFBQWEsRUFBQTtFQURqQjtJQUdRLGVBQWU7SUFDZixlQUFlLEVBQUE7RUFJdkI7RUFDSSxrQkFBa0IsRUFBQTtFQUd0QjtFQUNJLHFCQUFxQjtFQUNyQixTQUFTO0VBQ1QsY0FBYyxFQUFBO0VBR2xCO0VBQ0ksa0JBQWtCO0VBQ2xCLFNBQVMsRUFBQTtFQUZiO0lBSVEseUJBQXlCO0lBQ3pCLGFBQWEsRUFBQTtFQUlyQjtFQUNJLGlCQUFpQjtFQUNqQixvQkFBb0I7RUFDcEIsa0JBQWtCLEVBQUE7RUFFdEI7RUFDSSxrQkFBa0I7RUFDbEIsVUFBVztFQUNYLGVBQWU7RUFDZixlQUFlO0VBQ2YsVUFBVyxFQUFBO0VBR2Y7RUFDSSxlQUFlLEVBQUE7RUFHbkI7RUFDSSxZQUFhLEVBQUE7RUFFakI7RUFDSSxZQUFZO0VBQ1osZ0JBQWlCLEVBQUE7RUFHckI7RUFDSSxrQkFBa0I7RUFDbEIsUUFBUztFQUNULFNBQVU7RUFDVixnQkFBaUIsRUFBQTtFQUVyQjtFQUNJLGdCQUFpQixFQUFBO0VBRXJCO0VBQ0kseUJBQXlCO0VBQ3pCLHVCQUF3QjtFQUN4QixlQUFnQjtFQUNoQixlQUFlO0VBQ2Ysa0JBQWtCLEVBQUE7RUFHdEI7RUFDSSx5QkFBeUIsRUFBQTtFQUQ3QjtJQUdRLGVBQWUsRUFBQTtFQUl2QjtFQUNJLHVCQUF3QixFQUFBO0VBRzVCO0VBQ0ksbUJBQW1CLEVBQUE7RUFHdkI7RUFDSSxtQkFBbUI7RUFDbkIsOEJBQThCLEVBQUE7RUFHbEM7RUFDSSwwQkFBMEIsRUFBQTtFQUc5QjtFQUNJLHFCQUFxQjtFQUNyQixlQUFlLEVBQUE7RUFHbkI7RUFDSSx5QkFBeUI7RUFDekIsWUFBWSxFQUFBO0VBR2hCO0VBQ0Esa0JBQWtCLEVBQUE7RUFHbEI7RUFDSSxnQkFBaUIsRUFBQTtFQUdyQjtFQUNJLGdCQUFnQjtFQUNoQixtQkFBbUI7RUFDbkIscUJBQXNCO0VBQ3RCLFdBQVc7RUFDWCxxQ0FBcUMsRUFBQTtFQUd6QztFQUNJLGdCQUFnQjtFQUNoQixlQUFlLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2NyZWF0ZS1ub2Rlcy9jcmVhdGUtbm9kZXMuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY29udGFpbmVyLWZsdWlkIC5idG4tZ3JvdXAge1xyXG4gICAgbWFyZ2luLXJpZ2h0IDogMjBweDtcclxuICAgIGJ1dHRvbiB7XHJcbiAgICAgICAgYm9yZGVyLXJhZGl1czogMDtcclxuICAgICAgICBiYWNrZ3JvdW5kOiAjZTRlNGU0O1xyXG4gICAgICAgIGNvbG9yOiAjMDAwO1xyXG4gICAgICAgIC13ZWJraXQtYm94LXNoYWRvdzogMnB4IDlweCAxN3B4IC0xcHggcmdiYSgyMDQsIDIwNCwgMjA0LCAxKTtcclxuICAgICAgICAtbW96LWJveC1zaGFkb3c6IDJweCA5cHggMTdweCAtMXB4IHJnYmEoMjA0LCAyMDQsIDIwNCwgMSk7XHJcbiAgICAgICAgYm94LXNoYWRvdzogMnB4IDlweCAxN3B4IC0xcHggcmdiYSgyMDQsIDIwNCwgMjA0LCAxKTtcclxuICAgIH1cclxuICAgIGJ1dHRvbjphY3RpdmUge1xyXG4gICAgICAgIGJveC1zaGFkb3c6IG5vbmU7XHJcbiAgICAgICAgdHJhbnNpdGlvbjogMC41cztcclxuICAgIH1cclxufVxyXG5cclxuLmJ0bi1ncm91cDphY3RpdmUge1xyXG4gICAgb3V0bGluZTogbm9uZTtcclxuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcclxufVxyXG5cclxuLmNyZWF0ZUxpbmssXHJcbi5lZGl0TGluayxcclxuLmRlbGV0ZUxpbmsge1xyXG4gICAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xyXG4gICAgZm9udC1zaXplOiAxMnB4O1xyXG59XHJcblxyXG4uZHJvcGRvd24tbWVudSB7XHJcbiAgICAuZHJvcGRvd24taXRlbSB7XHJcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgICAgIHNwYW4ge1xyXG4gICAgICAgICAgICBtYXJnaW4tcmlnaHQ6IDhweDtcclxuICAgICAgICB9XHJcbiAgICB9XHJcbiAgICAuZHJvcGRvd24taXRlbTphY3RpdmUge1xyXG4gICAgICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xyXG4gICAgfVxyXG4gICAgLmNyZWF0ZTpob3ZlciB7XHJcbiAgICAgICAgY29sb3I6IGJsdWU7XHJcbiAgICB9XHJcbiAgICAuZWRpdDpob3ZlciB7XHJcbiAgICAgICAgY29sb3I6IGdyZWVuO1xyXG4gICAgfVxyXG4gICAgLmRlbGV0ZTpob3ZlciB7XHJcbiAgICAgICAgY29sb3I6IHJlZDtcclxuICAgIH1cclxufVxyXG5cclxuLm1vZGFsLWhlYWRlciB7XHJcbiAgICBiYWNrZ3JvdW5kOiAjNWY1ZjVmO1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG4gICAgYm9yZGVyLWNvbG9yOiAjNWY1ZjVmO1xyXG4gICAgYnV0dG9uLmNsb3NlIHtcclxuICAgICAgICBjb2xvcjogd2hpdGU7XHJcbiAgICB9XHJcbn1cclxuXHJcbi5tb2RhbEl0ZW0ge1xyXG4gICAgcGFkZGluZzogMTBweDtcclxuICAgIC5mYS1pbmZvLWNpcmNsZSB7XHJcbiAgICAgICAgZm9udC1zaXplOiAxNHB4O1xyXG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgIH1cclxufVxyXG5cclxuLm1vZGFsSXRlbS5idXR0b25Db250YWluZXIge1xyXG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG59XHJcblxyXG4uc2VjdGlvbk5hbWUge1xyXG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xyXG4gICAgbWFyZ2luOiAwO1xyXG4gICAgbWF4LXdpZHRoOiA1MCU7XHJcbn1cclxuXHJcbi5pbnB1dFNwYW4ge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgbGVmdDogNTAlO1xyXG4gICAgaW5wdXQge1xyXG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkICNhY2FjYWM7XHJcbiAgICAgICAgb3V0bGluZTogbm9uZTtcclxuICAgIH1cclxufVxyXG5cclxuLnByb3BlcnR5TGFiZWwge1xyXG4gICAgcGFkZGluZy10b3A6IDEzcHg7XHJcbiAgICBwYWRkaW5nLWJvdHRvbTogMTNweDtcclxuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxufVxyXG4uc3VwcG9ydEljb25zIHtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICAgIHJpZ2h0IDogMTAlO1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgY29sb3IgOiByZWQ7XHJcbn1cclxuXHJcbi5zdXBwb3J0SWNvbnMuY3VzdG9tRGVsZXRlIHtcclxuICAgIGZvbnQtc2l6ZTogMjBweDtcclxufVxyXG5cclxuaW5wdXQjcHJvcGVydHlLZXkge1xyXG4gICAgaGVpZ2h0IDogMzBweDtcclxufVxyXG4ubmV3TGluayB7XHJcbiAgICBmbG9hdDogcmlnaHQ7XHJcbiAgICBwYWRkaW5nIDogNXB4IDdweDtcclxufVxyXG5cclxuLm5ld0xpbmsyIHtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICAgIHJpZ2h0IDogMDtcclxuICAgIHRvcCA6IC0ycHg7XHJcbiAgICBwYWRkaW5nIDogNXB4IDdweDtcclxufVxyXG4ubG93ZXIge1xyXG4gICAgbWFyZ2luLXRvcCA6IDMwcHg7XHJcbn1cclxuLm5ld0xpbms6aG92ZXIsIC5uZXdMaW5rMjpob3ZlciB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjNWY1ZjVmO1xyXG4gICAgY29sb3IgOiB3aGl0ZSAhaW1wb3J0YW50O1xyXG4gICAgdHJhbnNpdGlvbiA6IC41cztcclxuICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgIGJvcmRlci1yYWRpdXM6IDVweDtcclxufVxyXG5cclxuLm5ld1RlbXBsYXRlIHtcclxuICAgIG1heC13aWR0aDogMzMlICFpbXBvcnRhbnQ7XHJcbiAgICBkaXYge1xyXG4gICAgICAgIG1heC13aWR0aDogMTAwJTtcclxuICAgIH1cclxufVxyXG5cclxuaS5mYXMuZmEtaW5mby1jaXJjbGUge1xyXG4gICAgY29sb3IgOiBibGFjayAhaW1wb3J0YW50O1xyXG59XHJcblxyXG5pbnB1dFtkaXNhYmxlZD1cInRydWVcIl0ge1xyXG4gICAgY3Vyc29yOiBub3QtYWxsb3dlZDtcclxufVxyXG5cclxuYnV0dG9uOmRpc2FibGVkIHtcclxuICAgIGN1cnNvcjogbm90LWFsbG93ZWQ7XHJcbiAgICBwb2ludGVyLWV2ZW50czogYWxsICFpbXBvcnRhbnQ7XHJcbiAgfVxyXG5cclxuLmRlbGV0ZUJ0biwgLm1haWxCdG4ge1xyXG4gICAgY3Vyc29yOiBwb2ludGVyICFpbXBvcnRhbnQ7XHJcbn1cclxuXHJcbi5sYXRlciB7XHJcbiAgICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXI7XHJcbn1cclxuXHJcbi5sYXRlcjpob3ZlciB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjNWY1ZjVmO1xyXG4gICAgY29sb3I6IHdoaXRlO1xyXG59XHJcblxyXG4ubWFpbEJ0biwgLmxlZnQge1xyXG5tYXJnaW4tcmlnaHQ6IGF1dG87XHJcbn1cclxuXHJcbi5tYWlsQnRuIHtcclxuICAgIHBhZGRpbmcgOiA1cHggOHB4O1xyXG59XHJcblxyXG4ubWFpbEJ0bjpob3ZlciB7XHJcbiAgICB0cmFuc2l0aW9uOiAwLjVzO1xyXG4gICAgYmFja2dyb3VuZDogI2U0ZTRlNDtcclxuICAgIGJvcmRlci1yYWRpdXMgOiAuMjVyZW07XHJcbiAgICBjb2xvcjogIzAwMDtcclxuICAgIGJveC1zaGFkb3c6IDJweCA5cHggMTdweCAtMXB4ICNjY2NjY2M7XHJcbn1cclxuXHJcbi5tYWlsQnRuOmFjdGl2ZSB7XHJcbiAgICBib3gtc2hhZG93OiBub25lO1xyXG4gICAgdHJhbnNpdGlvbjogLjVzO1xyXG59Il19 */"
 
 /***/ }),
 
@@ -10829,6 +10829,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_modules_core_services_graph_data_service_graph_data_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/modules/core/services/graph-data-service/graph-data.service */ "./src/app/modules/core/services/graph-data-service/graph-data.service.ts");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _core_services_shared_graph_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../../../core/services/shared-graph.service */ "./src/app/modules/core/services/shared-graph.service.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
 
 
 
@@ -10837,36 +10841,24 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var CreateNodesComponent = /** @class */ (function () {
-    function CreateNodesComponent(SharedSrvc, graphSrvc, sharedGraphSrvc) {
+    function CreateNodesComponent(SharedSrvc, graphSrvc, sharedGraphSrvc, fb) {
         this.SharedSrvc = SharedSrvc;
         this.graphSrvc = graphSrvc;
         this.sharedGraphSrvc = sharedGraphSrvc;
+        this.fb = fb;
+        // Output variables for event emitters to parent components
         this.nodeBtnEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
-        this.disabledBox = false;
-        this.deleteContext = 'Node';
-        this.clickedNodeID = null;
-        this.clickedRelationID = null;
-        this.disabledFromBox = false;
-        this.disabledToBox = false;
-        this.relationSourceNode = null;
-        this.relationTargetNode = null;
         this.edgeBtnEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.nodeTypes = [];
-        this.nodeTypes2 = [];
-        this.selectedType = [];
-        this.typeOptions = [];
+        this.newNodeCreated = null;
+        // constants
+        this.TYPE_TEXT = 'Type';
+        this.ADD_NEW_LABEL = 'Add New Label';
+        this.ADD_NEW_TYPE = 'Add New Type';
         this.toolTipText = '';
-        this.labelProperties = [];
-        this.relationTypeOptions = [];
-        this.typeProperties = [];
-        this.toNames = [];
-        this.fromNames = [];
-        this.editNodeConfig = {};
-        this.deleteNodeConfig = {};
-        this.queryObj = {
-            raw: true,
-            query: "MATCH (p) WITH DISTINCT keys(p) AS keys,p\n     with DISTINCT labels(p) as label,keys \n     UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields,label\n     RETURN collect(allfields),label"
-        };
+        this.deleteContext = 'node';
+        this.newNodeName = 'Not Available';
+        // object to handle modals
         this.popupConfig = {
             createNodePopup: false,
             editNodePopup: false,
@@ -10875,6 +10867,29 @@ var CreateNodesComponent = /** @class */ (function () {
             editRelationPopup: false,
             deleteRelationPopup: false
         };
+        // Query to fetch all labels
+        this.queryObj = {
+            raw: true,
+            query: "MATCH (p) WITH DISTINCT keys(p) AS keys,p\n     with DISTINCT labels(p) as label,keys \n     UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields,label\n     RETURN collect(allfields),label"
+        };
+        this.disabledBox = false;
+        this.enableNewTemplate = false;
+        this.clickedNodeID = null;
+        this.clickedRelationID = null;
+        this.disabledFromBox = false;
+        this.disabledToBox = false;
+        this.relationSourceNode = null;
+        this.relationTargetNode = null;
+        this.nodeTypes2 = [];
+        this.selectedType = [];
+        this.typeOptions = [];
+        this.labelProperties = [];
+        this.relationTypeOptions = [];
+        this.typeProperties = [];
+        this.toNames = [];
+        this.fromNames = [];
+        this.editNodeConfig = {};
+        this.deleteNodeConfig = {};
     }
     CreateNodesComponent.prototype.ngOnInit = function () {
         this.toolTipText = 'The Properties section can be left blank to set a default Node';
@@ -10884,41 +10899,45 @@ var CreateNodesComponent = /** @class */ (function () {
         var _this = this;
         this.popupConfig.createNodePopup = true;
         this.disabledBox = false;
-        /* this.SharedSrvc.runQuery(this.queryObj).subscribe(data => {
-          console.log('recieved label data from service ', data);
-          this.processedData = this.processData(data);
-          // extract types from the array
-          this.extractLabels(this.processedData);
-          this.typeOptions = _.cloneDeep(this.nodeTypes2);
-        }, err => {
-          console.log('An error occured while reading label data from the database');
-        }); */
+        this.enableNewTemplate = false;
         this.getNodeTypes().subscribe(function (data) {
-            _this.typeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](data);
+            var newOptions = data;
+            newOptions = _this.pushOnTop(_this.ADD_NEW_LABEL, newOptions);
+            _this.typeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](newOptions);
+            // add the option to add a new label on top
         }, function (err) {
             console.log('An error occured while reading label data from the database', err);
             _this.typeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"]([]);
         });
+    };
+    CreateNodesComponent.prototype.pushOnTop = function (valueToAdd, ArrayToUse, index) {
+        if (valueToAdd === void 0) { valueToAdd = 'null'; }
+        if (index === void 0) { index = 0; }
+        // this function will push the given value in the array at specified index, default for 0
+        if (ArrayToUse.length <= 0) {
+            return [];
+        }
+        if (valueToAdd === 'null' && ArrayToUse.length > 0) {
+            return ArrayToUse;
+        }
+        if (valueToAdd !== 'null' && ArrayToUse.length >= 0) {
+            ArrayToUse.splice(index, 0, valueToAdd);
+            return ArrayToUse;
+        }
     };
     CreateNodesComponent.prototype.editNode = function () {
         this.disabledBox = true;
         // this will send the edit event and then the app will wait for the node click event sent back to this component
         this.nodeBtnEvent.emit({ type: 'click', action: 'edit' });
     };
-    CreateNodesComponent.prototype.deleteNode = function () {
-        // gather the information to delete node and send to the graph
-        this.nodeBtnEvent.emit({ type: 'click', action: 'delete' });
-    };
     CreateNodesComponent.prototype.createRelation = function () {
         this.popupConfig.createRelationPopup = true;
+        this.enableNewTemplate = false;
         this.disabledBox = false;
         this.getRelationTypes().subscribe(function (data) { });
     };
     CreateNodesComponent.prototype.editRelation = function () {
         this.edgeBtnEvent.emit({ type: 'click', action: 'edit' });
-    };
-    CreateNodesComponent.prototype.deleteRelation = function () {
-        this.edgeBtnEvent.emit({ type: 'click', action: 'delete' });
     };
     CreateNodesComponent.prototype.getNodeTypes = function () {
         var _this = this;
@@ -10934,8 +10953,10 @@ var CreateNodesComponent = /** @class */ (function () {
     CreateNodesComponent.prototype.getRelationTypes = function () {
         var _this = this;
         return this.graphSrvc.getGraphRelations().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (response) {
-            _this.relationsData = response;
-            var extractedTypes = _this.extractTypes(response);
+            _this.relationsData = _this.filterRelationsData(response);
+            var extractedTypes = _this.extractTypes(_this.relationsData);
+            // add the new type option on top
+            extractedTypes = _this.pushOnTop(_this.ADD_NEW_TYPE, extractedTypes);
             // pass it into the options for dropdown
             _this.relationTypeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](extractedTypes);
             return true;
@@ -10944,30 +10965,69 @@ var CreateNodesComponent = /** @class */ (function () {
             throw Error();
         }));
     };
+    CreateNodesComponent.prototype.filterRelationsData = function (response) {
+        var filteredObjectArray = [];
+        filteredObjectArray.push(response[0]);
+        response.splice(0, 1);
+        // clear relations response as there are duplicates inside
+        // steps to clear, process each relation type
+        // find all the keys which are of this type and collect its properties into a unique array of objects
+        var i = 0;
+        var _loop_1 = function () {
+            if (response.length === 0) {
+                i = 1;
+            }
+            else {
+                var matched_1 = false;
+                filteredObjectArray.forEach(function (firstObj) {
+                    var _a;
+                    if (firstObj.type === response[i].type) {
+                        matched_1 = true;
+                        (_a = firstObj['properties']).push.apply(_a, response[i].properties);
+                    }
+                });
+                if (matched_1) {
+                    response.splice(i, 1);
+                    i = 0;
+                }
+                else {
+                    filteredObjectArray.push(response[i]);
+                    response.splice(i, 1);
+                }
+            }
+        };
+        while (i <= response.length) {
+            _loop_1();
+        }
+        // make the properties of each type as unique
+        filteredObjectArray.map(function (typeObj) {
+            typeObj['properties'] = lodash__WEBPACK_IMPORTED_MODULE_3__["uniq"](typeObj['properties']);
+            return typeObj;
+        });
+        console.log('final fetched types for relation is ', filteredObjectArray);
+        return filteredObjectArray;
+    };
     CreateNodesComponent.prototype.ngOnChanges = function (changes) {
         var _this = this;
-        console.log('hideDelModal is ', this.hideDelModal);
         if (this.hideDelModal === true) {
             // hide the delete modal
-            console.log('hide event recieved');
             this.hideModal('deleteModal');
             this.hideModal('createNodeModal');
             this.hideModal('createRelationModal');
             this.editData = null;
             this.editRelData = null;
-            console.log('post hide event is ', this.hideDelModal);
         }
+        $('#RelAfterNodeModal').on('hidden.bs.modal', function (e) {
+            _this.newNodeCreated = null;
+            _this.newNodeName = null;
+        });
         $('#createNodeModal').on('hidden.bs.modal', function (e) {
             // this event will reset the popupConfig object so that everytime correct data is accessed
-            _this.setAllToFalse();
-            _this.disabledBox = false;
+            _this.setAllToFalse('node');
         });
         $('#createRelationModal').on('hidden.bs.modal', function (e) {
             // this event will reset the popupConfig object so that everytime correct data is accessed
-            _this.setAllToFalse();
-            _this.disabledBox = false;
-            _this.disabledFromBox = false;
-            _this.disabledToBox = false;
+            _this.setAllToFalse('relation');
         });
         if ((!!this.editData && !!this.editData.length) || (!!this.editData && !!Object.keys(this.editData).length)) {
             this.disabledBox = true;
@@ -10984,7 +11044,7 @@ var CreateNodesComponent = /** @class */ (function () {
                 _this.typeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](data);
                 _this.selectedType = _this.editNodeConfig['type'];
                 // trigger update properties to show data before hand
-                _this.updateProperties(_this.selectedType);
+                _this.updateProperties(_this.selectedType, _this.editNodeConfig);
                 var prefilledInfo = _this.recreatePrefilledData(_this.editData['properties']);
                 if (!!prefilledInfo) {
                     // console.log('recieved some prefilled info ', prefilledInfo);
@@ -11018,20 +11078,12 @@ var CreateNodesComponent = /** @class */ (function () {
                 // once types are loaded, set a default type which is the type of selected relation
                 // relationTypeOptions are already set
                 _this.selectedType = editRelConfig_1['type'];
-                _this.updateRelProperties(_this.selectedType);
+                _this.updateRelProperties(_this.selectedType, editRelConfig_1);
                 var prefilledRelInfo = _this.recreatePrefilledData(editRelConfig_1['properties']);
                 // disable the from and to boxes
                 _this.disabledFromBox = true;
                 _this.disabledToBox = true;
-                if (!!prefilledRelInfo) {
-                    // console.log('recieved some prefilled info ', prefilledRelInfo);
-                    // set the data into the modal
-                    _this.prefillData('createRelationModal', prefilledRelInfo, editRelConfig_1['id'], 'relation');
-                }
-                else {
-                    // will allow the modal to be visible anyway
-                    console.error('An error occured while prefilling the relation data, did not recieve anyhting');
-                }
+                _this.prefillData('createRelationModal', prefilledRelInfo, editRelConfig_1['id'], 'relation');
                 // prefill the connected nodes names for the selected relationship modal
                 _this.prefillConnectedNodes(editRelConfig_1);
                 _this.sharedGraphSrvc.nodeDetails.subscribe(function (nodeDetailsArray) {
@@ -11046,6 +11098,20 @@ var CreateNodesComponent = /** @class */ (function () {
             // open the edit modal
             this.disabledBox = true;
             this.showModal('createRelationModal');
+        }
+        // detect if a new node is entered into the graph, prompt user to create a relationship
+        if (!!this.newNodeCreated && Object.keys(this.newNodeCreated).length) {
+            // new node has been created, prompt the user
+            // Do you wish to create a new relationship with respect to {{node_name}} ?
+            if (this.newNodeCreated.hasOwnProperty('created') && this.newNodeCreated['created']) {
+                if (this.newNodeCreated.hasOwnProperty('node')) {
+                    this.newNodeName = this.newNodeCreated['node']['label'] || 'Not Available';
+                    // enable the prompt
+                    this.setAllToFalse('node');
+                    this.setAllToFalse('relation');
+                    this.showModal('RelAfterNodeModal');
+                }
+            }
         }
     };
     CreateNodesComponent.prototype.prefillConnectedNodes = function (RelationData) {
@@ -11071,26 +11137,30 @@ var CreateNodesComponent = /** @class */ (function () {
         if (!modalID) {
             console.warn('cannot prefill data as modal id is not supplied');
         }
-        else if (!Object.keys(dataToFill).length) {
-            console.warn('Did not recieve any data to prefill');
-        }
         else {
             // both are supplied, time to prefill the modal
             if ($("#" + modalID).length) {
-                this.popupConfig.editNodePopup = true;
+                if (type === 'node') {
+                    this.popupConfig.editNodePopup = true;
+                }
+                else if (type === 'relation') {
+                    this.popupConfig.editRelationPopup = true;
+                }
                 this.showModal(modalID);
                 // found the modal
                 $("#" + modalID).on('shown.bs.modal', function (event) {
                     // capture the modal text boxes once it is visible
                     $("#" + modalID + " :text").each(function () {
                         var key = $(this).attr('id') || null;
-                        if (Object.keys(dataToFill).indexOf(key) > -1) {
-                            // assign this text box a prefilled value from dataToFill
-                            $("[id='" + key + "']").val(dataToFill[key]);
-                            // disable the Name box since it is unique fot the database
-                            /* if (key === 'id_Name') {
-                              $(`[id='${key}']`).attr('disabled', 'disabled');
-                            } */
+                        if (!!dataToFill) {
+                            if (Object.keys(dataToFill).indexOf(key) > -1) {
+                                // assign this text box a prefilled value from dataToFill
+                                $("[id='" + key + "']").val(dataToFill[key]);
+                                // disable the Name box since it is unique fot the database
+                                /* if (key === 'id_Name') {
+                                  $(`[id='${key}']`).attr('disabled', 'disabled');
+                                } */
+                            }
                         }
                     });
                     // add id of the node to the modal
@@ -11126,18 +11196,30 @@ var CreateNodesComponent = /** @class */ (function () {
     CreateNodesComponent.prototype.hideModal = function (modalID) {
         $("#" + modalID).modal('hide');
     };
-    CreateNodesComponent.prototype.setAllToFalse = function () {
+    CreateNodesComponent.prototype.setAllToFalse = function (setFor) {
         var _this = this;
         Object.keys(this.popupConfig).forEach(function (key) {
             if (_this.popupConfig[key]) {
                 _this.popupConfig[key] = false;
             }
         });
+        // reset common properties
         this.selectedType = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"]([]);
+        this.disabledBox = false;
+        this.enableNewTemplate = false;
+        if (setFor === 'node') {
+            this.labelProperties = [];
+        }
+        else if (setFor === 'relation') {
+            this.disabledFromBox = false;
+            this.disabledToBox = false;
+            this.selectedNodeNameSource = null;
+            this.selectedNodeNameTarget = null;
+            this.typeProperties = [];
+        }
     };
     CreateNodesComponent.prototype.submitModal = function (type) {
         if (type === void 0) { type = 'create'; }
-        console.log(type);
         var nodeData = {
             id: null,
             properties: {},
@@ -11154,7 +11236,6 @@ var CreateNodesComponent = /** @class */ (function () {
             // hide the modal once the data is created properly
             $('#createNodeModal').modal('hide');
             if (type === 'create') {
-                console.log('node created is ', nodeData);
                 this.nodeBtnEvent.emit({ type: 'click', action: 'create', data: nodeData });
                 this.popupConfig.createNodePopup = false;
             }
@@ -11204,7 +11285,7 @@ var CreateNodesComponent = /** @class */ (function () {
         }
     };
     CreateNodesComponent.prototype.generateID = function () {
-        // this function generates a new id for a the node which will be unique
+        // this function generates a new id for a the node which will be unique, currently deprecated
         return Math.floor(Date.now() + Math.random());
     };
     CreateNodesComponent.prototype.processData = function (data) {
@@ -11226,17 +11307,55 @@ var CreateNodesComponent = /** @class */ (function () {
         });
         // console.log('types are ', this.nodeTypes2);
     };
-    CreateNodesComponent.prototype.updateProperties = function (event) {
+    CreateNodesComponent.prototype.updateProperties = function (event, editProperties) {
+        if (editProperties === void 0) { editProperties = null; }
         // fetch the properties of selected label and display it in the dropdown
         // console.log(event)
-        this.labelProperties = this.getProperties([event]);
+        if (event === this.ADD_NEW_LABEL) {
+            this.TYPE_TEXT = 'New Type';
+            console.log('user wants to add a new label');
+        }
+        else {
+            this.TYPE_TEXT = 'Type';
+            if (!editProperties || !editProperties.hasOwnProperty('properties')) {
+                editProperties = null;
+            }
+            else {
+                editProperties = editProperties['properties'];
+            }
+            this.labelProperties = this.getProperties([event], editProperties);
+        }
     };
-    CreateNodesComponent.prototype.getProperties = function (labelName) {
+    CreateNodesComponent.prototype.getProperties = function (labelName, editProperties) {
+        var _this = this;
+        if (editProperties === void 0) { editProperties = null; }
         if (labelName.length > 0) {
             var fetchedProperties_1 = [];
-            this.processedData.forEach(function (labelObj) {
-                if (labelObj.type[0] === labelName[0]) {
-                    fetchedProperties_1 = labelObj.properties;
+            // if properties are supplied, use them else fetch from the processed data
+            if (!!editProperties) {
+                Object.keys(editProperties).forEach(function (property) {
+                    if (property !== 'Type') {
+                        fetchedProperties_1.push(property);
+                    }
+                });
+            }
+            else {
+                this.processedData.forEach(function (labelObj) {
+                    if (labelObj.type[0] === labelName[0]) {
+                        fetchedProperties_1 = labelObj.properties;
+                    }
+                });
+                // if fetched properties is empty, means this is a new Type the user has selected
+                // Add 2 properties to this TYPE : Name and deeted with deleted = false by default
+                if (!fetchedProperties_1.length) {
+                    fetchedProperties_1.push('Name');
+                    fetchedProperties_1.push('deleted');
+                }
+            }
+            // put Name property in the first position
+            fetchedProperties_1.forEach(function (property, index) {
+                if (property === 'Name' && index !== 0) {
+                    fetchedProperties_1 = _this.swap(fetchedProperties_1, index, 0);
                 }
             });
             return fetchedProperties_1.filter(function (ele) {
@@ -11247,15 +11366,28 @@ var CreateNodesComponent = /** @class */ (function () {
             return [];
         }
     };
+    CreateNodesComponent.prototype.swap = function (ArrayForSwapping, swapFromIndex, swapToIndex) {
+        var temp = ArrayForSwapping[swapFromIndex];
+        ArrayForSwapping[swapFromIndex] = ArrayForSwapping[swapToIndex];
+        ArrayForSwapping[swapToIndex] = temp;
+        return ArrayForSwapping;
+    };
     CreateNodesComponent.prototype.removeDirtyData = function (dataObj) {
         var newPropertyObject = {};
         Object.keys(dataObj.properties).forEach(function (property) {
-            if (property !== null && dataObj.properties[property] !== null) {
+            if (property !== null && property !== undefined) {
                 // remove the id_ prefix in the key
                 property = property.split('id_')[1];
                 newPropertyObject[property] = dataObj.properties['id_' + property];
+                if (!newPropertyObject[property]) {
+                    newPropertyObject[property] = 'not available';
+                }
             }
         });
+        // remove all undefined keys
+        if (newPropertyObject.hasOwnProperty('undefined')) {
+            delete newPropertyObject['undefined'];
+        }
         return newPropertyObject;
     };
     CreateNodesComponent.prototype.cleanNodeData = function (nodeObj) {
@@ -11293,10 +11425,17 @@ var CreateNodesComponent = /** @class */ (function () {
         });
         return typesArray;
     };
-    CreateNodesComponent.prototype.updateRelProperties = function (event) {
+    CreateNodesComponent.prototype.updateRelProperties = function (event, relProperties) {
         var _this = this;
+        if (relProperties === void 0) { relProperties = null; }
         // fetch the properties of selected type and display it in the dropdown
-        this.typeProperties = this.getRelProperties([event]);
+        if (!relProperties || !relProperties.hasOwnProperty('properties')) {
+            relProperties = null;
+        }
+        else {
+            relProperties = relProperties['properties'];
+        }
+        this.typeProperties = this.getRelProperties([event], relProperties);
         // trigger an api to get all the names of the nodes in the graph
         this.graphSrvc.getNodeLabelData().subscribe(function (response) {
             var temname = [];
@@ -11316,15 +11455,25 @@ var CreateNodesComponent = /** @class */ (function () {
             _this.toNames = [];
         });
     };
-    CreateNodesComponent.prototype.getRelProperties = function (relType) {
+    CreateNodesComponent.prototype.getRelProperties = function (relType, relProperties) {
+        if (relProperties === void 0) { relProperties = null; }
         if (relType.length > 0) {
             var fetchedProperties_2 = [];
-            this.relationsData.forEach(function (Obj) {
-                if (Obj.type === relType[0]) {
-                    fetchedProperties_2 = Obj['properties'];
-                    return fetchedProperties_2;
-                }
-            });
+            if (!!relProperties) {
+                Object.keys(relProperties).forEach(function (property) {
+                    if (property !== 'Type') {
+                        fetchedProperties_2.push(property);
+                    }
+                });
+            }
+            else {
+                this.relationsData.forEach(function (Obj) {
+                    if (Obj.type === relType[0]) {
+                        fetchedProperties_2 = Obj['properties'];
+                        return fetchedProperties_2;
+                    }
+                });
+            }
             return fetchedProperties_2.filter(function (el) {
                 return el !== 'deleted';
             });
@@ -11359,7 +11508,6 @@ var CreateNodesComponent = /** @class */ (function () {
             var value = $(this).val() || null;
             relationData.properties[key] = value;
         });
-        console.log(relationData);
         try {
             relationData = this.validateRelationData(relationData);
             console.log('relationship created is ', relationData);
@@ -11439,6 +11587,109 @@ var CreateNodesComponent = /** @class */ (function () {
             // nothing
         }
     };
+    CreateNodesComponent.prototype.addNewProperty = function () {
+        console.log('add new property');
+        this.enableNewTemplate = true;
+    };
+    CreateNodesComponent.prototype.deleteProperty = function (propertyName, modalType) {
+        var _this = this;
+        if (modalType === void 0) { modalType = 'node'; }
+        if (!!propertyName) {
+            // find the property in the labelProperties array and if present, simply remove it
+            if (modalType === 'node') {
+                this.labelProperties.filter(function (property, index) {
+                    if (property === propertyName) {
+                        console.log('found ', property + ' at ' + index);
+                        return _this.labelProperties.splice(index, 1);
+                    }
+                });
+            }
+            else if (modalType === 'relation') {
+                this.typeProperties.filter(function (property, index) {
+                    if (property === propertyName) {
+                        console.log('found ', property + ' at ' + index);
+                        return _this.typeProperties.splice(index, 1);
+                    }
+                });
+            }
+        }
+    };
+    CreateNodesComponent.prototype.saveNewProperty = function (modalType) {
+        var modalConfig = {
+            node: 0,
+            relation: 1
+        };
+        console.log('adding new property in ', modalType);
+        var newPropertyForm = (modalType === 'node') ? $("#NewPropertyGroup :text") : $("#NewPropertyGroupRel :text");
+        var propertyKey = null;
+        // let propertyValue = null;
+        if (newPropertyForm.length) {
+            propertyKey = $("[id='" + $(newPropertyForm[0]).attr('id') + "']").val();
+            // propertyValue  = $(`[id='${$(newPropertyForm[1]).attr('id')}']`).val();
+            if (!propertyKey) {
+                alert('Cannot add a property without a Name');
+            }
+            else {
+                /* if (!propertyValue) {
+                  propertyValue = "null";
+                } */
+                // console.log(propertyKey + '  ' + propertyValue);
+                if (modalType === 'node') {
+                    this.labelProperties.push(propertyKey);
+                    this.labelProperties = lodash__WEBPACK_IMPORTED_MODULE_3__["uniq"](this.labelProperties);
+                }
+                else if (modalType === 'relation') {
+                    this.typeProperties.push(propertyKey);
+                    this.typeProperties = lodash__WEBPACK_IMPORTED_MODULE_3__["uniq"](this.typeProperties);
+                }
+            }
+        }
+        // clear the property box
+        $('#propertyKey').val('');
+        $('#propertyKeyRel').val('');
+    };
+    CreateNodesComponent.prototype.getPropertyValues = function () {
+        // get the label information from the graph and then seperate different keys and their already filled options
+        this.graphSrvc.getNodeLabelData().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (data) {
+            if (!data.length) {
+                return Object(rxjs__WEBPACK_IMPORTED_MODULE_8__["of"])({});
+            }
+            // recieveing some data, filter out the name and labels key and send the rest
+            console.log('label data is ', data);
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_8__["of"])(data);
+        }));
+    };
+    CreateNodesComponent.prototype.promptRelation = function () {
+        // call create relation procedure
+        this.hideModal('RelAfterNode');
+        this.showModal('createRelationModal');
+        this.createRelation();
+    };
+    CreateNodesComponent.prototype.addNewLabel = function (labelFor) {
+        if (labelFor === void 0) { labelFor = null; }
+        var val = null;
+        if (labelFor === 'node') {
+            val = $("#id_newLabelNode").val();
+            if (!!val) {
+                // push it in the typeOptions
+                var newTypes = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](this.typeOptions);
+                newTypes = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](this.pushOnTop(val, newTypes, 1));
+                newTypes = lodash__WEBPACK_IMPORTED_MODULE_3__["uniq"](newTypes);
+                this.typeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](newTypes);
+            }
+        }
+        else if (labelFor === 'relation') {
+            val = $("#id_newLabelRelation").val();
+            if (!!val) {
+                var newTypesRel = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](this.relationTypeOptions);
+                newTypesRel = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](this.pushOnTop(val, newTypesRel, 1));
+                newTypesRel = lodash__WEBPACK_IMPORTED_MODULE_3__["uniq"](newTypesRel);
+                this.relationTypeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](newTypesRel);
+            }
+        }
+        console.log(val);
+        this.selectedType = null;
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
@@ -11447,10 +11698,6 @@ var CreateNodesComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
     ], CreateNodesComponent.prototype, "edgeBtnEvent", void 0);
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Array)
-    ], CreateNodesComponent.prototype, "nodeTypes", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
@@ -11463,13 +11710,24 @@ var CreateNodesComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
     ], CreateNodesComponent.prototype, "hideDelModal", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Array)
+    ], CreateNodesComponent.prototype, "nodeTypes", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], CreateNodesComponent.prototype, "newNodeCreated", void 0);
     CreateNodesComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-create-nodes',
             template: __webpack_require__(/*! ./create-nodes.component.html */ "./src/app/modules/dashboard-v2/components/create-nodes/create-nodes.component.html"),
             styles: [__webpack_require__(/*! ./create-nodes.component.scss */ "./src/app/modules/dashboard-v2/components/create-nodes/create-nodes.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_shared_services_search_service_search_service__WEBPACK_IMPORTED_MODULE_2__["SearchService"], src_app_modules_core_services_graph_data_service_graph_data_service__WEBPACK_IMPORTED_MODULE_4__["GraphDataService"], _core_services_shared_graph_service__WEBPACK_IMPORTED_MODULE_6__["SharedGraphService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_shared_services_search_service_search_service__WEBPACK_IMPORTED_MODULE_2__["SearchService"],
+            src_app_modules_core_services_graph_data_service_graph_data_service__WEBPACK_IMPORTED_MODULE_4__["GraphDataService"],
+            _core_services_shared_graph_service__WEBPACK_IMPORTED_MODULE_6__["SharedGraphService"],
+            _angular_forms__WEBPACK_IMPORTED_MODULE_7__["FormBuilder"]])
     ], CreateNodesComponent);
     return CreateNodesComponent;
 }());
@@ -11541,7 +11799,7 @@ var DashboardHeaderComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"wrapper sidebar-wrapper\">\r\n    <div class=\"sidebarBody p-0\">\r\n        <div class=\"sidebarBodyTitle\">\r\n            <p>Filter By Attributes</p>\r\n        </div>\r\n        <div class=\"sidebarElements\">\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Name');rotateObj.Name.rotate = !rotateObj.Name.rotate\" data-toggle=\"collapse\" href=\"#collapseExample\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}\">Names<span class=\"ele-count count-org\">{{nameOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample\" (click)=\"rotateObj.Name.rotate = !rotateObj.Name.rotate\" [ngClass]=\"{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedName\" [options]=\"nameOptions\" [maxSelected]=\"15\" (ngModelChange)=\"searchElement()\" #names>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Name...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of names.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Type');rotateObj.Type.rotate = !rotateObj.Type.rotate\" data-toggle=\"collapse\" href=\"#collapseExample2\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample2\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Type.rotate, 'no-rotate': !rotateObj?.Type.rotate}\">Type<span class=\"ele-count count-department\">{{typeOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample2\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample2\" (click)=\"rotateObj.Type.rotate = !rotateObj.Type.rotate\" [ngClass]=\"{'rotate': rotateObj?.Type.rotate, 'no-rotate': !rotateObj?.Type.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample2\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedType\" [options]=\"typeOptions\" [maxSelected]=\"15\" #type>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Type...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of type.filteredOptions\" [value]=\"o\">\r\n\r\n                            </sui-select-option>\r\n\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Represent');rotateObj.Represent.rotate = !rotateObj.Represent.rotate\" data-toggle=\"collapse\" href=\"#collapseExample3\" role=\"button\" aria-expanded=\"false\"\r\n                    aria-controls=\"collapseExample3\" [ngClass]=\"{'rotate': rotateObj?.Represent.rotate, 'no-rotate': !rotateObj?.Represent.rotate}\">Represent<span class=\"ele-count count-person\">{{representOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample3\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample3\" (click)=\"rotateObj.Represent.rotate = !rotateObj.Represent.rotate\" [ngClass]=\"{'rotate': rotateObj?.Represent.rotate, 'no-rotate': !rotateObj?.Represent.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample3\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedRepresent\" [options]=\"representOptions\" [maxSelected]=\"15\" #represent>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Represent...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of represent.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Connection');rotateObj.Connection.rotate = !rotateObj.Connection.rotate\" data-toggle=\"collapse\" href=\"#collapseExample4\" role=\"button\" aria-expanded=\"false\"\r\n                    aria-controls=\"collapseExample4\" [ngClass]=\"{'rotate': rotateObj?.Connection.rotate, 'no-rotate': !rotateObj?.Connection.rotate}\">Connection<span class=\"ele-count count-person\">{{connectionOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample4\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample4\" (click)=\"rotateObj.Connection.rotate = !rotateObj.Connection.rotate\" [ngClass]=\"{'rotate': rotateObj?.Connection.rotate, 'no-rotate': !rotateObj?.Connection.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample4\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedConnection\" [options]=\"connectionOptions\" [maxSelected]=\"15\" #connection>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Connection...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of connection.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Status');rotateObj.Status.rotate = !rotateObj.Status.rotate\" data-toggle=\"collapse\" href=\"#collapseExample5\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample5\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Status.rotate, 'no-rotate': !rotateObj?.Status.rotate}\">Status<span class=\"ele-count count-person\">{{statusOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample5\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample5\" (click)=\"rotateObj.Status.rotate = !rotateObj.Status.rotate\" [ngClass]=\"{'rotate': rotateObj?.Status.rotate, 'no-rotate': !rotateObj?.Status.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample5\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedStatus\" [options]=\"statusOptions\" [maxSelected]=\"15\" #status>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Status...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of status.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Understanding');rotateObj.Understanding.rotate = !rotateObj.Understanding.rotate\" data-toggle=\"collapse\" href=\"#collapseExample6\" role=\"button\" aria-expanded=\"false\"\r\n                    aria-controls=\"collapseExample6\" [ngClass]=\"{'rotate': rotateObj?.Understanding.rotate, 'no-rotate': !rotateObj?.Understanding.rotate}\">SP Thinking<span class=\"ele-count count-person\">{{understandingOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample6\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample6\" (click)=\"rotateObj.Understanding.rotate = !rotateObj.Understanding.rotate\" [ngClass]=\"{'rotate': rotateObj?.Understanding.rotate, 'no-rotate': !rotateObj?.Understanding.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample6\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedUnderstanding\" [options]=\"understandingOptions\" [maxSelected]=\"15\" #understanding>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Understanding...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of understanding.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Url');rotateObj.Url.rotate = !rotateObj.Url.rotate\" data-toggle=\"collapse\" href=\"#collapseExample7\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample7\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Url.rotate, 'no-rotate': !rotateObj?.Url.rotate}\">Url<span class=\"ele-count count-person\">{{urlOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample7\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample7\" (click)=\"rotateObj.Url.rotate = !rotateObj.Url.rotate\" [ngClass]=\"{'rotate': rotateObj?.Url.rotate, 'no-rotate': !rotateObj?.Url.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample7\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedUrl\" [options]=\"urlOptions\" [maxSelected]=\"15\" #url>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Url...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of url.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"btn-container d-flex justify-content-around\">\r\n            <div class=\"searchBtnWrapper btn-sidebar\">\r\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\r\n            </div>\r\n            <div class=\"searchBtnWrapper btn-sidebar\">\r\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"searchGraph()\">Apply</button>\r\n            </div>\r\n\r\n        </div>\r\n        <div class=\"sidebarBodyTitle\">\r\n            <p>Filter By Relationships</p>\r\n        </div>\r\n        <div class=\"sidebarElements\">\r\n            <div class=\"item\">\r\n                <sui-multi-select [(ngModel)]=\"selectedRelation\" [options]=\"relationOptions\" [maxSelected]=\"5\" #relation>\r\n                    <div class=\"ui icon search input\">\r\n                        <i class=\"search icon\"></i>\r\n                        <input suiSelectSearch type=\"text\" placeholder=\"Search Relationships...\">\r\n                    </div>\r\n                    <div class=\"scrolling menu\">\r\n                        <sui-select-option *ngFor=\"let o of relation.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                    </div>\r\n                </sui-multi-select>\r\n                <!-- <div class=\"rel-tabs-container\" *ngFor=\"let r of relationOptions\">\r\n                    <div class=\"rel-tab\" (click)=\"relationclickEvent(r)\" id={{r}}>\r\n                        <p>{{r}}</p>\r\n                    </div>\r\n                </div> -->\r\n                <div class=\"btn-container d-flex justify-content-around\">\r\n                    <div class=\"searchBtnWrapper btn-sidebar\">\r\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\r\n                    </div>\r\n                    <div class=\"searchBtnWrapper btn-sidebar\">\r\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"relationSearchGraph()\">Apply</button>\r\n                    </div>\r\n\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <!-- <div class=\"searchBtnWrapper btn-sidebar\">\r\n            <button class=\"btn btn-default btn-md searchBtn\" (click)=\"noderelationSearchGraph()\">Apply Both</button>\r\n        </div> -->\r\n    </div>\r\n\r\n</div>"
+module.exports = "<div class=\"wrapper sidebar-wrapper\">\r\n    <div class=\"sidebarBody p-0\">\r\n        <div class=\"sidebarBodyTitle\">\r\n            <p>Filter By Attributes</p>\r\n        </div>\r\n        <div class=\"sidebarElements\">\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Name');rotateObj.Name.rotate = !rotateObj.Name.rotate\" data-toggle=\"collapse\" href=\"#collapseExample\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}\">Names<span class=\"ele-count count-org\">{{nameOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample\" (click)=\"rotateObj.Name.rotate = !rotateObj.Name.rotate\" [ngClass]=\"{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedName\" [options]=\"nameOptions\" [maxSelected]=\"15\" (ngModelChange)=\"searchElement()\" #names>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Name...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of names.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Type');rotateObj.Type.rotate = !rotateObj.Type.rotate\" data-toggle=\"collapse\" href=\"#collapseExample2\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample2\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Type.rotate, 'no-rotate': !rotateObj?.Type.rotate}\">Type<span class=\"ele-count count-department\">{{typeOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample2\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample2\" (click)=\"rotateObj.Type.rotate = !rotateObj.Type.rotate\" [ngClass]=\"{'rotate': rotateObj?.Type.rotate, 'no-rotate': !rotateObj?.Type.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample2\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedType\" [options]=\"typeOptions\" [maxSelected]=\"15\" #type>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Type...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of type.filteredOptions\" [value]=\"o\">\r\n\r\n                            </sui-select-option>\r\n\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Represent');rotateObj.Represent.rotate = !rotateObj.Represent.rotate\" data-toggle=\"collapse\" href=\"#collapseExample3\" role=\"button\" aria-expanded=\"false\"\r\n                    aria-controls=\"collapseExample3\" [ngClass]=\"{'rotate': rotateObj?.Represent.rotate, 'no-rotate': !rotateObj?.Represent.rotate}\">Represent<span class=\"ele-count count-person\">{{representOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample3\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample3\" (click)=\"rotateObj.Represent.rotate = !rotateObj.Represent.rotate\" [ngClass]=\"{'rotate': rotateObj?.Represent.rotate, 'no-rotate': !rotateObj?.Represent.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample3\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedRepresent\" [options]=\"representOptions\" [maxSelected]=\"15\" #represent>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Represent...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of represent.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Connection');rotateObj.Connection.rotate = !rotateObj.Connection.rotate\" data-toggle=\"collapse\" href=\"#collapseExample4\" role=\"button\" aria-expanded=\"false\"\r\n                    aria-controls=\"collapseExample4\" [ngClass]=\"{'rotate': rotateObj?.Connection.rotate, 'no-rotate': !rotateObj?.Connection.rotate}\">Connection<span class=\"ele-count count-person\">{{connectionOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample4\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample4\" (click)=\"rotateObj.Connection.rotate = !rotateObj.Connection.rotate\" [ngClass]=\"{'rotate': rotateObj?.Connection.rotate, 'no-rotate': !rotateObj?.Connection.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample4\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedConnection\" [options]=\"connectionOptions\" [maxSelected]=\"15\" #connection>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Connection...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of connection.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Status');rotateObj.Status.rotate = !rotateObj.Status.rotate\" data-toggle=\"collapse\" href=\"#collapseExample5\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample5\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Status.rotate, 'no-rotate': !rotateObj?.Status.rotate}\">Status<span class=\"ele-count count-person\">{{statusOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample5\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample5\" (click)=\"rotateObj.Status.rotate = !rotateObj.Status.rotate\" [ngClass]=\"{'rotate': rotateObj?.Status.rotate, 'no-rotate': !rotateObj?.Status.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample5\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedStatus\" [options]=\"statusOptions\" [maxSelected]=\"15\" #status>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Status...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of status.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Understanding');rotateObj.Understanding.rotate = !rotateObj.Understanding.rotate\" data-toggle=\"collapse\" href=\"#collapseExample6\" role=\"button\" aria-expanded=\"false\"\r\n                    aria-controls=\"collapseExample6\" [ngClass]=\"{'rotate': rotateObj?.Understanding.rotate, 'no-rotate': !rotateObj?.Understanding.rotate}\">SP Thinking<span class=\"ele-count count-person\">{{understandingOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample6\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample6\" (click)=\"rotateObj.Understanding.rotate = !rotateObj.Understanding.rotate\" [ngClass]=\"{'rotate': rotateObj?.Understanding.rotate, 'no-rotate': !rotateObj?.Understanding.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample6\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedUnderstanding\" [options]=\"understandingOptions\" [maxSelected]=\"15\" #understanding>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Understanding...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of understanding.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n            <div class=\"item\">\r\n                <span class=\"\"></span><a class=\"item-text hoverable\" (click)=\"networkElementClick('Url');rotateObj.Url.rotate = !rotateObj.Url.rotate\" data-toggle=\"collapse\" href=\"#collapseExample7\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample7\"\r\n                    [ngClass]=\"{'rotate': rotateObj?.Url.rotate, 'no-rotate': !rotateObj?.Url.rotate}\">Url<span class=\"ele-count count-person\">{{urlOptions.length}}</span></a>\r\n                <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" href=\"#collapseExample7\" role=\"button\" aria-expanded=\"false\" aria-controls=\"collapseExample7\" (click)=\"rotateObj.Url.rotate = !rotateObj.Url.rotate\" [ngClass]=\"{'rotate': rotateObj?.Url.rotate, 'no-rotate': !rotateObj?.Url.rotate}\"></span>\r\n                <div class=\"collapse\" id=\"collapseExample7\">\r\n                    <sui-multi-select [(ngModel)]=\"selectedUrl\" [options]=\"urlOptions\" [maxSelected]=\"15\" #url>\r\n                        <div class=\"ui icon search input\">\r\n                            <i class=\"search icon\"></i>\r\n                            <input suiSelectSearch type=\"text\" placeholder=\"Search Url...\">\r\n                        </div>\r\n                        <div class=\"scrolling menu\">\r\n                            <sui-select-option *ngFor=\"let o of url.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                        </div>\r\n                    </sui-multi-select>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"btn-container d-flex justify-content-around\">\r\n            <div class=\"searchBtnWrapper btn-sidebar\">\r\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\r\n            </div>\r\n            <div class=\"searchBtnWrapper btn-sidebar\">\r\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"searchGraph()\">Apply</button>\r\n            </div>\r\n\r\n        </div>\r\n        <div class=\"sidebarBodyTitle\">\r\n            <p>Filter By Relationships</p>\r\n        </div>\r\n        <div class=\"sidebarElements\">\r\n            <div class=\"item\">\r\n                <sui-multi-select [(ngModel)]=\"selectedRelation\" [options]=\"relationOptions\" [maxSelected]=\"5\" #relation>\r\n                    <div class=\"ui icon search input\">\r\n                        <i class=\"search icon\"></i>\r\n                        <input suiSelectSearch type=\"text\" placeholder=\"Search Relationships...\">\r\n                    </div>\r\n                    <div class=\"scrolling menu\">\r\n                        <sui-select-option *ngFor=\"let o of relation.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                    </div>\r\n                </sui-multi-select>\r\n                <!-- <div class=\"rel-tabs-container\" *ngFor=\"let r of relationOptions\">\r\n                    <div class=\"rel-tab\" (click)=\"relationclickEvent(r)\" id={{r}}>\r\n                        <p>{{r}}</p>\r\n                    </div>\r\n                </div> -->\r\n                <div class=\"btn-container d-flex justify-content-around\">\r\n                    <div class=\"searchBtnWrapper btn-sidebar\">\r\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\r\n                    </div>\r\n                    <div class=\"searchBtnWrapper btn-sidebar\">\r\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"relationSearchGraph()\">Apply</button>\r\n                    </div>\r\n\r\n                </div>\r\n                <div class=\"btn-container d-flex justify-content-around\">\r\n                    <span>Show deleted data</span>\r\n                    <app-toggle-switch (toggleEvent) = \"NodeLimitToggleHandler($event)\"></app-toggle-switch>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <!-- <div class=\"searchBtnWrapper btn-sidebar\">\r\n            <button class=\"btn btn-default btn-md searchBtn\" (click)=\"noderelationSearchGraph()\">Apply Both</button>\r\n        </div> -->\r\n    </div>\r\n\r\n</div>"
 
 /***/ }),
 
@@ -11552,7 +11810,7 @@ module.exports = "<div class=\"wrapper sidebar-wrapper\">\r\n    <div class=\"si
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "@import url(\"https://fonts.googleapis.com/css?family=Kanit&display=swap\");\n::-webkit-scrollbar-track {\n  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #F5F5F5; }\n::-webkit-scrollbar {\n  width: 6px;\n  background-color: #F5F5F5; }\n::-webkit-scrollbar-thumb {\n  background-color: #5f5f5f; }\n.sidebar-wrapper {\n  position: absolute;\n  top: 13%;\n  left: 0;\n  overflow-y: auto;\n  z-index: 1;\n  width: 20%;\n  height: 87vh;\n  background: #fff; }\n.logo {\n  text-align: center; }\n.logo img {\n  cursor: pointer; }\n.sidebarBodyTitle {\n  font-family: 'Kanit', sans-serif;\n  font-size: 18px;\n  text-align: center; }\n.sidebarBodyTitle p {\n    padding: 0 10px;\n    padding-top: 8px;\n    padding-bottom: 8px;\n    background: transparent;\n    color: #5f5f5f;\n    font-weight: bold;\n    border-radius: 5px;\n    transition: 1s;\n    text-align: left; }\n.sidebarElements {\n  width: 100%;\n  padding: 25px 0; }\n.item {\n  font-size: 16px;\n  width: 100%;\n  padding: 0; }\n.item span {\n    margin-right: 20px; }\n.hoverable:hover {\n  font-size: 18px;\n  transition: 0.5s; }\n.item,\n.item span {\n  min-height: 50px;\n  line-height: 2.7; }\n.item-text {\n  cursor: pointer;\n  text-decoration: none;\n  color: #000; }\n.fa-chevron-right {\n  float: right;\n  cursor: pointer; }\n.rotate {\n  transform: rotate(90deg);\n  transition: .8s; }\n.no-rotate {\n  transform: rotate(0deg);\n  transition: .8s; }\n.click-pink {\n  color: pink; }\n.hide {\n  display: none; }\n.show {\n  display: block; }\n.ui.teal.left.pointing.label {\n  background: #5f5f5f !important; }\n.searchBtnWrapper {\n  font-family: 'Kanit', sans-serif;\n  font-size: 18px;\n  text-align: center;\n  position: relative;\n  margin-bottom: 20px;\n  bottom: 0;\n  width: 100%; }\n.searchBtnWrapper button {\n    background: #e4e4e4;\n    color: #000;\n    min-width: 100px;\n    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); }\n.searchBtnWrapper button:active {\n    box-shadow: none;\n    transition: 0.5s; }\n.btn-sidebar {\n  display: inline; }\n.btn-container {\n  margin-bottom: 25px; }\n.rel-tabs-container {\n  display: inline-block; }\n.rel-tab p {\n  word-break: break-all;\n  cursor: pointer;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-weight: bold;\n  font-size: 15px;\n  background-color: #F5F5F5;\n  color: #30333a;\n  margin: 4px;\n  padding: 3px 7px;\n  border-radius: 3px; }\n.ele-count {\n  border-radius: 50%;\n  padding: 8px;\n  margin-left: 10px;\n  text-align: center;\n  display: inline; }\n.wrapper hr {\n  margin-bottom: 2em;\n  margin-top: 0.15em; }\n.rel-tabs-container .selected {\n  box-shadow: -4px 4px 17px -8px rgba(0, 0, 0, 0.75); }\n.count-org {\n  background-color: #F5F5F5; }\n.count-person {\n  background-color: #F5F5F5; }\n.count-department {\n  background-color: #F5F5F5; }\nspan.ele-count.count-org {\n  padding: 9px 11px 9px 11px; }\n.c_ff4444 {\n  background-color: '#ff4444'; }\n.c_ffbb33 {\n  background-color: '#ffbb33'; }\n.c_00C851 {\n  background-color: '#00C851'; }\n.c_33b5e5 {\n  background-color: '#33b5e5'; }\n.c_CC0000 {\n  background-color: '#CC0000'; }\n.c_FF8800 {\n  background-color: '#FF8800'; }\n.c_007E33 {\n  background-color: '#007E33'; }\n.c_0099CC {\n  background-color: '#0099CC'; }\n.c_9933CC {\n  background-color: '#9933CC'; }\n.c_0d47a1 {\n  background-color: '#0d47a1'; }\n.c_2BBBAD {\n  background-color: '#2BBBAD'; }\n.c_c51162 {\n  background-color: '#c51162'; }\n@media screen and (max-width: 1100px) {\n  .sidebar-wrapper {\n    width: 25%; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9kYXNoYm9hcmQtdjItc2lkZWJhci9EOlxcbmVvNGotY29tbXVuaXR5LTMuMy45XFxkZXZlbG9wbWVudF9wcm9qZWN0c1xcbmVvNGpEYXRhRHJpdmVyXFxjbGllbnQvc3JjXFxhcHBcXG1vZHVsZXNcXGRhc2hib2FyZC12MlxcY29tcG9uZW50c1xcZGFzaGJvYXJkLXYyLXNpZGViYXJcXGRhc2hib2FyZC1zaWRlYmFyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLHlFQUFZO0FBQ1o7RUFFSSw0Q0FBNEM7RUFDNUMseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSxVQUFVO0VBQ1YseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSx5QkFBeUIsRUFBQTtBQUc3QjtFQUNJLGtCQUFrQjtFQUNsQixRQUFRO0VBQ1IsT0FBTztFQUdQLGdCQUFnQjtFQUNoQixVQUFVO0VBQ1YsVUFBVTtFQUNWLFlBQVk7RUFDWixnQkFBZ0IsRUFBQTtBQUdwQjtFQUNJLGtCQUFrQixFQUFBO0FBSXRCO0VBR1EsZUFBZSxFQUFBO0FBSXZCO0VBQ0ksZ0NBQWdDO0VBQ2hDLGVBQWU7RUFDZixrQkFBa0IsRUFBQTtBQUh0QjtJQU1RLGVBQWU7SUFDZixnQkFBZ0I7SUFDaEIsbUJBQW1CO0lBQ25CLHVCQUF1QjtJQUN2QixjQUFjO0lBQ2QsaUJBQWlCO0lBRWpCLGtCQUFrQjtJQUNsQixjQUFjO0lBQ2QsZ0JBQWdCLEVBQUE7QUFJeEI7RUFDSSxXQUFXO0VBQ1gsZUFBZSxFQUFBO0FBR25CO0VBQ0ksZUFBZTtFQUNmLFdBQVc7RUFDWCxVQUFVLEVBQUE7QUFIZDtJQU1RLGtCQUFrQixFQUFBO0FBSTFCO0VBQ0ksZUFBZTtFQUNmLGdCQUFnQixFQUFBO0FBR3BCOztFQUVJLGdCQUFnQjtFQUNoQixnQkFBZ0IsRUFBQTtBQUdwQjtFQUNJLGVBQWU7RUFDZixxQkFBcUI7RUFDckIsV0FBVyxFQUFBO0FBR2Y7RUFDSSxZQUFZO0VBQ1osZUFBZSxFQUFBO0FBR25CO0VBQ0ksd0JBQXdCO0VBQ3hCLGVBQWUsRUFBQTtBQUduQjtFQUNJLHVCQUF1QjtFQUN2QixlQUFlLEVBQUE7QUFHbkI7RUFDSSxXQUFXLEVBQUE7QUFHZjtFQUNJLGFBQWEsRUFBQTtBQUdqQjtFQUNJLGNBQWMsRUFBQTtBQUdsQjtFQUNJLDhCQUE4QixFQUFBO0FBR2xDO0VBQ0ksZ0NBQWdDO0VBQ2hDLGVBQWU7RUFDZixrQkFBa0I7RUFDbEIsa0JBQWtCO0VBQ2xCLG1CQUFtQjtFQUNuQixTQUFTO0VBQ1QsV0FBVyxFQUFBO0FBUGY7SUFVUSxtQkFBbUI7SUFDbkIsV0FBVztJQUNYLGdCQUFnQjtJQUNoQiwrQ0FBK0MsRUFBQTtBQWJ2RDtJQWdCUSxnQkFBZ0I7SUFDaEIsZ0JBQWdCLEVBQUE7QUFJeEI7RUFDSSxlQUFlLEVBQUE7QUFHbkI7RUFDSSxtQkFBbUIsRUFBQTtBQUd2QjtFQUNJLHFCQUFxQixFQUFBO0FBR3pCO0VBQ0kscUJBQXFCO0VBQ3JCLGVBQWU7RUFDZiwyREFBMkQ7RUFDM0QsaUJBQWlCO0VBQ2pCLGVBQWU7RUFDZix5QkFBeUI7RUFDekIsY0FBc0I7RUFDdEIsV0FBVztFQUNYLGdCQUFnQjtFQUNoQixrQkFBa0IsRUFBQTtBQUd0QjtFQUVJLGtCQUFrQjtFQUNsQixZQUFZO0VBQ1osaUJBQWlCO0VBQ2pCLGtCQUFrQjtFQUNsQixlQUFlLEVBQUE7QUFHbkI7RUFDSSxrQkFBa0I7RUFDbEIsa0JBQWtCLEVBQUE7QUFHdEI7RUFHSSxrREFBa0QsRUFBQTtBQUd0RDtFQUNJLHlCQUF5QixFQUFBO0FBRzdCO0VBQ0kseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSx5QkFBeUIsRUFBQTtBQUc3QjtFQUNJLDBCQUEwQixFQUFBO0FBRzlCO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUdBO0VBQ0k7SUFDSSxVQUFVLEVBQUEsRUFDYiIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvZGFzaGJvYXJkLXYyL2NvbXBvbmVudHMvZGFzaGJvYXJkLXYyLXNpZGViYXIvZGFzaGJvYXJkLXNpZGViYXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0IHVybCgnaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PUthbml0JmRpc3BsYXk9c3dhcCcpO1xyXG46Oi13ZWJraXQtc2Nyb2xsYmFyLXRyYWNrIHtcclxuICAgIC13ZWJraXQtYm94LXNoYWRvdzogaW5zZXQgMCAwIDZweCByZ2JhKDAsIDAsIDAsIDAuMyk7XHJcbiAgICBib3gtc2hhZG93OiBpbnNldCAwIDAgNnB4IHJnYmEoMCwgMCwgMCwgMC4zKTtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICNGNUY1RjU7XHJcbn1cclxuXHJcbjo6LXdlYmtpdC1zY3JvbGxiYXIge1xyXG4gICAgd2lkdGg6IDZweDtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICNGNUY1RjU7XHJcbn1cclxuXHJcbjo6LXdlYmtpdC1zY3JvbGxiYXItdGh1bWIge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzVmNWY1ZjtcclxufVxyXG5cclxuLnNpZGViYXItd3JhcHBlciB7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgICB0b3A6IDEzJTtcclxuICAgIGxlZnQ6IDA7XHJcbiAgICAvLyB3aWR0aDogMjMlO1xyXG4gICAgLy8gaGVpZ2h0OiAxMDB2aDtcclxuICAgIG92ZXJmbG93LXk6IGF1dG87XHJcbiAgICB6LWluZGV4OiAxO1xyXG4gICAgd2lkdGg6IDIwJTtcclxuICAgIGhlaWdodDogODd2aDtcclxuICAgIGJhY2tncm91bmQ6ICNmZmY7XHJcbn1cclxuXHJcbi5sb2dvIHtcclxuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICAgIC8vIHBhZGRpbmctdG9wOiAxMHB4O1xyXG59XHJcblxyXG4ubG9nbyB7XHJcbiAgICBpbWcge1xyXG4gICAgICAgIC8vIHdpZHRoOiA3MCU7XHJcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgfVxyXG59XHJcblxyXG4uc2lkZWJhckJvZHlUaXRsZSB7XHJcbiAgICBmb250LWZhbWlseTogJ0thbml0Jywgc2Fucy1zZXJpZjtcclxuICAgIGZvbnQtc2l6ZTogMThweDtcclxuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICAgIHAge1xyXG4gICAgICAgIC8vIGRpc3BsYXk6IGlubGluZTtcclxuICAgICAgICBwYWRkaW5nOiAwIDEwcHg7XHJcbiAgICAgICAgcGFkZGluZy10b3A6IDhweDtcclxuICAgICAgICBwYWRkaW5nLWJvdHRvbTogOHB4O1xyXG4gICAgICAgIGJhY2tncm91bmQ6IHRyYW5zcGFyZW50O1xyXG4gICAgICAgIGNvbG9yOiAjNWY1ZjVmO1xyXG4gICAgICAgIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gICAgICAgIC8vIGJveC1zaGFkb3c6IDJweCA3cHggMThweCAxcHggcmdiYSg5NSwgOTUsIDk1LCAwLjc2KTtcclxuICAgICAgICBib3JkZXItcmFkaXVzOiA1cHg7XHJcbiAgICAgICAgdHJhbnNpdGlvbjogMXM7XHJcbiAgICAgICAgdGV4dC1hbGlnbjogbGVmdDtcclxuICAgIH1cclxufVxyXG5cclxuLnNpZGViYXJFbGVtZW50cyB7XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIHBhZGRpbmc6IDI1cHggMDtcclxufVxyXG5cclxuLml0ZW0ge1xyXG4gICAgZm9udC1zaXplOiAxNnB4O1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBwYWRkaW5nOiAwO1xyXG4gICAgLy8gcGFkZGluZy1sZWZ0OiAzMHB4O1xyXG4gICAgc3BhbiB7XHJcbiAgICAgICAgbWFyZ2luLXJpZ2h0OiAyMHB4O1xyXG4gICAgfVxyXG59XHJcblxyXG4uaG92ZXJhYmxlOmhvdmVyIHtcclxuICAgIGZvbnQtc2l6ZTogMThweDtcclxuICAgIHRyYW5zaXRpb246IDAuNXM7XHJcbn1cclxuXHJcbi5pdGVtLFxyXG4uaXRlbSBzcGFuIHtcclxuICAgIG1pbi1oZWlnaHQ6IDUwcHg7XHJcbiAgICBsaW5lLWhlaWdodDogMi43O1xyXG59XHJcblxyXG4uaXRlbS10ZXh0IHtcclxuICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcclxuICAgIGNvbG9yOiAjMDAwO1xyXG59XHJcblxyXG4uZmEtY2hldnJvbi1yaWdodCB7XHJcbiAgICBmbG9hdDogcmlnaHQ7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXI7XHJcbn1cclxuXHJcbi5yb3RhdGUge1xyXG4gICAgdHJhbnNmb3JtOiByb3RhdGUoOTBkZWcpO1xyXG4gICAgdHJhbnNpdGlvbjogLjhzO1xyXG59XHJcblxyXG4ubm8tcm90YXRlIHtcclxuICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpO1xyXG4gICAgdHJhbnNpdGlvbjogLjhzO1xyXG59XHJcblxyXG4uY2xpY2stcGluayB7XHJcbiAgICBjb2xvcjogcGluaztcclxufVxyXG5cclxuLmhpZGUge1xyXG4gICAgZGlzcGxheTogbm9uZTtcclxufVxyXG5cclxuLnNob3cge1xyXG4gICAgZGlzcGxheTogYmxvY2s7XHJcbn1cclxuXHJcbi51aS50ZWFsLmxlZnQucG9pbnRpbmcubGFiZWwge1xyXG4gICAgYmFja2dyb3VuZDogIzVmNWY1ZiAhaW1wb3J0YW50O1xyXG59XHJcblxyXG4uc2VhcmNoQnRuV3JhcHBlciB7XHJcbiAgICBmb250LWZhbWlseTogJ0thbml0Jywgc2Fucy1zZXJpZjtcclxuICAgIGZvbnQtc2l6ZTogMThweDtcclxuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcclxuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgIG1hcmdpbi1ib3R0b206IDIwcHg7XHJcbiAgICBib3R0b206IDA7XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIC8vIG1hcmdpbi1yaWdodDogMjBweDtcclxuICAgIGJ1dHRvbiB7XHJcbiAgICAgICAgYmFja2dyb3VuZDogI2U0ZTRlNDtcclxuICAgICAgICBjb2xvcjogIzAwMDtcclxuICAgICAgICBtaW4td2lkdGg6IDEwMHB4O1xyXG4gICAgICAgIGJveC1zaGFkb3c6IDBweCA4cHggMTZweCAwcHggcmdiYSgwLCAwLCAwLCAwLjIpO1xyXG4gICAgfVxyXG4gICAgYnV0dG9uOmFjdGl2ZSB7XHJcbiAgICAgICAgYm94LXNoYWRvdzogbm9uZTtcclxuICAgICAgICB0cmFuc2l0aW9uOiAwLjVzO1xyXG4gICAgfVxyXG59XHJcblxyXG4uYnRuLXNpZGViYXIge1xyXG4gICAgZGlzcGxheTogaW5saW5lO1xyXG59XHJcblxyXG4uYnRuLWNvbnRhaW5lciB7XHJcbiAgICBtYXJnaW4tYm90dG9tOiAyNXB4O1xyXG59XHJcblxyXG4ucmVsLXRhYnMtY29udGFpbmVyIHtcclxuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcclxufVxyXG5cclxuLnJlbC10YWIgcCB7XHJcbiAgICB3b3JkLWJyZWFrOiBicmVhay1hbGw7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgICBmb250LWZhbWlseTogXCJIZWx2ZXRpY2EgTmV1ZVwiLCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmO1xyXG4gICAgZm9udC13ZWlnaHQ6IGJvbGQ7XHJcbiAgICBmb250LXNpemU6IDE1cHg7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xyXG4gICAgY29sb3I6IHJnYig0OCwgNTEsIDU4KTtcclxuICAgIG1hcmdpbjogNHB4O1xyXG4gICAgcGFkZGluZzogM3B4IDdweDtcclxuICAgIGJvcmRlci1yYWRpdXM6IDNweDtcclxufVxyXG5cclxuLmVsZS1jb3VudCB7XHJcbiAgICAvLyBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xyXG4gICAgYm9yZGVyLXJhZGl1czogNTAlO1xyXG4gICAgcGFkZGluZzogOHB4O1xyXG4gICAgbWFyZ2luLWxlZnQ6IDEwcHg7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgICBkaXNwbGF5OiBpbmxpbmU7XHJcbn1cclxuXHJcbi53cmFwcGVyIGhyIHtcclxuICAgIG1hcmdpbi1ib3R0b206IDJlbTtcclxuICAgIG1hcmdpbi10b3A6IDAuMTVlbTtcclxufVxyXG5cclxuLnJlbC10YWJzLWNvbnRhaW5lciAuc2VsZWN0ZWQge1xyXG4gICAgLXdlYmtpdC1ib3gtc2hhZG93OiAtNHB4IDRweCAxN3B4IC04cHggcmdiYSgwLCAwLCAwLCAwLjc1KTtcclxuICAgIC1tb3otYm94LXNoYWRvdzogLTRweCA0cHggMTdweCAtOHB4IHJnYmEoMCwgMCwgMCwgMC43NSk7XHJcbiAgICBib3gtc2hhZG93OiAtNHB4IDRweCAxN3B4IC04cHggcmdiYSgwLCAwLCAwLCAwLjc1KTtcclxufVxyXG5cclxuLmNvdW50LW9yZyB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xyXG59XHJcblxyXG4uY291bnQtcGVyc29uIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICNGNUY1RjU7XHJcbn1cclxuXHJcbi5jb3VudC1kZXBhcnRtZW50IHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICNGNUY1RjU7XHJcbn1cclxuXHJcbnNwYW4uZWxlLWNvdW50LmNvdW50LW9yZyB7XHJcbiAgICBwYWRkaW5nOiA5cHggMTFweCA5cHggMTFweDtcclxufVxyXG5cclxuLmNfZmY0NDQ0IHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjZmY0NDQ0J1xyXG59XHJcblxyXG4uY19mZmJiMzMge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyNmZmJiMzMnXHJcbn1cclxuXHJcbi5jXzAwQzg1MSB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnIzAwQzg1MSdcclxufVxyXG5cclxuLmNfMzNiNWU1IHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjMzNiNWU1J1xyXG59XHJcblxyXG4uY19DQzAwMDAge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyNDQzAwMDAnXHJcbn1cclxuXHJcbi5jX0ZGODgwMCB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnI0ZGODgwMCdcclxufVxyXG5cclxuLmNfMDA3RTMzIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjMDA3RTMzJ1xyXG59XHJcblxyXG4uY18wMDk5Q0Mge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyMwMDk5Q0MnXHJcbn1cclxuXHJcbi5jXzk5MzNDQyB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnIzk5MzNDQydcclxufVxyXG5cclxuLmNfMGQ0N2ExIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjMGQ0N2ExJ1xyXG59XHJcblxyXG4uY18yQkJCQUQge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyMyQkJCQUQnXHJcbn1cclxuXHJcbi5jX2M1MTE2MiB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnI2M1MTE2MidcclxufVxyXG5cclxuLy8gYW4gYXR0ZW1wdCB0byBtYWtlIGl0IGEgYml0IHJlc3BvbnNpdmVcclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogJzExMDBweCcpIHtcclxuICAgIC5zaWRlYmFyLXdyYXBwZXIge1xyXG4gICAgICAgIHdpZHRoOiAyNSU7XHJcbiAgICB9XHJcbn0iXX0= */"
+module.exports = "@import url(\"https://fonts.googleapis.com/css?family=Kanit&display=swap\");\n::-webkit-scrollbar-track {\n  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n  background-color: #F5F5F5; }\n::-webkit-scrollbar {\n  width: 6px;\n  background-color: #F5F5F5; }\n::-webkit-scrollbar-thumb {\n  background-color: #5f5f5f; }\n.sidebar-wrapper {\n  position: absolute;\n  top: 13%;\n  left: 0;\n  overflow-y: auto;\n  z-index: 1;\n  width: 20%;\n  height: 90vh;\n  background: #fff; }\n.logo {\n  text-align: center; }\n.logo img {\n  cursor: pointer; }\n.sidebarBodyTitle {\n  font-family: 'Kanit', sans-serif;\n  font-size: 18px;\n  text-align: center; }\n.sidebarBodyTitle p {\n    padding: 0 10px;\n    padding-top: 8px;\n    padding-bottom: 8px;\n    background: transparent;\n    color: #5f5f5f;\n    font-weight: bold;\n    border-radius: 5px;\n    transition: 1s;\n    text-align: left; }\n.sidebarElements {\n  width: 100%;\n  padding: 25px 0; }\n.item {\n  font-size: 16px;\n  width: 100%;\n  padding: 0; }\n.item span {\n    margin-right: 20px; }\n.hoverable:hover {\n  font-size: 18px;\n  transition: 0.5s; }\n.item,\n.item span {\n  min-height: 50px;\n  line-height: 2.7; }\n.item-text {\n  cursor: pointer;\n  text-decoration: none;\n  color: #000; }\n.fa-chevron-right {\n  float: right;\n  cursor: pointer; }\n.rotate {\n  transform: rotate(90deg);\n  transition: .8s; }\n.no-rotate {\n  transform: rotate(0deg);\n  transition: .8s; }\n.click-pink {\n  color: pink; }\n.hide {\n  display: none; }\n.show {\n  display: block; }\n.ui.teal.left.pointing.label {\n  background: #5f5f5f !important; }\n.searchBtnWrapper {\n  font-family: 'Kanit', sans-serif;\n  font-size: 18px;\n  text-align: center;\n  position: relative;\n  margin-bottom: 20px;\n  bottom: 0;\n  width: 100%; }\n.searchBtnWrapper button {\n    background: #e4e4e4;\n    color: #000;\n    min-width: 100px;\n    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); }\n.searchBtnWrapper button:active {\n    box-shadow: none;\n    transition: 0.5s; }\n.btn-sidebar {\n  display: inline; }\n.btn-container {\n  margin-bottom: 25px; }\n.rel-tabs-container {\n  display: inline-block; }\n.rel-tab p {\n  word-break: break-all;\n  cursor: pointer;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-weight: bold;\n  font-size: 15px;\n  background-color: #F5F5F5;\n  color: #30333a;\n  margin: 4px;\n  padding: 3px 7px;\n  border-radius: 3px; }\n.ele-count {\n  border-radius: 50%;\n  padding: 8px;\n  margin-left: 10px;\n  text-align: center;\n  display: inline; }\n.wrapper hr {\n  margin-bottom: 2em;\n  margin-top: 0.15em; }\n.rel-tabs-container .selected {\n  box-shadow: -4px 4px 17px -8px rgba(0, 0, 0, 0.75); }\n.count-org {\n  background-color: #F5F5F5; }\n.count-person {\n  background-color: #F5F5F5; }\n.count-department {\n  background-color: #F5F5F5; }\nspan.ele-count.count-org {\n  padding: 9px 11px 9px 11px; }\n.c_ff4444 {\n  background-color: '#ff4444'; }\n.c_ffbb33 {\n  background-color: '#ffbb33'; }\n.c_00C851 {\n  background-color: '#00C851'; }\n.c_33b5e5 {\n  background-color: '#33b5e5'; }\n.c_CC0000 {\n  background-color: '#CC0000'; }\n.c_FF8800 {\n  background-color: '#FF8800'; }\n.c_007E33 {\n  background-color: '#007E33'; }\n.c_0099CC {\n  background-color: '#0099CC'; }\n.c_9933CC {\n  background-color: '#9933CC'; }\n.c_0d47a1 {\n  background-color: '#0d47a1'; }\n.c_2BBBAD {\n  background-color: '#2BBBAD'; }\n.c_c51162 {\n  background-color: '#c51162'; }\n.spanWrapper {\n  font-family: 'Kanit', sans-serif;\n  font-weight: bold;\n  max-width: 135px; }\n@media screen and (max-width: 1100px) {\n  .sidebar-wrapper {\n    width: 25%; } }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9kYXNoYm9hcmQtdjItc2lkZWJhci9EOlxcbmVvNGotY29tbXVuaXR5LTMuMy45XFxkZXZlbG9wbWVudF9wcm9qZWN0c1xcbmVvNGpEYXRhRHJpdmVyXFxjbGllbnQvc3JjXFxhcHBcXG1vZHVsZXNcXGRhc2hib2FyZC12MlxcY29tcG9uZW50c1xcZGFzaGJvYXJkLXYyLXNpZGViYXJcXGRhc2hib2FyZC1zaWRlYmFyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLHlFQUFZO0FBQ1o7RUFFSSw0Q0FBNEM7RUFDNUMseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSxVQUFVO0VBQ1YseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSx5QkFBeUIsRUFBQTtBQUc3QjtFQUNJLGtCQUFrQjtFQUNsQixRQUFRO0VBQ1IsT0FBTztFQUdQLGdCQUFnQjtFQUNoQixVQUFVO0VBQ1YsVUFBVTtFQUNWLFlBQVk7RUFDWixnQkFBZ0IsRUFBQTtBQUdwQjtFQUNJLGtCQUFrQixFQUFBO0FBSXRCO0VBR1EsZUFBZSxFQUFBO0FBSXZCO0VBQ0ksZ0NBQWdDO0VBQ2hDLGVBQWU7RUFDZixrQkFBa0IsRUFBQTtBQUh0QjtJQU1RLGVBQWU7SUFDZixnQkFBZ0I7SUFDaEIsbUJBQW1CO0lBQ25CLHVCQUF1QjtJQUN2QixjQUFjO0lBQ2QsaUJBQWlCO0lBRWpCLGtCQUFrQjtJQUNsQixjQUFjO0lBQ2QsZ0JBQWdCLEVBQUE7QUFJeEI7RUFDSSxXQUFXO0VBQ1gsZUFBZSxFQUFBO0FBR25CO0VBQ0ksZUFBZTtFQUNmLFdBQVc7RUFDWCxVQUFVLEVBQUE7QUFIZDtJQU1RLGtCQUFrQixFQUFBO0FBSTFCO0VBQ0ksZUFBZTtFQUNmLGdCQUFnQixFQUFBO0FBR3BCOztFQUVJLGdCQUFnQjtFQUNoQixnQkFBZ0IsRUFBQTtBQUdwQjtFQUNJLGVBQWU7RUFDZixxQkFBcUI7RUFDckIsV0FBVyxFQUFBO0FBR2Y7RUFDSSxZQUFZO0VBQ1osZUFBZSxFQUFBO0FBR25CO0VBQ0ksd0JBQXdCO0VBQ3hCLGVBQWUsRUFBQTtBQUduQjtFQUNJLHVCQUF1QjtFQUN2QixlQUFlLEVBQUE7QUFHbkI7RUFDSSxXQUFXLEVBQUE7QUFHZjtFQUNJLGFBQWEsRUFBQTtBQUdqQjtFQUNJLGNBQWMsRUFBQTtBQUdsQjtFQUNJLDhCQUE4QixFQUFBO0FBR2xDO0VBQ0ksZ0NBQWdDO0VBQ2hDLGVBQWU7RUFDZixrQkFBa0I7RUFDbEIsa0JBQWtCO0VBQ2xCLG1CQUFtQjtFQUNuQixTQUFTO0VBQ1QsV0FBVyxFQUFBO0FBUGY7SUFVUSxtQkFBbUI7SUFDbkIsV0FBVztJQUNYLGdCQUFnQjtJQUNoQiwrQ0FBK0MsRUFBQTtBQWJ2RDtJQWdCUSxnQkFBZ0I7SUFDaEIsZ0JBQWdCLEVBQUE7QUFJeEI7RUFDSSxlQUFlLEVBQUE7QUFHbkI7RUFDSSxtQkFBbUIsRUFBQTtBQUd2QjtFQUNJLHFCQUFxQixFQUFBO0FBR3pCO0VBQ0kscUJBQXFCO0VBQ3JCLGVBQWU7RUFDZiwyREFBMkQ7RUFDM0QsaUJBQWlCO0VBQ2pCLGVBQWU7RUFDZix5QkFBeUI7RUFDekIsY0FBc0I7RUFDdEIsV0FBVztFQUNYLGdCQUFnQjtFQUNoQixrQkFBa0IsRUFBQTtBQUd0QjtFQUVJLGtCQUFrQjtFQUNsQixZQUFZO0VBQ1osaUJBQWlCO0VBQ2pCLGtCQUFrQjtFQUNsQixlQUFlLEVBQUE7QUFHbkI7RUFDSSxrQkFBa0I7RUFDbEIsa0JBQWtCLEVBQUE7QUFHdEI7RUFHSSxrREFBa0QsRUFBQTtBQUd0RDtFQUNJLHlCQUF5QixFQUFBO0FBRzdCO0VBQ0kseUJBQXlCLEVBQUE7QUFHN0I7RUFDSSx5QkFBeUIsRUFBQTtBQUc3QjtFQUNJLDBCQUEwQixFQUFBO0FBRzlCO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksMkJBQ0osRUFBQTtBQUVBO0VBQ0ksZ0NBQWdDO0VBQ2hDLGlCQUFpQjtFQUNqQixnQkFBaUIsRUFBQTtBQUdyQjtFQUNJO0lBQ0ksVUFBVSxFQUFBLEVBQ2IiLCJmaWxlIjoic3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2Rhc2hib2FyZC12Mi1zaWRlYmFyL2Rhc2hib2FyZC1zaWRlYmFyLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiQGltcG9ydCB1cmwoJ2h0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1LYW5pdCZkaXNwbGF5PXN3YXAnKTtcclxuOjotd2Via2l0LXNjcm9sbGJhci10cmFjayB7XHJcbiAgICAtd2Via2l0LWJveC1zaGFkb3c6IGluc2V0IDAgMCA2cHggcmdiYSgwLCAwLCAwLCAwLjMpO1xyXG4gICAgYm94LXNoYWRvdzogaW5zZXQgMCAwIDZweCByZ2JhKDAsIDAsIDAsIDAuMyk7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xyXG59XHJcblxyXG46Oi13ZWJraXQtc2Nyb2xsYmFyIHtcclxuICAgIHdpZHRoOiA2cHg7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xyXG59XHJcblxyXG46Oi13ZWJraXQtc2Nyb2xsYmFyLXRodW1iIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICM1ZjVmNWY7XHJcbn1cclxuXHJcbi5zaWRlYmFyLXdyYXBwZXIge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgdG9wOiAxMyU7XHJcbiAgICBsZWZ0OiAwO1xyXG4gICAgLy8gd2lkdGg6IDIzJTtcclxuICAgIC8vIGhlaWdodDogMTAwdmg7XHJcbiAgICBvdmVyZmxvdy15OiBhdXRvO1xyXG4gICAgei1pbmRleDogMTtcclxuICAgIHdpZHRoOiAyMCU7XHJcbiAgICBoZWlnaHQ6IDkwdmg7XHJcbiAgICBiYWNrZ3JvdW5kOiAjZmZmO1xyXG59XHJcblxyXG4ubG9nbyB7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgICAvLyBwYWRkaW5nLXRvcDogMTBweDtcclxufVxyXG5cclxuLmxvZ28ge1xyXG4gICAgaW1nIHtcclxuICAgICAgICAvLyB3aWR0aDogNzAlO1xyXG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgIH1cclxufVxyXG5cclxuLnNpZGViYXJCb2R5VGl0bGUge1xyXG4gICAgZm9udC1mYW1pbHk6ICdLYW5pdCcsIHNhbnMtc2VyaWY7XHJcbiAgICBmb250LXNpemU6IDE4cHg7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgICBwIHtcclxuICAgICAgICAvLyBkaXNwbGF5OiBpbmxpbmU7XHJcbiAgICAgICAgcGFkZGluZzogMCAxMHB4O1xyXG4gICAgICAgIHBhZGRpbmctdG9wOiA4cHg7XHJcbiAgICAgICAgcGFkZGluZy1ib3R0b206IDhweDtcclxuICAgICAgICBiYWNrZ3JvdW5kOiB0cmFuc3BhcmVudDtcclxuICAgICAgICBjb2xvcjogIzVmNWY1ZjtcclxuICAgICAgICBmb250LXdlaWdodDogYm9sZDtcclxuICAgICAgICAvLyBib3gtc2hhZG93OiAycHggN3B4IDE4cHggMXB4IHJnYmEoOTUsIDk1LCA5NSwgMC43Nik7XHJcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNXB4O1xyXG4gICAgICAgIHRyYW5zaXRpb246IDFzO1xyXG4gICAgICAgIHRleHQtYWxpZ246IGxlZnQ7XHJcbiAgICB9XHJcbn1cclxuXHJcbi5zaWRlYmFyRWxlbWVudHMge1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBwYWRkaW5nOiAyNXB4IDA7XHJcbn1cclxuXHJcbi5pdGVtIHtcclxuICAgIGZvbnQtc2l6ZTogMTZweDtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gICAgcGFkZGluZzogMDtcclxuICAgIC8vIHBhZGRpbmctbGVmdDogMzBweDtcclxuICAgIHNwYW4ge1xyXG4gICAgICAgIG1hcmdpbi1yaWdodDogMjBweDtcclxuICAgIH1cclxufVxyXG5cclxuLmhvdmVyYWJsZTpob3ZlciB7XHJcbiAgICBmb250LXNpemU6IDE4cHg7XHJcbiAgICB0cmFuc2l0aW9uOiAwLjVzO1xyXG59XHJcblxyXG4uaXRlbSxcclxuLml0ZW0gc3BhbiB7XHJcbiAgICBtaW4taGVpZ2h0OiA1MHB4O1xyXG4gICAgbGluZS1oZWlnaHQ6IDIuNztcclxufVxyXG5cclxuLml0ZW0tdGV4dCB7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XHJcbiAgICBjb2xvcjogIzAwMDtcclxufVxyXG5cclxuLmZhLWNoZXZyb24tcmlnaHQge1xyXG4gICAgZmxvYXQ6IHJpZ2h0O1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcblxyXG4ucm90YXRlIHtcclxuICAgIHRyYW5zZm9ybTogcm90YXRlKDkwZGVnKTtcclxuICAgIHRyYW5zaXRpb246IC44cztcclxufVxyXG5cclxuLm5vLXJvdGF0ZSB7XHJcbiAgICB0cmFuc2Zvcm06IHJvdGF0ZSgwZGVnKTtcclxuICAgIHRyYW5zaXRpb246IC44cztcclxufVxyXG5cclxuLmNsaWNrLXBpbmsge1xyXG4gICAgY29sb3I6IHBpbms7XHJcbn1cclxuXHJcbi5oaWRlIHtcclxuICAgIGRpc3BsYXk6IG5vbmU7XHJcbn1cclxuXHJcbi5zaG93IHtcclxuICAgIGRpc3BsYXk6IGJsb2NrO1xyXG59XHJcblxyXG4udWkudGVhbC5sZWZ0LnBvaW50aW5nLmxhYmVsIHtcclxuICAgIGJhY2tncm91bmQ6ICM1ZjVmNWYgIWltcG9ydGFudDtcclxufVxyXG5cclxuLnNlYXJjaEJ0bldyYXBwZXIge1xyXG4gICAgZm9udC1mYW1pbHk6ICdLYW5pdCcsIHNhbnMtc2VyaWY7XHJcbiAgICBmb250LXNpemU6IDE4cHg7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBtYXJnaW4tYm90dG9tOiAyMHB4O1xyXG4gICAgYm90dG9tOiAwO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICAvLyBtYXJnaW4tcmlnaHQ6IDIwcHg7XHJcbiAgICBidXR0b24ge1xyXG4gICAgICAgIGJhY2tncm91bmQ6ICNlNGU0ZTQ7XHJcbiAgICAgICAgY29sb3I6ICMwMDA7XHJcbiAgICAgICAgbWluLXdpZHRoOiAxMDBweDtcclxuICAgICAgICBib3gtc2hhZG93OiAwcHggOHB4IDE2cHggMHB4IHJnYmEoMCwgMCwgMCwgMC4yKTtcclxuICAgIH1cclxuICAgIGJ1dHRvbjphY3RpdmUge1xyXG4gICAgICAgIGJveC1zaGFkb3c6IG5vbmU7XHJcbiAgICAgICAgdHJhbnNpdGlvbjogMC41cztcclxuICAgIH1cclxufVxyXG5cclxuLmJ0bi1zaWRlYmFyIHtcclxuICAgIGRpc3BsYXk6IGlubGluZTtcclxufVxyXG5cclxuLmJ0bi1jb250YWluZXIge1xyXG4gICAgbWFyZ2luLWJvdHRvbTogMjVweDtcclxufVxyXG5cclxuLnJlbC10YWJzLWNvbnRhaW5lciB7XHJcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XHJcbn1cclxuXHJcbi5yZWwtdGFiIHAge1xyXG4gICAgd29yZC1icmVhazogYnJlYWstYWxsO1xyXG4gICAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICAgZm9udC1mYW1pbHk6IFwiSGVsdmV0aWNhIE5ldWVcIiwgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjtcclxuICAgIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gICAgZm9udC1zaXplOiAxNXB4O1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogI0Y1RjVGNTtcclxuICAgIGNvbG9yOiByZ2IoNDgsIDUxLCA1OCk7XHJcbiAgICBtYXJnaW46IDRweDtcclxuICAgIHBhZGRpbmc6IDNweCA3cHg7XHJcbiAgICBib3JkZXItcmFkaXVzOiAzcHg7XHJcbn1cclxuXHJcbi5lbGUtY291bnQge1xyXG4gICAgLy8gYmFja2dyb3VuZC1jb2xvcjogI0Y1RjVGNTtcclxuICAgIGJvcmRlci1yYWRpdXM6IDUwJTtcclxuICAgIHBhZGRpbmc6IDhweDtcclxuICAgIG1hcmdpbi1sZWZ0OiAxMHB4O1xyXG4gICAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gICAgZGlzcGxheTogaW5saW5lO1xyXG59XHJcblxyXG4ud3JhcHBlciBociB7XHJcbiAgICBtYXJnaW4tYm90dG9tOiAyZW07XHJcbiAgICBtYXJnaW4tdG9wOiAwLjE1ZW07XHJcbn1cclxuXHJcbi5yZWwtdGFicy1jb250YWluZXIgLnNlbGVjdGVkIHtcclxuICAgIC13ZWJraXQtYm94LXNoYWRvdzogLTRweCA0cHggMTdweCAtOHB4IHJnYmEoMCwgMCwgMCwgMC43NSk7XHJcbiAgICAtbW96LWJveC1zaGFkb3c6IC00cHggNHB4IDE3cHggLThweCByZ2JhKDAsIDAsIDAsIDAuNzUpO1xyXG4gICAgYm94LXNoYWRvdzogLTRweCA0cHggMTdweCAtOHB4IHJnYmEoMCwgMCwgMCwgMC43NSk7XHJcbn1cclxuXHJcbi5jb3VudC1vcmcge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogI0Y1RjVGNTtcclxufVxyXG5cclxuLmNvdW50LXBlcnNvbiB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xyXG59XHJcblxyXG4uY291bnQtZGVwYXJ0bWVudCB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRjVGNUY1O1xyXG59XHJcblxyXG5zcGFuLmVsZS1jb3VudC5jb3VudC1vcmcge1xyXG4gICAgcGFkZGluZzogOXB4IDExcHggOXB4IDExcHg7XHJcbn1cclxuXHJcbi5jX2ZmNDQ0NCB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnI2ZmNDQ0NCdcclxufVxyXG5cclxuLmNfZmZiYjMzIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjZmZiYjMzJ1xyXG59XHJcblxyXG4uY18wMEM4NTEge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyMwMEM4NTEnXHJcbn1cclxuXHJcbi5jXzMzYjVlNSB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnIzMzYjVlNSdcclxufVxyXG5cclxuLmNfQ0MwMDAwIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjQ0MwMDAwJ1xyXG59XHJcblxyXG4uY19GRjg4MDAge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyNGRjg4MDAnXHJcbn1cclxuXHJcbi5jXzAwN0UzMyB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnIzAwN0UzMydcclxufVxyXG5cclxuLmNfMDA5OUNDIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjMDA5OUNDJ1xyXG59XHJcblxyXG4uY185OTMzQ0Mge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyM5OTMzQ0MnXHJcbn1cclxuXHJcbi5jXzBkNDdhMSB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAnIzBkNDdhMSdcclxufVxyXG5cclxuLmNfMkJCQkFEIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6ICcjMkJCQkFEJ1xyXG59XHJcblxyXG4uY19jNTExNjIge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogJyNjNTExNjInXHJcbn1cclxuXHJcbi5zcGFuV3JhcHBlciB7XHJcbiAgICBmb250LWZhbWlseTogJ0thbml0Jywgc2Fucy1zZXJpZjtcclxuICAgIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gICAgbWF4LXdpZHRoIDogMTM1cHg7XHJcbn1cclxuLy8gYW4gYXR0ZW1wdCB0byBtYWtlIGl0IGEgYml0IHJlc3BvbnNpdmVcclxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogJzExMDBweCcpIHtcclxuICAgIC5zaWRlYmFyLXdyYXBwZXIge1xyXG4gICAgICAgIHdpZHRoOiAyNSU7XHJcbiAgICB9XHJcbn0iXX0= */"
 
 /***/ }),
 
@@ -11581,6 +11839,9 @@ var DashboardSidebarComponent = /** @class */ (function () {
     function DashboardSidebarComponent(graphDataService, sharedGraphData) {
         this.graphDataService = graphDataService;
         this.sharedGraphData = sharedGraphData;
+        // tslint:disable-next-line: no-input-rename
+        this.nodeLimitOnEnter = null;
+        this.showDisabled = false;
         this.rotateObj = {
             Name: {
                 rotate: false,
@@ -11656,13 +11917,19 @@ var DashboardSidebarComponent = /** @class */ (function () {
         this.getGraph();
     };
     DashboardSidebarComponent.prototype.ngOnChanges = function () {
-        //update all dropdown when new node is created
+        // update all dropdown when new node is created
         // get the createdEvent
         if (this.newNodeCreated) {
             var nodeEvent = this.newNodeCreated.split('_')[0];
-            if (nodeEvent === "NodeEvent") {
+            if (nodeEvent === 'NodeEvent') {
                 this.getGraph();
             }
+        }
+        // detect if the user hit enter while entering the nodelimit value
+        if (!!this.nodeLimitOnEnter && !isNaN(this.nodeLimitOnEnter)) {
+            // user pressed entered after filling a valid number
+            console.log('enter detected after ', this.nodeLimitOnEnter);
+            this.searchGraph();
         }
     };
     // set all data in sidebar dropdown
@@ -11743,33 +12010,36 @@ var DashboardSidebarComponent = /** @class */ (function () {
     };
     DashboardSidebarComponent.prototype.searchGraph = function () {
         var requestBody;
-        if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0) {
+        // tslint:disable-next-line: max-line-length
+        if (this.selectedName.length > 0 || this.selectedType.length > 0 ||
+            this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 ||
+            this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0) {
             this.selectedGraph = [];
             if (this.selectedName.length > 0) {
-                this.selectedGraph.push({ type: "Name", value: this.selectedName });
+                this.selectedGraph.push({ type: 'Name', value: this.selectedName });
             }
             if (this.selectedType.length > 0) {
-                this.selectedGraph.push({ type: "Type", value: this.selectedType });
+                this.selectedGraph.push({ type: 'Type', value: this.selectedType });
             }
             if (this.selectedConnection.length > 0) {
-                this.selectedGraph.push({ type: "Connection", value: this.selectedConnection });
+                this.selectedGraph.push({ type: 'Connection', value: this.selectedConnection });
             }
             if (this.selectedRepresent.length > 0) {
-                this.selectedGraph.push({ type: "Represent", value: this.selectedRepresent });
+                this.selectedGraph.push({ type: 'Represent', value: this.selectedRepresent });
             }
             if (this.selectedStatus.length > 0) {
-                this.selectedGraph.push({ type: "Status", value: this.selectedStatus });
+                this.selectedGraph.push({ type: 'Status', value: this.selectedStatus });
             }
             if (this.selectedUnderstanding.length > 0) {
-                this.selectedGraph.push({ type: "Understanding of SP Thinking", value: this.selectedUnderstanding });
+                this.selectedGraph.push({ type: 'Understanding of SP Thinking', value: this.selectedUnderstanding });
             }
             if (this.selectedUrl.length > 0) {
-                this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
+                this.selectedGraph.push({ type: 'Url', value: this.selectedUrl });
             }
             requestBody = { nodes: this.selectedGraph };
         }
         else {
-            // if no selected element 
+            // if no selected element
             requestBody = {};
         }
         this.sharedGraphData.setGraphData(requestBody);
@@ -11960,10 +12230,25 @@ var DashboardSidebarComponent = /** @class */ (function () {
         }
     };
     DashboardSidebarComponent.prototype.networkElementClick = function (element) { };
+    //
+    DashboardSidebarComponent.prototype.NodeLimitToggleHandler = function (event) {
+        try {
+            if (event.constructor === Object) {
+                this.showDisabled = event['isOn'];
+            }
+        }
+        catch (e) {
+            this.showDisabled = false;
+        }
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
     ], DashboardSidebarComponent.prototype, "newNodeCreated", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])('nodeLimitEnterEvent'),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], DashboardSidebarComponent.prototype, "nodeLimitOnEnter", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
@@ -12075,7 +12360,7 @@ var GraphExporterComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\r\n<app-color-panel *ngIf=\"!loader\"></app-color-panel>\r\n<div class=\"wrapper-countlimit\" *ngIf=\"!loader\">\r\n    <div class=\"selected-count\">{{selectedCount}} Elements Found</div>\r\n    <div class=\"nodeLimit\">\r\n        <p class=\"nodelimit-head\">Element Limit :</p>\r\n        <input type=\"text\" [(ngModel)]=nodeLimit (ngModelChange)=\"limitChange(nodeLimit, popup)\" suiPopup popupText=\"{{errorMessage}}\" popupTrigger=\"manual\" #popup=\"suiPopup\">\r\n    </div>\r\n    <div class=\"creationToolbar\">\r\n        <app-create-nodes [nodeTypes]=\"totalTypesArray\" [editData]=\"editNodeData\" [editRelData]=\"editRelationData\" [hideDelModal]=\"hideDelModal\" (nodeBtnEvent)=\"nodeEventCapture($event)\" (edgeBtnEvent)=\"edgeEventCapture($event)\"></app-create-nodes>\r\n    </div>\r\n    <!-- graph exporter -->\r\n    <div class=\"export\">\r\n        <app-graph-exporter></app-graph-exporter>\r\n    </div>\r\n</div>\r\n<div class=\"graph-container\" id=\"graphViewer\">\r\n</div>\r\n<ng-template *ngIf=\"showlimiterror\" let-popup #popupTemplate>\r\n    <div class=\"header\">Rating</div>\r\n    <div class=\"content\">\r\n        <sui-rating class=\"star\" (click)=\"popup.close()\"></sui-rating>\r\n    </div>\r\n</ng-template>"
+module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\r\n<app-color-panel *ngIf=\"!loader\"></app-color-panel>\r\n<div class=\"wrapper-countlimit\" *ngIf=\"!loader\">\r\n    <div class=\"selected-count\">{{selectedCount}} Elements Found</div>\r\n    <div class=\"nodeLimit\">\r\n        <p class=\"nodelimit-head\">Element Limit :</p>\r\n        <input type=\"text\" [(ngModel)]=nodeLimit (ngModelChange)=\"limitChange(nodeLimit, popup)\" suiPopup popupText=\"{{errorMessage}}\" popupTrigger=\"manual\" #popup=\"suiPopup\" (keyup)=\"sendLimit($event, nodeLimit)\">\r\n    </div>\r\n    <div class=\"creationToolbar\">\r\n        <app-create-nodes [nodeTypes]=\"totalTypesArray\" \r\n        [editData]=\"editNodeData\" [editRelData]=\"editRelationData\" \r\n        [hideDelModal]=\"hideDelModal\" (nodeBtnEvent)=\"nodeEventCapture($event)\" \r\n        (edgeBtnEvent)=\"edgeEventCapture($event)\" [newNodeCreated]=\"promptRelationCreateAfterNode\"></app-create-nodes>\r\n    </div>\r\n    <!-- graph exporter -->\r\n    <div class=\"export\">\r\n        <app-graph-exporter></app-graph-exporter>\r\n    </div>\r\n</div>\r\n<div class=\"graph-container\" id=\"graphViewer\">\r\n</div>\r\n<ng-template *ngIf=\"showlimiterror\" let-popup #popupTemplate>\r\n    <div class=\"header\">Rating</div>\r\n    <div class=\"content\">\r\n        <sui-rating class=\"star\" (click)=\"popup.close()\"></sui-rating>\r\n    </div>\r\n</ng-template>"
 
 /***/ }),
 
@@ -12086,7 +12371,7 @@ module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\r\n<a
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".graph-container {\n  background: #F5F5F5;\n  height: 81vh;\n  width: 80%;\n  float: right; }\n\n.selected-count {\n  background: #F5F5F5;\n  word-break: break-all;\n  cursor: pointer;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  color: #30333a;\n  border-radius: 3px;\n  padding: 1em;\n  float: left; }\n\n.wrapper-countlimit {\n  width: 80%;\n  float: right; }\n\n.nodeLimit {\n  max-width: 200px;\n  top: 50px;\n  float: left;\n  border-radius: 3px;\n  padding: 1em;\n  background: #F5F5F5;\n  outline: none; }\n\n.creationToolbar {\n  top: 50px;\n  float: left;\n  padding: 1em;\n  outline: none; }\n\n.nodeLimit input {\n  width: 35%;\n  border: 0.3px solid #000;\n  padding: 5px;\n  border-radius: 2px; }\n\n.nodeLimit:focus {\n  outline: none; }\n\n.nodelimit-head {\n  display: inline;\n  margin-right: 3px; }\n\n@media screen and (max-width: 1100px) {\n  .graph-container,\n  .selected-count {\n    width: 75%; } }\n\n.export {\n  float: right;\n  margin-top: 15px;\n  margin-right: 170px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9ncmFwaC12Mi12aXN1YWxpemVyL0Q6XFxuZW80ai1jb21tdW5pdHktMy4zLjlcXGRldmVsb3BtZW50X3Byb2plY3RzXFxuZW80akRhdGFEcml2ZXJcXGNsaWVudC9zcmNcXGFwcFxcbW9kdWxlc1xcZGFzaGJvYXJkLXYyXFxjb21wb25lbnRzXFxncmFwaC12Mi12aXN1YWxpemVyXFxncmFwaC12aXN1YWxpemVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksbUJBQW1CO0VBQ25CLFlBQVk7RUFDWixVQUFVO0VBQ1YsWUFBWSxFQUFBOztBQUdoQjtFQUNJLG1CQUFtQjtFQUNuQixxQkFBcUI7RUFDckIsZUFBZTtFQUNmLDJEQUEyRDtFQUMzRCxlQUFlO0VBQ2YsY0FBYztFQUNkLGtCQUFrQjtFQUNsQixZQUFZO0VBQ1osV0FBVyxFQUFBOztBQUdmO0VBQ0ksVUFBVTtFQUNWLFlBQVksRUFBQTs7QUFHaEI7RUFDSSxnQkFBZ0I7RUFDaEIsU0FBUztFQUNULFdBQVc7RUFDWCxrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLG1CQUFtQjtFQUNuQixhQUFhLEVBQUE7O0FBR2pCO0VBQ0ksU0FBUztFQUNULFdBQVc7RUFDWCxZQUFZO0VBQ1osYUFBYSxFQUFBOztBQUdqQjtFQUNJLFVBQVU7RUFDVix3QkFBd0I7RUFDeEIsWUFBWTtFQUNaLGtCQUFrQixFQUFBOztBQUd0QjtFQUNJLGFBQWEsRUFBQTs7QUFHakI7RUFDSSxlQUFlO0VBQ2YsaUJBQWlCLEVBQUE7O0FBR3JCO0VBQ0k7O0lBRUksVUFBVSxFQUFBLEVBQ2I7O0FBR0w7RUFFSSxZQUFZO0VBQ1osZ0JBQWdCO0VBQ2hCLG1CQUFtQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9ncmFwaC12Mi12aXN1YWxpemVyL2dyYXBoLXZpc3VhbGl6ZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZ3JhcGgtY29udGFpbmVyIHtcclxuICAgIGJhY2tncm91bmQ6ICNGNUY1RjU7XHJcbiAgICBoZWlnaHQ6IDgxdmg7XHJcbiAgICB3aWR0aDogODAlO1xyXG4gICAgZmxvYXQ6IHJpZ2h0O1xyXG59XHJcblxyXG4uc2VsZWN0ZWQtY291bnQge1xyXG4gICAgYmFja2dyb3VuZDogI0Y1RjVGNTtcclxuICAgIHdvcmQtYnJlYWs6IGJyZWFrLWFsbDtcclxuICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgIGZvbnQtZmFtaWx5OiBcIkhlbHZldGljYSBOZXVlXCIsIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7XHJcbiAgICBmb250LXNpemU6IDE2cHg7XHJcbiAgICBjb2xvcjogIzMwMzMzYTtcclxuICAgIGJvcmRlci1yYWRpdXM6IDNweDtcclxuICAgIHBhZGRpbmc6IDFlbTtcclxuICAgIGZsb2F0OiBsZWZ0O1xyXG59XHJcblxyXG4ud3JhcHBlci1jb3VudGxpbWl0IHtcclxuICAgIHdpZHRoOiA4MCU7XHJcbiAgICBmbG9hdDogcmlnaHQ7XHJcbn1cclxuXHJcbi5ub2RlTGltaXQge1xyXG4gICAgbWF4LXdpZHRoOiAyMDBweDtcclxuICAgIHRvcDogNTBweDtcclxuICAgIGZsb2F0OiBsZWZ0O1xyXG4gICAgYm9yZGVyLXJhZGl1czogM3B4O1xyXG4gICAgcGFkZGluZzogMWVtO1xyXG4gICAgYmFja2dyb3VuZDogI0Y1RjVGNTtcclxuICAgIG91dGxpbmU6IG5vbmU7XHJcbn1cclxuXHJcbi5jcmVhdGlvblRvb2xiYXIge1xyXG4gICAgdG9wOiA1MHB4O1xyXG4gICAgZmxvYXQ6IGxlZnQ7XHJcbiAgICBwYWRkaW5nOiAxZW07XHJcbiAgICBvdXRsaW5lOiBub25lO1xyXG59XHJcblxyXG4ubm9kZUxpbWl0IGlucHV0IHtcclxuICAgIHdpZHRoOiAzNSU7XHJcbiAgICBib3JkZXI6IDAuM3B4IHNvbGlkICMwMDA7XHJcbiAgICBwYWRkaW5nOiA1cHg7XHJcbiAgICBib3JkZXItcmFkaXVzOiAycHg7XHJcbn1cclxuXHJcbi5ub2RlTGltaXQ6Zm9jdXMge1xyXG4gICAgb3V0bGluZTogbm9uZTtcclxufVxyXG5cclxuLm5vZGVsaW1pdC1oZWFkIHtcclxuICAgIGRpc3BsYXk6IGlubGluZTtcclxuICAgIG1hcmdpbi1yaWdodDogM3B4O1xyXG59XHJcblxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAnMTEwMHB4Jykge1xyXG4gICAgLmdyYXBoLWNvbnRhaW5lcixcclxuICAgIC5zZWxlY3RlZC1jb3VudCB7XHJcbiAgICAgICAgd2lkdGg6IDc1JTtcclxuICAgIH1cclxufVxyXG5cclxuLmV4cG9ydCB7XHJcbiAgICAvL3Bvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICAgIGZsb2F0OiByaWdodDtcclxuICAgIG1hcmdpbi10b3A6IDE1cHg7XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDE3MHB4O1xyXG59Il19 */"
+module.exports = ".graph-container {\n  background: #F5F5F5;\n  height: 80vh;\n  width: 80%;\n  float: right; }\n\n.selected-count {\n  background: #F5F5F5;\n  word-break: break-all;\n  cursor: pointer;\n  font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n  font-size: 16px;\n  color: #30333a;\n  border-radius: 3px;\n  padding: 1em;\n  float: left; }\n\n.wrapper-countlimit {\n  width: 80%;\n  float: right; }\n\n.nodeLimit {\n  max-width: 200px;\n  top: 50px;\n  float: left;\n  border-radius: 3px;\n  padding: 1em;\n  background: #F5F5F5;\n  outline: none; }\n\n.creationToolbar {\n  top: 50px;\n  float: left;\n  padding: 1em;\n  outline: none; }\n\n.nodeLimit input {\n  width: 35%;\n  border: 0.3px solid #000;\n  padding: 5px;\n  border-radius: 2px; }\n\n.nodeLimit:focus {\n  outline: none; }\n\n.nodelimit-head {\n  display: inline;\n  margin-right: 3px; }\n\n@media screen and (max-width: 1100px) {\n  .graph-container,\n  .selected-count {\n    width: 75%; } }\n\n.export {\n  float: right;\n  margin-top: 15px;\n  margin-right: 170px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9ncmFwaC12Mi12aXN1YWxpemVyL0Q6XFxuZW80ai1jb21tdW5pdHktMy4zLjlcXGRldmVsb3BtZW50X3Byb2plY3RzXFxuZW80akRhdGFEcml2ZXJcXGNsaWVudC9zcmNcXGFwcFxcbW9kdWxlc1xcZGFzaGJvYXJkLXYyXFxjb21wb25lbnRzXFxncmFwaC12Mi12aXN1YWxpemVyXFxncmFwaC12aXN1YWxpemVyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksbUJBQW1CO0VBQ25CLFlBQVk7RUFDWixVQUFVO0VBQ1YsWUFBWSxFQUFBOztBQUdoQjtFQUNJLG1CQUFtQjtFQUNuQixxQkFBcUI7RUFDckIsZUFBZTtFQUNmLDJEQUEyRDtFQUMzRCxlQUFlO0VBQ2YsY0FBYztFQUNkLGtCQUFrQjtFQUNsQixZQUFZO0VBQ1osV0FBVyxFQUFBOztBQUdmO0VBQ0ksVUFBVTtFQUNWLFlBQVksRUFBQTs7QUFHaEI7RUFDSSxnQkFBZ0I7RUFDaEIsU0FBUztFQUNULFdBQVc7RUFDWCxrQkFBa0I7RUFDbEIsWUFBWTtFQUNaLG1CQUFtQjtFQUNuQixhQUFhLEVBQUE7O0FBR2pCO0VBQ0ksU0FBUztFQUNULFdBQVc7RUFDWCxZQUFZO0VBQ1osYUFBYSxFQUFBOztBQUdqQjtFQUNJLFVBQVU7RUFDVix3QkFBd0I7RUFDeEIsWUFBWTtFQUNaLGtCQUFrQixFQUFBOztBQUd0QjtFQUNJLGFBQWEsRUFBQTs7QUFHakI7RUFDSSxlQUFlO0VBQ2YsaUJBQWlCLEVBQUE7O0FBR3JCO0VBQ0k7O0lBRUksVUFBVSxFQUFBLEVBQ2I7O0FBR0w7RUFFSSxZQUFZO0VBQ1osZ0JBQWdCO0VBQ2hCLG1CQUFtQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9ncmFwaC12Mi12aXN1YWxpemVyL2dyYXBoLXZpc3VhbGl6ZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuZ3JhcGgtY29udGFpbmVyIHtcclxuICAgIGJhY2tncm91bmQ6ICNGNUY1RjU7XHJcbiAgICBoZWlnaHQ6IDgwdmg7XHJcbiAgICB3aWR0aDogODAlO1xyXG4gICAgZmxvYXQ6IHJpZ2h0O1xyXG59XHJcblxyXG4uc2VsZWN0ZWQtY291bnQge1xyXG4gICAgYmFja2dyb3VuZDogI0Y1RjVGNTtcclxuICAgIHdvcmQtYnJlYWs6IGJyZWFrLWFsbDtcclxuICAgIGN1cnNvcjogcG9pbnRlcjtcclxuICAgIGZvbnQtZmFtaWx5OiBcIkhlbHZldGljYSBOZXVlXCIsIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7XHJcbiAgICBmb250LXNpemU6IDE2cHg7XHJcbiAgICBjb2xvcjogIzMwMzMzYTtcclxuICAgIGJvcmRlci1yYWRpdXM6IDNweDtcclxuICAgIHBhZGRpbmc6IDFlbTtcclxuICAgIGZsb2F0OiBsZWZ0O1xyXG59XHJcblxyXG4ud3JhcHBlci1jb3VudGxpbWl0IHtcclxuICAgIHdpZHRoOiA4MCU7XHJcbiAgICBmbG9hdDogcmlnaHQ7XHJcbn1cclxuXHJcbi5ub2RlTGltaXQge1xyXG4gICAgbWF4LXdpZHRoOiAyMDBweDtcclxuICAgIHRvcDogNTBweDtcclxuICAgIGZsb2F0OiBsZWZ0O1xyXG4gICAgYm9yZGVyLXJhZGl1czogM3B4O1xyXG4gICAgcGFkZGluZzogMWVtO1xyXG4gICAgYmFja2dyb3VuZDogI0Y1RjVGNTtcclxuICAgIG91dGxpbmU6IG5vbmU7XHJcbn1cclxuXHJcbi5jcmVhdGlvblRvb2xiYXIge1xyXG4gICAgdG9wOiA1MHB4O1xyXG4gICAgZmxvYXQ6IGxlZnQ7XHJcbiAgICBwYWRkaW5nOiAxZW07XHJcbiAgICBvdXRsaW5lOiBub25lO1xyXG59XHJcblxyXG4ubm9kZUxpbWl0IGlucHV0IHtcclxuICAgIHdpZHRoOiAzNSU7XHJcbiAgICBib3JkZXI6IDAuM3B4IHNvbGlkICMwMDA7XHJcbiAgICBwYWRkaW5nOiA1cHg7XHJcbiAgICBib3JkZXItcmFkaXVzOiAycHg7XHJcbn1cclxuXHJcbi5ub2RlTGltaXQ6Zm9jdXMge1xyXG4gICAgb3V0bGluZTogbm9uZTtcclxufVxyXG5cclxuLm5vZGVsaW1pdC1oZWFkIHtcclxuICAgIGRpc3BsYXk6IGlubGluZTtcclxuICAgIG1hcmdpbi1yaWdodDogM3B4O1xyXG59XHJcblxyXG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAnMTEwMHB4Jykge1xyXG4gICAgLmdyYXBoLWNvbnRhaW5lcixcclxuICAgIC5zZWxlY3RlZC1jb3VudCB7XHJcbiAgICAgICAgd2lkdGg6IDc1JTtcclxuICAgIH1cclxufVxyXG5cclxuLmV4cG9ydCB7XHJcbiAgICAvL3Bvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICAgIGZsb2F0OiByaWdodDtcclxuICAgIG1hcmdpbi10b3A6IDE1cHg7XHJcbiAgICBtYXJnaW4tcmlnaHQ6IDE3MHB4O1xyXG59Il19 */"
 
 /***/ }),
 
@@ -12120,6 +12405,8 @@ var GraphVisualizerComponent = /** @class */ (function () {
         this.sharedGraphService = sharedGraphService;
         this.totalTypesArray = [];
         this.newNodeCreated = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
+        this.nodeLimitEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
+        this.promptRelationCreateAfterNode = null;
         this.requestedNodeDetails = null;
         this.graphData = {};
         this.errorMessage = '';
@@ -12163,6 +12450,9 @@ var GraphVisualizerComponent = /** @class */ (function () {
         this.hideDelModal = false;
         this.graphOptions = {
             physics: false,
+            interaction: {
+                navigationButtons: true
+            },
             edges: {
                 smooth: {
                     type: 'dynamic'
@@ -12337,6 +12627,14 @@ var GraphVisualizerComponent = /** @class */ (function () {
             }, 3000);
         }
     };
+    GraphVisualizerComponent.prototype.sendLimit = function (event, nodeLimit) {
+        if (event['key'] === 'Enter') {
+            this.nodeLimitEvent.emit(this.nodeLimit);
+        }
+        else {
+            this.nodeLimitEvent.emit(null);
+        }
+    };
     GraphVisualizerComponent.prototype.nodeEventCapture = function (event) {
         var _this = this;
         if (Object.keys(event).length > 0) {
@@ -12361,7 +12659,6 @@ var GraphVisualizerComponent = /** @class */ (function () {
                         // let newNodeForVis = _.cloneDeep(newNodeData);
                         // make a request to create a node, if it succeedes only then show in the graph
                         _this.graphService.createNewNode(newNodeData).subscribe(function (response) {
-                            console.log(response);
                             //update sidebar dropdown
                             _this.newNodeCreated.emit("NodeEvent_create" + response['seperateNodes'][0].id);
                             // add additional data for vis layout
@@ -12370,6 +12667,9 @@ var GraphVisualizerComponent = /** @class */ (function () {
                                 var visNode = _this.addData(response['seperateNodes'][0], clickEvent, event);
                                 // add the new node to the vis
                                 _this.graphData['nodes'].add([visNode]);
+                                // emit the createNodes component that a node has been put into the graph, prompt user to create a relation
+                                // send the data of new node for relationPrompt
+                                _this.promptRelationCreateAfterNode = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"]({ created: true, node: visNode });
                             }
                             catch (addErr) {
                                 console.error('Error while adding the data node to vis ', addErr['message']);
@@ -12421,7 +12721,7 @@ var GraphVisualizerComponent = /** @class */ (function () {
                             // node was present, simply update it now
                             _this.graphData['nodes'].update(visNode);
                             //update sidebar dropdown
-                            _this.newNodeCreated.emit("NodeEvent_update" + response['seperateNodes'][0].id);
+                            _this.newNodeCreated.emit('NodeEvent_update' + response['seperateNodes'][0].id);
                         }
                         console.log(visNode);
                     }
@@ -12444,7 +12744,6 @@ var GraphVisualizerComponent = /** @class */ (function () {
                     relations: connectedEdgeIDs
                 };
                 this.graphService.deleteNode(requestOption).subscribe(function (response) {
-                    console.log('recieved some response', response);
                     // remove the node in vis graph and connected edges, if any
                     var removedNode = response['seperateNodes'];
                     if (response['seperateEdges'].length > 0) {
@@ -12453,10 +12752,9 @@ var GraphVisualizerComponent = /** @class */ (function () {
                     }
                     // remove the node
                     _this.graphData['nodes'].remove(removedNode);
-                    console.log('changing hideDelModal value');
                     _this.hideDelModal = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](true);
                     //update sidebar dropdown
-                    _this.newNodeCreated.emit("NodeEvent_delete" + response['seperateNodes'][0].id);
+                    _this.newNodeCreated.emit('NodeEvent_delete' + response['seperateNodes'][0].id);
                 }, function (err) {
                     console.error('An error occured while reading response for node delete ', err);
                 });
@@ -12504,30 +12802,12 @@ var GraphVisualizerComponent = /** @class */ (function () {
             else if (event.action === 'edit') {
                 // capture the details of the relationship clicked by the user, clean it if needed and send for use
                 console.log('Relation edit is being clicked');
-                /* this.network.once('click', (clickEvent) => {
-                  console.log(clickEvent);
-                  if (clickEvent.nodes.length > 0) {
-                    // user clicked on node despite selecting 'edit edge' feature
-                    alert('Please click on an edge not a node');
-                  } else {
-                    console.log('edge click ok');
-                    let clickedEdge = this.graphData['edges'].get(clickEvent.edges[0]);
-                  // if there are multiple nodes one above another, always select the top most one
-                    if (clickedEdge.length > 0) {
-                      clickedEdge = _.cloneDeep(clickedEdge[0]);
-                    }
-                    console.log('clicked Edge is ', clickedEdge);
-                    // emit data for edge
-                    this.startEditProcess(clickedEdge, 'edge');
-                  }
-                }); */
                 // hit the update relation service and updae it in visJS too
                 var relationData = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](event.data);
                 if (relationData.hasOwnProperty('id') && relationData.hasOwnProperty('type')) {
                     // object has atleast id and type key, move ahead
                     this.graphService.updateRelation(relationData).subscribe(function (response) {
                         var newRelation = response['seperateEdges'][0];
-                        console.log('new relation data is ', newRelation);
                         _this.updateRelationinVIS(newRelation);
                     }, function (err) {
                         console.error('An error occured while reading the updated relation data', err);
@@ -12583,15 +12863,14 @@ var GraphVisualizerComponent = /** @class */ (function () {
             });
             return finalString_1;
         }
-        else
+        else {
             return null;
+        }
     };
     GraphVisualizerComponent.prototype.addData = function (node, clickEvent, event) {
         node['x'] = clickEvent.pointer.canvas.x;
         node['y'] = clickEvent.pointer.canvas.y;
-        // node['title'] = this.serializeProperties(event.data.properties);
         node['color'] = this.colorConfig.defaultColor[event.data.type];
-        console.log('final node is ', node);
         return node;
     };
     GraphVisualizerComponent.prototype.addNodeColor = function (node) {
@@ -12624,7 +12903,6 @@ var GraphVisualizerComponent = /** @class */ (function () {
         var changedNodeIDs = nodeIDs.map(function (nodeID) {
             return _this.graphData['nodes'].get(nodeID);
         });
-        console.log('post processing ', changedNodeIDs);
         return changedNodeIDs;
     };
     GraphVisualizerComponent.prototype.doubleClickHandler = function (event) {
@@ -12672,6 +12950,10 @@ var GraphVisualizerComponent = /** @class */ (function () {
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], GraphVisualizerComponent.prototype, "nodeLimitEvent", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
     ], GraphVisualizerComponent.prototype, "networkInstance", void 0);
     GraphVisualizerComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -12695,7 +12977,7 @@ var GraphVisualizerComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-dashboard-header></app-dashboard-header>\r\n<app-dashboard-sidebar (eventClicked)=\"childEventClicked($event)\" (nodeTypesEvent)=\"sendTypes($event)\" [newNodeCreated]=\"newNodeCreated\"></app-dashboard-sidebar>\r\n<app-graph-visualizer (newNodeCreated)=\"childEventClicked2($event)\" [event]=\"clickedEvent\" [totalTypesArray]=\"totalTypesArray\"></app-graph-visualizer>"
+module.exports = "<app-dashboard-header></app-dashboard-header>\r\n<app-dashboard-sidebar (eventClicked)=\"childEventClicked($event)\" (nodeTypesEvent)=\"sendTypes($event)\" [newNodeCreated]=\"newNodeCreated\" [nodeLimitEnterEvent] = \"nodeLimitValue\"></app-dashboard-sidebar>\r\n<app-graph-visualizer (newNodeCreated)=\"childEventClicked2($event)\" [event]=\"clickedEvent\" (nodeLimitEvent)=\"sendLimitToSidebar($event)\" [totalTypesArray]=\"totalTypesArray\"></app-graph-visualizer>"
 
 /***/ }),
 
@@ -12727,6 +13009,7 @@ __webpack_require__.r(__webpack_exports__);
 var MainComponent = /** @class */ (function () {
     function MainComponent() {
         this.totalTypesArray = [];
+        this.nodeLimitValue = null;
     }
     MainComponent.prototype.ngOnInit = function () {
     };
@@ -12738,8 +13021,17 @@ var MainComponent = /** @class */ (function () {
     };
     MainComponent.prototype.sendTypes = function (event) {
         if (!!event && event.length > 0) {
-            console.log('sending types', event);
             this.totalTypesArray = event;
+        }
+    };
+    MainComponent.prototype.sendLimitToSidebar = function (event) {
+        // this  function is responsible to send the nodeLimit value to the sidebar so that apply function can be clicked
+        if (!isNaN(event)) {
+            this.nodeLimitValue = event;
+        }
+        else {
+            console.log('nodelimit is not a number');
+            this.nodeLimitValue = null;
         }
     };
     MainComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -12832,6 +13124,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var DashboardModule = /** @class */ (function () {
     function DashboardModule() {
     }
@@ -12842,6 +13135,7 @@ var DashboardModule = /** @class */ (function () {
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
+                _angular_forms__WEBPACK_IMPORTED_MODULE_3__["ReactiveFormsModule"],
                 ng2_semantic_ui__WEBPACK_IMPORTED_MODULE_9__["SuiSelectModule"], ng2_semantic_ui__WEBPACK_IMPORTED_MODULE_9__["SuiModule"],
                 _shared_shared_module__WEBPACK_IMPORTED_MODULE_10__["SharedModule"],
                 _dashboard_v2_routing_module__WEBPACK_IMPORTED_MODULE_4__["DashboardV2RoutingModule"]

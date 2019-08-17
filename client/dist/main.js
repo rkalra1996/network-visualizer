@@ -1106,6 +1106,72 @@ var SidebarComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.html":
+/*!***************************************************************************************************!*\
+  !*** ./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.html ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"toggleWrapper\">\n  <label class=\"switch\">\n    <input type=\"checkbox\" (change)=\"toggleEventHandler($event)\">\n    <span class=\"slider round\"></span>\n  </label>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.scss":
+/*!***************************************************************************************************!*\
+  !*** ./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.scss ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".toggleWrapper {\n  text-align: center;\n  width: 50%;\n  margin: auto;\n  height: 20%; }\n\n.switch {\n  position: relative;\n  display: block;\n  top: 8px;\n  width: 50px;\n  height: 30px; }\n\n.slider {\n  position: absolute;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  cursor: pointer;\n  background: white;\n  border: 2px solid black;\n  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);\n  transition: .5s; }\n\n.slider:before {\n  position: absolute;\n  left: 0;\n  content: \"\";\n  top: 4.5px;\n  bottom: 3px;\n  background-color: black;\n  transition: .5s; }\n\n.switch input {\n  display: none; }\n\ninput:checked + .slider {\n  background-color: black; }\n\ninput:checked + .slider:before {\n  transform: translateX(27px) rotateZ(45deg);\n  background-color: white; }\n\n.slider.round {\n  border-radius: 35px; }\n\n.slider.round:before {\n  width: 43%;\n  height: 43%;\n  border-top-left-radius: 50px;\n  border-top-right-radius: 50px;\n  transform: rotateZ(-45deg); }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9zaGFyZWQvY29tcG9uZW50L3RvZ2dsZS1zd2l0Y2gvdG9nZ2xlLXN3aXRjaC9EOlxcbmVvNGotY29tbXVuaXR5LTMuMy45XFxkZXZlbG9wbWVudF9wcm9qZWN0c1xcbmVvNGpEYXRhRHJpdmVyXFxjbGllbnQvc3JjXFxhcHBcXG1vZHVsZXNcXHNoYXJlZFxcY29tcG9uZW50XFx0b2dnbGUtc3dpdGNoXFx0b2dnbGUtc3dpdGNoXFx0b2dnbGUtc3dpdGNoLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksa0JBQW1CO0VBQ25CLFVBQVc7RUFDWCxZQUFhO0VBQ2IsV0FBWSxFQUFBOztBQUdkO0VBQ0Usa0JBQW1CO0VBQ25CLGNBQWU7RUFDZixRQUFRO0VBQ1IsV0FBWTtFQUNaLFlBQWEsRUFBQTs7QUFHZjtFQUNFLGtCQUFtQjtFQUNuQixNQUFRO0VBQ1IsUUFBUztFQUNULFNBQVU7RUFDVixPQUFRO0VBQ1IsZUFBZ0I7RUFDaEIsaUJBQWtCO0VBQ2xCLHVCQUF3QjtFQUN4QiwwQ0FBd0M7RUFDeEMsZUFBZ0IsRUFBQTs7QUFHbEI7RUFDRSxrQkFBbUI7RUFDbkIsT0FBUTtFQUNSLFdBQVk7RUFDWixVQUFXO0VBQ1gsV0FBWTtFQUNaLHVCQUF3QjtFQUN4QixlQUFnQixFQUFBOztBQUdsQjtFQUNFLGFBQWMsRUFBQTs7QUFHaEI7RUFDRSx1QkFBd0IsRUFBQTs7QUFHMUI7RUFDRSwwQ0FBMkM7RUFDM0MsdUJBQXdCLEVBQUE7O0FBRzFCO0VBQ0UsbUJBQW9CLEVBQUE7O0FBR3RCO0VBQ0UsVUFBVztFQUNYLFdBQVk7RUFDWiw0QkFBNkI7RUFDN0IsNkJBQThCO0VBQzlCLDBCQUEyQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9zaGFyZWQvY29tcG9uZW50L3RvZ2dsZS1zd2l0Y2gvdG9nZ2xlLXN3aXRjaC90b2dnbGUtc3dpdGNoLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnRvZ2dsZVdyYXBwZXIge1xyXG4gICAgdGV4dC1hbGlnbiA6IGNlbnRlcjtcclxuICAgIHdpZHRoIDogNTAlO1xyXG4gICAgbWFyZ2luIDogYXV0bztcclxuICAgIGhlaWdodCA6IDIwJTtcclxuICB9XHJcbiAgXHJcbiAgLnN3aXRjaCB7XHJcbiAgICBwb3NpdGlvbiA6IHJlbGF0aXZlO1xyXG4gICAgZGlzcGxheSA6IGJsb2NrO1xyXG4gICAgdG9wOiA4cHg7XHJcbiAgICB3aWR0aCA6IDUwcHg7XHJcbiAgICBoZWlnaHQgOiAzMHB4O1xyXG4gIH1cclxuICBcclxuICAuc2xpZGVyIHtcclxuICAgIHBvc2l0aW9uIDogYWJzb2x1dGU7XHJcbiAgICB0b3AgOiAwIDsgXHJcbiAgICByaWdodCA6IDA7IFxyXG4gICAgYm90dG9tIDogMDsgXHJcbiAgICBsZWZ0IDogMDtcclxuICAgIGN1cnNvciA6IHBvaW50ZXI7XHJcbiAgICBiYWNrZ3JvdW5kIDogd2hpdGU7XHJcbiAgICBib3JkZXIgOiAycHggc29saWQgYmxhY2s7XHJcbiAgICBib3gtc2hhZG93IDogMXB4IDFweCAxcHggcmdiYSgwLDAsMCwwLjEpO1xyXG4gICAgdHJhbnNpdGlvbiA6IC41cztcclxuICB9XHJcbiAgXHJcbiAgLnNsaWRlcjpiZWZvcmUge1xyXG4gICAgcG9zaXRpb24gOiBhYnNvbHV0ZTtcclxuICAgIGxlZnQgOiAwO1xyXG4gICAgY29udGVudCA6IFwiXCI7XHJcbiAgICB0b3AgOiA0LjVweDtcclxuICAgIGJvdHRvbSA6IDNweDtcclxuICAgIGJhY2tncm91bmQtY29sb3IgOiBibGFjaztcclxuICAgIHRyYW5zaXRpb24gOiAuNXM7XHJcbiAgfVxyXG4gIFxyXG4gIC5zd2l0Y2ggaW5wdXQge1xyXG4gICAgZGlzcGxheSA6IG5vbmU7XHJcbiAgfVxyXG4gIFxyXG4gIGlucHV0OmNoZWNrZWQgKyAuc2xpZGVyIHtcclxuICAgIGJhY2tncm91bmQtY29sb3IgOiBibGFjaztcclxuICB9XHJcbiAgXHJcbiAgaW5wdXQ6Y2hlY2tlZCArIC5zbGlkZXI6YmVmb3JlIHtcclxuICAgIHRyYW5zZm9ybSA6IHRyYW5zbGF0ZVgoMjdweCkgcm90YXRlWig0NWRlZyk7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yIDogd2hpdGU7XHJcbiAgfVxyXG4gIFxyXG4gIC5zbGlkZXIucm91bmQge1xyXG4gICAgYm9yZGVyLXJhZGl1cyA6IDM1cHg7XHJcbiAgfVxyXG4gIFxyXG4gIC5zbGlkZXIucm91bmQ6YmVmb3JlIHtcclxuICAgIHdpZHRoIDogNDMlO1xyXG4gICAgaGVpZ2h0IDogNDMlO1xyXG4gICAgYm9yZGVyLXRvcC1sZWZ0LXJhZGl1cyA6IDUwcHg7XHJcbiAgICBib3JkZXItdG9wLXJpZ2h0LXJhZGl1cyA6IDUwcHg7XHJcbiAgICB0cmFuc2Zvcm0gOiByb3RhdGVaKC00NWRlZyk7XHJcbiAgfSJdfQ== */"
+
+/***/ }),
+
+/***/ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.ts":
+/*!*************************************************************************************************!*\
+  !*** ./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.ts ***!
+  \*************************************************************************************************/
+/*! exports provided: ToggleSwitchComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToggleSwitchComponent", function() { return ToggleSwitchComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var ToggleSwitchComponent = /** @class */ (function () {
+    function ToggleSwitchComponent() {
+        this.toggleOn = false;
+        this.toggleEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"](null);
+    }
+    ToggleSwitchComponent.prototype.ngOnInit = function () {
+    };
+    ToggleSwitchComponent.prototype.toggleEventHandler = function (event) {
+        this.toggleOn = !this.toggleOn;
+        this.toggleEvent.emit({ type: 'toggle', isOn: this.toggleOn });
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], ToggleSwitchComponent.prototype, "toggleEvent", void 0);
+    ToggleSwitchComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-toggle-switch',
+            template: __webpack_require__(/*! ./toggle-switch.component.html */ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.html"),
+            styles: [__webpack_require__(/*! ./toggle-switch.component.scss */ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], ToggleSwitchComponent);
+    return ToggleSwitchComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/modules/shared/shared-routing.module.ts":
 /*!*********************************************************!*\
   !*** ./src/app/modules/shared/shared-routing.module.ts ***!
@@ -1158,6 +1224,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _core_core_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../core/core.module */ "./src/app/modules/core/core.module.ts");
 /* harmony import */ var _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./component/global-loader/global-loader/global-loader.component */ "./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.ts");
+/* harmony import */ var _component_toggle_switch_toggle_switch_toggle_switch_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./component/toggle-switch/toggle-switch/toggle-switch.component */ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.ts");
+
 
 
 
@@ -1174,7 +1242,8 @@ var SharedModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             declarations: [
                 _component_sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_4__["SidebarComponent"],
-                _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"]
+                _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"],
+                _component_toggle_switch_toggle_switch_toggle_switch_component__WEBPACK_IMPORTED_MODULE_9__["ToggleSwitchComponent"]
             ],
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
@@ -1187,7 +1256,8 @@ var SharedModule = /** @class */ (function () {
             ],
             exports: [
                 _component_sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_4__["SidebarComponent"],
-                _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"]
+                _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"],
+                _component_toggle_switch_toggle_switch_toggle_switch_component__WEBPACK_IMPORTED_MODULE_9__["ToggleSwitchComponent"]
             ]
         })
     ], SharedModule);
