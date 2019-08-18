@@ -1,3 +1,6 @@
+const _ = require('lodash');
+
+
 var processProperties = (objectName, dataProperties, addBrackets = false) => {
     if (Object.keys(dataProperties).length > 0) {
         // has some properties, now convert them
@@ -114,10 +117,70 @@ var createDeleteRelationQuery = (relationID) => {
     }
 }
 
+function extractProperties(entitiesArray, type = 'node') {
+    try {
+        if (entitiesArray.length > 0) {
+            // start collecting the list
+            let idealObject = {}
+            entitiesArray.forEach(entity => {
+                if (Object.keys(entity).length > 0) {
+                    Object.keys(entity).forEach(entityKey => {
+                        if (Object.keys(idealObject).indexOf(entityKey) > -1) {
+                            idealObject[entityKey].push(entity[entityKey]);
+                        }
+                        else {
+                            idealObject[entityKey] = [];
+                            idealObject[entityKey].push(entity[entityKey]);
+                        }
+                    });
+                }
+            });
+            
+            // make all the keys unique
+            Object.keys(idealObject).forEach(key => {
+                idealObject[key] = _.uniq(idealObject[key]);
+                idealObject[key] = _.orderBy(idealObject[key]);
+            });
+            return idealObject;
+        }
+    } catch (e) {
+        // illegal datatype provided in entitiesArray
+        console.log('bad datatype provided in entitiesArray', e);
+        return {}
+    }
+}
+
+var processFetchedProperties = (rawGraphResponse) => {
+    // iterate to all the nodes and relations and collect all the possible values used in the properties
+    let responseObj = {
+        nodes : [],
+        relations : []
+    }
+    // seperate nodes and relations properties
+    rawGraphResponse.forEach(record => {
+        // index 0 is for node, 1 for relation
+        try {
+            if (record._fields[0] !== null && record._fields[0].hasOwnProperty('properties')) {
+                responseObj.nodes.push(record._fields[0].properties);
+            }
+            if (record._fields[1] !== null && record._fields[1].hasOwnProperty('properties')) {
+                responseObj.relations.push(record._fields[1].properties);
+            }
+        } catch (e) {
+            console.log('An error occured while seperating node and relationships in processFetchedProperties ', e);
+        }
+    });
+    return {
+        nodes : extractProperties(responseObj.nodes, 'node'), 
+        relations : extractProperties(responseObj.relations, 'relation')
+    };
+}
+
 module.exports = {
     createUpdateNodeQuery,
     createUpdateRelationQuery,
     createDeleteNodeQuery,
     createDeleteRelationQuery,
-    processProperties
+    processProperties,
+    processFetchedProperties
 }

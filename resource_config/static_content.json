@@ -34,6 +34,11 @@
                 "read" : {
                     "d001" : ""
                 }
+            },
+            "properties" : {
+                "fetch" : {
+                    "a001": "API : /graph/properties/ | ERROR : Error encountered while reading from database"
+                }
             }
         }
     },

@@ -272,4 +272,17 @@ router.post('/graph/relation/delete', (req,res) => {
     }
 });
 
+router.get('/graph/properties', (req,res) => {
+    console.log('/graph/properties hit\n');
+    neo4j.fetchGraphProperties()
+    .then(response => {
+        console.log('sending back  data from /graph/properties');
+        res.send(response);
+    })
+    .catch(err => {
+        console.error('An Error occured while sending back relations data ->', err);
+        res.status(500).send({ error: 'Something went wrong while sending back the data' });
+    })
+});
+
 module.exports = router;
