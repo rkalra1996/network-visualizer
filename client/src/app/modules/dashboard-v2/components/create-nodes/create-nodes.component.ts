@@ -31,6 +31,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   public TYPE_TEXT = 'Type';
   public ADD_NEW_LABEL = 'Add New Label';
   public ADD_NEW_TYPE = 'Add New Type';
+  public ADD_NEW_PROPERTY = 'Add New Property';
   public toolTipText = '';
   public deleteContext = 'node';
   public newNodeName = 'Not Available';
@@ -74,17 +75,34 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   public selectedNodeNameTarget: any;
   public editNodeConfig = {};
   public deleteNodeConfig = {};
+  public totalNodesProperties = {};
+  public totalRelationsProperties = {};
+  public availablePropertyList = {};
+  public selectedPropertiesObject = {};
 
   constructor(
     private SharedSrvc: SearchService, 
     private graphSrvc: GraphDataService,
-    private sharedGraphSrvc: SharedGraphService, 
+    private sharedGraphSrvc: SharedGraphService,
     private fb: FormBuilder) {
   }
 
   ngOnInit() {
     this.toolTipText = 'The Properties section can be left blank to set a default Node';
     $('.toolTipText').tooltip();
+    // fetch the properties of all the nodes and relationships
+    this.graphSrvc.getGraphProperties()
+    .subscribe(response => {
+      if (response.hasOwnProperty('nodes')) {
+        this.totalNodesProperties = _.cloneDeep(response['nodes']);
+      }
+      if (response.hasOwnProperty('relations')) {
+        this.totalRelationsProperties = _.cloneDeep(response['relations']);
+      }
+      console.log(this.totalNodesProperties, this.totalRelationsProperties);
+    }, err => {
+      console.error('Error while subscribing to graphProperties method -> ', err);
+    });
   }
 
   createNode() {
@@ -210,6 +228,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     $('#RelAfterNodeModal').on('hidden.bs.modal', (e) => {
       this.newNodeCreated = null;
       this.newNodeName = null;
+      this.setAllToFalse('node');
     });
     $('#createNodeModal').on('hidden.bs.modal', (e) => {
       // this event will reset the popupConfig object so that everytime correct data is accessed
@@ -338,8 +357,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         this.showModal(modalID);
         // found the modal
         $(`#${modalID}`).on('shown.bs.modal', (event) => {
+          this.selectedPropertiesObject = _.cloneDeep(dataToFill);
           // capture the modal text boxes once it is visible
-          $(`#${modalID} :text`).each(function() {
+          /* $(`#${modalID} :text`).each(function() {
             let key = $(this).attr('id') || null;
             if (!!dataToFill) {
               if (Object.keys(dataToFill).indexOf(key) > -1) {
@@ -348,10 +368,11 @@ export class CreateNodesComponent implements OnInit, OnChanges {
                 // disable the Name box since it is unique fot the database
                 /* if (key === 'id_Name') {
                   $(`[id='${key}']`).attr('disabled', 'disabled');
-                } */
+                }
               }
             }
-          });
+          }); */
+
           // add id of the node to the modal
           this.addAttribute('edit_btn', `${type}_id`, IDToSupply);
         });
@@ -370,12 +391,13 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     // main purpose is to attach id_ to the object keys so that it can be used to find elements in the modal
     if (Object.keys(prefilledData).length > 0) {
       // iterate on the keys and rename them
-      let prefilledObj = {};
-      Object.keys(prefilledData).forEach(key => {
-        let newKey = `id_${key}`;
+      // let prefilledObj = {};
+      /* Object.keys(prefilledData).forEach(key => {
+        // let newKey = `id_${key}`;
+
         prefilledObj[newKey] = prefilledData[key];
-      });
-      return prefilledObj;
+      }); */
+      return prefilledData;
     }
     else {return null}
   }
@@ -398,9 +420,10 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     this.selectedType = _.cloneDeep([]);
     this.disabledBox = false;
     this.enableNewTemplate = false;
-
     if (setFor === 'node') {
       this.labelProperties = [];
+      this.availablePropertyList = _.cloneDeep({});
+      this.selectedPropertiesObject = _.cloneDeep({});
     } else if (setFor === 'relation') {
       this.disabledFromBox = false;
       this.disabledToBox = false;
@@ -417,24 +440,69 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       type: null
     };
     nodeData.type = [this.selectedType];
-    $('#createNodeModal :text').each(function () {
+    /* $('#createNodeModal :text').each(function () {
       let key = $(this).attr('id') || null;
       let value = $(this).val() || null;
       nodeData.properties[key] = value;
-    });
+    }); */
+    console.log('properties object on submit is  ', this.selectedPropertiesObject);
+    // pass the captured data into the object and move ahead
+    nodeData.properties = _.cloneDeep(this.selectedPropertiesObject);
     try {
       nodeData = this.validateNodeData(nodeData);
       // hide the modal once the data is created properly
       $('#createNodeModal').modal('hide');
       if (type === 'create') {
+        this.insertIntoPropertyList(nodeData.properties);
         this.nodeBtnEvent.emit({ type: 'click', action: 'create', data: nodeData });
         this.popupConfig.createNodePopup = false;
+        this.setAllToFalse('node');
       } else if (type === 'edit') {
+        // add the updated properties if any, to the availablePropertyList for future use
+        this.insertIntoPropertyList(nodeData.properties);
         this.nodeBtnEvent.emit({ type: 'click', action: 'edit', data: nodeData, process : 'complete' });
         this.popupConfig.editNodePopup = false;
       }
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  insertIntoPropertyList(propertiesToUpdate) {
+    // the  purpose of this function is to update the global availablePropertyList
+    if (Object.keys(propertiesToUpdate).length > 0) {
+      Object.keys(propertiesToUpdate).forEach(property => {
+        /* if (Object.keys(this.availablePropertyList).indexOf(property) > -1) {
+          debugger;
+          let propertyList = this.availablePropertyList[property]['list'];
+          if (propertyList.indexOf(propertiesToUpdate[property]) <= -1) {
+            // will enter here if the property Name is already present but the new value not present
+            this.availablePropertyList[property]['list'].push(propertiesToUpdate[property]);
+
+          } else {
+            let sol = propertiesToUpdate[property];
+          }
+        } */
+        if (Object.keys(this.totalNodesProperties).indexOf(property) > -1) {
+          let propertyList = this.totalNodesProperties[property];
+          if (propertyList.indexOf(propertiesToUpdate[property]) <= -1) {
+            this.totalNodesProperties[property].push(propertiesToUpdate[property]);
+          }
+        } else {
+          this.totalNodesProperties[property] = [];
+          this.totalNodesProperties[property].push(propertiesToUpdate[property]);
+        }
+        if (Object.keys(this.totalRelationsProperties).indexOf(property) > -1) {
+          let propertyList = this.totalRelationsProperties[property];
+          if (propertyList.indexOf(propertiesToUpdate[property]) <= -1) {
+            this.totalRelationsProperties[property].push(propertiesToUpdate[property]);
+          }
+        } else {
+          this.totalRelationsProperties[property] = [];
+          this.totalRelationsProperties[property].push(propertiesToUpdate[property]);
+        }
+      });
+      // this.availablePropertyList = _.cloneDeep(this.availablePropertyList);
     }
   }
 
@@ -504,6 +572,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.TYPE_TEXT = 'Type';
       if (!editProperties || !editProperties.hasOwnProperty('properties')) {
         editProperties = null;
+        this.selectedPropertiesObject = _.cloneDeep({});
       } else {
         editProperties = editProperties['properties'];
       }
@@ -521,15 +590,14 @@ export class CreateNodesComponent implements OnInit, OnChanges {
             fetchedProperties.push(property);
           }
         });
-      }
-      else {
+      } else {
         this.processedData.forEach(labelObj => {
           if (labelObj.type[0] === labelName[0]) {
             fetchedProperties = labelObj.properties;
           }
         });
         // if fetched properties is empty, means this is a new Type the user has selected
-        // Add 2 properties to this TYPE : Name and deeted with deleted = false by default
+        // Add 2 properties to this TYPE : Name and deleted with deleted = false by default
         if (!fetchedProperties.length) {
           fetchedProperties.push('Name');
           fetchedProperties.push('deleted');
@@ -541,14 +609,75 @@ export class CreateNodesComponent implements OnInit, OnChanges {
           fetchedProperties = this.swap(fetchedProperties, index, 0);
         }
       });
+      // before sending back, set the available property list for each property
+      this.setPropertyList(fetchedProperties);
+
       return fetchedProperties.filter(ele => {
         return ele !== 'deleted';
     });
-    }
-    else {
+    } else {
       return [];
     }
   }
+
+  setPropertyList(propertyKeyList) {
+    debugger;
+    // this function will keep updating the global allPropertyList whenever new set of properties are recieved
+    try {
+      propertyKeyList.forEach((propertyName, index) => {
+        if (!Object.keys(this.availablePropertyList).length) {
+          // this is the first entry
+          this.availablePropertyList[propertyName] = { list : [], enableNewProperty : false};
+          this.availablePropertyList[propertyName]['list'] = this.getcollectedProperties(propertyName);
+        } else {
+          // update the key
+          if (Object.keys(this.availablePropertyList).indexOf(propertyName) > -1) {
+            this.availablePropertyList[propertyName]['list'] = this.getcollectedProperties(propertyName);
+          } else {
+            this.availablePropertyList[propertyName] = { list : [], enableNewProperty : false};
+            this.availablePropertyList[propertyName]['list'] = this.getcollectedProperties(propertyName);
+          }
+        }
+        // tslint:disable-next-line: max-line-length
+        this.availablePropertyList[propertyName]['list'] = this.pushOnTop(this.ADD_NEW_PROPERTY, this.availablePropertyList[propertyName]['list']);
+      });
+      // now add a default key of 'Add new Property' in each list
+      // once the objectis prepared, create another object to store the info of selected value
+      this.initiatePropertiesValues();
+    } catch (e) {
+      console.warn('Illegal propertyKeyList array supplied in setPropertyList', e);
+      this.availablePropertyList = {};
+    }
+  }
+
+  initiatePropertiesValues(){
+    Object.keys(this.availablePropertyList).forEach(key => {
+      this.selectedPropertiesObject[key] = '';
+    });
+    // remove the deleted key if present
+    if (Object.keys(this.selectedPropertiesObject).indexOf('deleted') > -1) {
+      delete this.selectedPropertiesObject['deleted'];
+    }
+    console.log('propertyObject looks like ', this.selectedPropertiesObject);
+  }
+
+  getcollectedProperties(propertyName) {
+    if (!propertyName) {
+      return [];
+    }
+    let combinedPropertyList = [];
+    // find the collected property values of given propertyName from totalNodeProperties and totalRelationProperties and fill it
+    if (Object.keys(this.totalNodesProperties).indexOf(propertyName) > -1) {
+      combinedPropertyList.push(...this.totalNodesProperties[propertyName]);
+    }
+    if (Object.keys(this.totalRelationsProperties).indexOf(propertyName) > -1) {
+      combinedPropertyList.push(...this.totalRelationsProperties[propertyName]);
+    }
+    // make them unique and order by alphabets
+    combinedPropertyList = _.orderBy(combinedPropertyList);
+    combinedPropertyList = _.uniq(combinedPropertyList);
+    return combinedPropertyList;
+    }
 
   swap(ArrayForSwapping,swapFromIndex, swapToIndex) {
     const temp = ArrayForSwapping[swapFromIndex];
@@ -562,8 +691,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     Object.keys(dataObj.properties).forEach(property => {
       if (property !== null && property !== undefined) {
         // remove the id_ prefix in the key
-        property = property.split('id_')[1];
-        newPropertyObject[property] = dataObj.properties['id_' + property];
+        property = property.split('id_')[0];
+        newPropertyObject[property] = dataObj.properties[property];
         if (!newPropertyObject[property]) {
           newPropertyObject[property] = 'not available';
         }
@@ -572,6 +701,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     // remove all undefined keys
     if (newPropertyObject.hasOwnProperty('undefined')) {
       delete newPropertyObject['undefined'];
+    }
+    if (newPropertyObject.hasOwnProperty('Type')) {
+      delete newPropertyObject['Type'];
     }
     return newPropertyObject;
   }
@@ -790,6 +922,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         this.labelProperties.filter((property,index) => {
           if (property === propertyName) {
             console.log('found ', property + ' at ' + index);
+            this.updateSelectedPropertiesObject(property, 'delete');
             return this.labelProperties.splice(index, 1 );
           }
       });
@@ -826,16 +959,52 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         if (modalType === 'node') {
           this.labelProperties.push(propertyKey);
           this.labelProperties = _.uniq(this.labelProperties);
-        }
-        else if (modalType === 'relation') {
+          this.addNewPropertyToAvailablePropterties(propertyKey, this.ADD_NEW_PROPERTY);
+          // this.appendNewElement({name: propertyKey});
+          this.enableNewTemplate = false;
+        } else if (modalType === 'relation') {
           this.typeProperties.push(propertyKey);
           this.typeProperties = _.uniq(this.typeProperties);
         }
+        this.updateSelectedPropertiesObject(propertyKey, 'add');
       }
     }
   // clear the property box
     $('#propertyKey').val('');
     $('#propertyKeyRel').val('');
+  }
+
+  addNewPropertyToAvailablePropterties(propertyName, defaultTextToAdd = '') {
+    // add the new property name in the availablePropertiesList if not exisits and add a default value of ADD_NEW_PROPERTY
+    if (Object.keys(this.availablePropertyList).indexOf(propertyName) <= -1) {
+      // it is a new property
+      this.availablePropertyList[propertyName] = {list : [], enableNewProperty : false};
+      if (defaultTextToAdd) {
+        this.availablePropertyList[propertyName]['list'] = [defaultTextToAdd];
+      }
+    }
+  }
+
+  removeNewPropertyFromAvailableProperties(propertyName) {
+    if (Object.keys(this.availablePropertyList).indexOf(propertyName) > -1) {
+      // property found, simlpy delete the property
+    }
+  }
+
+  updateSelectedPropertiesObject(key, action = 'add') {
+    // add / delete the provided key from selectedPropertiesObject
+    if (action === 'add') {
+      if (Object.keys(this.selectedPropertiesObject).indexOf(key) <= -1) {
+        this.selectedPropertiesObject[key] = "";
+        this.selectedPropertiesObject = _.cloneDeep(this.selectedPropertiesObject);
+      }
+    }
+    else if (action === 'delete') {
+      if (Object.keys(this.selectedPropertiesObject).indexOf(key) > -1) {
+        delete this.selectedPropertiesObject[key]
+        this.selectedPropertiesObject = _.cloneDeep(this.selectedPropertiesObject);
+      }
+    }
   }
 
   getPropertyValues() {
@@ -879,5 +1048,56 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
     console.log(val);
     this.selectedType = null;
+  }
+
+  updateSelectedOption(propertValueEvent, propertyKey) {
+    console.log(`property is  ${propertyKey} and value is ${this.selectedPropertiesObject[propertyKey]}`);
+    if (!!propertyKey && this.selectedPropertiesObject[propertyKey] === this.ADD_NEW_PROPERTY) {
+      console.log('selected NEW PROPERTY for ', propertyKey);
+      this.availablePropertyList[propertyKey]['enableNewProperty'] = true;
+    }
+  }
+
+  hasList(data) {
+    // check whether provided data is present in the availablePropertyList and return accordingly
+    if (!!data) {
+       if (Object.keys(this.availablePropertyList).indexOf(data) > -1) {
+         console.log('will display dropdown for ', data);
+         return true;
+       } else {
+          console.log('will display text box for ', data);
+          return false;
+        }
+    } else {
+      return false;
+    }
+  }
+
+  appendNewElement(elementDetails: object | null) {
+    const newPropertyEl = `<div class="modalItem" id="newPropertiesContainer_${elementDetails['name']}">
+    <p class="sectionName">${elementDetails['name']}</p>
+    <span class="inputSpan">
+        <div class="ui corner labeled input normalTextBox">
+            <input type="text" placeholder="Enter Value..." id="id_${elementDetails['name']}" 
+            [(ngModel)] = "selectedPropertiesObject['${elementDetails['name']}']" 
+            (ngModelChange)="updateSelectedOption($event, '${elementDetails['name']}')">
+        </div>
+    </span>
+    <span class="supportIcons" (click)="deleteProperty('${elementDetails['name']}')"><i class="far fa-trash-alt"></i></span>
+</div>`;
+
+// add this element into provided div class
+    $(`.newPropertyGroup`).append(newPropertyEl);
+  }
+
+  updateNewPropertyValue(keyupEvent, data) {
+    if (keyupEvent.key === 'Enter') {
+      // push the new value entered into the propertyValues list
+      if (!!data) {
+        // tslint:disable-next-line: max-line-length
+        this.availablePropertyList[data]['list'] = this.pushOnTop(this.selectedPropertiesObject[data], this.availablePropertyList[data]['list'], 1);
+        this.availablePropertyList[data]['enableNewProperty'] = false;
+      }
+    }
   }
 }

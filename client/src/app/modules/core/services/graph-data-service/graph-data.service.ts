@@ -15,6 +15,7 @@ import * as _ from 'lodash';
 export class GraphDataService {
 
   constructor(private publicHttp: PublicHttpService) { }
+
   getInitialData() {
     // const url = 'http://localhost:3050/api/initialdata';
     const url = '/api/initialdata';
@@ -416,5 +417,19 @@ export class GraphDataService {
     } else {
       return throwError('Invalid data provided');
     }
+  }
+
+  getGraphProperties() {
+    const url = '/api/graph/properties';
+    return this.publicHttp.get(url).pipe(map(data => {
+      if (!!data) {
+        return data;
+      } else {
+        return {response: 'empty'};
+    }
+    }, err => {
+      throwError({error : 'Error while reading graph properties'});
+      console.error(err);
+    }));
   }
 }

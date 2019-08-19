@@ -32,7 +32,7 @@
                                 [(ngModel)]="selectedType"
                                 (ngModelChange)="updateProperties($event)"
                                 [options]="typeOptions"
-                                [isSearchable]="searchable"
+                                [isSearchable]="true"
                                 [isDisabled]="disabledBox"
                                 #select>
                         <sui-select-option *ngFor="let option of select.filteredOptions"
@@ -49,16 +49,58 @@
                     <h5 class="propertyLabel">
                         Properties <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
                     </h5>
+                    <!--container to display pre exisiting properties-->
                     <ng-container *ngFor="let data of labelProperties">
                         <div class="modalItem">
                             <p class="sectionName">{{data}}</p>
-                            <span class="inputSpan"><input type="text" id="id_{{data}}"></span>
-                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name'" (click)="deleteProperty(data)"><i class="far fa-trash-alt"></i></span>
-                            <span class="supportIcons nameKey" *ngIf="(data?.length > 0) && data === 'Name'">
+                            <span class="inputSpan">
+                                <ng-container *ngIf = "data === 'Name'">
+                                    <div class="ui corner labeled input normalTextBox">
+                                        <input type="text" placeholder="Enter Name..." id="id_{{data}}" [(ngModel)] = "selectedPropertiesObject[data]" (ngModelChange)="updateSelectedOption($event, data)">
+                                        <div class="ui corner label">
+                                            <i class="asterisk icon"></i>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="data !== 'Name'">
+                                    <sui-select class="selection" *ngIf="!availablePropertyList[data]?.enableNewProperty"
+                                    [options]="availablePropertyList[data]['list']" [(ngModel)]="selectedPropertiesObject[data]"
+                                    (ngModelChange)="updateSelectedOption($event, data)" [isSearchable]="true"
+                                    [isDisabled]="false" #Propertyselect>
+                                        <sui-select-option *ngFor="let option of Propertyselect.filteredOptions" [value]="option"></sui-select-option>
+                                    </sui-select>
+                                    <div class="ui corner labeled input normalTextBox" *ngIf="availablePropertyList[data]?.enableNewProperty">
+                                        <input type="text" placeholder="Enter New Property..." id="id_{{data}}" [(ngModel)]="selectedPropertiesObject[data]" (ngModelChange)="updateSelectedOption($event, data)" (keyup)="updateNewPropertyValue($event,data)">
+                                        <div class="ui corner label">
+                                            <i class="asterisk icon"></i>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </span>
+                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty" (click)="deleteProperty(data)"><i class="far fa-trash-alt"></i></span>
+                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty" (click)="availablePropertyList[data].enableNewProperty = false" ><i class="far fa-times-circle" style="color: red;"></i></span>
+                            <span class="supportIcons nameKey" *ngIf="(data?.length > 0) && data === 'Name'"> 
                                 <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="right" [title]="'Name is mandatory and cannot be deleted'"></i>
                             </span>
                         </div>
                     </ng-container>
+                    <!--container to display pre exisiting properties-->
+
+                    <!--element group to collect all new properties-->
+                    <div class="newPropertyGroup">
+                        <!-- <div class="modalItem" id="newPropertiesContainer">
+                            <p class="sectionName">New Property</p>
+                            <span class="inputSpan">
+                                <div class="ui corner labeled input normalTextBox">
+                                    <input type="text" placeholder="Enter Value..." id="id_{{data}}" [(ngModel)] = "selectedPropertiesObject[data]" (ngModelChange)="updateSelectedOption($event, data)">
+                                </div>
+                            </span>
+                            <span class="supportIcons" (click)="deleteProperty(data)"><i class="far fa-trash-alt"></i></span>
+                        </div> -->
+                    </div>
+                    <!--element group to collect all new properties-->
+
+                    <!--Template to add a new property-->
                     <ng-container *ngIf="enableNewTemplate">
                         <form id="NewPropertyGroup">
                             <div class="modalItem">
@@ -75,6 +117,7 @@
                             </div>
                         </form>
                     </ng-container>
+                    <!--Template to add a new property ends-->
                 </div>
                 <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && !enableNewTemplate" (click)="addNewProperty('node')">Add New Property</a>
                 <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && enableNewTemplate" (click)="saveNewProperty('node')">Save Property</a>
@@ -83,8 +126,8 @@
                 <button type="button" class="btn btn-danger deleteBtn" *ngIf="popupConfig.editNodePopup === true" style="color: white;" (click)="activateDelete('deleteModal', 'node')">Delete</button>
                 <a class="mailBtn" *ngIf="popupConfig.editNodePopup === true" >Send Mail</a>
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
-                <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true" [disabled]="selectedType?.length <= 0">Create</button>
-                <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true" id="edit_btn">Update</button>
+                <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true" [disabled]="(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])">Create</button>
+                <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true" [disabled]="(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])" id="edit_btn">Update</button>
             </div>
             <div class="modal-footer" *ngIf="selectedType === ADD_NEW_LABEL">
                     <button type="button" class="btn btn-primary create" id="edit_btn" (click)="addNewLabel('node')">Add Label</button>
