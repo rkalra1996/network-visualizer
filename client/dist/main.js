@@ -846,6 +846,20 @@ var GraphDataService = /** @class */ (function () {
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])('Invalid data provided');
         }
     };
+    GraphDataService.prototype.getGraphProperties = function () {
+        var url = '/api/graph/properties';
+        return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+            if (!!data) {
+                return data;
+            }
+            else {
+                return { response: 'empty' };
+            }
+        }, function (err) {
+            Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])({ error: 'Error while reading graph properties' });
+            console.error(err);
+        }));
+    };
     GraphDataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
