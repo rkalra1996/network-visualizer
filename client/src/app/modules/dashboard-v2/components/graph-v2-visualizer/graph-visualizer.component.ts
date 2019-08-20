@@ -240,11 +240,16 @@ export class GraphVisualizerComponent implements OnInit {
     // if the user opted for deleted data, simply set deleted default color to all the nodes
     nodeObj.forEach(node => {
       if (node.hasOwnProperty('type') && node.type.length > 0) {
-        node['color'] = this.showDeletedData ? this.colorConfig.deletedColor.colorCode : this.colorConfig.defaultColor[node.type[0]];
-        // temporary fix, add exception for societal platform
-        if (node.label === 'Societal Platform Team') {
+        if(node['properties']['deleted'] === "true"){
+          node['color'] = this.colorConfig.deletedColor.colorCode;
+        }else{
           node['color'] = this.colorConfig.defaultColor[node.type[0]];
         }
+        // node['color'] = this.showDeletedData ? this.colorConfig.deletedColor.colorCode : this.colorConfig.defaultColor[node.type[0]];
+        // // temporary fix, add exception for societal platform
+        // if (node.label === 'Societal Platform Team') {
+        //   node['color'] = this.colorConfig.defaultColor[node.type[0]];
+        // }
       }
     });
     // console.log(nodeObj);

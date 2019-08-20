@@ -38,6 +38,7 @@ export class ColorPanelComponent implements OnInit {
         // set to false by default
         this.showDeletedData = false;
       }
+      this.addDeleteColor();
     });
   }
 
@@ -52,6 +53,15 @@ export class ColorPanelComponent implements OnInit {
       console.log('empty key Array or colorObj in color panel');
       return [];
     }
+  }
+
+  addDeleteColor(){
+// add new color for deleted node
+if(!this.colorData.hasOwnProperty("Deleted")){
+  if(this.showDeletedData){
+    this.colorData.push({name: "Deleted",color: "#C0C0C0"})
+  }
+}    
   }
 
   toggleDropdown() {
