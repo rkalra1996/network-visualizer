@@ -18,8 +18,8 @@
                 <h5 class="modal-title" id="NodeModalLabel" *ngIf="popupConfig.createNodePopup === true">Create Element</h5>
                 <h5 class="modal-title" id="NodeModalLabel" *ngIf="popupConfig.editNodePopup === true">Element Details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="modalItem">
@@ -43,7 +43,7 @@
                         <ng-container *ngIf="selectedType === ADD_NEW_LABEL">
                             <span class="inputSpan"><input type="text" id="id_newLabelNode"></span>
                         </ng-container>
-            </span>
+                    </span>
                 </div>
                 <div class="modalItem" *ngIf="labelProperties?.length > 0 && selectedType?.length > 0">
                     <h5 class="propertyLabel">
@@ -84,23 +84,10 @@
                             </span>
                         </div>
                     </ng-container>
-                    <!--container to display pre exisiting properties-->
-
-                    <!--element group to collect all new properties-->
-                    <div class="newPropertyGroup">
-                        <!-- <div class="modalItem" id="newPropertiesContainer">
-                            <p class="sectionName">New Property</p>
-                            <span class="inputSpan">
-                                <div class="ui corner labeled input normalTextBox">
-                                    <input type="text" placeholder="Enter Value..." id="id_{{data}}" [(ngModel)] = "selectedPropertiesObject[data]" (ngModelChange)="updateSelectedOption($event, data)">
-                                </div>
-                            </span>
-                            <span class="supportIcons" (click)="deleteProperty(data)"><i class="far fa-trash-alt"></i></span>
-                        </div> -->
-                    </div>
-                    <!--element group to collect all new properties-->
+                    <!--container to display pre exisiting properties end-->
 
                     <!--Template to add a new property-->
+                    
                     <ng-container *ngIf="enableNewTemplate">
                         <form id="NewPropertyGroup">
                             <div class="modalItem">
@@ -130,7 +117,7 @@
                 <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true" [disabled]="(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])" id="edit_btn">Update</button>
             </div>
             <div class="modal-footer" *ngIf="selectedType === ADD_NEW_LABEL">
-                    <button type="button" class="btn btn-primary create" id="edit_btn" (click)="addNewLabel('node')">Add Label</button>
+                <button type="button" class="btn btn-primary create" id="edit_btn" (click)="addNewLabel('node')">Add Label</button>
             </div>
         </div>
     </div>
@@ -143,8 +130,8 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="RelModalLabel" *ngIf="popupConfig.createRelationPopup === true">Create Relationship</h5>
-                <h5 class="modal-title" id="RelModalLabel" *ngIf="popupConfig.editRelationPopup === true">Relationship Details</h5>
+                <h5 class="modal-title" id="RelModalLabel" *ngIf="createRelationPopup == true">Create Relationship</h5>
+                <h5 class="modal-title" id="RelModalLabel" *ngIf="editRelationPopup == true">Relationship Details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -154,41 +141,60 @@
                     <p class="sectionName">
                         {{TYPE_TEXT}}
                     </p>
-                    <ng-container *ngIf="selectedType !== ADD_NEW_TYPE">
-                            <span class="inputSpan">
-                                    <sui-select class="selection"
-                                    [(ngModel)]="selectedType"
-                                    (ngModelChange)="updateRelProperties($event)"
-                                    [options]="relationTypeOptions"
-                                    [isSearchable]="true"
-                                    [isDisabled]="disabledBox"
-                                    #selectRelationBox>
-                            <sui-select-option *ngFor="let option of selectRelationBox.filteredOptions"
-                                               [value]="option">
-                            </sui-select-option>
-                        </sui-select>
-                                          </span>
-                    </ng-container>
-                    <ng-container *ngIf="selectedType === ADD_NEW_TYPE">
-                        <span class="inputSpan"><input type="text" id="id_newLabelRelation"></span>
+                    <span class="inputSpan">
+                        <ng-container *ngIf="selectedType !== ADD_NEW_TYPE">
+                                <sui-select class="selection"
+                                [(ngModel)]="selectedType"
+                                (ngModelChange)="updateRelProperties($event)"
+                                [options]="relationTypeOptions"
+                                [isSearchable]="true"
+                                [isDisabled]="disabledBox"
+                                #selectRelationBox>
+                        <sui-select-option *ngFor="let option of selectRelationBox.filteredOptions"
+                                           [value]="option">
+                        </sui-select-option>
+                    </sui-select>
                         </ng-container>
+                        <ng-container *ngIf="selectedType === ADD_NEW_TYPE">
+                            <span class="inputSpan"><input type="text" id="id_newLabelRelation"></span>
+                        </ng-container>
+                    </span>
                 </div>
-                <div class="modalItem" *ngIf="typeProperties.length > 0 || enableNewTemplate">
+                <div class="modalItem" *ngIf="typeProperties?.length > 0 && selectedType?.length > 0">
                     <h5 class="propertyLabel">
                         Properties <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
                     </h5>
+                    
+                    
                     <ng-container *ngFor="let data of typeProperties">
                         <div class="modalItem">
                             <p class="sectionName">{{data}}</p>
-                            <span class="inputSpan"><input type="text" id="id_{{data}}"></span>
-                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name'" (click)="deleteProperty(data, 'relation')"><i class="far fa-trash-alt"></i></span>
+                            <span class="inputSpan">
+                                <ng-container *ngIf="data !== 'Name'">
+                                    <sui-select class="selection" *ngIf="!availablePropertyList[data]?.enableNewProperty"
+                                     [options]="availablePropertyList[data]['list']" [(ngModel)]="selectedPropertiesObject[data]"
+                                     (ngModelChange)="updateSelectedOption($event, data)" [isSearchable]="true"
+                                     [isDisabled]="false" #PropertyRelselect>
+                                        <sui-select-option *ngFor="let option of PropertyRelselect.filteredOptions" [value]="option"></sui-select-option>
+                                    </sui-select>
+                                    <div class="ui corner labeled input normalTextBox" *ngIf="availablePropertyList[data]?.enableNewProperty">
+                                        <input type="text" placeholder="Enter New Property..." id="id_{{data}}" [(ngModel)]="selectedPropertiesObject[data]" (ngModelChange)="updateSelectedOption($event, data)" (keyup)="updateNewPropertyValue($event,data)">
+                                        <div class="ui corner label">
+                                            <i class="asterisk icon"></i>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <!-- <input type="text" id="id_{{data}}"> -->
+                            </span>
+                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty" (click)="deleteProperty(data, 'relation')"><i class="far fa-trash-alt"></i></span>
+                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty" (click)="availablePropertyList[data].enableNewProperty = false" ><i class="far fa-times-circle" style="color: red;"></i></span>                            
                             <span class="supportIcons nameKey" *ngIf="(data?.length > 0) && data === 'Name'">
                                 <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="right" [title]="'Name is mandatory and cannot be deleted'"></i>
                             </span>
                         </div>
                     </ng-container>
-                    <ng-container *ngIf="enableNewTemplate">
-                            <form id="NewPropertyGroupRel">
+                </div>
+                        <form id="NewPropertyGroupRel" *ngIf="enableNewTemplate">
                                 <div class="modalItem">
                                     <div class="ui divider"></div>
                                     <p class="sectionName">Property Name</p>
@@ -202,55 +208,56 @@
                                     <div class="ui divider lower"></div>
                                 </div>
                             </form>
-                        </ng-container>
-                </div>
+
+
                 <div class="modalItem buttonContainer">
                     <a class="newLink2" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && !enableNewTemplate" (click)="addNewProperty('relation')">Add New Property</a>
-                    <a class="newLink2" *ngIf="selectedType !== ADD_NEW_TYPE && enableNewTemplate" (click)="saveNewProperty('relation')">Save Property</a>
-                    <h5 class="propertyLabel">
-                            Connection <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
-                        </h5>
+                    <a class="newLink2" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && enableNewTemplate" (click)="saveNewProperty('relation')">Save Property</a>
                 </div>
-                <div class="relationScope">
+
+                <div class="relationScope" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE">
                     <div class="modalItem">
+                            <h5 class="propertyLabel">
+                                    Connection <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
+                                </h5>
                         <p class="sectionName">From</p>
                         <span class="inputSpan">
-              <sui-select class="selection"
-              [(ngModel)]="selectedNodeNameSource"
-              (ngModelChange)="updateList('to',[selectedNodeNameSource])"
-              [options]="fromNames"
-              [isSearchable]="true"
-              [isDisabled]="disabledFromBox"
-              #NodeFromName>
-      <sui-select-option *ngFor="let option of NodeFromName.filteredOptions"
-                         [value]="option">
-      </sui-select-option>
-      </sui-select>
-            </span>
+                            <sui-select class="selection"
+                                [(ngModel)]="selectedNodeNameSource"
+                                (ngModelChange)="updateList('to',[selectedNodeNameSource])"
+                                [options]="fromNames"
+                                [isSearchable]="true"
+                                [isDisabled]="disabledFromBox"
+                                #NodeFromName>
+                                <sui-select-option *ngFor="let option of NodeFromName.filteredOptions"
+                                    [value]="option">
+                                </sui-select-option>
+                            </sui-select>
+                        </span>
                     </div>
                     <div class="modalItem">
                         <p class="sectionName">To</p>
                         <span class="inputSpan">
-            <sui-select class="selection"
-            [(ngModel)]="selectedNodeNameTarget"
-            (ngModelChange)="updateList('from',[selectedNodeNameTarget])"
-            [options]="toNames"
-            [isSearchable]="true"
-            [isDisabled]="disabledToBox"
-            #NodeToName>
-    <sui-select-option *ngFor="let option of NodeToName.filteredOptions"
-                       [value]="option">
-    </sui-select-option>
-    </sui-select> 
-          </span>
+                            <sui-select class="selection"
+                                [(ngModel)]="selectedNodeNameTarget"
+                                (ngModelChange)="updateList('from',[selectedNodeNameTarget])"
+                                [options]="toNames"
+                                [isSearchable]="true"
+                                [isDisabled]="disabledToBox"
+                                #NodeToName>
+                                <sui-select-option *ngFor="let option of NodeToName.filteredOptions"
+                                    [value]="option">
+                                </sui-select-option>
+                            </sui-select> 
+                        </span>
                     </div>
                 </div>
             </div>
             <div class="modal-footer" *ngIf="selectedType !== ADD_NEW_TYPE">
                 <button type="button" class="btn btn-danger deleteBtn left" *ngIf="popupConfig.editRelationPopup === true" style="color: white;" (click)="activateDelete('deleteModal', 'relation')">Delete</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
-                <button type="button" class="btn btn-primary create" (click)="submitRelModal()" *ngIf="popupConfig.createRelationPopup === true" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0">Create</button>
-                <button type="button" class="btn btn-primary create" (click)="submitRelModal('edit')" *ngIf="popupConfig.editRelationPopup === true" id="edit_btn">Update</button>
+                <button type="button" class="btn btn-primary create" (click)="submitRelModal()" *ngIf="popupConfig.createRelationPopup === true || createRelationPopup === true" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0">Create</button>
+                <button type="button" class="btn btn-primary create" (click)="submitRelModal('edit')" *ngIf="popupConfig.editRelationPopup === true" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0" id="edit_btn">Update</button>
             </div>
             <div class="modal-footer" *ngIf="selectedType === ADD_NEW_TYPE">
                 <button type="button" class="btn btn-primary create" id="edit_btn" (click)="addNewLabel('relation')">Add Type</button>

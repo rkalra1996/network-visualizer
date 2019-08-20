@@ -53,6 +53,14 @@ export class CreateNodesComponent implements OnInit, OnChanges {
      RETURN collect(allfields),label`
   };
 
+  // modal specific variables
+    public createNodePopup = false;
+    public editNodePopup = false;
+    public deleteNodePopup = false;
+    public createRelationPopup = false;
+    public editRelationPopup = false;
+    public deleteRelationPopup = false;
+
   public disabledBox = false;
   public enableNewTemplate = false;
   public clickedNodeID = null;
@@ -107,6 +115,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   createNode() {
     this.popupConfig.createNodePopup = true;
+    this.createNodePopup = true;
     this.disabledBox = false;
     this.enableNewTemplate = false;
 
@@ -141,10 +150,13 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   }
 
   createRelation() {
-    this.popupConfig.createRelationPopup = true;
+    this.setAllToFalse('relation');
+    this.popupConfig.createRelationPopup = _.cloneDeep(true);
+    this.createRelationPopup = true;
     this.enableNewTemplate = false;
     this.disabledBox = false;
     this.getRelationTypes().subscribe(data => {});
+    console.log('variables values are ', this.popupConfig.createRelationPopup + ' ' + this.createRelationPopup);
   }
 
   editRelation() {
@@ -228,15 +240,34 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     $('#RelAfterNodeModal').on('hidden.bs.modal', (e) => {
       this.newNodeCreated = null;
       this.newNodeName = null;
+      // this.createNodePopup = false;
+      this.editNodePopup = false;
+      this.editRelationPopup = false;
+      this.deleteNodePopup = false;
+      this.deleteRelationPopup = false;
       this.setAllToFalse('node');
     });
     $('#createNodeModal').on('hidden.bs.modal', (e) => {
       // this event will reset the popupConfig object so that everytime correct data is accessed
       this.setAllToFalse('node');
+      this.createNodePopup = false;
+      this.createRelationPopup = false;
+      this.editNodePopup = false;
+      this.editRelationPopup = false;
+      this.deleteNodePopup = false;
+      this.deleteRelationPopup = false;
+      
     });
     $('#createRelationModal').on('hidden.bs.modal', (e) => {
       // this event will reset the popupConfig object so that everytime correct data is accessed
       this.setAllToFalse('relation');
+      this.createNodePopup = false;
+      // this.createRelationPopup = false;
+      this.editNodePopup = false;
+      this.editRelationPopup = false;
+      this.deleteNodePopup = false;
+      this.deleteRelationPopup = false;
+      
     });
 
     if ((!!this.editData && !!this.editData.length) || (!!this.editData && !!Object.keys(this.editData).length)) {
@@ -271,6 +302,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     } else if ((!!this.editRelData && !!this.editRelData.length) || (!!this.editRelData && !!Object.keys(this.editRelData).length)) {
       // execute this portion if edit relationship is triggred
       this.popupConfig.editRelationPopup = true;
+      this.editRelationPopup = true;
       console.log('recieved edit relation data is ', this.editRelData);
       this.disabledBox = true;
       let editRelConfig = {
@@ -351,8 +383,10 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       if ($(`#${modalID}`).length) {
         if (type === 'node') {
           this.popupConfig.editNodePopup = true;
+          this.editNodePopup = true;
         } else if (type === 'relation') {
           this.popupConfig.editRelationPopup = true;
+          this.editRelationPopup = true;
         }
         this.showModal(modalID);
         // found the modal
@@ -421,8 +455,11 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     this.disabledBox = false;
     this.enableNewTemplate = false;
     if (setFor === 'node') {
+      this.createNodePopup = false;
+      this.editNodePopup = false;
       this.labelProperties = [];
       this.availablePropertyList = _.cloneDeep({});
+      this.deleteNodePopup = false;
       this.selectedPropertiesObject = _.cloneDeep({});
     } else if (setFor === 'relation') {
       this.disabledFromBox = false;
@@ -430,6 +467,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.selectedNodeNameSource = null;
       this.selectedNodeNameTarget = null;
       this.typeProperties = [];
+      this.createRelationPopup = false;
+      this.editRelationPopup = false;
+      this.deleteRelationPopup = false;
     }
   }
 
@@ -456,14 +496,69 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         this.insertIntoPropertyList(nodeData.properties);
         this.nodeBtnEvent.emit({ type: 'click', action: 'create', data: nodeData });
         this.popupConfig.createNodePopup = false;
+        this.createNodePopup = false;
         this.setAllToFalse('node');
       } else if (type === 'edit') {
         // add the updated properties if any, to the availablePropertyList for future use
         this.insertIntoPropertyList(nodeData.properties);
         this.nodeBtnEvent.emit({ type: 'click', action: 'edit', data: nodeData, process : 'complete' });
         this.popupConfig.editNodePopup = false;
+        this.editNodePopup = false;
       }
     } catch (e) {
+      console.log(e);
+    }
+  }
+
+
+  submitRelModal(type = 'create') {
+    let nodeData = null;
+    let relationData = null;
+    let sourceNode = null;
+    let targetNode = null;
+
+    if (type === 'create') {
+      nodeData = {
+        Name: null
+      };
+      sourceNode = _.cloneDeep(nodeData);
+      targetNode = _.cloneDeep(nodeData);
+      sourceNode.Name = this.selectedNodeNameSource;
+      targetNode.Name = this.selectedNodeNameTarget;
+    }
+
+    relationData = {
+      type: null,
+      properties: {}
+    };
+
+    relationData.type = [this.selectedType];
+
+
+    // extract properties from modal if entered
+    /* $('#createRelationModal :text').each(function() {
+      let key = $(this).attr('id') || null;
+      let value = $(this).val() || null;
+      relationData.properties[key] = value;
+      }); */
+    console.log('properties object on submit rel is  ', this.selectedPropertiesObject);
+
+    relationData.properties = _.cloneDeep(this.selectedPropertiesObject);
+    try {
+      relationData = this.validateRelationData(relationData);
+      console.log('relationship created is ', relationData);
+      // add the source and target nodes of this relation
+      if (type === 'create') {
+        relationData['from'] = sourceNode.Name;
+        relationData['to'] = targetNode.Name;
+      }
+      relationData['id'] = relationData['id'];
+      this.insertIntoPropertyList(relationData.properties);
+      this.edgeBtnEvent.emit({ type: 'click', action: `${type}`, data: relationData });
+      // hide the modal once the data is created properly
+      $('#createRelationModal').modal('hide');
+    }
+    catch (e) {
       console.log(e);
     }
   }
@@ -580,6 +675,35 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
   }
 
+  updateRelProperties(event, relProperties = null) {
+    // fetch the properties of selected type and display it in the dropdown
+     if (!relProperties || !relProperties.hasOwnProperty('properties')) {
+       relProperties = null;
+       this.selectedPropertiesObject = _.cloneDeep({});
+     } else {
+       relProperties = relProperties['properties'];
+     }
+     this.typeProperties =  this.getRelProperties([event], relProperties);
+       // trigger an api to get all the names of the nodes in the graph
+     this.graphSrvc.getNodeLabelData().subscribe(response => {
+       let temname = [];
+       if (response && response.length > 0) {
+         response.forEach(data => {
+           let keyName = Object.keys(data)[0];
+           if(keyName === "Name"){
+               temname = data['Name'];
+             }
+           });
+         this.fromNames = _.cloneDeep(temname);
+         this.toNames = _.cloneDeep(temname);
+         }
+       }, error => {
+         console.log(error);
+         this.fromNames = [];
+         this.toNames = [];
+       });
+     }
+
   getProperties(labelName, editProperties = null) {
     if (labelName.length > 0) {
       let fetchedProperties = [];
@@ -620,8 +744,45 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
   }
 
+  getRelProperties(relType: Array<string>, relProperties = null): any {
+    if (relType.length > 0) {
+      let fetchedProperties = [];
+      if (!!relProperties) {
+        Object.keys(relProperties).forEach(property => {
+          if (property !== 'Type') {
+            fetchedProperties.push(property);
+          }
+        });
+      }
+      else {
+        this.relationsData.forEach(Obj => {
+          if (Obj.type === relType[0]) {
+            fetchedProperties = Obj['properties'];
+          }
+        });
+
+        if (!fetchedProperties.length) {
+          fetchedProperties.push('deleted');
+        }
+      }
+
+      fetchedProperties.forEach((property, index) => {
+        if (property === 'Name' && index !== 0) {
+          fetchedProperties = this.swap(fetchedProperties, index, 0);
+        }
+      });
+      // before sending back, set the available property list for each property
+      this.setPropertyList(fetchedProperties);
+
+      return fetchedProperties.filter(el => {
+        return el !== 'deleted';
+      });
+    } else {
+      return [];
+    }
+  }
+
   setPropertyList(propertyKeyList) {
-    debugger;
     // this function will keep updating the global allPropertyList whenever new set of properties are recieved
     try {
       propertyKeyList.forEach((propertyName, index) => {
@@ -734,6 +895,13 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     // remove any null properties
     relationshipProperties = this.removeDirtyData(relation);
     relation.properties = _.cloneDeep(relationshipProperties);
+    if (this.popupConfig.editRelationPopup === true) {
+      // assign the node id
+      this.disabledBox = true;
+      const relationID = !isNaN($(`#edit_btn`).attr('relation_id')) ? $(`#edit_btn`).attr('relation_id') : null;
+      console.log('relation id is ', relationID);
+      relation['id'] = relationID;
+    }
     relation['type'] = relation['type'][0];
     return relation;
   }
@@ -746,7 +914,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     return typesArray;
   }
 
-  updateRelProperties(event, relProperties = null) {
+  /* updateRelProperties(event, relProperties = null) {
  // fetch the properties of selected type and display it in the dropdown
   if (!relProperties || !relProperties.hasOwnProperty('properties')) {
     relProperties = null;
@@ -772,8 +940,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.fromNames = [];
       this.toNames = [];
     });
-  }
-  getRelProperties(relType: Array<string>, relProperties = null): any {
+  } */
+  
+  /* getRelProperties(relType: Array<string>, relProperties = null): any {
     if (relType.length > 0) {
       let fetchedProperties = [];
       if (!!relProperties) {
@@ -797,9 +966,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     } else {
       return [];
     }
-  }
+  } */
 
-  submitRelModal(type = 'create') {
+  /* submitRelModal(type = 'create') {
     let nodeData = null;
     let relationData = null;
     let sourceNode = null;
@@ -847,7 +1016,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     catch (e) {
       console.log(e);
     }
-  }
+  } */
 
   updateList(key,name) {
     if (name.length > 0) {
@@ -912,14 +1081,14 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
   addNewProperty() {
     console.log('add new property');
-    this.enableNewTemplate = true;
+    this.enableNewTemplate = _.cloneDeep(true);
   }
 
   deleteProperty(propertyName, modalType = 'node') {
     if (!!propertyName) {
       // find the property in the labelProperties array and if present, simply remove it
       if (modalType === 'node') {
-        this.labelProperties.filter((property,index) => {
+        this.labelProperties.filter((property, index) => {
           if (property === propertyName) {
             console.log('found ', property + ' at ' + index);
             this.updateSelectedPropertiesObject(property, 'delete');
@@ -930,6 +1099,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         this.typeProperties.filter((property, index) => {
           if (property === propertyName) {
             console.log('found ', property + ' at ' + index);
+            this.updateSelectedPropertiesObject(property, 'delete');
             return this.typeProperties.splice(index, 1);
           }
         });
@@ -965,6 +1135,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         } else if (modalType === 'relation') {
           this.typeProperties.push(propertyKey);
           this.typeProperties = _.uniq(this.typeProperties);
+          this.enableNewTemplate = _.cloneDeep(false);
+          this.addNewPropertyToAvailablePropterties(propertyKey, this.ADD_NEW_PROPERTY);
         }
         this.updateSelectedPropertiesObject(propertyKey, 'add');
       }
