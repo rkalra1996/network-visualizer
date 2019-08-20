@@ -57,7 +57,7 @@ export class GraphVisualizerComponent implements OnInit {
 
     },
     deletedColor: {
-      colorCode : '#C0C0C0'
+      colorCode: '#C0C0C0'
     }
   };
 
@@ -71,7 +71,7 @@ export class GraphVisualizerComponent implements OnInit {
     physics: false,
     interaction: {
       navigationButtons: true
-  },
+    },
     edges: {
       smooth: {
         type: 'dynamic'
@@ -89,6 +89,9 @@ export class GraphVisualizerComponent implements OnInit {
     }
   };
 
+  public allGraphData = {};
+  public filteredGraphData = {};
+
   constructor(private graphService: GraphDataService, private sharedGraphService: SharedGraphService) { }
 
   ngOnInit() {
@@ -100,7 +103,7 @@ export class GraphVisualizerComponent implements OnInit {
       let nodesByIDs = this.getNodeDetails(nodeIDArray);
       console.log('processed data now is  ', nodesByIDs);
       this.sharedGraphService.sendNodeDetails(nodesByIDs);
-    }, err => {});
+    }, err => { });
 
     // subscribe to showDeletedData so that appropriate data can be fetched
     this.sharedGraphService.showDeletedData.subscribe(toggle => {
@@ -113,7 +116,14 @@ export class GraphVisualizerComponent implements OnInit {
         // set to false by default
         this.showDeletedData = false;
       }
-      this.displayInitialGraph();
+      if (this.showDeletedData) {
+        this.showAllData();
+      } else {
+        if(this.allGraphData.hasOwnProperty('nodes')){
+          this.showFilteredData();
+        }        
+      }
+
     }, err => {
       // set to false by default
       console.error('An error occured while subscribing to the toggle for deleted data', err);
@@ -129,7 +139,12 @@ export class GraphVisualizerComponent implements OnInit {
       if (result.hasOwnProperty('seperateNodes')) {
         // add colors to nodes
         result['seperateNodes'] = this.addColors(result['seperateNodes']);
-        this.graphData['nodes'] = new DataSet(result['seperateNodes']);
+        // store all data without any filter
+        // this.allGraphData['nodes'] = new DataSet(result['seperateNodes']); 
+        this.allGraphData['nodes'] = result['seperateNodes'];
+        // remove deleted data
+        this.removeDeletedData();
+        this.graphData['nodes'] = new DataSet(this.filteredGraphData['nodes']);
         this.selectedCount = this.graphData['nodes'].length;
       }
       if (result.hasOwnProperty('seperateEdges')) {
@@ -240,9 +255,9 @@ export class GraphVisualizerComponent implements OnInit {
     // if the user opted for deleted data, simply set deleted default color to all the nodes
     nodeObj.forEach(node => {
       if (node.hasOwnProperty('type') && node.type.length > 0) {
-        if(node['properties']['deleted'] === "true"){
+        if (node['properties']['deleted'] === "true") {
           node['color'] = this.colorConfig.deletedColor.colorCode;
-        }else{
+        } else {
           node['color'] = this.colorConfig.defaultColor[node.type[0]];
         }
         // node['color'] = this.showDeletedData ? this.colorConfig.deletedColor.colorCode : this.colorConfig.defaultColor[node.type[0]];
@@ -309,7 +324,7 @@ export class GraphVisualizerComponent implements OnInit {
             // make a request to create a node, if it succeedes only then show in the graph
             this.graphService.createNewNode(newNodeData).subscribe(response => {
               //update sidebar dropdown
-              this.newNodeCreated.emit("NodeEvent_create"+response['seperateNodes'][0].id);
+              this.newNodeCreated.emit("NodeEvent_create" + response['seperateNodes'][0].id);
               // add additional data for vis layout
               // newNodeForVis = this.addData(newNodeForVis, clickEvent, event);
               try {
@@ -318,7 +333,7 @@ export class GraphVisualizerComponent implements OnInit {
                 this.graphData['nodes'].add([visNode]);
                 // emit the createNodes component that a node has been put into the graph, prompt user to create a relation
                 // send the data of new node for relationPrompt
-                this.promptRelationCreateAfterNode = _.cloneDeep({created: true, node: visNode});
+                this.promptRelationCreateAfterNode = _.cloneDeep({ created: true, node: visNode });
               } catch (addErr) {
                 console.error('Error while adding the data node to vis ', addErr['message']);
               }
@@ -386,8 +401,8 @@ export class GraphVisualizerComponent implements OnInit {
         const connectedEdgeIDs = this.network.getConnectedEdges(nodeID);
         // hit the delete node api
         let requestOption = {
-          id : nodeID,
-          relations : connectedEdgeIDs
+          id: nodeID,
+          relations: connectedEdgeIDs
         }
         this.graphService.deleteNode(requestOption).subscribe(response => {
           // remove the node in vis graph and connected edges, if any
@@ -465,7 +480,7 @@ export class GraphVisualizerComponent implements OnInit {
           relationID = event.data.id;
           // create the delete request
           let requestObj = {
-            id : relationID
+            id: relationID
           };
           this.graphService.deleteRelation(requestObj).subscribe(response => {
             console.log('recieved some response', response['seperateEdges']);
@@ -495,17 +510,17 @@ export class GraphVisualizerComponent implements OnInit {
 
   serializeProperties(propertyObject) {
     if (propertyObject.constructor === Object) {
-        let finalString = '';
-        _.forOwn(Object.keys(propertyObject), (key) => {
-            if (propertyObject[key].hasOwnProperty('low')) {
-                // if the key has an integer value then set the low value of it
-                propertyObject[key] = propertyObject[key]['low']
-            }
-            finalString += `<strong>${key} :</strong> ${propertyObject[key]} <br>`;
-        });
-        return finalString;
-    } else {return null;}
-}
+      let finalString = '';
+      _.forOwn(Object.keys(propertyObject), (key) => {
+        if (propertyObject[key].hasOwnProperty('low')) {
+          // if the key has an integer value then set the low value of it
+          propertyObject[key] = propertyObject[key]['low']
+        }
+        finalString += `<strong>${key} :</strong> ${propertyObject[key]} <br>`;
+      });
+      return finalString;
+    } else { return null; }
+  }
 
   addData(node, clickEvent, event) {
     node['x'] = clickEvent.pointer.canvas.x;
@@ -547,31 +562,64 @@ export class GraphVisualizerComponent implements OnInit {
 
 
   doubleClickHandler(event) {
-      // if nodes array exists, it is a node edit event else it is edge edit event
-      if (!!event.nodes.length) {
-        // emit node edit event data
-        let clickedNode = this.graphData['nodes'].get(event.nodes);
-        // if there are multiple nodes one above another, always select the top most one
-        if (clickedNode.length > 0) {
-          clickedNode = _.cloneDeep(clickedNode[0]);
-        }
-        console.log('clicked Node is ', clickedNode);
-        this.startEditProcess(clickedNode);
-      } else if (!!event.edges.length) {
-        // emit edge edit event data
-        if (event.nodes.length > 0) {
-          // user clicked on node despite selecting 'edit edge' feature
-          alert('Please click on an edge not a node');
-        } else {
-          let clickedEdge = this.graphData['edges'].get(event.edges[0]);
-          // if there are multiple nodes one above another, always select the top most one
-          if ([clickedEdge].length > 0) {
-            clickedEdge = _.cloneDeep([clickedEdge][0]);
-          }
-          console.log('clicked Edge is ', clickedEdge);
-          // emit data for edge
-          this.startEditProcess(clickedEdge, 'edge');
-        }
+    // if nodes array exists, it is a node edit event else it is edge edit event
+    if (!!event.nodes.length) {
+      // emit node edit event data
+      let clickedNode = this.graphData['nodes'].get(event.nodes);
+      // if there are multiple nodes one above another, always select the top most one
+      if (clickedNode.length > 0) {
+        clickedNode = _.cloneDeep(clickedNode[0]);
       }
+      console.log('clicked Node is ', clickedNode);
+      this.startEditProcess(clickedNode);
+    } else if (!!event.edges.length) {
+      // emit edge edit event data
+      if (event.nodes.length > 0) {
+        // user clicked on node despite selecting 'edit edge' feature
+        alert('Please click on an edge not a node');
+      } else {
+        let clickedEdge = this.graphData['edges'].get(event.edges[0]);
+        // if there are multiple nodes one above another, always select the top most one
+        if ([clickedEdge].length > 0) {
+          clickedEdge = _.cloneDeep([clickedEdge][0]);
+        }
+        console.log('clicked Edge is ', clickedEdge);
+        // emit data for edge
+        this.startEditProcess(clickedEdge, 'edge');
+      }
+    }
+  }
+
+  // to remove deleted data
+  removeDeletedData() {
+    this.filteredGraphData['nodes'] = [];
+    this.allGraphData['nodes'].filter(node => {
+      if (node['properties']['deleted'] === "false") {
+        this.filteredGraphData['nodes'].push(node);
+      }
+    });
+  }
+
+  // to show all data
+  showAllData() {
+    // create dataset for all data    
+    this.graphData['nodes'] = new DataSet(this.allGraphData['nodes']);
+    // to count graph element
+    this.selectedCount = this.graphData['nodes'].length;
+    // display data
+    this.reinitializeGraph();
+    this.loader = false;
+    
+  }
+
+  // to show filtered data
+  showFilteredData() {
+    // create dataset for filtered graph data
+    this.graphData['nodes'] = new DataSet(this.filteredGraphData['nodes']);
+    // to count graph element
+    this.selectedCount = this.graphData['nodes'].length;
+    // display data
+    this.reinitializeGraph();
+    this.loader = false;
   }
 }
