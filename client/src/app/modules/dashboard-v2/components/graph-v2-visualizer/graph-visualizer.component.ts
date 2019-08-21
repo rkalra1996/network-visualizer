@@ -644,15 +644,15 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   cleanPropertyBindingData(cleanType) {
-    if (this.editNodeData !== null || this.editRelationData !== null) {
+    if (this.editNodeData !== null || this.editRelationData !== null || this.promptRelationCreateAfterNode !== null) {
       console.log('cleaning data for ', cleanType);
       if (!!cleanType) {
         if (cleanType === 'node') {
           this.editNodeData = null;
         } else if (cleanType === 'relation') {
           this.editRelationData = null;
-        } else {
-          // nothing
+        } else if (cleanType === 'afterCreateNode') {
+          this.promptRelationCreateAfterNode = null
         }
       }
     }

@@ -264,6 +264,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.deleteNodePopup = false;
       this.deleteRelationPopup = false;
       this.setAllToFalse('node');
+      this.cleanData.emit('afterCreateNode');
+      this.newNodeCreated = null;
     });
     $('#createNodeModal').on('hidden.bs.modal', (e) => {
       // this event will reset the popupConfig object so that everytime correct data is accessed
