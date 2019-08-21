@@ -142,9 +142,15 @@ export class GraphVisualizerComponent implements OnInit {
         // store all data without any filter
         // this.allGraphData['nodes'] = new DataSet(result['seperateNodes']); 
         this.allGraphData['nodes'] = result['seperateNodes'];
-        // remove deleted data
+        // to update filtered data
         this.removeDeletedData();
-        this.graphData['nodes'] = new DataSet(this.filteredGraphData['nodes']);
+        // check for show deleted toggel
+        if (this.showDeletedData) {
+          // show all data
+          this.graphData['nodes'] = new DataSet(this.allGraphData['nodes']);
+        } else {
+          this.graphData['nodes'] = new DataSet(this.filteredGraphData['nodes']);
+        }
         this.selectedCount = this.graphData['nodes'].length;
       }
       if (result.hasOwnProperty('seperateEdges')) {
@@ -233,13 +239,15 @@ export class GraphVisualizerComponent implements OnInit {
         // store all data without any filter
         // this.allGraphData['nodes'] = new DataSet(result['seperateNodes']); 
         this.allGraphData['nodes'] = result['seperateNodes'];
+        // to update filtered data
+        this.removeDeletedData();
         //check for show deleted 
         if (this.showDeletedData) {
           // show all data
-          this.graphData['nodes'] = new DataSet(this.allGraphData['nodes']);  
+          this.graphData['nodes'] = new DataSet(this.allGraphData['nodes']);
+
         } else {
           // remove deleted data
-          this.removeDeletedData();
           this.graphData['nodes'] = new DataSet(this.filteredGraphData['nodes']);
         }
         this.selectedCount = this.graphData['nodes'].length;
