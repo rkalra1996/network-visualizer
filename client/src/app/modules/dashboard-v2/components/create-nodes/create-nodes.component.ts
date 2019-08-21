@@ -21,6 +21,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   // Output variables for event emitters to parent components
   @Output() nodeBtnEvent = new EventEmitter<any>();
   @Output() edgeBtnEvent = new EventEmitter<any>();
+  @Output() cleanData = new EventEmitter<string>();
   // input variables from parent components
   @Input() editData: any;
   @Input() editRelData: any;
@@ -127,6 +128,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       console.error('An error occured while subscribing to the toggle for deleted data', err);
       this.showDeletedData = false;
   });
+
 }
 
   createNode() {
@@ -272,7 +274,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.editRelationPopup = false;
       this.deleteNodePopup = false;
       this.deleteRelationPopup = false;
-      
+      this.editData = null;
+      this.cleanData.emit('node');
     });
     $('#createRelationModal').on('hidden.bs.modal', (e) => {
       // this event will reset the popupConfig object so that everytime correct data is accessed
@@ -283,16 +286,19 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.editRelationPopup = false;
       this.deleteNodePopup = false;
       this.deleteRelationPopup = false;
-      
+      this.cleanData.emit('relation');
     });
 
     if ((!!this.editData && !!this.editData.length) || (!!this.editData && !!Object.keys(this.editData).length)) {
       this.disabledBox = true;
-      // console.log('edit data recieved is ', this.editData);
+      // store the data in internal variable and clear this
+      let editNodeData = _.cloneDeep(this.editData);
+      this.editData = _.cloneDeep(null);
+      console.log('edit data recieved is ', editNodeData);
       this.editNodeConfig = _.cloneDeep({
-        properties : this.editData['properties'],
-        type : this.editData['type'][0],
-        id: this.editData['id']
+        properties : editNodeData['properties'],
+        type : editNodeData['type'][0],
+        id: editNodeData['id']
       });
       this.clickedNodeID = _.cloneDeep(this.editNodeConfig['id']);
       // console.log('editNodeConfig is ', this.editNodeConfig);
@@ -302,7 +308,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         this.selectedType = this.editNodeConfig['type'];
         // trigger update properties to show data before hand
         this.updateProperties(this.selectedType, this.editNodeConfig);
-        const prefilledInfo = this.recreatePrefilledData(this.editData['properties']);
+        const prefilledInfo = this.recreatePrefilledData(editNodeData['properties']);
         if (!!prefilledInfo) {
           // console.log('recieved some prefilled info ', prefilledInfo);
           // set the data into the modal
@@ -352,6 +358,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
     }, err => {
       console.warn('An error occured while setting the types in the dropdown');
+      this.editRelData = null;
     });
       // open the edit modal
       this.disabledBox = true;

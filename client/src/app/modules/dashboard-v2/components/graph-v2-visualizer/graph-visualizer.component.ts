@@ -642,4 +642,19 @@ export class GraphVisualizerComponent implements OnInit {
     this.reinitializeGraph();
     this.loader = false;
   }
+
+  cleanPropertyBindingData(cleanType) {
+    if (this.editNodeData !== null || this.editRelationData !== null) {
+      console.log('cleaning data for ', cleanType);
+      if (!!cleanType) {
+        if (cleanType === 'node') {
+          this.editNodeData = null;
+        } else if (cleanType === 'relation') {
+          this.editRelationData = null;
+        } else {
+          // nothing
+        }
+      }
+    }
+  }
 }
