@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import {ColorServiceService} from './../../../services/colorService/color-service.service';
-import {SharedGraphService} from './../../../../core/services/shared-graph.service';
+import { ColorServiceService } from './../../../services/colorService/color-service.service';
+import { SharedGraphService } from './../../../../core/services/shared-graph.service';
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-color-panel',
@@ -38,6 +39,7 @@ export class ColorPanelComponent implements OnInit {
         // set to false by default
         this.showDeletedData = false;
       }
+      this.addDeleteColor();
     });
   }
 
@@ -46,11 +48,24 @@ export class ColorPanelComponent implements OnInit {
       // both have the data , kindly process
       keyArray.map(key => {
         // for each key create a new object which has item name and item color
-        this.colorData.push({name: key, color: colorObj[key]});
+        this.colorData.push({ name: key, color: colorObj[key] });
       });
     } else {
       console.log('empty key Array or colorObj in color panel');
       return [];
+    }
+  }
+
+  addDeleteColor() {
+    // add new color for deleted node
+    if (this.showDeletedData) {
+      if(_.some(this.colorData,{name:"Deleted",color:"#C0C0C0"})){
+
+      }else{
+        this.colorData.push({name:"Deleted",color:"#C0C0C0"});
+      }
+    }else{
+      _.remove(this.colorData,{name:"Deleted",color:"#C0C0C0"});
     }
   }
 
