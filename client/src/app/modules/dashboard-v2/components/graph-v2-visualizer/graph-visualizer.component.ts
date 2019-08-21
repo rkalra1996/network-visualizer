@@ -445,7 +445,7 @@ export class GraphVisualizerComponent implements OnInit {
       }
     }
   }
-
+  
   edgeEventCapture(event) {
     if (Object.keys(event).length > 0) {
       if (event.action === 'create') {
