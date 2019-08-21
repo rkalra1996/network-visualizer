@@ -119,9 +119,9 @@ export class GraphVisualizerComponent implements OnInit {
       if (this.showDeletedData) {
         this.showAllData();
       } else {
-        if(this.allGraphData.hasOwnProperty('nodes')){
+        if (this.allGraphData.hasOwnProperty('nodes')) {
           this.showFilteredData();
-        }        
+        }
       }
 
     }, err => {
@@ -229,7 +229,19 @@ export class GraphVisualizerComponent implements OnInit {
       // set data for vis
       if (result.hasOwnProperty('seperateNodes')) {
         result['seperateNodes'] = this.addColors(result['seperateNodes']);
-        this.graphData['nodes'] = new DataSet(result['seperateNodes']);
+        //this.graphData['nodes'] = new DataSet(result['seperateNodes']);
+        // store all data without any filter
+        // this.allGraphData['nodes'] = new DataSet(result['seperateNodes']); 
+        this.allGraphData['nodes'] = result['seperateNodes'];
+        //check for show deleted 
+        if (this.showDeletedData) {
+          // show all data
+          this.graphData['nodes'] = new DataSet(this.allGraphData['nodes']);  
+        } else {
+          // remove deleted data
+          this.removeDeletedData();
+          this.graphData['nodes'] = new DataSet(this.filteredGraphData['nodes']);
+        }
         this.selectedCount = this.graphData['nodes'].length;
       }
       if (result.hasOwnProperty('seperateEdges')) {
@@ -609,7 +621,7 @@ export class GraphVisualizerComponent implements OnInit {
     // display data
     this.reinitializeGraph();
     this.loader = false;
-    
+
   }
 
   // to show filtered data

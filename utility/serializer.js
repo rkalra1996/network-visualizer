@@ -93,13 +93,13 @@ function processNodes(nodeArray, showDeleted = false) {
                         value: 30
                     }
                     // check show deleted
-                if (!showDeleted) {
-                    // remove the deleted property as it is not required in the frontend
-                    if (preprocessedNode.properties.hasOwnProperty('deleted')) {
-                        delete preprocessedNode.properties.deleted;
-                    }
-                }
-                //add the new title veresion of properties
+                    // if (!showDeleted) {
+                    //     // remove the deleted property as it is not required in the frontend
+                    //     if (preprocessedNode.properties.hasOwnProperty('deleted')) {
+                    //         delete preprocessedNode.properties.deleted;
+                    //     }
+                    // }
+                    //add the new title veresion of properties
                 preprocessedNode['title'] = serializeProperties(preprocessedNode.properties, showDeleted);
                 return preprocessedNode;
             });
