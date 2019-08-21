@@ -5,7 +5,7 @@ const colorManager = require('./graphColorManager');
 var seperateNodes = [];
 var seperateEdges = [];
 
-var Neo4JtoVisFormat = (data) => {
+var Neo4JtoVisFormat = (data, showDeleted = false) => {
     // clean the data containers before processing
     seperateNodes = [];
     seperateEdges = [];
@@ -46,7 +46,7 @@ var Neo4JtoVisFormat = (data) => {
          * Edges should be array objects with each object having from and to key also
          */
         try {
-            seperateNodes = processNodes(seperateNodes);
+            seperateNodes = processNodes(seperateNodes, showDeleted);
             seperateEdges = processEdges(seperateEdges);
             seperateNodes = _.uniqBy(seperateNodes, 'id');
             seperateEdges = _.uniqBy(seperateEdges, (edge) => { return [edge.from, edge.to, edge.label].join(); });
@@ -58,7 +58,7 @@ var Neo4JtoVisFormat = (data) => {
     }
 }
 
-function serializeProperties(propertyObject) {
+function serializeProperties(propertyObject, showDeleted = false) {
     if (propertyObject.constructor === Object) {
         let finalString = '';
         _.forOwn(Object.keys(propertyObject), (key) => {
@@ -72,7 +72,7 @@ function serializeProperties(propertyObject) {
     } else return null
 }
 
-function processNodes(nodeArray) {
+function processNodes(nodeArray, showDeleted = false) {
     let processedNode = [];
     let preprocessedNodeFiltered = [];
     if (nodeArray.length > 0) {
@@ -92,12 +92,15 @@ function processNodes(nodeArray) {
                         font: { align: 'middle' },
                         value: 30
                     }
-                    // remove the deleted property as it is not required in the frontend
-                if (preprocessedNode.properties.hasOwnProperty('deleted')) {
-                    delete preprocessedNode.properties.deleted;
-                }
-                //add the new title veresion of properties
-                preprocessedNode['title'] = serializeProperties(preprocessedNode.properties);
+                    // check show deleted
+                    // if (!showDeleted) {
+                    //     // remove the deleted property as it is not required in the frontend
+                    //     if (preprocessedNode.properties.hasOwnProperty('deleted')) {
+                    //         delete preprocessedNode.properties.deleted;
+                    //     }
+                    // }
+                    //add the new title veresion of properties
+                preprocessedNode['title'] = serializeProperties(preprocessedNode.properties, showDeleted);
                 return preprocessedNode;
             });
             // make them unique

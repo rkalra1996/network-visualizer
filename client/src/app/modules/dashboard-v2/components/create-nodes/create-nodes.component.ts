@@ -87,9 +87,10 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   public totalRelationsProperties = {};
   public availablePropertyList = {};
   public selectedPropertiesObject = {};
+  public showDeletedData = false;
 
   constructor(
-    private SharedSrvc: SearchService, 
+    private SharedSrvc: SearchService,
     private graphSrvc: GraphDataService,
     private sharedGraphSrvc: SharedGraphService,
     private fb: FormBuilder) {
@@ -111,7 +112,22 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }, err => {
       console.error('Error while subscribing to graphProperties method -> ', err);
     });
-  }
+
+    this.sharedGraphSrvc.showDeletedData.subscribe(toggle => {
+      if (toggle !== null && (toggle.toString() === 'true' || toggle.toString() === 'false')) {
+        // if the toggle variable is  only true and false and nothing else
+        this.showDeletedData = toggle;
+        // console.log('recieved toggle in create nodes', toggle);
+      } else {
+        // set to false by default
+        this.showDeletedData = false;
+      }
+    }, err => {
+      // set to false by default
+      console.error('An error occured while subscribing to the toggle for deleted data', err);
+      this.showDeletedData = false;
+  });
+}
 
   createNode() {
     this.popupConfig.createNodePopup = true;

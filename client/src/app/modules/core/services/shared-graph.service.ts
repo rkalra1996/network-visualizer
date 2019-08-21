@@ -8,6 +8,7 @@ export class SharedGraphService {
   graphData : object;
   public nodeDetails = new BehaviorSubject<any>(null);
   public getNodeByIDs = new BehaviorSubject<Array<any>>([]);
+  public showDeletedData = new BehaviorSubject<boolean>(null);
   constructor() { }
   setGraphData(graphdata){
     this.graphData = graphdata;
@@ -21,5 +22,11 @@ export class SharedGraphService {
   }
   sendNodeDetails(nodeDetailsArray) {
     this.nodeDetails.next(nodeDetailsArray);
+  }
+
+  // function to send the deleted toggle info whenever needed
+  sendToogleStatus(status) {
+    console.log('sending new status for toggle ', status);
+    this.showDeletedData.next(status);
   }
 }

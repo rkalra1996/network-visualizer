@@ -95,7 +95,12 @@ router.post('/search/neo4j', auth_middleware.searchAuth, (req, res) => {
 router.get('/initialdatav2', (req, res) => {
     console.log('initial data');
     // get initial data from the data base
-    neo4j.getDataV2()
+    // extract whether user wants to view deleted data only
+    let showDeleted = false;
+    if (req.query.hasOwnProperty('deleted')) {
+        showDeleted = req.query.deleted === 'true' ? true : false;
+    }
+    neo4j.getDataV2({query : "", showDeleted})
         .then(response => {
             res.send(response);
         })

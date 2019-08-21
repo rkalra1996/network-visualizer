@@ -348,13 +348,15 @@ var searchQuery = (requestBody, raw = false) => {
     });
 
 }
-var getDataV2 = (query) => {
-    if (!query || query.length <= 0) {
-        query = neoConfig.initial_query_v2
+var getDataV2 = (queryObj) => {
+    let query = "";
+    if (!queryObj.query || queryObj.query.length <= 0) {
+        queryObj.query = neoConfig.initial_query_v2
     }
-    return runQuery(query)
+    console.log("Initial Query : ", queryObj.query);
+    return runQuery(queryObj.query)
         .then(result => {
-            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records), queryObj.showDeleted);
             console.log('serialized data is ', serializedData.seperateNodes.length, serializedData.seperateEdges.length);
             neo4Jdriver.close();
             return new Promise((res, rej) => {
@@ -393,16 +395,16 @@ var getGraphDataV2 = (req) => {
     if (req.body.hasOwnProperty('nodes') && req.body.nodes.length >= 0) {
         // data for nodes is present, get all the relevant information
         if (req.body.nodes.length == 1) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 1, limit: req.body.limit });
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 1, limit: req.body.limit, showDeleted: req.showDeleted });
         } else if (req.body.nodes.length == 2) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 2, limit: req.body.limit })
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 2, limit: req.body.limit, showDeleted: req.showDeleted })
         } else if (req.body.nodes.length === 3) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 3, limit: req.body.limit })
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 3, limit: req.body.limit, showDeleted: req.showDeleted })
         } else {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 0, limit: req.body.limit })
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 0, limit: req.body.limit, showDeleted: req.showDeleted })
         }
     } else if (req.body.hasOwnProperty('limit')) {
-        return limitBasedInitGraphShow({ limit: req.body.limit });
+        return limitBasedInitGraphShow({ limit: req.body.limit, showDeleted: req.body.showDeleted });
     } else {
         return new Promise((resolve, reject) => {
             // send back the data 
@@ -464,6 +466,7 @@ function runQueryWithTypesV2(dataObj) {
             }
             let queryStatement = '';
             if (!!dataObj.relation && dataObj.nodes.length > 0) {
+                // not in use : this is for combin search of element and relationship
                 queryStatement = `match (p)-[r${dataObj.relation}]-(q) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
                 if (dataObj.nodes.length == 1) {
                     if (dataObj.nodes[0].type === "Name") {
@@ -477,22 +480,29 @@ function runQueryWithTypesV2(dataObj) {
                     queryStatement = `match (p {Name:"Societal Platform Team"})-[r${dataObj.relation}]-(q) where labels(q) In [${dataObj.nodes[1].value}] and q.Name IN [${dataObj.nodes[0].value}] return p,r,q limit 50`;
                 }
             } else if (!!dataObj.relation) {
-                queryStatement = `match (p {Name:"Societal Platform Team"}) <-[r${dataObj.relation}]->(q) where p.deleted = "false" and r.deleted = "false" and q.deleted = "false" return p,q,r limit ${dataObj.limit}`;
+                // for relationship filter
+                // queryStatement = `match (p {Name:"Societal Platform Team"}) <-[r${dataObj.relation}]->(q) where p.deleted = "false" and r.deleted = "false" and q.deleted = "false" return p,q,r limit ${dataObj.limit}`;
+                queryStatement = `match (p {Name:"Societal Platform Team"}) <-[r${dataObj.relation}]->(q) return p,q,r limit ${dataObj.limit}`;
             } else if (typeArray.length > 0) {
+                // for multiple selection of element with type
                 // queryStatement = `match (p)-[r]-(q) where labels(p) In [${dataObj.nodes[1].value}] p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
                 if (allSubQuery.length > 0) {
 
                     //queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where labels(q) In [${typeArray}] and ${allSubQuery} and p.deleted = false and r.deleted = false and q.deleted = false return p,r,q limit ${dataObj.limit}`;
-                    queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and ${allSubQuery} and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
+                    // queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and ${allSubQuery} and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
+                    queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and ${allSubQuery} and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
                 } else {
                     //queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where labels(q) In [${typeArray}] and p.deleted = false and r.deleted = false and q.deleted = false return p,r,q limit ${dataObj.limit}`;
-                    queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
+                    //queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
+                    queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
                 }
 
             } else {
-                queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where ${allSubQuery} and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" return p,r,q limit ${dataObj.limit}`;
+                // if type not selected , apply on other elements only
+                //queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where ${allSubQuery} and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" return p,r,q limit ${dataObj.limit}`;
+                queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where ${allSubQuery} return p,r,q limit ${dataObj.limit}`;
             }
-            console.log('query for 1 node type is ', queryStatement);
+            console.log('query for filter ', queryStatement);
             return runQuery(queryStatement).then(result => {
                 let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
                 return new Promise((resolve, reject) => {
@@ -640,9 +650,14 @@ function limitBasedInitGraphShow(limitObj) {
     // check for limit empty or undefined
     limitObj.limit = getLimit(limitObj.limit);
     let queryStatement = '';
+    // add the showDeleted toggle value
+    let showDeleted = !!limitObj.showDeleted ? true : false;
 
-    queryStatement = `match (p) -[r]-> (q) return p,q,r limit ${limitObj.limit}`;
-
+    if (showDeleted) {
+        queryStatement = `match (p) -[r]-> (q) return p,r,q limit ${limitObj.limit}`;
+    } else {
+        queryStatement = `match (p) -[r]-> (q) where p.deleted IN [${showDeleted}, "${showDeleted}"] and q.deleted IN [${showDeleted}, "${showDeleted}"] and r.deleted IN [${showDeleted}, "${showDeleted}"] return p,q,r limit ${limitObj.limit}`;
+    }
     console.log('query created by graphDataV2 is ', queryStatement);
     return runQuery(queryStatement).then(result => {
         let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
