@@ -656,7 +656,8 @@ function limitBasedInitGraphShow(limitObj) {
     if (showDeleted) {
         queryStatement = `match (p) -[r]-> (q) return p,r,q limit ${limitObj.limit}`;
     } else {
-        queryStatement = `match (p) -[r]-> (q) where p.deleted IN [${showDeleted}, "${showDeleted}"] and q.deleted IN [${showDeleted}, "${showDeleted}"] and r.deleted IN [${showDeleted}, "${showDeleted}"] return p,q,r limit ${limitObj.limit}`;
+        // queryStatement = `match (p) -[r]-> (q) where p.deleted IN [${showDeleted}, "${showDeleted}"] and q.deleted IN [${showDeleted}, "${showDeleted}"] and r.deleted IN [${showDeleted}, "${showDeleted}"] return p,q,r limit ${limitObj.limit}`;
+        queryStatement = `match (p) -[r]-> (q) return p,q,r limit ${limitObj.limit}`;
     }
     console.log('query created by graphDataV2 is ', queryStatement);
     return runQuery(queryStatement).then(result => {
@@ -911,25 +912,25 @@ var fetchGraphProperties = () => {
     let query = 'match (n) optional match (n)-[r]-() return distinct n,r'
     console.log('fetch property query is --> ', query + '\n');
     return runQuery(query)
-    .then(response => {
-        // work on the response and create the following patter
-        /**
-         *  response = {
-         *                  nodes : {
-         *                              property_Name : [values used in the property]
-         *                          }
-         *                  relations : {
-         *                              property_Name : [values used in the property]
-         *                          }
-         *              }
-         */
-        let processedData = dataUtility.processFetchedProperties(response.records);
-        return Promise.resolve(processedData);
-    })
-    .catch(err => {
-        console.log('\nAn error occured while runnning the query for fetch graph properties', err);
-        return Promise.reject(messages.error.API.properties.fetch.a001);
-    })
+        .then(response => {
+            // work on the response and create the following patter
+            /**
+             *  response = {
+             *                  nodes : {
+             *                              property_Name : [values used in the property]
+             *                          }
+             *                  relations : {
+             *                              property_Name : [values used in the property]
+             *                          }
+             *              }
+             */
+            let processedData = dataUtility.processFetchedProperties(response.records);
+            return Promise.resolve(processedData);
+        })
+        .catch(err => {
+            console.log('\nAn error occured while runnning the query for fetch graph properties', err);
+            return Promise.reject(messages.error.API.properties.fetch.a001);
+        })
 }
 
 module.exports = {
