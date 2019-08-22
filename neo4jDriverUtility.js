@@ -964,7 +964,7 @@ var restoreData = (request) => {
     .then(response => {
         let processedData;
         if (response.hasOwnProperty('records') && response.records.length > 0) {
-            processedData = serializer.Neo4JtoVisFormat(response.records);
+            processedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
         } else {
             // empty records
             processedData = {"result" : "No data updated "};

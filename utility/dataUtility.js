@@ -211,7 +211,7 @@ function convertToArrayString(ArrayData) {
     if (ArrayData.length > 0) {
         let arrayStatements = [];
         ArrayData.forEach(item => {
-            arrayStatements.push(`"${item}"`);
+            arrayStatements.push(`${item}`);
         });
         return `[${arrayStatements.join(",")}]`;
     }
