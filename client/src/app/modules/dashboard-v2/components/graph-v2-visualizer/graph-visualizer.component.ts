@@ -57,7 +57,8 @@ export class GraphVisualizerComponent implements OnInit {
 
     },
     deletedColor: {
-      colorCode: '#C0C0C0'
+      colorCode: '#C0C0C0',
+      highlightColorCode: '#9a9a9a'
     }
   };
 
@@ -138,10 +139,10 @@ export class GraphVisualizerComponent implements OnInit {
       // set data for vis
       if (result.hasOwnProperty('seperateNodes')) {
         // add colors to nodes
-        result['seperateNodes'] = this.addColors(result['seperateNodes']);
+        result = this.addColors(result);
         // store all data without any filter
-        // this.allGraphData['nodes'] = new DataSet(result['seperateNodes']); 
         this.allGraphData['nodes'] = result['seperateNodes'];
+        this.allGraphData['edges'] = result['seperateEdges'];
         // to update filtered data
         this.removeDeletedData();
         // check for show deleted toggel
@@ -149,14 +150,21 @@ export class GraphVisualizerComponent implements OnInit {
           // show all data
           this.graphData['nodes'] = new DataSet(this.allGraphData['nodes']);
         } else {
+          // show filtered data
           this.graphData['nodes'] = new DataSet(this.filteredGraphData['nodes']);
         }
         this.selectedCount = this.graphData['nodes'].length;
       }
       if (result.hasOwnProperty('seperateEdges')) {
-        this.graphData['edges'] = new DataSet(result['seperateEdges']);
+        // check for show deleted toggel
+        if (this.showDeletedData) {
+          this.graphData['edges'] = new DataSet(this.allGraphData['edges']);
+        } else {
+          // show filtered data
+          this.graphData['edges'] = new DataSet(this.filteredGraphData['edges']);
+        }
       }
-      console.log('graphData :', this.graphData);
+      // console.log('graphData :', this.graphData);
       // display data
       const container = document.getElementById('graphViewer');
       this.loader = false;
@@ -234,7 +242,7 @@ export class GraphVisualizerComponent implements OnInit {
       // console.log('recieved data from graph service', result);
       // set data for vis
       if (result.hasOwnProperty('seperateNodes')) {
-        result['seperateNodes'] = this.addColors(result['seperateNodes']);
+        result = this.addColors(result);
         //this.graphData['nodes'] = new DataSet(result['seperateNodes']);
         // store all data without any filter
         // this.allGraphData['nodes'] = new DataSet(result['seperateNodes']); 
@@ -271,9 +279,9 @@ export class GraphVisualizerComponent implements OnInit {
     });
   }
 
-  addColors(nodeObj) {
+  addColors(resultObj) {
     // if the user opted for deleted data, simply set deleted default color to all the nodes
-    nodeObj.forEach(node => {
+    resultObj['seperateNodes'].forEach(node => {
       if (node.hasOwnProperty('type') && node.type.length > 0) {
         if (node['properties']['deleted'] === "true" || node['properties']['deleted'] === true) {
           node['color'] = this.colorConfig.deletedColor.colorCode;
@@ -287,8 +295,19 @@ export class GraphVisualizerComponent implements OnInit {
         // }
       }
     });
+    // if the user opted for deleted data, simply set deleted default color to all the edges
+    resultObj['seperateEdges'].forEach(edge => {
+      if (edge.hasOwnProperty('type') && edge.type.length > 0) {
+        if (edge['properties']['deleted'] === "true" || edge['properties']['deleted'] === true) {
+          edge['color']['color'] = this.colorConfig.deletedColor.colorCode;
+          edge['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
+        } else {
+          // edge['color'] = this.colorConfig.defaultColor[edge.type[0]];
+        }
+      }
+    });
     // console.log(nodeObj);
-    return nodeObj;
+    return resultObj;
 
   }
 
@@ -351,6 +370,9 @@ export class GraphVisualizerComponent implements OnInit {
                 let visNode = this.addData(response['seperateNodes'][0], clickEvent, event);
                 // add the new node to the vis
                 this.graphData['nodes'].add([visNode]);
+                // to update all data array while a new node is created
+                this.allGraphData['nodes'].push(response['seperateNodes'][0]);
+                this.removeDeletedData();
                 // emit the createNodes component that a node has been put into the graph, prompt user to create a relation
                 // send the data of new node for relationPrompt
                 this.promptRelationCreateAfterNode = _.cloneDeep({ created: true, node: visNode });
@@ -428,11 +450,44 @@ export class GraphVisualizerComponent implements OnInit {
           // remove the node in vis graph and connected edges, if any
           const removedNode = response['seperateNodes'];
           if (response['seperateEdges'].length > 0) {
-            const removedEdges = response['seperateEdges'];
-            this.graphData['edges'].remove(removedEdges);
+            let removedEdges = response['seperateEdges'];
+            // update the edges
+            this.allGraphData['edges'].filter(edge => {
+              removedEdges = removedEdges.filter(removed => {
+                removed['color']['color'] = this.colorConfig.deletedColor.colorCode;
+                removed['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
+                if (edge['id'] === removed['id']) {
+                  edge['properties']['deleted'] = true;
+                  edge['color']['color'] = removed['color']['color'];
+                  edge['color']['highlight'] = removed['color']['highlight'];
+                }
+                return removed;
+              })
+            })
+            if (this.showDeletedData) {
+              this.graphData['edges'].update(removedEdges);
+            } else {
+              this.graphData['edges'].remove(removedEdges);
+            }
           }
-          // remove the node
-          this.graphData['nodes'].remove(removedNode);
+          // update the node
+          removedNode[0]['color'] = this.colorConfig.deletedColor.colorCode;
+          if (this.showDeletedData) {
+            this.graphData['nodes'].update(removedNode);
+          } else {
+            this.graphData['nodes'].remove(removedNode);
+          }
+
+          // to update deleted data from allGraphData
+          this.allGraphData['nodes'].filter(node => {
+            if (node['label'] === response['seperateNodes'][0]['label']) {
+              node['properties']['deleted'] = true;
+              node['color'] = this.colorConfig.deletedColor.colorCode;
+            }
+          })
+
+          // to update filtered data
+          this.removeDeletedData();
           this.hideDelModal = _.cloneDeep(true);
           //update sidebar dropdown
           this.newNodeCreated.emit('NodeEvent_delete' + response['seperateNodes'][0].id);
@@ -445,7 +500,7 @@ export class GraphVisualizerComponent implements OnInit {
       }
     }
   }
-  
+
   edgeEventCapture(event) {
     if (Object.keys(event).length > 0) {
       if (event.action === 'create') {
@@ -506,7 +561,24 @@ export class GraphVisualizerComponent implements OnInit {
             console.log('recieved some response', response['seperateEdges']);
             // once database relation is deleted, remove it from visGraph also
             let deletedRel = _.cloneDeep(response['seperateEdges'])
-            this.graphData['edges'].remove([deletedRel]);
+            // update the edges
+            deletedRel['color']['color'] = this.colorConfig.deletedColor.colorCode;
+            deletedRel['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
+            this.allGraphData['edges'].filter(edge => {
+              if (edge['id'] === deletedRel['id']) {
+                edge['properties']['deleted'] = true;
+                edge['color']['color'] = deletedRel['color']['color'];
+                edge['color']['highlight'] = deletedRel['color']['highlight'];
+              }
+            })
+            if (this.showDeletedData) {
+              this.graphData['edges'].update([deletedRel]);
+            } else {
+              this.graphData['edges'].remove([deletedRel]);
+            }
+
+            // to update filtered data
+            this.removeDeletedData();
             this.hideDelModal = true;
           }, err => {
             console.error('An error occured while reading response for relation delete ', err);
@@ -528,7 +600,8 @@ export class GraphVisualizerComponent implements OnInit {
     this.graphData['edges'].update([relation]);
   }
 
-  serializeProperties(propertyObject) {
+  // to change key in tooltip
+  stringifyProperties(propertyObject) {
     if (propertyObject.constructor === Object) {
       let finalString = '';
       _.forOwn(Object.keys(propertyObject), (key) => {
@@ -613,9 +686,15 @@ export class GraphVisualizerComponent implements OnInit {
   // to remove deleted data
   removeDeletedData() {
     this.filteredGraphData['nodes'] = [];
+    this.filteredGraphData['edges'] = [];
     this.allGraphData['nodes'].filter(node => {
       if (node['properties']['deleted'] === "false" || node['properties']['deleted'] === false) {
         this.filteredGraphData['nodes'].push(node);
+      }
+    });
+    this.allGraphData['edges'].filter(edge => {
+      if (edge['properties']['deleted'] === "false" || edge['properties']['deleted'] === false) {
+        this.filteredGraphData['edges'].push(edge);
       }
     });
   }
@@ -624,6 +703,7 @@ export class GraphVisualizerComponent implements OnInit {
   showAllData() {
     // create dataset for all data    
     this.graphData['nodes'] = new DataSet(this.allGraphData['nodes']);
+    this.graphData['edges'] = new DataSet(this.allGraphData['edges']);
     // to count graph element
     this.selectedCount = this.graphData['nodes'].length;
     // display data
@@ -636,6 +716,7 @@ export class GraphVisualizerComponent implements OnInit {
   showFilteredData() {
     // create dataset for filtered graph data
     this.graphData['nodes'] = new DataSet(this.filteredGraphData['nodes']);
+    this.graphData['edges'] = new DataSet(this.filteredGraphData['edges']);
     // to count graph element
     this.selectedCount = this.graphData['nodes'].length;
     // display data
