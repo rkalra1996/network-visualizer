@@ -373,14 +373,16 @@ export class GraphVisualizerComponent implements OnInit {
               // add additional data for vis layout
               // newNodeForVis = this.addData(newNodeForVis, clickEvent, event);
               try {
-                let visNode = this.addData(response['seperateNodes'][0], clickEvent, event);
+                let visNode = _.cloneDeep(this.addData(response['seperateNodes'][0], clickEvent, event));
                 // to remove deleted key from tooltip
                 visNode['title'] = this.stringifyProperties(visNode);
                 // add the new node to the vis
                 this.graphData['nodes'].add([visNode]);
                 // to update all data array while a new node is created
                 this.allGraphData['nodes'].push(response['seperateNodes'][0]);
-                this.filteredGraphData['nodes'].push(response['seperateNodes'][0]);
+                let tem = _.cloneDeep(response['seperateNodes'][0]);
+                tem['title'] = this.stringifyProperties(tem);
+                this.filteredGraphData['nodes'].push(tem);
                 // emit the createNodes component that a node has been put into the graph, prompt user to create a relation
                 // send the data of new node for relationPrompt
                 this.promptRelationCreateAfterNode = _.cloneDeep({ created: true, node: visNode });
@@ -527,7 +529,7 @@ export class GraphVisualizerComponent implements OnInit {
           console.log(response);
 
           try {
-            let visRelation = response['seperateEdges'][0];
+            let visRelation = _.cloneDeep(response['seperateEdges'][0]);
             // to remove deleted key from tooltip
             visRelation['title'] = this.stringifyProperties(visRelation);
             // add the new node to the vis
@@ -545,7 +547,7 @@ export class GraphVisualizerComponent implements OnInit {
               this.graphData['edges'].add([visRelation]);
               // add new edge to allgraphdata and filtered data array
               this.allGraphData['edges'].push(response['seperateEdges'][0]);
-              this.filteredGraphData['edges'].push(response['seperateEdges'][0]);
+              this.filteredGraphData['edges'].push(visRelation);
             }
           } catch (addErr) {
             console.log('Error while adding the data relation to vis ', addErr['message']);
@@ -626,25 +628,14 @@ export class GraphVisualizerComponent implements OnInit {
     if (propertyObject.constructor === Object) {
       let finalString = '';
       if (propertyObject['properties'].hasOwnProperty('deleted')) {
-        delete propertyObject['properties']['deleted'];
         Object.keys(propertyObject['properties']).filter(key => {
-          finalString += `<strong>${key} :</strong> ${propertyObject['properties'][key]} <br>`;
+          if(key !== 'deleted'){
+            finalString += `<strong>${key} :</strong> ${propertyObject['properties'][key]} <br>`;
+          }
         });
       }
       return finalString;
-    } else { return null; }
-  }
-
-  // to change property list in tooltip
-  stringifyPropertiesForAllData(propertyObject) {
-    if (propertyObject.constructor === Object) {
-      let finalString = '';
-      propertyObject['properties']['deleted'] = false;
-      Object.keys(propertyObject['properties']).filter(key => {
-        finalString += `<strong>${key} :</strong> ${propertyObject['properties'][key]} <br>`;
-      });
-      return finalString;
-    } else { return null; }
+    } else { return propertyObject['title']; }
   }
 
   addData(node, clickEvent, event) {
@@ -721,14 +712,16 @@ export class GraphVisualizerComponent implements OnInit {
     this.filteredGraphData['edges'] = [];
     this.allGraphData['nodes'].filter(node => {
       if (node['properties']['deleted'] === "false" || node['properties']['deleted'] === false) {
-        node['title'] = this.stringifyProperties(node);
-        this.filteredGraphData['nodes'].push(node);
+        let tem = _.cloneDeep(node);
+        tem['title'] = this.stringifyProperties(tem);
+        this.filteredGraphData['nodes'].push(tem);
       }
     });
     this.allGraphData['edges'].filter(edge => {
       if (edge['properties']['deleted'] === "false" || edge['properties']['deleted'] === false) {
-        edge['title'] = this.stringifyProperties(edge);
-        this.filteredGraphData['edges'].push(edge);
+        let tem = _.cloneDeep(edge);
+        tem['title'] = this.stringifyProperties(tem);
+        this.filteredGraphData['edges'].push(tem);
       }
     });
   }
@@ -736,16 +729,6 @@ export class GraphVisualizerComponent implements OnInit {
   // to show all data
   showAllData() {
     // create dataset for all data 
-    this.allGraphData['nodes'].map(node => {
-      if (!('deleted' in node['properties'])) {
-        node['title'] = this.stringifyPropertiesForAllData(node);
-      }
-    });
-    this.allGraphData['edges'].map(edge => {
-      if (!('deleted' in edge['properties'])) {
-        edge['title'] = this.stringifyPropertiesForAllData(edge);
-      }
-    });
     this.graphData['nodes'] = new DataSet(this.allGraphData['nodes']);
     this.graphData['edges'] = new DataSet(this.allGraphData['edges']);
     // to count graph element
@@ -758,13 +741,6 @@ export class GraphVisualizerComponent implements OnInit {
 
   // to show filtered data
   showFilteredData() {
-    // create dataset for all filtered data 
-    this.filteredGraphData['nodes'].map(node => {
-        node['title'] = this.stringifyProperties(node);
-    });
-    this.filteredGraphData['edges'].map(edge => {
-        edge['title'] = this.stringifyProperties(edge);
-    });
     // create dataset for filtered graph data
     this.graphData['nodes'] = new DataSet(this.filteredGraphData['nodes']);
     this.graphData['edges'] = new DataSet(this.filteredGraphData['edges']);
