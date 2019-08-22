@@ -175,6 +175,49 @@ var convertToBoolean = (possibleBool) => {
     return !!possibleBool ? ((possibleBool === 'true') ? true : false) : false;
 }
 
+var createQueryForRestore = (dataObj) => {
+    if (dataObj.hasOwnProperty('nodes') || dataObj.hasOwnProperty('relations')) {
+        let idStringNodesArray = '';
+        let idStringRelationsArray = '';
+        let query = '';
+        // start creating the query
+        if (dataObj.nodes.length > 0) {
+            idStringNodesArray = convertToArrayString(dataObj.nodes);
+        }
+        if (dataObj.relations.length > 0) {
+            idStringRelationsArray = convertToArrayString(dataObj.relations);
+        }
+        if (!!idStringNodesArray && !!idStringRelationsArray) {
+            // both are present
+            query = `match (nodes) where id(nodes) IN ${idStringNodesArray} set nodes.deleted = false with nodes
+            match ()-[relations]-() where id(relations) IN ${idStringRelationsArray} set relations.deleted = false return nodes,relations`;
+        } else if (!!idStringNodesArray && !idStringRelationsArray) {
+            // only relations are present
+            query = `match (nodes) where id(nodes) IN ${idStringNodesArray} set nodes.deleted = false return nodes`;
+        } else if (!idStringNodesArray && !!idStringRelationsArray) {
+            // only nodes are present
+            query = `match ()-[relations]-() where id(relations) IN ${idStringRelationsArray} set relations.deleted = false return relations`;
+        } else {
+            // both are not present, no restore
+            return '';
+        }
+        return query;
+        } else {
+            return '';
+        }
+    }
+
+function convertToArrayString(ArrayData) {
+    if (ArrayData.length > 0) {
+        let arrayStatements = [];
+        ArrayData.forEach(item => {
+            arrayStatements.push(`"${item}"`);
+        });
+        return `[${arrayStatements.join(",")}]`;
+    }
+    else return null;
+}
+
 module.exports = {
     createUpdateNodeQuery,
     createUpdateRelationQuery,
@@ -182,5 +225,6 @@ module.exports = {
     createDeleteRelationQuery,
     processProperties,
     processFetchedProperties,
-    convertToBoolean
+    convertToBoolean,
+    createQueryForRestore
 }
