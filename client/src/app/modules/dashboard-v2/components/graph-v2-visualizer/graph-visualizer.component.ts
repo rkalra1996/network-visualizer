@@ -3,6 +3,7 @@ import { GraphDataService } from 'src/app/modules/core/services/graph-data-servi
 import { Network, DataSet, Node, Edge, IdType } from 'vis';
 import * as _ from 'lodash';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
+import { elementOperation } from './../../interfaces/elementOperation'
 
 @Component({
   selector: 'app-graph-visualizer',
@@ -380,11 +381,12 @@ export class GraphVisualizerComponent implements OnInit {
                 // add the new node to the vis
                 this.graphData['nodes'].add([visNode]);
                 // to update all data array while a new node is created
-                this.allGraphData['nodes'].push(response['seperateNodes'][0]);
-                // update filterd graph data
-                let tem = _.cloneDeep(response['seperateNodes'][0]);
-                tem['title'] = this.stringifyProperties(tem);
-                this.filteredGraphData['nodes'].push(tem);
+                let eleObj : elementOperation = {
+                  element : 'nodes',
+                  event : "create",
+                  data : response['seperateNodes'][0]
+                };
+                this.updateGraphArray(eleObj);
                 // emit the createNodes component that a node has been put into the graph, prompt user to create a relation
                 // send the data of new node for relationPrompt
                 this.promptRelationCreateAfterNode = _.cloneDeep({ created: true, node: visNode });
@@ -435,7 +437,21 @@ export class GraphVisualizerComponent implements OnInit {
               visNode['type'] = updatedNode['type'];
               console.log('update node details are ', visNode);
               // node was present, simply update it now
-              this.graphData['nodes'].update(visNode);
+              if (this.showDeletedData) {
+                this.graphData['nodes'].update(visNode);
+              } else {
+                let tem = _.cloneDeep(visNode);
+                tem['title'] = this.stringifyProperties(tem);
+                this.graphData['nodes'].update(tem);
+              }
+
+              // update all+filtered graph array
+              let eleObj : elementOperation = {
+                element : 'nodes',
+                event : "edit",
+                data : visNode
+              };
+              this.updateGraphArray(eleObj);
               //update sidebar dropdown
               this.newNodeCreated.emit('NodeEvent_update' + response['seperateNodes'][0].id);
             }
@@ -465,26 +481,27 @@ export class GraphVisualizerComponent implements OnInit {
             let removedEdges = response['seperateEdges'];
             // update the edges
             removedEdges.map(removed => {
-              // remove from filtered data array
-            let index = _.findIndex(this.filteredGraphData['edges'], { id: removed['id'] })
-            if (index >= 0)
-              this.filteredGraphData['edges'].splice(index, 1)
-            
-              // update in all graph data array
-            let index2 = _.findIndex(this.allGraphData['edges'], { id: removed['id'] })
-            if (index2 >= 0){
-                removed['color']['color'] = this.colorConfig.deletedColor.colorCode;
-                removed['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
-                this.allGraphData['edges'][index2] = removed;
-            }
-          });
-
-             if (this.showDeletedData) {
+              // update all+filtered graph array
+              let eleObj : elementOperation = {
+                element : 'edges',
+                event : "delete",
+                data : removed
+              };
+              this.updateGraphArray(eleObj);
+            });
+            if (this.showDeletedData) {
               this.graphData['edges'].update(removedEdges);
             } else {
               this.graphData['edges'].remove(removedEdges);
             }
           }
+          // update all+filtered array
+          let eleObj : elementOperation = {
+            element : 'nodes',
+            event : "delete",
+            data : response['seperateNodes'][0]
+          };
+          this.updateGraphArray(eleObj);
           // update the node in vis
           removedNode[0]['color'] = this.colorConfig.deletedColor.colorCode;
           if (this.showDeletedData) {
@@ -492,17 +509,6 @@ export class GraphVisualizerComponent implements OnInit {
           } else {
             this.graphData['nodes'].remove(removedNode);
           }
-
-          // to update deleted data from filtered data array
-          let index = _.findIndex(this.filteredGraphData['nodes'], { label: removedNode[0]['label'] });
-              if(index >= 0)
-              this.filteredGraphData['nodes'].splice(index, 1);
-              // to update deleted data from all graph data array
-          let index2 = _.findIndex(this.allGraphData['nodes'], { label: removedNode[0]['label'] });
-          if(index2 >= 0){
-            removedNode[0]['color'] = this.colorConfig.deletedColor.colorCode;
-            this.allGraphData['nodes'][index2] = removedNode[0];
-            }
           this.hideDelModal = _.cloneDeep(true);
           //update sidebar dropdown
           this.newNodeCreated.emit('NodeEvent_delete' + response['seperateNodes'][0].id);
@@ -537,19 +543,21 @@ export class GraphVisualizerComponent implements OnInit {
             // add the new node to the vis
             // first get the edge, if it is already present, simply update it else add it
             let isAlreadyPresent = this.graphData['edges'].get(visRelation['id']);
+            let eleObj : elementOperation = {
+              element : 'edges',
+              event : "edit",
+              data : response['seperateEdges'][0]
+            };
             if (isAlreadyPresent !== null) {
               //update it 
               this.graphData['edges'].update([visRelation]);
-              let index2 = _.findIndex(this.allGraphData['edges'], { id: response['seperateEdges'][0]['id'] })
-            if (index2 >= 0) {
-              // update allgraphdata array 
-              this.allGraphData['edges'][index2] = response['seperateEdges'][0];
-            }
+              // update edge in allgraphdata and filtered data array
+              this.updateGraphArray(eleObj);
             } else {
               this.graphData['edges'].add([visRelation]);
               // add new edge to allgraphdata and filtered data array
-              this.allGraphData['edges'].push(response['seperateEdges'][0]);
-              this.filteredGraphData['edges'].push(visRelation);
+              eleObj.event = "create";
+              this.updateGraphArray(eleObj);
             }
           } catch (addErr) {
             console.log('Error while adding the data relation to vis ', addErr['message']);
@@ -586,20 +594,16 @@ export class GraphVisualizerComponent implements OnInit {
             console.log('recieved some response', response['seperateEdges']);
             // once database relation is deleted, remove it from visGraph also
             let deletedRel = _.cloneDeep(response['seperateEdges'])
-            // to update filtered data array
-            let index = _.findIndex(this.filteredGraphData['edges'], { id: deletedRel['id'] })
-            if (index >= 0)
-              this.filteredGraphData['edges'].splice(index, 1)
-            // to update all graph data array
-            let index2 = _.findIndex(this.allGraphData['edges'], { id: deletedRel['id'] })
-            if (index2 >= 0) {
-              // update the edges property and push it to allgraphdata array 
-              deletedRel['properties']['deleted'] = true;
+            // update all+filtered graph array
+            let eleObj : elementOperation = {
+              element : 'edges',
+              event : "delete",
+              data : response['seperateEdges']
+            };
+            this.updateGraphArray(eleObj);
+            if (this.showDeletedData) {
               deletedRel['color']['color'] = this.colorConfig.deletedColor.colorCode;
               deletedRel['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
-              this.allGraphData['edges'][index2] = deletedRel;
-            }
-            if (this.showDeletedData) {
               this.graphData['edges'].update([deletedRel]);
             } else {
               this.graphData['edges'].remove([deletedRel]);
@@ -630,13 +634,13 @@ export class GraphVisualizerComponent implements OnInit {
           oldNode = this.addNodeColor(node);
           // update all graph data array
           let index = _.findIndex(this.allGraphData['nodes'], { id: oldNodeID })
-            if (index >= 0){
-                this.allGraphData['nodes'][index] = oldNode;
-            }
+          if (index >= 0) {
+            this.allGraphData['nodes'][index] = oldNode;
+          }
           // update filtered grpah data array
           let tem = _.cloneDeep(oldNode);
-                tem['title'] = this.stringifyProperties(tem);
-                this.filteredGraphData['nodes'].push(tem);
+          tem['title'] = this.stringifyProperties(tem);
+          this.filteredGraphData['nodes'].push(tem);
           // set it back in VISJS
           this.graphData['nodes'].update(oldNode);
           console.log('updated node ', oldNode);
@@ -653,7 +657,20 @@ export class GraphVisualizerComponent implements OnInit {
     let oldRelationID = relation['id'];
     let oldRelation = this.graphData['edges'].get(oldRelationID);
     console.log('old relation is  ', oldRelation);
-    this.graphData['edges'].update([relation]);
+    if (this.showDeletedData) {
+      this.graphData['edges'].update([relation]);
+    } else {
+      let tem = _.cloneDeep(relation);
+      tem['title'] = this.stringifyProperties(tem);
+      this.graphData['edges'].update([tem]);
+    }
+    // update all+filtered graph array 
+    let eleObj: elementOperation = {
+      element: "edges",
+      event: "edit",
+      data: relation
+    };
+    this.updateGraphArray(eleObj);
   }
 
   updateRelationsInVis(relationArray) {
@@ -683,7 +700,7 @@ export class GraphVisualizerComponent implements OnInit {
       let finalString = '';
       if (propertyObject['properties'].hasOwnProperty('deleted')) {
         Object.keys(propertyObject['properties']).filter(key => {
-          if(key !== 'deleted'){
+          if (key !== 'deleted') {
             finalString += `<strong>${key} :</strong> ${propertyObject['properties'][key]} <br>`;
           }
         });
@@ -809,7 +826,7 @@ export class GraphVisualizerComponent implements OnInit {
     if (
       this.editNodeData !== null || this.editRelationData !== null ||
       this.promptRelationCreateAfterNode !== null || this.restoredData !== null
-      ) {
+    ) {
       console.log('cleaning data for ', cleanType);
       if (!!cleanType) {
         if (cleanType === 'node') {
@@ -821,7 +838,7 @@ export class GraphVisualizerComponent implements OnInit {
         } else if (cleanType === 'restore') {
           this.restoredData = null;
         }
-         else {
+        else {
           // nothing
         }
       }
@@ -832,67 +849,67 @@ export class GraphVisualizerComponent implements OnInit {
     // this.loader = true;
     if (Object.keys(restoreDataObj).length > 0 && restoreDataObj.hasOwnProperty('type') && restoreDataObj.hasOwnProperty('data')) {
 
-      let requestBodyObj = {nodes : [], relations: []};
+      let requestBodyObj = { nodes: [], relations: [] };
 
       if (restoreDataObj['type'] === 'node_relation') {
         // the data key should have both node and relation key with id array key inside them
-          if (Object.keys(restoreDataObj['data']).length > 0 && Object.keys(restoreDataObj['data']).length <= 2) {
-            if (restoreDataObj['data'].hasOwnProperty('node') &&
-                restoreDataObj['data']['node'].hasOwnProperty('id') &&
-                Array.isArray(restoreDataObj['data']['node']['id'])
-                ) {
-                  requestBodyObj.nodes = _.cloneDeep(restoreDataObj['data']['node']['id']);
-                } else {
-                  // the data object does not have valid node key or id key
-                  console.error('the data object does not have valid node key or id key for initRestoreData');
-                }
-            if (restoreDataObj['data'].hasOwnProperty('relation') &&
-                restoreDataObj['data']['relation'].hasOwnProperty('id') &&
-                Array.isArray(restoreDataObj['data']['relation']['id'])
-                ) {
-                  requestBodyObj.nodes = _.cloneDeep(restoreDataObj['data']['relation']['id']);
-                } else {
-                  // the data object does not have valid relation key or id key
-                  console.error('the data object does not have valid relation key or id key for relation in initRestoreData');
-                }
+        if (Object.keys(restoreDataObj['data']).length > 0 && Object.keys(restoreDataObj['data']).length <= 2) {
+          if (restoreDataObj['data'].hasOwnProperty('node') &&
+            restoreDataObj['data']['node'].hasOwnProperty('id') &&
+            Array.isArray(restoreDataObj['data']['node']['id'])
+          ) {
+            requestBodyObj.nodes = _.cloneDeep(restoreDataObj['data']['node']['id']);
           } else {
-            // providing irrelevant number of keys to the api in the data object
-            console.error('irrelevant number of keys to the api in the data object in initRestoreData');
+            // the data object does not have valid node key or id key
+            console.error('the data object does not have valid node key or id key for initRestoreData');
+          }
+          if (restoreDataObj['data'].hasOwnProperty('relation') &&
+            restoreDataObj['data']['relation'].hasOwnProperty('id') &&
+            Array.isArray(restoreDataObj['data']['relation']['id'])
+          ) {
+            requestBodyObj.nodes = _.cloneDeep(restoreDataObj['data']['relation']['id']);
+          } else {
+            // the data object does not have valid relation key or id key
+            console.error('the data object does not have valid relation key or id key for relation in initRestoreData');
           }
         } else {
-          if (restoreDataObj['type'] === 'node' && restoreDataObj['data'].hasOwnProperty('id')) {
-            requestBodyObj.nodes = [ restoreDataObj['data']['id'] ];
-          }
-          if (restoreDataObj['type'] === 'relation' && restoreDataObj['data'].hasOwnProperty('id')) {
-            requestBodyObj.relations = [ restoreDataObj['data']['id'] ];
-          }
+          // providing irrelevant number of keys to the api in the data object
+          console.error('irrelevant number of keys to the api in the data object in initRestoreData');
         }
+      } else {
+        if (restoreDataObj['type'] === 'node' && restoreDataObj['data'].hasOwnProperty('id')) {
+          requestBodyObj.nodes = [restoreDataObj['data']['id']];
+        }
+        if (restoreDataObj['type'] === 'relation' && restoreDataObj['data'].hasOwnProperty('id')) {
+          requestBodyObj.relations = [restoreDataObj['data']['id']];
+        }
+      }
 
-        // requestBody has been prepared
+      // requestBody has been prepared
       console.log('final request body is ', requestBodyObj);
       this.graphService.restoreData(requestBodyObj).subscribe(response => {
-          // once the response if okay, send back the confirmation to the create nodes
-          let finalData = {
-            nodes : response['seperateNodes'],
-            relations : response['seperateRelations']
-          };
-          // update the nodes / relations in the visJS graph also and finally tell the modal to go away
-          if (this.updateRestoreDataInVis(finalData)) {
-            this.loader = false;
-            this.restoredData = _.cloneDeep(finalData);
-          } else {
-            this.restoredData = null;
-            this.loader = false;
-          }
-
-        }, error => {
-          console.error('An error occured while restoring the data from the API');
-          console.log(error);
+        // once the response if okay, send back the confirmation to the create nodes
+        let finalData = {
+          nodes: response['seperateNodes'],
+          relations: response['seperateRelations']
+        };
+        // update the nodes / relations in the visJS graph also and finally tell the modal to go away
+        if (this.updateRestoreDataInVis(finalData)) {
           this.loader = false;
-        });
+          this.restoredData = _.cloneDeep(finalData);
+        } else {
+          this.restoredData = null;
+          this.loader = false;
+        }
+
+      }, error => {
+        console.error('An error occured while restoring the data from the API');
+        console.log(error);
+        this.loader = false;
+      });
     } else {
-            console.error('Did not recieve any valid object data for restore');
-            this.loader = false;
+      console.error('Did not recieve any valid object data for restore');
+      this.loader = false;
     }
   }
 
@@ -910,5 +927,103 @@ export class GraphVisualizerComponent implements OnInit {
       return false;
     }
     // the purpose of the function is to update the nodes / relations in VisJS dataSet
+  }
+
+  // to update allGraphData and filteredGraphData
+  updateGraphArray(obj : elementOperation) : void {
+    try {
+      if (obj.hasOwnProperty('event') && obj.event === 'create') {
+        this.insertIntoAllGraphArray(obj);
+        this.insertIntoFilteredGraphArray(obj);
+      } else if (obj.hasOwnProperty('event') && obj.event === 'edit' || obj.event === 'delete') {
+        this.updateAllGraphArray(obj);
+        this.updateFilteredGraphArray(obj);
+      }
+    } catch (e) {
+      console.log("Method : updateGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
+    }
+
+  }
+
+  // update allgraphdata array
+  updateAllGraphArray(obj : elementOperation) : void {
+    try {
+      if (obj.hasOwnProperty('data')) {
+        let index;
+        // update in all graph data array
+        if (obj.hasOwnProperty('element') && obj.element === 'nodes') {
+          // for node
+          if (obj.hasOwnProperty('event') && obj.event === 'delete') {
+            obj.data['color'] = this.colorConfig.deletedColor.colorCode;
+          }
+          index = _.findIndex(this.allGraphData[obj.element], { label: obj.data['label'] });
+        } else if (obj.hasOwnProperty('element') && obj.element === 'edges') {
+          // for edge
+          if (obj.hasOwnProperty('event') && obj.event === 'delete') {
+            obj.data['color']['color'] = this.colorConfig.deletedColor.colorCode;
+            obj.data['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
+          }
+          index = _.findIndex(this.allGraphData[obj.element], { id: obj.data['id'] })
+        }
+        if (index >= 0) {
+          // update in array
+          this.allGraphData[obj.element][index] = obj.data;
+        }
+      }
+    } catch (e) {
+      console.log("Method : updateAllGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
+    }
+  }
+
+  // update filteredgrapdata garray
+  updateFilteredGraphArray(obj : elementOperation) : void {
+    try {
+      if (obj.hasOwnProperty('data')) {
+        let index;
+        // update in all graph data array
+        if (obj.hasOwnProperty('element') && obj.element === 'nodes') {
+          index = _.findIndex(this.filteredGraphData[obj.element], { label: obj.data['label'] });
+        } else if (obj.hasOwnProperty('element') && obj.element === 'edges') {
+          // remove deleted edge from filtered data array
+          index = _.findIndex(this.filteredGraphData[obj.element], { id: obj.data['id'] })
+        }
+        if (index >= 0) {
+          if (obj.hasOwnProperty('event') && obj.event === 'delete') {
+            this.filteredGraphData[obj.element].splice(index, 1);
+          } else if (obj.hasOwnProperty('event') && obj.event === 'edit') {
+            // update filterd graph data
+            let tem = _.cloneDeep(obj.data);
+            tem['title'] = this.stringifyProperties(tem);
+            this.filteredGraphData[obj.element][index] = tem;
+          }
+        }
+      }
+    } catch (e) {
+      console.log("Method : updateFilteredGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
+    }
+  }
+
+  // insert into allgraphdata array
+  insertIntoAllGraphArray(obj : elementOperation) : void {
+    try {
+      if (obj.hasOwnProperty('data') && obj.hasOwnProperty('element')) {
+        this.allGraphData[obj.element].push(obj.data);
+      }
+    } catch (e) {
+      console.log("Method : insertIntoAllGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
+    }
+  }
+
+  //insert into filtered graph array
+  insertIntoFilteredGraphArray(obj : elementOperation) : void {
+    try {
+      if (obj.hasOwnProperty('data') && obj.hasOwnProperty('element')) {
+        let tem = _.cloneDeep(obj.data);
+        tem['title'] = this.stringifyProperties(tem);
+        this.filteredGraphData[obj.element].push(tem);
+      }
+    } catch (e) {
+      console.log("Method : insertIntoFilteredGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
+    }
   }
 }
