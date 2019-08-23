@@ -381,6 +381,7 @@ export class GraphVisualizerComponent implements OnInit {
                 this.graphData['nodes'].add([visNode]);
                 // to update all data array while a new node is created
                 this.allGraphData['nodes'].push(response['seperateNodes'][0]);
+                // update filterd graph data
                 let tem = _.cloneDeep(response['seperateNodes'][0]);
                 tem['title'] = this.stringifyProperties(tem);
                 this.filteredGraphData['nodes'].push(tem);
@@ -627,6 +628,15 @@ export class GraphVisualizerComponent implements OnInit {
         if (!!oldNode) {
           oldNode['properties'] = node['properties'];
           oldNode = this.addNodeColor(node);
+          // update all graph data array
+          let index = _.findIndex(this.allGraphData['nodes'], { id: oldNodeID })
+            if (index >= 0){
+                this.allGraphData['nodes'][index] = oldNode;
+            }
+          // update filtered grpah data array
+          let tem = _.cloneDeep(oldNode);
+                tem['title'] = this.stringifyProperties(tem);
+                this.filteredGraphData['nodes'].push(tem);
           // set it back in VISJS
           this.graphData['nodes'].update(oldNode);
           console.log('updated node ', oldNode);
