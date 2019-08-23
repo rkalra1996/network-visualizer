@@ -134,8 +134,8 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     this.sharedGraphSrvc.nameArray.subscribe(response => {
       this.totalName = response;
       // to change format for lookup option
-      this.totalName = this.totalName.map((name, i) => {
-        return { id: i, key: name };
+      this.totalName = this.totalName.map(name => {
+        return { key: name };
       });
     })
   }
@@ -1348,7 +1348,7 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
   // to set dropdown of from and to 
   optionLookUp = (query: string, initial: number) => {
     // to change lookup option according to search 
-    if (query.length > 0) {
+    if (!!query && query.length > 0) {
       let regex: RegExp | string;
       try {
         regex = new RegExp(query, "i");
