@@ -153,6 +153,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       this.nameOptions = _.cloneDeep([]);
       let temp = _.cloneDeep(temname);
       this.nameOptions = temp;
+      this.sharedGraphData.setFromToData(this.nameOptions);
       
       // send the types array for further use to the modals
       // this.nodeTypesEvent.emit(temtype);

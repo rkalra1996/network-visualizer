@@ -1,10 +1,10 @@
 import { Component, OnInit, EventEmitter, Output, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import {SearchService} from './../../../shared/services/search-service/search.service';
+import { SearchService } from './../../../shared/services/search-service/search.service';
 import * as _ from 'lodash';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
 import { map, filter } from 'rxjs/operators';
 
-import {SharedGraphService} from './../../../core/services/shared-graph.service';
+import { SharedGraphService } from './../../../core/services/shared-graph.service';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 
@@ -38,12 +38,12 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   public newNodeName = 'Not Available';
   // object to handle modals
   public popupConfig = {
-    createNodePopup : false,
-    editNodePopup : false,
-    deleteNodePopup : false,
-    createRelationPopup : false,
-    editRelationPopup : false,
-    deleteRelationPopup : false
+    createNodePopup: false,
+    editNodePopup: false,
+    deleteNodePopup: false,
+    createRelationPopup: false,
+    editRelationPopup: false,
+    deleteRelationPopup: false
   };
   // Query to fetch all labels
   public queryObj = {
@@ -55,12 +55,12 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   };
 
   // modal specific variables
-    public createNodePopup = false;
-    public editNodePopup = false;
-    public deleteNodePopup = false;
-    public createRelationPopup = false;
-    public editRelationPopup = false;
-    public deleteRelationPopup = false;
+  public createNodePopup = false;
+  public editNodePopup = false;
+  public deleteNodePopup = false;
+  public createRelationPopup = false;
+  public editRelationPopup = false;
+  public deleteRelationPopup = false;
 
   public disabledBox = false;
   public enableNewTemplate = false;
@@ -89,7 +89,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   public availablePropertyList = {};
   public selectedPropertiesObject = {};
   public showDeletedData = false;
-
+  public totalName = [];
   constructor(
     private SharedSrvc: SearchService,
     private graphSrvc: GraphDataService,
@@ -102,17 +102,17 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     $('.toolTipText').tooltip();
     // fetch the properties of all the nodes and relationships
     this.graphSrvc.getGraphProperties()
-    .subscribe(response => {
-      if (response.hasOwnProperty('nodes')) {
-        this.totalNodesProperties = _.cloneDeep(response['nodes']);
-      }
-      if (response.hasOwnProperty('relations')) {
-        this.totalRelationsProperties = _.cloneDeep(response['relations']);
-      }
-      console.log(this.totalNodesProperties, this.totalRelationsProperties);
-    }, err => {
-      console.error('Error while subscribing to graphProperties method -> ', err);
-    });
+      .subscribe(response => {
+        if (response.hasOwnProperty('nodes')) {
+          this.totalNodesProperties = _.cloneDeep(response['nodes']);
+        }
+        if (response.hasOwnProperty('relations')) {
+          this.totalRelationsProperties = _.cloneDeep(response['relations']);
+        }
+        console.log(this.totalNodesProperties, this.totalRelationsProperties);
+      }, err => {
+        console.error('Error while subscribing to graphProperties method -> ', err);
+      });
 
     this.sharedGraphSrvc.showDeletedData.subscribe(toggle => {
       if (toggle !== null && (toggle.toString() === 'true' || toggle.toString() === 'false')) {
@@ -127,9 +127,16 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       // set to false by default
       console.error('An error occured while subscribing to the toggle for deleted data', err);
       this.showDeletedData = false;
-  });
+    });
+    this.sharedGraphSrvc.nameArray.subscribe(response => {
+      this.totalName = response;
+      // to change format for lookup option
+      this.totalName = this.totalName.map((name, i) => {
+        return { id: i, key: name };
+      });
+    })
+  }
 
-}
 
   createNode() {
     this.popupConfig.createNodePopup = true;
@@ -173,7 +180,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     this.createRelationPopup = true;
     this.enableNewTemplate = false;
     this.disabledBox = false;
-    this.getRelationTypes().subscribe(data => {});
+    this.getRelationTypes().subscribe(data => { });
     console.log('variables values are ', this.popupConfig.createRelationPopup + ' ' + this.createRelationPopup);
   }
 
@@ -228,7 +235,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
           }
         });
         if (matched) {
-          response.splice(i,1);
+          response.splice(i, 1);
           i = 0;
         } else {
           filteredObjectArray.push(response[i]);
@@ -289,6 +296,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.deleteNodePopup = false;
       this.deleteRelationPopup = false;
       this.cleanData.emit('relation');
+      this.fromNames = [];
+      this.toNames = [];
     });
 
     if ((!!this.editData && !!this.editData.length) || (!!this.editData && !!Object.keys(this.editData).length)) {
@@ -298,8 +307,8 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.editData = _.cloneDeep(null);
       console.log('edit data recieved is ', editNodeData);
       this.editNodeConfig = _.cloneDeep({
-        properties : editNodeData['properties'],
-        type : editNodeData['type'][0],
+        properties: editNodeData['properties'],
+        type: editNodeData['type'][0],
         id: editNodeData['id']
       });
       this.clickedNodeID = _.cloneDeep(this.editNodeConfig['id']);
@@ -330,38 +339,38 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       console.log('recieved edit relation data is ', this.editRelData);
       this.disabledBox = true;
       let editRelConfig = {
-        id : this.editRelData['id'],
-        type : this.editRelData['type'],
-        properties : this.editRelData['properties'],
-        from : this.editRelData['from'],
-        to : this.editRelData['to']
+        id: this.editRelData['id'],
+        type: this.editRelData['type'],
+        properties: this.editRelData['properties'],
+        from: this.editRelData['from'],
+        to: this.editRelData['to']
       };
       this.clickedRelationID = _.cloneDeep(editRelConfig['id']);
       this.getRelationTypes().subscribe(response => {
-      console.log('fetched relationship types successfully');
-      // once types are loaded, set a default type which is the type of selected relation
-      // relationTypeOptions are already set
-      this.selectedType = editRelConfig['type'];
-      this.updateRelProperties(this.selectedType, editRelConfig);
-      const prefilledRelInfo = this.recreatePrefilledData(editRelConfig['properties']);
+        console.log('fetched relationship types successfully');
+        // once types are loaded, set a default type which is the type of selected relation
+        // relationTypeOptions are already set
+        this.selectedType = editRelConfig['type'];
+        this.updateRelProperties(this.selectedType, editRelConfig);
+        const prefilledRelInfo = this.recreatePrefilledData(editRelConfig['properties']);
 
-      // disable the from and to boxes
-      this.disabledFromBox = true;
-      this.disabledToBox = true;
-      this.prefillData('createRelationModal', prefilledRelInfo, editRelConfig['id'], 'relation');
-      // prefill the connected nodes names for the selected relationship modal
-      this.prefillConnectedNodes(editRelConfig);
-      this.sharedGraphSrvc.nodeDetails.subscribe(nodeDetailsArray => {
-        // this variable will have arrays of nodes in same sequesnce the ids were sent
-        console.log('recieved connected node information', nodeDetailsArray);
-        this.selectedNodeNameSource = nodeDetailsArray[0]['label'] || '';
-        this.selectedNodeNameTarget = nodeDetailsArray[1]['label'] || '';
+        // disable the from and to boxes
+        this.disabledFromBox = true;
+        this.disabledToBox = true;
+        this.prefillData('createRelationModal', prefilledRelInfo, editRelConfig['id'], 'relation');
+        // prefill the connected nodes names for the selected relationship modal
+        this.prefillConnectedNodes(editRelConfig);
+        this.sharedGraphSrvc.nodeDetails.subscribe(nodeDetailsArray => {
+          // this variable will have arrays of nodes in same sequesnce the ids were sent
+          console.log('recieved connected node information', nodeDetailsArray);
+          this.selectedNodeNameSource = nodeDetailsArray[0]['label'] || '';
+          this.selectedNodeNameTarget = nodeDetailsArray[1]['label'] || '';
+        });
+
+      }, err => {
+        console.warn('An error occured while setting the types in the dropdown');
+        this.editRelData = null;
       });
-
-    }, err => {
-      console.warn('An error occured while setting the types in the dropdown');
-      this.editRelData = null;
-    });
       // open the edit modal
       this.disabledBox = true;
       this.showModal('createRelationModal');
@@ -403,7 +412,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   prefillData(modalID, dataToFill, IDToSupply, type = 'node') {
     if (!modalID) {
       console.warn('cannot prefill data as modal id is not supplied');
-    }  else {
+    } else {
       // both are supplied, time to prefill the modal
       if ($(`#${modalID}`).length) {
         if (type === 'node') {
@@ -458,7 +467,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       }); */
       return prefilledData;
     }
-    else {return null}
+    else { return null }
   }
 
   showModal(modalID) {
@@ -526,7 +535,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       } else if (type === 'edit') {
         // add the updated properties if any, to the availablePropertyList for future use
         this.insertIntoPropertyList(nodeData.properties);
-        this.nodeBtnEvent.emit({ type: 'click', action: 'edit', data: nodeData, process : 'complete' });
+        this.nodeBtnEvent.emit({ type: 'click', action: 'edit', data: nodeData, process: 'complete' });
         this.popupConfig.editNodePopup = false;
         this.editNodePopup = false;
       }
@@ -586,6 +595,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     catch (e) {
       console.log(e);
     }
+    // clear from to data
+    this.fromNames = [];
+    this.fromNames = [];
   }
 
   insertIntoPropertyList(propertiesToUpdate) {
@@ -638,9 +650,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       } else {
         throw new Error('Cannot create a node with no Type');
       }
-      } else {
-        throw new Error('Cannot create a node with no details');
-      }
+    } else {
+      throw new Error('Cannot create a node with no details');
+    }
   }
   validateRelationData(relationObj) {
     if (Object.keys(relationObj).length > 0) {
@@ -654,7 +666,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         throw new Error('Cannot create a relation with no Type');
       }
     } else {
-      throw new Error ('cannot create a relation with no details');
+      throw new Error('cannot create a relation with no details');
     }
   }
 
@@ -667,7 +679,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     if (data.length > 0) {
       let tempData = [];
       data.forEach(label => {
-        tempData.push({type: label._fields[1], properties : label._fields[0]});
+        tempData.push({ type: label._fields[1], properties: label._fields[0] });
       });
       return tempData;
     } else return [];
@@ -696,38 +708,20 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       } else {
         editProperties = editProperties['properties'];
       }
-      this.labelProperties =  this.getProperties([event], editProperties);
+      this.labelProperties = this.getProperties([event], editProperties);
     }
   }
 
   updateRelProperties(event, relProperties = null) {
     // fetch the properties of selected type and display it in the dropdown
-     if (!relProperties || !relProperties.hasOwnProperty('properties')) {
-       relProperties = null;
-       this.selectedPropertiesObject = _.cloneDeep({});
-     } else {
-       relProperties = relProperties['properties'];
-     }
-     this.typeProperties =  this.getRelProperties([event], relProperties);
-       // trigger an api to get all the names of the nodes in the graph
-     this.graphSrvc.getNodeLabelData().subscribe(response => {
-       let temname = [];
-       if (response && response.length > 0) {
-         response.forEach(data => {
-           let keyName = Object.keys(data)[0];
-           if(keyName === "Name"){
-               temname = data['Name'];
-             }
-           });
-         this.fromNames = _.cloneDeep(temname);
-         this.toNames = _.cloneDeep(temname);
-         }
-       }, error => {
-         console.log(error);
-         this.fromNames = [];
-         this.toNames = [];
-       });
-     }
+    if (!relProperties || !relProperties.hasOwnProperty('properties')) {
+      relProperties = null;
+      this.selectedPropertiesObject = _.cloneDeep({});
+    } else {
+      relProperties = relProperties['properties'];
+    }
+    this.typeProperties = this.getRelProperties([event], relProperties);
+  }
 
   getProperties(labelName, editProperties = null) {
     if (labelName.length > 0) {
@@ -763,7 +757,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
 
       return fetchedProperties.filter(ele => {
         return ele !== 'deleted';
-    });
+      });
     } else {
       return [];
     }
@@ -813,14 +807,14 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       propertyKeyList.forEach((propertyName, index) => {
         if (!Object.keys(this.availablePropertyList).length) {
           // this is the first entry
-          this.availablePropertyList[propertyName] = { list : [], enableNewProperty : false};
+          this.availablePropertyList[propertyName] = { list: [], enableNewProperty: false };
           this.availablePropertyList[propertyName]['list'] = this.getcollectedProperties(propertyName);
         } else {
           // update the key
           if (Object.keys(this.availablePropertyList).indexOf(propertyName) > -1) {
             this.availablePropertyList[propertyName]['list'] = this.getcollectedProperties(propertyName);
           } else {
-            this.availablePropertyList[propertyName] = { list : [], enableNewProperty : false};
+            this.availablePropertyList[propertyName] = { list: [], enableNewProperty: false };
             this.availablePropertyList[propertyName]['list'] = this.getcollectedProperties(propertyName);
           }
         }
@@ -836,7 +830,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
   }
 
-  initiatePropertiesValues(){
+  initiatePropertiesValues() {
     Object.keys(this.availablePropertyList).forEach(key => {
       this.selectedPropertiesObject[key] = '';
     });
@@ -863,9 +857,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     combinedPropertyList = _.orderBy(combinedPropertyList);
     combinedPropertyList = _.uniq(combinedPropertyList);
     return combinedPropertyList;
-    }
+  }
 
-  swap(ArrayForSwapping,swapFromIndex, swapToIndex) {
+  swap(ArrayForSwapping, swapFromIndex, swapToIndex) {
     const temp = ArrayForSwapping[swapFromIndex];
     ArrayForSwapping[swapFromIndex] = ArrayForSwapping[swapToIndex];
     ArrayForSwapping[swapToIndex] = temp;
@@ -966,7 +960,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.toNames = [];
     });
   } */
-  
+
   /* getRelProperties(relType: Array<string>, relProperties = null): any {
     if (relType.length > 0) {
       let fetchedProperties = [];
@@ -1043,7 +1037,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
   } */
 
-  updateList(key,name) {
+  updateList(key, name) {
     if (name.length > 0) {
       let ans = '';
       // if name is selected from source, remove it from target and vice versa
@@ -1096,9 +1090,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     // get the id of node/relation  to delete
     const selectedID = $(`#del_btn`).attr(`${deleteContext}_id`);
     if (deleteContext === 'node') {
-      this.nodeBtnEvent.emit({ type: 'click', action: 'delete', data : {id: selectedID} });
-    } else if  (deleteContext === 'relation') {
-      this.edgeBtnEvent.emit({ type: 'click', action: 'delete', data : {id: selectedID} });
+      this.nodeBtnEvent.emit({ type: 'click', action: 'delete', data: { id: selectedID } });
+    } else if (deleteContext === 'relation') {
+      this.edgeBtnEvent.emit({ type: 'click', action: 'delete', data: { id: selectedID } });
     } else {
       // nothing
     }
@@ -1117,10 +1111,10 @@ export class CreateNodesComponent implements OnInit, OnChanges {
           if (property === propertyName) {
             console.log('found ', property + ' at ' + index);
             this.updateSelectedPropertiesObject(property, 'delete');
-            return this.labelProperties.splice(index, 1 );
+            return this.labelProperties.splice(index, 1);
           }
-      });
-    } else if (modalType === 'relation') {
+        });
+      } else if (modalType === 'relation') {
         this.typeProperties.filter((property, index) => {
           if (property === propertyName) {
             console.log('found ', property + ' at ' + index);
@@ -1142,7 +1136,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     let propertyKey = null;
     // let propertyValue = null;
     if (newPropertyForm.length) {
-      propertyKey  = $(`[id='${$(newPropertyForm[0]).attr('id')}']`).val();
+      propertyKey = $(`[id='${$(newPropertyForm[0]).attr('id')}']`).val();
       // propertyValue  = $(`[id='${$(newPropertyForm[1]).attr('id')}']`).val();
       if (!propertyKey) {
         alert('Cannot add a property without a Name');
@@ -1166,7 +1160,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         this.updateSelectedPropertiesObject(propertyKey, 'add');
       }
     }
-  // clear the property box
+    // clear the property box
     $('#propertyKey').val('');
     $('#propertyKeyRel').val('');
   }
@@ -1175,7 +1169,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     // add the new property name in the availablePropertiesList if not exisits and add a default value of ADD_NEW_PROPERTY
     if (Object.keys(this.availablePropertyList).indexOf(propertyName) <= -1) {
       // it is a new property
-      this.availablePropertyList[propertyName] = {list : [], enableNewProperty : false};
+      this.availablePropertyList[propertyName] = { list: [], enableNewProperty: false };
       if (defaultTextToAdd) {
         this.availablePropertyList[propertyName]['list'] = [defaultTextToAdd];
       }
@@ -1238,7 +1232,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       val = $(`#id_newLabelRelation`).val();
       if (!!val) {
         let newTypesRel = _.cloneDeep(this.relationTypeOptions);
-        newTypesRel = _.cloneDeep(this.pushOnTop(val,newTypesRel,1));
+        newTypesRel = _.cloneDeep(this.pushOnTop(val, newTypesRel, 1));
         newTypesRel = _.uniq(newTypesRel);
         this.relationTypeOptions = _.cloneDeep(newTypesRel);
       }
@@ -1258,13 +1252,13 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   hasList(data) {
     // check whether provided data is present in the availablePropertyList and return accordingly
     if (!!data) {
-       if (Object.keys(this.availablePropertyList).indexOf(data) > -1) {
-         console.log('will display dropdown for ', data);
-         return true;
-       } else {
-          console.log('will display text box for ', data);
-          return false;
-        }
+      if (Object.keys(this.availablePropertyList).indexOf(data) > -1) {
+        console.log('will display dropdown for ', data);
+        return true;
+      } else {
+        console.log('will display text box for ', data);
+        return false;
+      }
     } else {
       return false;
     }
@@ -1283,7 +1277,7 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     <span class="supportIcons" (click)="deleteProperty('${elementDetails['name']}')"><i class="far fa-trash-alt"></i></span>
 </div>`;
 
-// add this element into provided div class
+    // add this element into provided div class
     $(`.newPropertyGroup`).append(newPropertyEl);
   }
 
@@ -1297,4 +1291,24 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       }
     }
   }
+
+  // to set dropdown of from and to 
+  optionLookUp = (query: string, initial: number) => {
+    // to change lookup option according to search 
+    if (query.length > 0) {
+      let regex: RegExp | string;
+      try {
+        regex = new RegExp(query, "i");
+      } catch (e) {
+        regex = query;
+      }
+      return new Promise(resolve =>
+        setTimeout(() => resolve(this.totalName.filter(item => item.key.match(regex))), 500));
+    } else {
+      // to set initial dropdown
+      return Promise.resolve(this.totalName);
+    }
+  }
+
+
 }

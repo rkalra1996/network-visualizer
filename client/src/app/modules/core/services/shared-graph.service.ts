@@ -9,6 +9,7 @@ export class SharedGraphService {
   public nodeDetails = new BehaviorSubject<any>(null);
   public getNodeByIDs = new BehaviorSubject<Array<any>>([]);
   public showDeletedData = new BehaviorSubject<boolean>(null);
+  public nameArray = new BehaviorSubject<Array<any>>(null);
   constructor() { }
   setGraphData(graphdata){
     this.graphData = graphdata;
@@ -28,5 +29,10 @@ export class SharedGraphService {
   sendToogleStatus(status) {
     console.log('sending new status for toggle ', status);
     this.showDeletedData.next(status);
+  }
+
+  // to set from and to data
+  setFromToData(nameArray){
+    this.nameArray.next(nameArray);
   }
 }
