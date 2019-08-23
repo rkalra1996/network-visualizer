@@ -11,7 +11,8 @@
         [editData]="editNodeData" [editRelData]="editRelationData" 
         [hideDelModal]="hideDelModal" (nodeBtnEvent)="nodeEventCapture($event)" 
         (edgeBtnEvent)="edgeEventCapture($event)" [newNodeCreated]="promptRelationCreateAfterNode"
-        (cleanData)="cleanPropertyBindingData($event)"></app-create-nodes>
+        (cleanData)="cleanPropertyBindingData($event)" (restoreEvent)="initRestoreData($event)"
+        [restoredDataResponse]="restoredData"></app-create-nodes>
     </div>
     <!-- graph exporter -->
     <div class="export">

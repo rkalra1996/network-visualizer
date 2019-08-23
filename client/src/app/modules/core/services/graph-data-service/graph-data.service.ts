@@ -200,4 +200,33 @@ export class GraphDataService {
       console.error(err);
     }));
   }
+
+  restoreData(restoreData: object) {
+    if (restoreData.constructor === Object && restoreData.hasOwnProperty('nodes') || restoreData.hasOwnProperty('relations')) {
+      // check for datatypes of nodes and relations
+      if (!Array.isArray(restoreData['nodes']) || !Array.isArray(restoreData['relations'])) {
+        console.error('Either nodes or relations key in not an Array in restoreData');
+        return throwError({err : 'restoreData is incompatible'});
+      } else {
+        // data is okay, send it to the server
+        const url = '/api/graph/data/restore';
+        let requestBody = {
+          nodes: restoreData['nodes'],
+          relations: restoreData['relations']
+        };
+
+        // send it
+        return this.publicHttp.post(url, requestBody).pipe(map(data => {
+          if (!!data) {
+            return data;
+          } else {
+            return {response: 'empty'};
+        }
+        }));
+      }
+    } else {
+      console.error('Invalid restorData object from client');
+      return throwError({err : 'restoreData is invalid'});
+    }
+  }
 }
