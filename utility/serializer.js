@@ -123,20 +123,20 @@ function processEdges(edgeArray) {
             processedEdge = edgeArray.map(edge => {
                 let preprocessedEdge = edge;
                 preprocessedEdge = {
-                    from: edge.start.low,
-                    to: edge.end.low,
-                    properties: edge.properties || null,
-                    type: edge.type || null,
-                    id: edge.identity.low || null,
-                    label: edge.type || 'Name not available',
-                    arrows: 'to',
-                    font: { align: 'bottom' },
-                    color: colorManager.getEdgeColors(edge.type)
-                }
-                if (preprocessedEdge.properties.hasOwnProperty('deleted')) {
-                    delete preprocessedEdge.properties.deleted;
-                }
-                // add the text format of updated properties
+                        from: edge.start.low,
+                        to: edge.end.low,
+                        properties: edge.properties || null,
+                        type: edge.type || null,
+                        id: edge.identity.low || null,
+                        label: edge.type || 'Name not available',
+                        arrows: 'to',
+                        font: { align: 'bottom' },
+                        color: colorManager.getEdgeColors(edge.type)
+                    }
+                    // if (preprocessedEdge.properties.hasOwnProperty('deleted')) {
+                    //     delete preprocessedEdge.properties.deleted;
+                    // }
+                    // add the text format of updated properties
                 preprocessedEdge['title'] = serializeProperties(preprocessedEdge.properties);
                 return preprocessedEdge;
             });

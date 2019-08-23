@@ -638,6 +638,36 @@ var GraphDataService = /** @class */ (function () {
             console.error(err);
         }));
     };
+    GraphDataService.prototype.restoreData = function (restoreData) {
+        if (restoreData.constructor === Object && restoreData.hasOwnProperty('nodes') || restoreData.hasOwnProperty('relations')) {
+            // check for datatypes of nodes and relations
+            if (!Array.isArray(restoreData['nodes']) || !Array.isArray(restoreData['relations'])) {
+                console.error('Either nodes or relations key in not an Array in restoreData');
+                return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])({ err: 'restoreData is incompatible' });
+            }
+            else {
+                // data is okay, send it to the server
+                var url = '/api/graph/data/restore';
+                var requestBody = {
+                    nodes: restoreData['nodes'],
+                    relations: restoreData['relations']
+                };
+                // send it
+                return this.publicHttp.post(url, requestBody).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+                    if (!!data) {
+                        return data;
+                    }
+                    else {
+                        return { response: 'empty' };
+                    }
+                }));
+            }
+        }
+        else {
+            console.error('Invalid restorData object from client');
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])({ err: 'restoreData is invalid' });
+        }
+    };
     GraphDataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
@@ -773,7 +803,9 @@ var PublicHttpService = /** @class */ (function () {
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["throwError"])('No url provided');
         }
     };
-    PublicHttpService.prototype.patch = function () { };
+    PublicHttpService.prototype.patch = function () {
+        // no implementation yet
+    };
     PublicHttpService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
@@ -806,8 +838,10 @@ __webpack_require__.r(__webpack_exports__);
 var SharedGraphService = /** @class */ (function () {
     function SharedGraphService() {
         this.nodeDetails = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.connectedNodeDetails = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
         this.getNodeByIDs = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
         this.showDeletedData = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.restoreConnectedNodesData = false;
     }
     SharedGraphService.prototype.setGraphData = function (graphdata) {
         this.graphData = graphdata;
@@ -815,11 +849,19 @@ var SharedGraphService = /** @class */ (function () {
     SharedGraphService.prototype.getGraphData = function () {
         return this.graphData;
     };
-    SharedGraphService.prototype.getNodeDetails = function (nodeIDs) {
+    SharedGraphService.prototype.getNodeDetails = function (nodeIDs, forRestore) {
+        if (forRestore === void 0) { forRestore = false; }
+        this.restoreConnectedNodesData = forRestore ? true : false;
         this.getNodeByIDs.next(nodeIDs);
     };
     SharedGraphService.prototype.sendNodeDetails = function (nodeDetailsArray) {
-        this.nodeDetails.next(nodeDetailsArray);
+        if (this.restoreConnectedNodesData) {
+            this.connectedNodeDetails.next(nodeDetailsArray);
+        }
+        else {
+            this.nodeDetails.next(nodeDetailsArray);
+        }
+        this.restoreConnectedNodesData = false;
     };
     // function to send the deleted toggle info whenever needed
     SharedGraphService.prototype.sendToogleStatus = function (status) {
