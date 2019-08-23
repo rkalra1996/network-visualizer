@@ -56,7 +56,7 @@
                             <span class="inputSpan">
                                 <ng-container *ngIf = "data === 'Name'">
                                     <div class="ui corner labeled input normalTextBox">
-                                        <input type="text" placeholder="Enter Name..." id="id_{{data}}" [(ngModel)] = "selectedPropertiesObject[data]" (ngModelChange)="updateSelectedOption($event, data)">
+                                        <input type="text" placeholder="Enter Name..." id="id_{{data}}" [(ngModel)] = "selectedPropertiesObject[data]" (ngModelChange)="updateSelectedOption($event, data)" [disabled]="restoreOptions === true">
                                         <div class="ui corner label">
                                             <i class="asterisk icon"></i>
                                         </div>
@@ -66,7 +66,7 @@
                                     <sui-select class="selection" *ngIf="!availablePropertyList[data]?.enableNewProperty"
                                     [options]="availablePropertyList[data]['list']" [(ngModel)]="selectedPropertiesObject[data]"
                                     (ngModelChange)="updateSelectedOption($event, data)" [isSearchable]="true"
-                                    [isDisabled]="false" #Propertyselect>
+                                    [isDisabled]="restoreOptions" #Propertyselect>
                                         <sui-select-option *ngFor="let option of Propertyselect.filteredOptions" [value]="option"></sui-select-option>
                                     </sui-select>
                                     <div class="ui corner labeled input normalTextBox" *ngIf="availablePropertyList[data]?.enableNewProperty">
@@ -77,9 +77,9 @@
                                     </div>
                                 </ng-container>
                             </span>
-                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty" (click)="deleteProperty(data)"><i class="far fa-trash-alt"></i></span>
-                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty" (click)="availablePropertyList[data].enableNewProperty = false"><i class="far fa-times-circle" style="color: red;"></i></span>
-                            <span class="supportIcons nameKey" *ngIf="(data?.length > 0) && data === 'Name'"> 
+                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty && !restoreOptions" (click)="deleteProperty(data)"><i class="far fa-trash-alt"></i></span>
+                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty && !restoreOptions" (click)="availablePropertyList[data].enableNewProperty = false"><i class="far fa-times-circle" style="color: red;"></i></span>
+                            <span class="supportIcons nameKey" *ngIf="(data?.length > 0) && data === 'Name' && !restoreOptions"> 
                                 <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="right" [title]="'Name is mandatory and cannot be deleted'"></i>
                             </span>
                         </div>
@@ -106,15 +106,16 @@
                     </ng-container>
                     <!--Template to add a new property ends-->
                 </div>
-                <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && !enableNewTemplate" (click)="addNewProperty('node')">Add New Property</a>
-                <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && enableNewTemplate" (click)="saveNewProperty('node')">Save Property</a>
+                <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && !enableNewTemplate && !restoreOptions" (click)="addNewProperty('node')">Add New Property</a>
+                <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && enableNewTemplate && !restoreOptions" (click)="saveNewProperty('node')">Save Property</a>
             </div>
             <div class="modal-footer" *ngIf="selectedType !== ADD_NEW_LABEL">
-                <button type="button" class="btn btn-danger deleteBtn" *ngIf="popupConfig.editNodePopup === true" style="color: white;" (click)="activateDelete('deleteModal', 'node')">Delete</button>
+                <button type="button" class="btn btn-danger deleteBtn" *ngIf="popupConfig.editNodePopup === true && !restoreOptions" style="color: white;" (click)="activateDelete('deleteModal', 'node')">Delete</button>
                 <a class="mailBtn" *ngIf="popupConfig.editNodePopup === true">Send Mail</a>
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
-                <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true" [disabled]="(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])">Create</button>
-                <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true" [disabled]="(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])" id="edit_btn">Update</button>
+                <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true && !restoreOptions" [disabled]="(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])">Create</button>
+                <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true && !restoreOptions" [disabled]="(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])" id="edit_btn">Update</button>
+                <button type="button" id="restoreBtn" class="btn btn-info restoreBtn" *ngIf="(popupConfig.editNodePopup === true || editNodePopup === true) && restoreOptions" style="color: white;" (click)="restoreData('node')">Restore </button>
             </div>
             <div class="modal-footer" *ngIf="selectedType === ADD_NEW_LABEL">
                 <button type="button" class="btn btn-primary create" id="edit_btn" (click)="addNewLabel('node')">Add Label</button>
@@ -174,7 +175,7 @@
                                     <sui-select class="selection" *ngIf="!availablePropertyList[data]?.enableNewProperty"
                                      [options]="availablePropertyList[data]['list']" [(ngModel)]="selectedPropertiesObject[data]"
                                      (ngModelChange)="updateSelectedOption($event, data)" [isSearchable]="true"
-                                     [isDisabled]="false" #PropertyRelselect>
+                                     [isDisabled]="restoreOptions" #PropertyRelselect>
                                         <sui-select-option *ngFor="let option of PropertyRelselect.filteredOptions" [value]="option"></sui-select-option>
                                     </sui-select>
                                     <div class="ui corner labeled input normalTextBox" *ngIf="availablePropertyList[data]?.enableNewProperty">
@@ -186,10 +187,10 @@
                                 </ng-container>
                                 <!-- <input type="text" id="id_{{data}}"> -->
                             </span>
-                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty" (click)="deleteProperty(data, 'relation')"><i class="far fa-trash-alt"></i></span>
-                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty" (click)="availablePropertyList[data].enableNewProperty = false"><i class="far fa-times-circle" style="color: red;"></i></span>
-                            <span class="supportIcons nameKey" *ngIf="(data?.length > 0) && data === 'Name'">
-                                <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="right" [title]="'Name is mandatory and cannot be deleted'"></i>
+                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty && !restoreOptions" (click)="deleteProperty(data, 'relation')"><i class="far fa-trash-alt"></i></span>
+                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty && !restoreOptions" (click)="availablePropertyList[data].enableNewProperty = false"><i class="far fa-times-circle" style="color: red;"></i></span>
+                            <span class="supportIcons nameKey" *ngIf="(data?.length > 0) && data === 'Name' && !restoreOptions">
+                                <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="right" [title]="'Name is mandatory and cannot be deleted'" ></i>
                             </span>
                         </div>
                     </ng-container>
@@ -211,8 +212,8 @@
 
 
                 <div class="modalItem buttonContainer">
-                    <a class="newLink2" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && !enableNewTemplate" (click)="addNewProperty('relation')">Add New Property</a>
-                    <a class="newLink2" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && enableNewTemplate" (click)="saveNewProperty('relation')">Save Property</a>
+                    <a class="newLink2" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && !enableNewTemplate && !restoreOptions" (click)="addNewProperty('relation')">Add New Property</a>
+                    <a class="newLink2" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && enableNewTemplate && !restoreOptions" (click)="saveNewProperty('relation')">Save Property</a>
                 </div>
 
                 <div class="relationScope" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE">

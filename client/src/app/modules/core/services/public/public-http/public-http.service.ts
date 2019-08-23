@@ -33,11 +33,15 @@ export class PublicHttpService {
        })
     };
     if (!!requestUrl) {
-      return this.http.post(requestUrl,body,httpOptions);
+      return this.http.post(requestUrl, body, httpOptions);
     } else {
       console.error('No url provided for post request');
       return throwError('No url provided');
     }
   }
-  patch() {}
+
+
+  patch() {
+    // no implementation yet
+  }
 }

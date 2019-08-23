@@ -64,6 +64,7 @@ export class GraphVisualizerComponent implements OnInit {
 
   public editNodeData = null;
   public editRelationData = null;
+  public restoredData = null;
   public network: any;
   @Output() networkInstance = new EventEmitter<any>();
   public hideDelModal = false;
@@ -616,6 +617,28 @@ export class GraphVisualizerComponent implements OnInit {
     }
   }
 
+  updateNodesInVis(nodesArray) {
+    // update the nodes in the data set
+    if (Array.isArray(nodesArray)) {
+      nodesArray.forEach(node => {
+        let oldNodeID = node['id'];
+        let oldNode = this.graphData['nodes'].get(oldNodeID);
+        // update the old node with new node
+        if (!!oldNode) {
+          oldNode['properties'] = node['properties'];
+          oldNode = this.addNodeColor(node);
+          // set it back in VISJS
+          this.graphData['nodes'].update(oldNode);
+          console.log('updated node ', oldNode);
+        } else {
+          console.error(`Provided node ${oldNode} is not present in VisGraph for restoration`);
+        }
+      });
+    } else {
+      console.error('Non array provided in updateNodesInVis');
+    }
+  }
+
   updateRelationinVIS(relation) {
     let oldRelationID = relation['id'];
     let oldRelation = this.graphData['edges'].get(oldRelationID);
@@ -623,7 +646,28 @@ export class GraphVisualizerComponent implements OnInit {
     this.graphData['edges'].update([relation]);
   }
 
-  // to change property list in tooltip
+  updateRelationsInVis(relationArray) {
+    // update the relations present in the dataset
+    if (Array.isArray(relationArray)) {
+      relationArray.forEach(relation => {
+        let oldRelationID = relation['id'];
+        let oldRelation = this.graphData['edges'].get(oldRelationID);
+        // update the old node with new node
+        if (!!oldRelation) {
+          oldRelation['properties'] = relation['properties'];
+          // set it back in VisJS
+          this.graphData['edges'].update(oldRelation);
+          console.log('updated relation ', oldRelation);
+        } else {
+          console.error(`Provided relation ${oldRelation} is not present in VisGraph for restoration`);
+        }
+      });
+    } else {
+      console.error('Non array provided in updateNodesInVis');
+    }
+  }
+
+  // to change key in tooltip
   stringifyProperties(propertyObject) {
     if (propertyObject.constructor === Object) {
       let finalString = '';
@@ -752,7 +796,10 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   cleanPropertyBindingData(cleanType) {
-    if (this.editNodeData !== null || this.editRelationData !== null || this.promptRelationCreateAfterNode !== null) {
+    if (
+      this.editNodeData !== null || this.editRelationData !== null ||
+      this.promptRelationCreateAfterNode !== null || this.restoredData !== null
+      ) {
       console.log('cleaning data for ', cleanType);
       if (!!cleanType) {
         if (cleanType === 'node') {
@@ -761,8 +808,97 @@ export class GraphVisualizerComponent implements OnInit {
           this.editRelationData = null;
         } else if (cleanType === 'afterCreateNode') {
           this.promptRelationCreateAfterNode = null
+        } else if (cleanType === 'restore') {
+          this.restoredData = null;
+        }
+         else {
+          // nothing
         }
       }
     }
+  }
+
+  initRestoreData(restoreDataObj) {
+    // this.loader = true;
+    if (Object.keys(restoreDataObj).length > 0 && restoreDataObj.hasOwnProperty('type') && restoreDataObj.hasOwnProperty('data')) {
+
+      let requestBodyObj = {nodes : [], relations: []};
+
+      if (restoreDataObj['type'] === 'node_relation') {
+        // the data key should have both node and relation key with id array key inside them
+          if (Object.keys(restoreDataObj['data']).length > 0 && Object.keys(restoreDataObj['data']).length <= 2) {
+            if (restoreDataObj['data'].hasOwnProperty('node') &&
+                restoreDataObj['data']['node'].hasOwnProperty('id') &&
+                Array.isArray(restoreDataObj['data']['node']['id'])
+                ) {
+                  requestBodyObj.nodes = _.cloneDeep(restoreDataObj['data']['node']['id']);
+                } else {
+                  // the data object does not have valid node key or id key
+                  console.error('the data object does not have valid node key or id key for initRestoreData');
+                }
+            if (restoreDataObj['data'].hasOwnProperty('relation') &&
+                restoreDataObj['data']['relation'].hasOwnProperty('id') &&
+                Array.isArray(restoreDataObj['data']['relation']['id'])
+                ) {
+                  requestBodyObj.nodes = _.cloneDeep(restoreDataObj['data']['relation']['id']);
+                } else {
+                  // the data object does not have valid relation key or id key
+                  console.error('the data object does not have valid relation key or id key for relation in initRestoreData');
+                }
+          } else {
+            // providing irrelevant number of keys to the api in the data object
+            console.error('irrelevant number of keys to the api in the data object in initRestoreData');
+          }
+        } else {
+          if (restoreDataObj['type'] === 'node' && restoreDataObj['data'].hasOwnProperty('id')) {
+            requestBodyObj.nodes = [ restoreDataObj['data']['id'] ];
+          }
+          if (restoreDataObj['type'] === 'relation' && restoreDataObj['data'].hasOwnProperty('id')) {
+            requestBodyObj.relations = [ restoreDataObj['data']['id'] ];
+          }
+        }
+
+        // requestBody has been prepared
+      console.log('final request body is ', requestBodyObj);
+      this.graphService.restoreData(requestBodyObj).subscribe(response => {
+          // once the response if okay, send back the confirmation to the create nodes
+          let finalData = {
+            nodes : response['seperateNodes'],
+            relations : response['seperateRelations']
+          };
+          // update the nodes / relations in the visJS graph also and finally tell the modal to go away
+          if (this.updateRestoreDataInVis(finalData)) {
+            this.loader = false;
+            this.restoredData = _.cloneDeep(finalData);
+          } else {
+            this.restoredData = null;
+            this.loader = false;
+          }
+
+        }, error => {
+          console.error('An error occured while restoring the data from the API');
+          console.log(error);
+          this.loader = false;
+        });
+    } else {
+            console.error('Did not recieve any valid object data for restore');
+            this.loader = false;
+    }
+  }
+
+  updateRestoreDataInVis(restoredDataObj) {
+    try {
+      if (restoredDataObj.hasOwnProperty('nodes') && !!restoredDataObj['nodes'] && restoredDataObj['nodes'].length > 0) {
+        this.updateNodesInVis(restoredDataObj['nodes']);
+      }
+      if (restoredDataObj.hasOwnProperty('relations') && !!restoredDataObj['relations'] && restoredDataObj['relations'].length > 0) {
+        this.updateRelationsInVis(restoredDataObj['relations']);
+      }
+      return true;
+    } catch (e) {
+      console.error('An error occured while updating visJS in updateRestoreDataInVis function ', e);
+      return false;
+    }
+    // the purpose of the function is to update the nodes / relations in VisJS dataSet
   }
 }

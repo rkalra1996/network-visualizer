@@ -26,7 +26,7 @@ var runQuery = (query) => {
         }
     } else {
         console.error('Empty query passed');
-        throw Error;
+        return  Promise.reject('Query to run on database is empty');
     }
 }
 
@@ -933,6 +933,52 @@ var fetchGraphProperties = () => {
         })
 }
 
+var restoreData = (request) => {
+    let data = request.body;
+    // extract the ids
+    let nodeIDArray = [];
+    let relationIDArray = [];
+
+    if (data.hasOwnProperty('nodes') && data.nodes.length > 0) {
+        if (Array.isArray(data.nodes)) {
+            nodeIDArray = data.nodes;
+        }
+        else {
+            console.error('Datatype of nodes key is not an array');
+            return Promise.reject('Datatype of nodes key is not an array');
+        }
+    }
+    if (data.hasOwnProperty('relations') && data.relations.length > 0) {
+        if (Array.isArray(data.relations)) {
+            relationIDArray = data.relations
+        }
+        else {
+            console.error('Datatype of relations key is not an array');
+            return Promise.reject('Datatype of relations key is not an array');
+        }
+    }
+
+    // process the data
+    let query = dataUtility.createQueryForRestore({nodes: nodeIDArray, relations: relationIDArray});
+    console.log('query for restore data is ', query + '\n');
+    return runQuery(query)
+    .then(response => {
+        let processedData;
+        if (response.hasOwnProperty('records') && response.records.length > 0) {
+            processedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+        } else {
+            // empty records
+            processedData = {"result" : "No data updated "};
+        }
+        return Promise.resolve(processedData);
+    })
+    .catch(err => {
+        console.log('\x1b[31m','\nAn error occured while runnning the query for restore graph data \n', err);
+        return Promise.reject(err);
+    });
+
+}
+
 module.exports = {
     initiate,
     getData,
@@ -951,5 +997,6 @@ module.exports = {
     neo4jRunQuery,
     deleteNode,
     deleteRelationhip,
-    fetchGraphProperties
+    fetchGraphProperties,
+    restoreData
 }

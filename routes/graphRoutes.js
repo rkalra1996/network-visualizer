@@ -290,4 +290,23 @@ router.get('/graph/properties', (req,res) => {
     })
 });
 
+router.post('/graph/data/restore', (req,res)=> {
+    // to restore the nodes / relationships provided as array
+    console.log('\x1b[36m%s\x1b[0m', '/graph/data/restore hit');
+    if (!!Object.keys(req.body).length) {
+        neo4j.restoreData(req)
+        .then(response => {
+            console.log("\x1b[32m", 'Returning response from /graph/data/restore');
+            res.status(200).send(response);
+        })
+        .catch( err => {
+            res.status(500).send({'error': 'An error occured while processing your request'});
+        })
+    }
+    else {
+        console.log('\x1b[31m', 'Body not provided to access the API');
+        res.status(400).send({'error': 'Request body is required to access the API'});
+    }
+});
+
 module.exports = router;

@@ -1,5 +1,5 @@
-import { Component, OnInit, EventEmitter, Output, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { SearchService } from './../../../shared/services/search-service/search.service';
+import { Component, OnInit, EventEmitter, Output, Input, OnChanges, SimpleChanges, ChangeDetectorRef, AfterViewInit, DoCheck } from '@angular/core';
+import {SearchService} from './../../../shared/services/search-service/search.service';
 import * as _ from 'lodash';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
 import { map, filter } from 'rxjs/operators';
@@ -16,18 +16,20 @@ declare var $: any;
   styleUrls: ['./create-nodes.component.scss']
 })
 
-export class CreateNodesComponent implements OnInit, OnChanges {
+export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
 
   // Output variables for event emitters to parent components
   @Output() nodeBtnEvent = new EventEmitter<any>();
   @Output() edgeBtnEvent = new EventEmitter<any>();
   @Output() cleanData = new EventEmitter<string>();
+  @Output() restoreEvent = new EventEmitter<any>();
   // input variables from parent components
   @Input() editData: any;
   @Input() editRelData: any;
   @Input() hideDelModal: any;
   @Input() nodeTypes: Array<any> = [];
   @Input() newNodeCreated: object | null = null;
+  @Input() restoredDataResponse: object | null = null;
   // constants
   public TYPE_TEXT = 'Type';
   public ADD_NEW_LABEL = 'Add New Label';
@@ -55,12 +57,13 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   };
 
   // modal specific variables
-  public createNodePopup = false;
-  public editNodePopup = false;
-  public deleteNodePopup = false;
-  public createRelationPopup = false;
-  public editRelationPopup = false;
-  public deleteRelationPopup = false;
+    public createNodePopup = false;
+    public editNodePopup = false;
+    public deleteNodePopup = false;
+    public createRelationPopup = false;
+    public editRelationPopup = false;
+    public deleteRelationPopup = false;
+    public restoreOptions = false;
 
   public disabledBox = false;
   public enableNewTemplate = false;
@@ -272,7 +275,6 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.deleteRelationPopup = false;
       this.setAllToFalse('node');
       this.cleanData.emit('afterCreateNode');
-      this.newNodeCreated = null;
     });
     $('#createNodeModal').on('hidden.bs.modal', (e) => {
       // this event will reset the popupConfig object so that everytime correct data is accessed
@@ -304,8 +306,9 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.disabledBox = true;
       // store the data in internal variable and clear this
       let editNodeData = _.cloneDeep(this.editData);
+
       this.editData = _.cloneDeep(null);
-      console.log('edit data recieved is ', editNodeData);
+      // console.log('edit data recieved is ', editNodeData);
       this.editNodeConfig = _.cloneDeep({
         properties: editNodeData['properties'],
         type: editNodeData['type'][0],
@@ -314,6 +317,24 @@ export class CreateNodesComponent implements OnInit, OnChanges {
       this.clickedNodeID = _.cloneDeep(this.editNodeConfig['id']);
       // console.log('editNodeConfig is ', this.editNodeConfig);
       this.selectedType = null;
+      // check if the node is already deleted or not, if yes, simply don't let the user to update it
+      // tslint:disable-next-line: max-line-length
+      if (
+        this.editNodeConfig['properties'].hasOwnProperty('deleted') &&
+        (this.editNodeConfig['properties']['deleted'] === 'true' || this.editNodeConfig['properties']['deleted'] === true)
+        ) {
+        // make changes so that user cannot update the node but rather restore it
+        console.log('recieved node is deleted type');
+        // let responseBool = true;
+        window.setTimeout( () => {
+          this.restoreOptions = true;
+        }, 0);
+      } else {
+        window.setTimeout( () => {
+          this.restoreOptions = false;
+        }, 0);
+        console.log('restore options is false for this node');
+      }
       this.getNodeTypes().subscribe(data => {
         this.typeOptions = _.cloneDeep(data);
         this.selectedType = this.editNodeConfig['type'];
@@ -346,6 +367,20 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         to: this.editRelData['to']
       };
       this.clickedRelationID = _.cloneDeep(editRelConfig['id']);
+
+      // tslint:disable-next-line: max-line-length
+      if (
+        editRelConfig['properties'].hasOwnProperty('deleted') &&
+        (editRelConfig['properties']['deleted'] === 'true' || editRelConfig['properties']['deleted'] === true)
+        ) {
+        // make changes so that user cannot update the node but rather restore it
+        console.log('recieved relation is deleted type');
+        let responseBool = true;
+        this.restoreOptions = _.cloneDeep(responseBool);
+      } else {
+        let responseBool = false;
+        this.restoreOptions = _.cloneDeep(responseBool);
+      }
       this.getRelationTypes().subscribe(response => {
         console.log('fetched relationship types successfully');
         // once types are loaded, set a default type which is the type of selected relation
@@ -389,6 +424,20 @@ export class CreateNodesComponent implements OnInit, OnChanges {
         }
       }
     }
+    // detect if nodes / relationships have been restored successfully
+    console.log('restored recieved options are ', this.restoredDataResponse);
+    if (!!this.restoredDataResponse && Object.keys(this.restoredDataResponse).length) {
+      console.log('Recieved restored information as ', this.restoredDataResponse);
+      if (this.restoredDataResponse.hasOwnProperty('nodes') && Array.isArray(this.restoredDataResponse['nodes']) && this.restoredDataResponse['nodes'].length > 0) {
+        // hide the node modal
+        this.hideModal('createNodeModal');
+      }
+      if (this.restoredDataResponse.hasOwnProperty('relations') && Array.isArray(this.restoredDataResponse['relations']) && this.restoredDataResponse['relations'].length > 0) {
+        // hide the node modal
+        this.hideModal('createRelationModal');
+      }
+      this.restoreOptions = false;
+    }
   }
 
   prefillConnectedNodes(RelationData) {
@@ -398,12 +447,12 @@ export class CreateNodesComponent implements OnInit, OnChanges {
     }
   }
 
-  fetchNodeNameFromID(nodeIDArray) {
+  fetchNodeNameFromID(nodeIDArray, isRestore = false) {
     // this function will send the node id to the graph visualilzer which has all the information of the nodes
     // the graph visualizer will fetch the node details using the provided node id and send the details back here
     if (!!nodeIDArray.length) {
       console.log('asking for details of ', nodeIDArray);
-      this.sharedGraphSrvc.getNodeDetails(nodeIDArray);
+      this.sharedGraphSrvc.getNodeDetails(nodeIDArray, isRestore);
     } else {
       console.warn('nodeID was not valid while sending event to read node details');
     }
@@ -442,7 +491,11 @@ export class CreateNodesComponent implements OnInit, OnChanges {
           }); */
 
           // add id of the node to the modal
-          this.addAttribute('edit_btn', `${type}_id`, IDToSupply);
+          if (!this.restoreOptions) {
+            this.addAttribute('edit_btn', `${type}_id`, IDToSupply);
+          } else {
+            this.addAttribute('restoreBtn', `${type}_id`, IDToSupply);
+          }
         });
       } else {
         console.warn('did not find any element with provided ID');
@@ -1311,4 +1364,30 @@ export class CreateNodesComponent implements OnInit, OnChanges {
   }
 
 
+  restoreData(restoreType) {
+    // fetch the id of element requested to restore
+    let clickedElementID = this.getAttribute('restoreBtn', `${restoreType}_id`);
+    clickedElementID = isNaN(clickedElementID) ? null : parseInt(clickedElementID, 10);
+    // now send the data to restore the element
+    if (clickedElementID !== null || clickedElementID !== undefined) {
+      if (restoreType === 'relation') {
+        // check if the connected nodes are restored / exisits already, if not ask the user to restore them first
+        // 1. if both the connected nodes of relation are not deleted, emit restoreType = relation else relation_node
+      } else {
+        // emit data for node restore
+        this.restoreEvent.emit({type: restoreType, data : {id: clickedElementID}});
+      }
+    } else {
+      console.error('An error occured while restoring the data, clickedElementID is not a valid interger id');
+    }
+  }
+
+  getAttribute(elementID, attributeKey) {
+    return $(`#${elementID}`).attr(`${attributeKey}`);
+  }
+
+  ngDoCheck() {
+    // resetting the value so that it stays updated anytime needed, temporary bug fix for restoredOptions variable not setting properly
+    this.restoreOptions = _.cloneDeep(this.restoreOptions);
+  }
 }
