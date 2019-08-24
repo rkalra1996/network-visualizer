@@ -222,7 +222,7 @@
                             Connection <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
                         </h5>
                         <p class="sectionName">From</p>
-                        <span class="inputSpan">
+                        <span class="inputSpan" *ngIf="!disabledToBox">
                             <sui-select class="selection"
                                 [(ngModel)]="selectedNodeNameSource"
                                 (ngModelChange)="updateList('to',[selectedNodeNameSource])"
@@ -237,10 +237,15 @@
                                 </sui-select-option>
                             </sui-select>
                         </span>
+                        <span class="inputSpan" *ngIf="disabledToBox">
+                            <div class="ui corner labeled input normalTextBox">
+                                <input type="text" [(ngModel)] = "selectedNodeNameSource" (ngModelChange)="updateSelectedOption($event, data)" [disabled]="restoreOptions === false">
+                            </div>
+                        </span>
                     </div>
                     <div class="modalItem">
                         <p class="sectionName">To</p>
-                        <span class="inputSpan">
+                        <span class="inputSpan" *ngIf="!disabledToBox">
                             <sui-select class="selection"
                                 [(ngModel)]="selectedNodeNameTarget"
                                 (ngModelChange)="updateList('from',[selectedNodeNameTarget])"
@@ -254,6 +259,11 @@
                                     [value]="option">
                                 </sui-select-option>
                             </sui-select> 
+                        </span>
+                        <span class="inputSpan" *ngIf="disabledToBox">
+                            <div class="ui corner labeled input normalTextBox">
+                                <input type="text" [(ngModel)] = "selectedNodeNameTarget" (ngModelChange)="updateSelectedOption($event, data)" [disabled]="restoreOptions === false">
+                            </div>
                         </span>
                     </div>
                 </div>
