@@ -633,7 +633,7 @@ export class GraphVisualizerComponent implements OnInit {
           oldNode['properties'] = node['properties'];
           oldNode = this.addNodeColor(node);
           // update all graph data array
-          let index = _.findIndex(this.allGraphData['nodes'], { id: oldNodeID })
+          let index = _.findIndex(this.allGraphData['nodes'], { id: oldNodeID });
           if (index >= 0) {
             this.allGraphData['nodes'][index] = oldNode;
           }
@@ -664,7 +664,7 @@ export class GraphVisualizerComponent implements OnInit {
       tem['title'] = this.stringifyProperties(tem);
       this.graphData['edges'].update([tem]);
     }
-    // update all+filtered graph array 
+    // update all+filtered graph array
     let eleObj: elementOperation = {
       element: "edges",
       event: "edit",
@@ -891,11 +891,12 @@ export class GraphVisualizerComponent implements OnInit {
         // once the response if okay, send back the confirmation to the create nodes
         let finalData = {
           nodes: response['seperateNodes'],
-          relations: response['seperateRelations']
+          relations: response['seperateEdges']
         };
         // update the nodes / relations in the visJS graph also and finally tell the modal to go away
-        if (this.updateRestoreDataInVis(finalData)) {
-          this.loader = false;
+        let processedResponse = this.updateRestoreDataInVis(finalData);
+        if (processedResponse.constructor === Boolean && processedResponse) {
+          // this will be executed when a node has been restored
           this.restoredData = _.cloneDeep(finalData);
         } else {
           this.restoredData = null;
@@ -1014,7 +1015,7 @@ export class GraphVisualizerComponent implements OnInit {
     }
   }
 
-  //insert into filtered graph array
+  // insert into filtered graph array
   insertIntoFilteredGraphArray(obj : elementOperation) : void {
     try {
       if (obj.hasOwnProperty('data') && obj.hasOwnProperty('element')) {

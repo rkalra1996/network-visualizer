@@ -65,40 +65,43 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     public deleteRelationPopup = false;
     public restoreOptions = false;
 
-  public disabledBox = false;
-  public enableNewTemplate = false;
-  public clickedNodeID = null;
-  public clickedRelationID = null;
-  public disabledFromBox = false;
-  public disabledToBox = false;
-  public relationSourceNode = null;
-  public relationTargetNode = null;
-  public nodeTypes2: Array<any> = [];
-  public selectedType: any = [];
-  public typeOptions: Array<any> = [];
-  public processedData;
-  public labelProperties = [];
-  public relationTypeOptions: Array<any> = [];
-  public typeProperties: any[] = [];
-  public relationsData: any;
-  public toNames: any[] = [];
-  public fromNames: any[] = [];
-  public selectedNodeNameSource: any;
-  public selectedNodeNameTarget: any;
-  public editNodeConfig = {};
-  public deleteNodeConfig = {};
-  public totalNodesProperties = {};
-  public totalRelationsProperties = {};
-  public availablePropertyList = {};
-  public selectedPropertiesObject = {};
-  public showDeletedData = false;
-  public totalName = [];
-  constructor(
-    private SharedSrvc: SearchService,
-    private graphSrvc: GraphDataService,
-    private sharedGraphSrvc: SharedGraphService,
-    private fb: FormBuilder) {
-  }
+    public disabledBox = false;
+    public enableNewTemplate = false;
+    public clickedNodeID = null;
+    public clickedRelationID = null;
+    public disabledFromBox = false;
+    public disabledToBox = false;
+    public relationSourceNode = null;
+    public relationTargetNode = null;
+    public nodeTypes2: Array<any> = [];
+    public selectedType: any = [];
+    public typeOptions: Array<any> = [];
+    public processedData;
+    public labelProperties = [];
+    public relationTypeOptions: Array<any> = [];
+    public typeProperties: any[] = [];
+    public relationsData: any;
+    public toNames: any[] = [];
+    public fromNames: any[] = [];
+    public selectedNodeNameSource: any;
+    public selectedNodeNameTarget: any;
+    public editNodeConfig = {};
+    public deleteNodeConfig = {};
+    public totalNodesProperties = {};
+    public totalRelationsProperties = {};
+    public availablePropertyList = {};
+    public selectedPropertiesObject = {};
+    public showDeletedData = false;
+    public totalName = [];
+
+    // private variables to be used by the class
+    private allowedRestoreEvents = ['node','relation'];
+    constructor(
+      private SharedSrvc: SearchService,
+      private graphSrvc: GraphDataService,
+      private sharedGraphSrvc: SharedGraphService,
+      private fb: FormBuilder) {
+    }
 
   ngOnInit() {
     this.toolTipText = 'The Properties section can be left blank to set a default Node';
@@ -428,15 +431,27 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     console.log('restored recieved options are ', this.restoredDataResponse);
     if (!!this.restoredDataResponse && Object.keys(this.restoredDataResponse).length) {
       console.log('Recieved restored information as ', this.restoredDataResponse);
-      if (this.restoredDataResponse.hasOwnProperty('nodes') && Array.isArray(this.restoredDataResponse['nodes']) && this.restoredDataResponse['nodes'].length > 0) {
+      if (
+        this.restoredDataResponse.hasOwnProperty('nodes') &&
+        Array.isArray(this.restoredDataResponse['nodes']) &&
+        this.restoredDataResponse['nodes'].length > 0) {
         // hide the node modal
         this.hideModal('createNodeModal');
       }
-      if (this.restoredDataResponse.hasOwnProperty('relations') && Array.isArray(this.restoredDataResponse['relations']) && this.restoredDataResponse['relations'].length > 0) {
+      if (
+        this.restoredDataResponse.hasOwnProperty('relations') &&
+        Array.isArray(this.restoredDataResponse['relations']) &&
+        this.restoredDataResponse['relations'].length > 0) {
         // hide the node modal
         this.hideModal('createRelationModal');
       }
-      this.restoreOptions = false;
+      window.setTimeout(() => {
+        this.restoreOptions = false;
+      }, 0);
+      // clean all the events
+      this.cleanData.emit('restore');
+      this.cleanData.emit('node');
+      this.cleanData.emit('relation');
     }
   }
 
@@ -1369,16 +1384,12 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     let clickedElementID = this.getAttribute('restoreBtn', `${restoreType}_id`);
     clickedElementID = isNaN(clickedElementID) ? null : parseInt(clickedElementID, 10);
     // now send the data to restore the element
-    if (clickedElementID !== null || clickedElementID !== undefined) {
-      if (restoreType === 'relation') {
-        // check if the connected nodes are restored / exisits already, if not ask the user to restore them first
-        // 1. if both the connected nodes of relation are not deleted, emit restoreType = relation else relation_node
-      } else {
-        // emit data for node restore
-        this.restoreEvent.emit({type: restoreType, data : {id: clickedElementID}});
-      }
+    if ((clickedElementID !== null && clickedElementID !== undefined) && this.allowedRestoreEvents.indexOf(restoreType) > -1) {
+      // emit data for node restore
+      this.restoreEvent.emit({type: restoreType, data : {id: clickedElementID}});
     } else {
-      console.error('An error occured while restoring the data, clickedElementID is not a valid interger id');
+      // tslint:disable-next-line: max-line-length
+      console.error('An error occured while restoring the data, either clickedElementID is not valid or the event type is not of node/relation');
     }
   }
 

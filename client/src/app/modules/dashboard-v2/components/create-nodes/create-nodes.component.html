@@ -222,7 +222,7 @@
                             Connection <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
                         </h5>
                         <p class="sectionName">From</p>
-                        <span class="inputSpan" *ngIf="!disabledToBox">
+                        <span class="inputSpan" *ngIf="!disabledFromBox">
                             <sui-select class="selection"
                                 [(ngModel)]="selectedNodeNameSource"
                                 (ngModelChange)="updateList('to',[selectedNodeNameSource])"
@@ -237,9 +237,9 @@
                                 </sui-select-option>
                             </sui-select>
                         </span>
-                        <span class="inputSpan" *ngIf="disabledToBox">
+                        <span class="inputSpan" *ngIf="disabledFromBox">
                             <div class="ui corner labeled input normalTextBox">
-                                <input type="text" [(ngModel)] = "selectedNodeNameSource" (ngModelChange)="updateSelectedOption($event, data)" [disabled]="restoreOptions === false">
+                                <input type="text" [(ngModel)] = "selectedNodeNameSource" (ngModelChange)="updateSelectedOption($event, data)" [disabled]="restoreOptions || disabledFromBox">
                             </div>
                         </span>
                     </div>
@@ -262,17 +262,19 @@
                         </span>
                         <span class="inputSpan" *ngIf="disabledToBox">
                             <div class="ui corner labeled input normalTextBox">
-                                <input type="text" [(ngModel)] = "selectedNodeNameTarget" (ngModelChange)="updateSelectedOption($event, data)" [disabled]="restoreOptions === false">
+                                <input type="text" [(ngModel)] = "selectedNodeNameTarget" (ngModelChange)="updateSelectedOption($event, data)" [disabled]="restoreOptions || disabledToBox">
                             </div>
                         </span>
                     </div>
                 </div>
             </div>
             <div class="modal-footer" *ngIf="selectedType !== ADD_NEW_TYPE">
-                <button type="button" class="btn btn-danger deleteBtn left" *ngIf="popupConfig.editRelationPopup === true" style="color: white;" (click)="activateDelete('deleteModal', 'relation')">Delete</button>
+                <button type="button" class="btn btn-danger deleteBtn left" *ngIf="(popupConfig.editRelationPopup === true || editRelationPopup === true) && !restoreOptions" style="color: white;" (click)="activateDelete('deleteModal', 'relation')">Delete</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
-                <button type="button" class="btn btn-primary create" (click)="submitRelModal()" *ngIf="popupConfig.createRelationPopup === true || createRelationPopup === true" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0">Create</button>
-                <button type="button" class="btn btn-primary create" (click)="submitRelModal('edit')" *ngIf="popupConfig.editRelationPopup === true" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0" id="edit_btn">Update</button>
+                <button type="button" class="btn btn-primary create" (click)="submitRelModal()" *ngIf="(popupConfig.createRelationPopup === true || createRelationPopup === true) && !restoreOptions" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0">Create</button>
+                <button type="button" class="btn btn-primary create" (click)="submitRelModal('edit')" *ngIf="(popupConfig.editRelationPopup === true || editRelationPopup === true) && !restoreOptions" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0" id="edit_btn">Update</button>
+                <button type="button" id="restoreBtn" class="btn btn-info restoreBtn" *ngIf="(popupConfig.editRelationPopup === true || editRelationPopup === true) && restoreOptions" style="color: white;" (click)="restoreData('relation')">Restore </button>
+
             </div>
             <div class="modal-footer" *ngIf="selectedType === ADD_NEW_TYPE">
                 <button type="button" class="btn btn-primary create" id="edit_btn" (click)="addNewLabel('relation')">Add Type</button>
