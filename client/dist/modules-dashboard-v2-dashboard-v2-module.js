@@ -12507,6 +12507,11 @@ var DashboardSidebarComponent = /** @class */ (function () {
                     else if (keyName === "Understanding of SP Thinking") {
                         temunder = data['Understanding of SP Thinking'];
                     }
+                    else if (keyName === "labels") {
+                        temtype = data['labels'].map(function (l) {
+                            return l[0];
+                        });
+                    }
                     // data['Type'].filter(nodeType => {
                     //   // let x ={
                     //   //   name:node,
@@ -12529,18 +12534,19 @@ var DashboardSidebarComponent = /** @class */ (function () {
             _this.connectionOptions = temconnection;
             _this.understandingOptions = temunder;
             _this.statusOptions = temstatus;
-            temtype = [
-                "Philanthropy",
-                "NGO/CBO",
-                "Consulting",
-                "Research Institute",
-                "Private Sector",
-                "Government",
-                "Impact Investor",
-                "Media",
-                "Academia",
-                "International Agency"
-            ];
+            // temtype = [
+            //       "Philanthropy",
+            //       "NGO/CBO",
+            //       "Consulting",
+            //       "Research Institute",
+            //       "Private Sector",
+            //       "Government",
+            //       "Impact Investor",
+            //       "Media",
+            //       "Academia",
+            //       "International Agency"
+            //     ]
+            temtype = temtype.filter(_this.onlyUnique);
             _this.typeOptions = temtype;
             temrelation = [
                 "Advisory",
