@@ -60,6 +60,10 @@ export class GraphVisualizerComponent implements OnInit {
     deletedColor: {
       colorCode: '#C0C0C0',
       highlightColorCode: '#9a9a9a'
+    },
+    restoreColor: {
+      colorCode: '#96C1FA',
+      highlightColorCode: '#249BFC'
     }
   };
 
@@ -682,8 +686,19 @@ export class GraphVisualizerComponent implements OnInit {
         // update the old node with new node
         if (!!oldRelation) {
           oldRelation['properties'] = relation['properties'];
+          oldRelation['title'] = relation['title'];
+          oldRelation['color']['color'] = this.colorConfig.restoreColor.colorCode;
+          oldRelation['color']['highlight'] = this.colorConfig.restoreColor.highlightColorCode;
           // set it back in VisJS
           this.graphData['edges'].update(oldRelation);
+          // update allGraphData and filteredGraphData Array
+          let index = _.findIndex(this.allGraphData['edges'], { id: oldRelationID });
+          if (index >= 0) {
+            this.allGraphData['edges'][index] = oldRelation;
+          }
+          let tem = _.cloneDeep(oldRelation);
+          tem['title'] = this.stringifyProperties(tem);
+          this.filteredGraphData['edges'].push(tem);
           console.log('updated relation ', oldRelation);
         } else {
           console.error(`Provided relation ${oldRelation} is not present in VisGraph for restoration`);
@@ -936,7 +951,7 @@ export class GraphVisualizerComponent implements OnInit {
       if (obj.hasOwnProperty('event') && obj.event === 'create') {
         this.insertIntoAllGraphArray(obj);
         this.insertIntoFilteredGraphArray(obj);
-      } else if (obj.hasOwnProperty('event') && obj.event === 'edit' || obj.event === 'delete') {
+      } else if (obj.hasOwnProperty('event') && obj.event === 'edit' || obj.event === 'delete' || obj.event === 'restore') {
         this.updateAllGraphArray(obj);
         this.updateFilteredGraphArray(obj);
       }
