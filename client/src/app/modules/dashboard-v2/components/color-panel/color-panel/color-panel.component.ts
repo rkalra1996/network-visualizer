@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ColorServiceService } from './../../../services/colorService/color-service.service';
 import { SharedGraphService } from './../../../../core/services/shared-graph.service';
 import * as _ from "lodash";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-color-panel',
@@ -16,7 +17,11 @@ export class ColorPanelComponent implements OnInit {
   public objectKeys = [];
   public colorData = [];
   public showDropDown = true;
-  constructor(private colorSrvc: ColorServiceService, private sharedGraphSrvc: SharedGraphService) { }
+  constructor(
+    private colorSrvc: ColorServiceService,
+    private sharedGraphSrvc: SharedGraphService,
+    private sb: MatSnackBar
+    ) { }
 
   ngOnInit() {
     // get color panel details
@@ -71,6 +76,12 @@ export class ColorPanelComponent implements OnInit {
 
   toggleDropdown() {
     this.showDropDown = !this.showDropDown;
+  }
+
+  openSnackBar() {
+      // opening snackbar
+      console.log('called');
+      this.sb.open('Helo', 'This  is action', {duration: 2000, verticalPosition : 'top'});
   }
 
 }
