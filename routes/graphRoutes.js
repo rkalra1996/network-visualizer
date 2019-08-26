@@ -95,7 +95,12 @@ router.post('/search/neo4j', auth_middleware.searchAuth, (req, res) => {
 router.get('/initialdatav2', (req, res) => {
     console.log('initial data');
     // get initial data from the data base
-    neo4j.getDataV2()
+    // extract whether user wants to view deleted data only
+    let showDeleted = false;
+    if (req.query.hasOwnProperty('deleted')) {
+        showDeleted = req.query.deleted === 'true' ? true : false;
+    }
+    neo4j.getDataV2({query : "", showDeleted})
         .then(response => {
             res.send(response);
         })
@@ -130,7 +135,7 @@ router.get('/graph/labeldata', (req, res) => {
             res.send(response);
         })
         .catch(err => {
-            console.log('err occured while sending back ', err);
+            console.log('err occured while sending back graph labels data', err);
             res.sendStatus(500);
         });
 });
@@ -141,9 +146,167 @@ router.get('/graph/labels', (req, res) => {
             res.send(result);
         })
         .catch(err => {
-            console.log('err occured while sending back labels data');
+            console.log('err occured while sending back labels');
             res.status(500).send(err);
         })
 })
+
+router.post('/graph/node/create', (req, res) => {
+    console.log('create node hit');
+    // get the body, else return the error that no body is provided
+    if (!!Object.keys(req.body).length) {
+        neo4j.createNode(req)
+            .then(response => {
+                res.send(response);
+            })
+            .catch(err => {
+                console.log('err occured while sending back node create data', err);
+                res.status(400).send(err);
+            });
+    } else {
+        // empty object is not allowed
+        console.log('empty body recieved in the req');
+        res.status(400).send({ 'error': 'Request Body is required to access the API' });
+    }
+})
+
+router.post('/graph/node/update', (req, res) => {
+    console.log('update node hit');
+    if (!!Object.keys(req.body).length) {
+        neo4j.updateNode(req)
+            .then(response => {
+                res.send(response);
+            })
+            .catch(err => {
+                console.log('err occured while sending back node update data', err);
+                res.status(400).send(err);
+            });
+    } else {
+        // empty object not allowed
+        res.status(400).send({ 'error': 'Request Body is required to access the API' });
+    }
+});
+
+router.post('/graph/relation/create', (req, res) => {
+    console.log('create relation hit');
+    // get the body, else return the error that no body is provided
+    if (!!Object.keys(req.body).length) {
+        neo4j.createRelation(req)
+            .then(response => {
+                res.send(response);
+            })
+            .catch(err => {
+                console.log('err occured while sending back relation create data', err);
+                res.status(400).send(err);
+            });
+    } else {
+        // empty object is not allowed
+        console.log('empty body recieved in the req');
+        res.status(400).send({ 'error': 'Request Body is required to access the API' });
+    }
+
+});
+
+router.post('/graph/relation/update', (req, res) => {
+    console.log('update relation hit');
+    // get the body, else return the error that no body is provided
+    if (!!Object.keys(req.body).length) {
+        neo4j.updateRelationship(req)
+            .then(response => {
+                res.send(response);
+            })
+            .catch(err => {
+                console.log('err occured while sending back relation update data', err);
+                res.status(400).send(err);
+            });
+    } else {
+        // empty object is not allowed
+        console.log('empty body recieved in the req');
+        res.status(400).send({ 'error': 'Request Body is required to access the API' });
+    }
+});
+
+router.get('/graph/relations', (req, res) => {
+    console.log('/graph/relations hit');
+    neo4j.getRelations()
+        .then(response => {
+            console.log('sending back  data from /graph/relations')
+            res.send(response);
+        })
+        .catch(error => {
+            console.error('An Error occured while sending back relations data ->', error);
+            res.status(500).send({ error: 'Something went wrong while sending back the data' });
+        })
+});
+
+router.post('/graph/node/delete', (req,res) => {
+    console.log('delete node hit');
+    // get the body, else return the error that no body is provided
+    if (!!Object.keys(req.body).length) {
+        neo4j.deleteNode(req)
+            .then(response => {
+                res.send(response);
+            })
+            .catch(err => {
+                console.log('err occured while sending back node delete data', err);
+                res.status(400).send(err);
+            });
+    } else {
+        // empty object is not allowed
+        console.log('empty body recieved in the req');
+        res.status(400).send({ 'error': 'Request Body is required to access the API' });
+    }
+});
+
+router.post('/graph/relation/delete', (req,res) => {
+    console.log('delete relation hit');
+    // get the body, else return the error that no body is provided
+    if (!!Object.keys(req.body).length) {
+        neo4j.deleteRelationhip(req)
+            .then(response => {
+                res.send(response);
+            })
+            .catch(err => {
+                console.log('err occured while sending back relation delete data', err);
+                res.status(400).send(err);
+            });
+    } else {
+        // empty object is not allowed
+        console.log('empty body recieved in the req');
+        res.status(400).send({ 'error': 'Request Body is required to access the API' });
+    }
+});
+
+router.get('/graph/properties', (req,res) => {
+    console.log('/graph/properties hit\n');
+    neo4j.fetchGraphProperties()
+    .then(response => {
+        console.log('sending back  data from /graph/properties');
+        res.send(response);
+    })
+    .catch(err => {
+        console.error('An Error occured while sending back relations data ->', err);
+        res.status(500).send({ error: 'Something went wrong while sending back the data' });
+    })
+});
+
+router.post('/graph/data/restore', (req,res)=> {
+    // to restore the nodes / relationships provided as array
+    console.log('\x1b[36m%s\x1b[0m', '/graph/data/restore hit');
+    if (!!Object.keys(req.body).length) {
+        neo4j.restoreData(req)
+        .then(response => {
+            console.log("\x1b[32m", 'Returning response from /graph/data/restore');
+            res.status(200).send(response);
+        })
+        .catch( err => {
+            res.status(500).send({'error': 'An error occured while processing your request'});
+        })
+    }
+    else {
+        console.log('\x1b[31m', 'Body not provided to access the API');
+        res.status(400).send({'error': 'Request body is required to access the API'});
+    }
+});
 
 module.exports = router;

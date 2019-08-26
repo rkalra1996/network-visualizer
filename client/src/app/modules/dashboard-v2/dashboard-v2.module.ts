@@ -10,13 +10,17 @@ import { DashboardHeaderComponent } from './components/dashboard-v2-header/dashb
 import {SuiSelectModule, SuiModule} from 'ng2-semantic-ui';
 import { SharedModule } from '../shared/shared.module';
 import { ColorPanelComponent } from './components/color-panel/color-panel/color-panel.component';
+import { CreateNodesComponent } from './components/create-nodes/create-nodes.component';
+import { GraphExporterComponent } from './components/graph-exporter/graph-exporter.component';
 
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [MainComponent, GraphVisualizerComponent, DashboardSidebarComponent, DashboardHeaderComponent, 
-    ColorPanelComponent],
+    ColorPanelComponent, CreateNodesComponent, GraphExporterComponent],
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     SuiSelectModule, SuiModule,
     SharedModule,
     DashboardV2RoutingModule

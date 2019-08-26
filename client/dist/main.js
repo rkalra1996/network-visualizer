@@ -10,12 +10,10 @@
 var map = {
 	"./modules/dashboard-v2/dashboard-v2.module": [
 		"./src/app/modules/dashboard-v2/dashboard-v2.module.ts",
-		"common",
 		"modules-dashboard-v2-dashboard-v2-module"
 	],
 	"./modules/dashboard/dashboard.module": [
 		"./src/app/modules/dashboard/dashboard.module.ts",
-		"common",
 		"modules-dashboard-dashboard-module"
 	]
 };
@@ -28,7 +26,7 @@ function webpackAsyncContext(req) {
 			throw e;
 		});
 	}
-	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
+	return __webpack_require__.e(ids[1]).then(function() {
 		var id = ids[0];
 		return __webpack_require__(id);
 	});
@@ -383,11 +381,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var _core_routing_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./core-routing.module */ "./src/app/modules/core/core-routing.module.ts");
 /* harmony import */ var _components_graph_visualizer_graph_visualizer_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/graph-visualizer/graph-visualizer.component */ "./src/app/modules/core/components/graph-visualizer/graph-visualizer.component.ts");
+/* harmony import */ var _services_interceptors_core_interceptor_core_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./services/interceptors/core-interceptor/core.service */ "./src/app/modules/core/services/interceptors/core-interceptor/core.service.ts");
 
 
 
 
 
+
+// interceptors
 
 var CoreModule = /** @class */ (function () {
     function CoreModule() {
@@ -399,6 +400,9 @@ var CoreModule = /** @class */ (function () {
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"],
                 _core_routing_module__WEBPACK_IMPORTED_MODULE_4__["CoreRoutingModule"]
+            ],
+            providers: [
+                { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HTTP_INTERCEPTORS"], useClass: _services_interceptors_core_interceptor_core_service__WEBPACK_IMPORTED_MODULE_6__["CoreService"], multi: true }
             ],
             exports: [_components_graph_visualizer_graph_visualizer_component__WEBPACK_IMPORTED_MODULE_5__["GraphVisualizerComponent"]]
         })
@@ -425,12 +429,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _public_public_http_public_http_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../public/public-http/public-http.service */ "./src/app/modules/core/services/public/public-http/public-http.service.ts");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_5__);
 
 
 
 
 
-// import {PublicHttpService} from '@network-visualizer-core/public-http/PublicHttpService';
+
+
 var GraphDataService = /** @class */ (function () {
     function GraphDataService(publicHttp) {
         this.publicHttp = publicHttp;
@@ -459,239 +466,17 @@ var GraphDataService = /** @class */ (function () {
             }
         }));
     };
-    GraphDataService.prototype.getNodeLabels = function () {
+    GraphDataService.prototype.getNodeLabelData = function () {
         // const url = 'http://localhost:3050/api/graph/labeldata';
-        // return this.publicHttp.get(url).pipe(map(data => {
-        //   if (!!data) {
-        //     return data;
-        //   } else {
-        //     return of({});
-        //   }
-        // }));
-        var data = {
-            "Name": [
-                "Accenture",
-                "Aditya Birla CSR",
-                "AIILSG",
-                "Amani Institute",
-                "Anahad",
-                "Annalie Killian",
-                "Acumen",
-                "Advaith Foundation",
-                "Alan Schwartz",
-                "Amnesty International",
-                "Andrew Ng",
-                "APF",
-                "Arghyam",
-                "ATREE",
-                "BCG",
-                "Bhavtosh Vajpayee",
-                "Bloomberg (NEF)",
-                "Bosch Foundation",
-                "Bridgespan",
-                "Brookings",
-                "Central Square Foundation",
-                "Chamath Palihapitiya",
-                "Chandu Bhave",
-                "Cisco",
-                "Co-Impact",
-                "Cornell",
-                "APPI",
-                "Ashoka Fellows",
-                "Avanti Finance",
-                "Bharat Innovation Fund",
-                "Bill Gates",
-                "BMGF",
-                "BRAC",
-                "British Asian Trust",
-                "C&R",
-                "CGD",
-                "Chandler Foundation",
-                "Chris Anderson",
-                "Clearly Vision",
-                "Code For America",
-                "Dalberg",
-                "Dayle Stevens",
-                "Dell",
-                "Dept. of Agriculture (AP)",
-                "Devex",
-                "Digital Green",
-                "Dasra",
-                "deAsra",
-                "Deloitte",
-                "Deshpande Foundation",
-                "DIAL",
-                "Don Norman",
-                "ECF",
-                "Edumentum",
-                "EkStep",
-                "FHI360",
-                "Founding Fuel",
-                "Future State",
-                "GDI",
-                "Giving Pledge",
-                "Goradia Foundation",
-                "Guidestar",
-                "Harry Hertz",
-                "Harvard Kennedy School",
-                "Heather McGowan",
-                "IDR",
-                "Drucker Forum",
-                "ECHO",
-                "eGovernments",
-                "EY",
-                "Ford Foundation",
-                "FSG",
-                "Gates Foundation",
-                "Genpact",
-                "Goonj",
-                "Greymatters Capital",
-                "Harambee",
-                "Harvard Business School",
-                "Health Stack",
-                "ICICI",
-                "IIHS",
-                "IIMB",
-                "IKEA Foundation",
-                "Imago",
-                "India Stack",
-                "Ingrid Srinath",
-                "IIITB",
-                "IIT-IIT",
-                "ILIMI",
-                "In The Field",
-                "Indian School of Democracy",
-                "Institute For Transformative Tech.",
-                "IPI",
-                "iSpirt",
-                "JPAL",
-                "Last Mile Health",
-                "Living Farms",
-                "London Business School",
-                "McKinsey",
-                "MHRD",
-                "Mindtree Org",
-                "MoHUA",
-                "Nasscom Foundation",
-                "NIEPA",
-                "NIUA",
-                "NSRCEL",
-                "Intelehealth",
-                "ISDM",
-                "John McDermott",
-                "Landesa",
-                "Lean Impact",
-                "Living Goods",
-                "MAGC",
-                "Mercy Corps",
-                "Michael Susan Dell Foundation",
-                "MIT",
-                "N/Core",
-                "New America Foundation",
-                "NIIT",
-                "Nilekani Philanthropies",
-                "NSDC",
-                "Ola Foundation",
-                "One Acre Fund",
-                "ORF",
-                "PEI (Graduation)",
-                "Piramal Foundation",
-                "Omidyar Network",
-                "Open Mobility",
-                "Pankaj Jalote",
-                "PIE (Livelihoods)",
-                "Pivotal Ventures",
-                "Precision Ag Dev",
-                "PwC",
-                "Ram Sewak Sharma",
-                "SAMA",
-                "Sameer Dua",
-                "Sangeet Paul Chaudhry",
-                "Sara Chamberlain",
-                "ShikshaLokam",
-                "Skoll",
-                "Socion",
-                "Stefan Dercon",
-                "SVP",
-                "Tasvereein",
-                "TechSoup",
-                "Tom Monahan",
-                "Pratham Books",
-                "Project Evident",
-                "Raj Shah",
-                "Rita McGrath",
-                "Samagra Consulting",
-                "Samhita",
-                "Santhosh Mathew",
-                "Sattva",
-                "Skill Stack",
-                "Social Alpha",
-                "Stanford PACS",
-                "Strategyzer",
-                "Tarento",
-                "Tata Trusts",
-                "Thomas Friedman",
-                "TouchKin",
-                "UNDP",
-                "Unilever",
-                "Unleash",
-                "UNSDN",
-                "Ugly Indian",
-                "UNICEF",
-                "University of Wisconsin",
-                "UnLtd",
-                "UNSSC",
-                "Venkat Ramaswamy",
-                "Wadhwani AI",
-                "WEF",
-                "World Bank",
-                "Vayam",
-                "Vidhi Legal",
-                "Wadhwani Foundation",
-                "WHU"
-            ],
-            "Type": [
-                "Philanthropy",
-                "NGO/CBO",
-                "Consulting",
-                "Research Institute",
-                "Private Sector",
-                "Government",
-                "Impact Investor",
-                "Media",
-                "Academia",
-                "International Agency"
-            ],
-            "Represent": [
-                "Capital",
-                "Reach",
-                "Research Capacity",
-                "Platform",
-                "Talent",
-                "Technology Expertise",
-                "Partners",
-                "Advisory"
-            ],
-            "Status": [
-                "Active",
-                "Dormant"
-            ],
-            "Understanding of SP Thinking": [
-                "Defined",
-                "Early",
-                "Mature"
-            ],
-            "Connection": [
-                "Connected"
-            ],
-            "Relationships": [
-                "Advisory",
-                "Collaborator",
-                "Partner",
-                "Service Provider"
-            ]
-        };
-        return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])(data);
+        var url = '/api/graph/labeldata';
+        return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+            if (!!data) {
+                return data;
+            }
+            else {
+                return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])({});
+            }
+        }));
     };
     GraphDataService.prototype.getInitialDataV2 = function () {
         // const url = 'http://localhost:3050/api/initialdatav2';
@@ -717,6 +502,172 @@ var GraphDataService = /** @class */ (function () {
             }
         }));
     };
+    GraphDataService.prototype.createNewNode = function (nodeData) {
+        var url = '/api/graph/node/create';
+        // tslint:disable-next-line: max-line-length
+        if (nodeData.hasOwnProperty('id') && nodeData.hasOwnProperty('type') && nodeData.hasOwnProperty('properties') && nodeData.properties.hasOwnProperty('Name')) {
+            // initial conditions are okay, now send the creation request
+            return this.publicHttp.post(url, nodeData).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+                if (!!data) {
+                    return data;
+                }
+                else {
+                    return { response: 'empty' };
+                }
+            }));
+        }
+        else {
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])('Invalid data provided');
+        }
+    };
+    GraphDataService.prototype.updateNode = function (nodeData) {
+        var url = '/api/graph/node/update';
+        // tslint:disable-next-line: max-line-length
+        if (nodeData.hasOwnProperty('id') && nodeData.hasOwnProperty('type') && nodeData.hasOwnProperty('properties') && nodeData.properties.hasOwnProperty('Name')) {
+            // initial conditions are okay, now send the creation request
+            return this.publicHttp.post(url, nodeData).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+                if (!!data) {
+                    return data;
+                }
+                else {
+                    return { response: 'empty' };
+                }
+            }));
+        }
+        else {
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])('Invalid data provided');
+        }
+    };
+    GraphDataService.prototype.updateRelation = function (relationData) {
+        var url = '/api/graph/relation/update';
+        if (relationData.hasOwnProperty('id') && relationData.hasOwnProperty('type')) {
+            return this.publicHttp.post(url, relationData).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+                if (!!data) {
+                    return data;
+                }
+                else {
+                    return { response: 'empty' };
+                }
+            }));
+        }
+        else {
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])('Incomplete data provided');
+        }
+    };
+    GraphDataService.prototype.createNewRelation = function (relationData) {
+        var url = '/api/graph/relation/create';
+        if (relationData.hasOwnProperty('type') && relationData.hasOwnProperty('to') && relationData.hasOwnProperty('from')) {
+            // data is okay now prepare to send
+            return this.publicHttp.post(url, relationData).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+                if (!!data) {
+                    return data;
+                }
+                else {
+                    return { response: 'empty' };
+                }
+            }));
+        }
+        else {
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])('Invalid data provided');
+        }
+    };
+    GraphDataService.prototype.getGraphRelations = function () {
+        var url = '/api/graph/relations';
+        return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+            return data;
+        }));
+    };
+    GraphDataService.prototype.getNodeNames = function () {
+        return this.getInitialDataV2().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+            var nodeNames = [];
+            if (data.hasOwnProperty('seperateNodes')) {
+                var newData = lodash__WEBPACK_IMPORTED_MODULE_5__["cloneDeep"](data['seperateNodes']);
+                newData.forEach(function (element) {
+                    nodeNames.push(element['label']);
+                    return element['label'];
+                });
+            }
+            return nodeNames;
+        }));
+    };
+    GraphDataService.prototype.deleteNode = function (nodeData) {
+        var url = '/api/graph/node/delete';
+        if (nodeData.hasOwnProperty('id') && nodeData.hasOwnProperty('relations')) {
+            // data is okay now prepare to send
+            return this.publicHttp.post(url, nodeData).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+                if (!!data) {
+                    return data;
+                }
+                else {
+                    return { response: 'empty' };
+                }
+            }));
+        }
+        else {
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])('Invalid data provided');
+        }
+    };
+    GraphDataService.prototype.deleteRelation = function (relationIDData) {
+        var url = '/api/graph/relation/delete';
+        if (relationIDData.hasOwnProperty('id')) {
+            // data is okay now prepare to send
+            return this.publicHttp.post(url, relationIDData).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+                if (!!data) {
+                    return data;
+                }
+                else {
+                    return { response: 'empty' };
+                }
+            }));
+        }
+        else {
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])('Invalid data provided');
+        }
+    };
+    GraphDataService.prototype.getGraphProperties = function () {
+        var url = '/api/graph/properties';
+        return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+            if (!!data) {
+                return data;
+            }
+            else {
+                return { response: 'empty' };
+            }
+        }, function (err) {
+            Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])({ error: 'Error while reading graph properties' });
+            console.error(err);
+        }));
+    };
+    GraphDataService.prototype.restoreData = function (restoreData) {
+        if (restoreData.constructor === Object && restoreData.hasOwnProperty('nodes') || restoreData.hasOwnProperty('relations')) {
+            // check for datatypes of nodes and relations
+            if (!Array.isArray(restoreData['nodes']) || !Array.isArray(restoreData['relations'])) {
+                console.error('Either nodes or relations key in not an Array in restoreData');
+                return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])({ err: 'restoreData is incompatible' });
+            }
+            else {
+                // data is okay, send it to the server
+                var url = '/api/graph/data/restore';
+                var requestBody = {
+                    nodes: restoreData['nodes'],
+                    relations: restoreData['relations']
+                };
+                // send it
+                return this.publicHttp.post(url, requestBody).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
+                    if (!!data) {
+                        return data;
+                    }
+                    else {
+                        return { response: 'empty' };
+                    }
+                }));
+            }
+        }
+        else {
+            console.error('Invalid restorData object from client');
+            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["throwError"])({ err: 'restoreData is invalid' });
+        }
+    };
     GraphDataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
@@ -724,6 +675,74 @@ var GraphDataService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_public_public_http_public_http_service__WEBPACK_IMPORTED_MODULE_4__["PublicHttpService"]])
     ], GraphDataService);
     return GraphDataService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/core/services/interceptors/core-interceptor/core.service.ts":
+/*!*************************************************************************************!*\
+  !*** ./src/app/modules/core/services/interceptors/core-interceptor/core.service.ts ***!
+  \*************************************************************************************/
+/*! exports provided: CoreService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CoreService", function() { return CoreService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _shared_graph_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../../shared-graph.service */ "./src/app/modules/core/services/shared-graph.service.ts");
+
+
+// import sharedService so that we can access the toggle response
+
+var CoreService = /** @class */ (function () {
+    function CoreService(sharedService) {
+        var _this = this;
+        this.sharedService = sharedService;
+        this.showDeletedData = false;
+        this.sharedService.showDeletedData.subscribe(function (toggle) {
+            _this.setDeletedDataToggle(toggle);
+        }, function (error) {
+            console.warn('An error occured while subscribing to the toggle event in core interceptor', error);
+        });
+    }
+    CoreService.prototype.intercept = function (req, next) {
+        // update the body with an added parameter to fetch deleted data or not
+        console.log('setting show deleted for req ---> ', req.url + ' to ' + this.showDeletedData);
+        if (req.method === 'POST') {
+            var request = req.clone({ body: tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, req.body, { showDeleted: this.showDeletedData }) });
+            return next.handle(request);
+        }
+        else if (req.method === 'GET') {
+            console.log(req.params);
+            var request = req.clone({ url: req.url + ("?deleted=" + this.showDeletedData) });
+            console.log('new get request created is ', request);
+            return next.handle(request);
+        }
+        return next.handle(req);
+    };
+    // handler to set deleted toggler
+    CoreService.prototype.setDeletedDataToggle = function (toggle) {
+        if (toggle !== null && (toggle.toString() === 'true' || toggle.toString() === 'false')) {
+            // if the toggle variable is  only true and false and nothing else
+            this.showDeletedData = toggle;
+            // console.log('recieved toggle in core interceptor', toggle);
+        }
+        else {
+            // set to false by default
+            this.showDeletedData = false;
+        }
+    };
+    CoreService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_shared_graph_service__WEBPACK_IMPORTED_MODULE_2__["SharedGraphService"]])
+    ], CoreService);
+    return CoreService;
 }());
 
 
@@ -752,10 +771,17 @@ var PublicHttpService = /** @class */ (function () {
     function PublicHttpService(http) {
         this.http = http;
     }
-    PublicHttpService.prototype.get = function (url) {
+    PublicHttpService.prototype.get = function (url, httpOptions) {
+        if (httpOptions === void 0) { httpOptions = {}; }
         var requestUrl = !!url ? url : null;
+        // if(httpOptions.hasOwnProperty('user-token') && httpOptions.hasOwnProperty('contentType')){
+        if (_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]) {
+            httpOptions = {
+                'Access-Control-Allow-Origin': httpOptions['Access-Control-Allow-Origin']
+            };
+        }
         if (!!requestUrl) {
-            return this.http.get(requestUrl);
+            return this.http.get(requestUrl, httpOptions);
         }
         else {
             console.error('No url provided for get request');
@@ -777,7 +803,9 @@ var PublicHttpService = /** @class */ (function () {
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["throwError"])('No url provided');
         }
     };
-    PublicHttpService.prototype.patch = function () { };
+    PublicHttpService.prototype.patch = function () {
+        // no implementation yet
+    };
     PublicHttpService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
@@ -785,6 +813,73 @@ var PublicHttpService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
     ], PublicHttpService);
     return PublicHttpService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/core/services/shared-graph.service.ts":
+/*!***************************************************************!*\
+  !*** ./src/app/modules/core/services/shared-graph.service.ts ***!
+  \***************************************************************/
+/*! exports provided: SharedGraphService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SharedGraphService", function() { return SharedGraphService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+var SharedGraphService = /** @class */ (function () {
+    function SharedGraphService() {
+        this.nodeDetails = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.connectedNodeDetails = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.getNodeByIDs = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
+        this.showDeletedData = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.nameArray = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.restoreConnectedNodesData = false;
+    }
+    SharedGraphService.prototype.setGraphData = function (graphdata) {
+        this.graphData = graphdata;
+    };
+    SharedGraphService.prototype.getGraphData = function () {
+        return this.graphData;
+    };
+    SharedGraphService.prototype.getNodeDetails = function (nodeIDs, forRestore) {
+        if (forRestore === void 0) { forRestore = false; }
+        this.restoreConnectedNodesData = forRestore ? true : false;
+        this.getNodeByIDs.next(nodeIDs);
+    };
+    SharedGraphService.prototype.sendNodeDetails = function (nodeDetailsArray) {
+        if (this.restoreConnectedNodesData) {
+            this.connectedNodeDetails.next(nodeDetailsArray);
+        }
+        else {
+            this.nodeDetails.next(nodeDetailsArray);
+        }
+        this.restoreConnectedNodesData = false;
+    };
+    // function to send the deleted toggle info whenever needed
+    SharedGraphService.prototype.sendToogleStatus = function (status) {
+        console.log('sending new status for toggle ', status);
+        this.showDeletedData.next(status);
+    };
+    // to set from and to data
+    SharedGraphService.prototype.setFromToData = function (nameArray) {
+        this.nameArray.next(nameArray);
+    };
+    SharedGraphService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], SharedGraphService);
+    return SharedGraphService;
 }());
 
 
@@ -970,6 +1065,72 @@ var SidebarComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.html":
+/*!***************************************************************************************************!*\
+  !*** ./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.html ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"toggleWrapper\">\n  <label class=\"switch\">\n    <input type=\"checkbox\" (change)=\"toggleEventHandler($event)\">\n    <span class=\"slider round\"></span>\n  </label>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.scss":
+/*!***************************************************************************************************!*\
+  !*** ./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.scss ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".toggleWrapper {\n  text-align: center;\n  width: 50%;\n  margin: auto;\n  height: 20%; }\n\n.switch {\n  position: relative;\n  display: block;\n  top: 8px;\n  width: 50px;\n  height: 30px; }\n\n.slider {\n  position: absolute;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  cursor: pointer;\n  background: white;\n  border: 2px solid black;\n  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);\n  transition: .5s; }\n\n.slider:before {\n  position: absolute;\n  left: 0;\n  content: \"\";\n  top: 4.5px;\n  bottom: 3px;\n  background-color: black;\n  transition: .5s; }\n\n.switch input {\n  display: none; }\n\ninput:checked + .slider {\n  background-color: black; }\n\ninput:checked + .slider:before {\n  transform: translateX(27px) rotateZ(45deg);\n  background-color: white; }\n\n.slider.round {\n  border-radius: 35px; }\n\n.slider.round:before {\n  width: 43%;\n  height: 43%;\n  border-top-left-radius: 50px;\n  border-top-right-radius: 50px;\n  transform: rotateZ(-45deg); }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL3NoYXJlZC9jb21wb25lbnQvdG9nZ2xlLXN3aXRjaC90b2dnbGUtc3dpdGNoL3RvZ2dsZS1zd2l0Y2guY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxrQkFBbUI7RUFDbkIsVUFBVztFQUNYLFlBQWE7RUFDYixXQUFZLEVBQUE7O0FBR2Q7RUFDRSxrQkFBbUI7RUFDbkIsY0FBZTtFQUNmLFFBQVE7RUFDUixXQUFZO0VBQ1osWUFBYSxFQUFBOztBQUdmO0VBQ0Usa0JBQW1CO0VBQ25CLE1BQVE7RUFDUixRQUFTO0VBQ1QsU0FBVTtFQUNWLE9BQVE7RUFDUixlQUFnQjtFQUNoQixpQkFBa0I7RUFDbEIsdUJBQXdCO0VBQ3hCLDBDQUF3QztFQUN4QyxlQUFnQixFQUFBOztBQUdsQjtFQUNFLGtCQUFtQjtFQUNuQixPQUFRO0VBQ1IsV0FBWTtFQUNaLFVBQVc7RUFDWCxXQUFZO0VBQ1osdUJBQXdCO0VBQ3hCLGVBQWdCLEVBQUE7O0FBR2xCO0VBQ0UsYUFBYyxFQUFBOztBQUdoQjtFQUNFLHVCQUF3QixFQUFBOztBQUcxQjtFQUNFLDBDQUEyQztFQUMzQyx1QkFBd0IsRUFBQTs7QUFHMUI7RUFDRSxtQkFBb0IsRUFBQTs7QUFHdEI7RUFDRSxVQUFXO0VBQ1gsV0FBWTtFQUNaLDRCQUE2QjtFQUM3Qiw2QkFBOEI7RUFDOUIsMEJBQTJCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9tb2R1bGVzL3NoYXJlZC9jb21wb25lbnQvdG9nZ2xlLXN3aXRjaC90b2dnbGUtc3dpdGNoL3RvZ2dsZS1zd2l0Y2guY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIudG9nZ2xlV3JhcHBlciB7XG4gICAgdGV4dC1hbGlnbiA6IGNlbnRlcjtcbiAgICB3aWR0aCA6IDUwJTtcbiAgICBtYXJnaW4gOiBhdXRvO1xuICAgIGhlaWdodCA6IDIwJTtcbiAgfVxuICBcbiAgLnN3aXRjaCB7XG4gICAgcG9zaXRpb24gOiByZWxhdGl2ZTtcbiAgICBkaXNwbGF5IDogYmxvY2s7XG4gICAgdG9wOiA4cHg7XG4gICAgd2lkdGggOiA1MHB4O1xuICAgIGhlaWdodCA6IDMwcHg7XG4gIH1cbiAgXG4gIC5zbGlkZXIge1xuICAgIHBvc2l0aW9uIDogYWJzb2x1dGU7XG4gICAgdG9wIDogMCA7IFxuICAgIHJpZ2h0IDogMDsgXG4gICAgYm90dG9tIDogMDsgXG4gICAgbGVmdCA6IDA7XG4gICAgY3Vyc29yIDogcG9pbnRlcjtcbiAgICBiYWNrZ3JvdW5kIDogd2hpdGU7XG4gICAgYm9yZGVyIDogMnB4IHNvbGlkIGJsYWNrO1xuICAgIGJveC1zaGFkb3cgOiAxcHggMXB4IDFweCByZ2JhKDAsMCwwLDAuMSk7XG4gICAgdHJhbnNpdGlvbiA6IC41cztcbiAgfVxuICBcbiAgLnNsaWRlcjpiZWZvcmUge1xuICAgIHBvc2l0aW9uIDogYWJzb2x1dGU7XG4gICAgbGVmdCA6IDA7XG4gICAgY29udGVudCA6IFwiXCI7XG4gICAgdG9wIDogNC41cHg7XG4gICAgYm90dG9tIDogM3B4O1xuICAgIGJhY2tncm91bmQtY29sb3IgOiBibGFjaztcbiAgICB0cmFuc2l0aW9uIDogLjVzO1xuICB9XG4gIFxuICAuc3dpdGNoIGlucHV0IHtcbiAgICBkaXNwbGF5IDogbm9uZTtcbiAgfVxuICBcbiAgaW5wdXQ6Y2hlY2tlZCArIC5zbGlkZXIge1xuICAgIGJhY2tncm91bmQtY29sb3IgOiBibGFjaztcbiAgfVxuICBcbiAgaW5wdXQ6Y2hlY2tlZCArIC5zbGlkZXI6YmVmb3JlIHtcbiAgICB0cmFuc2Zvcm0gOiB0cmFuc2xhdGVYKDI3cHgpIHJvdGF0ZVooNDVkZWcpO1xuICAgIGJhY2tncm91bmQtY29sb3IgOiB3aGl0ZTtcbiAgfVxuICBcbiAgLnNsaWRlci5yb3VuZCB7XG4gICAgYm9yZGVyLXJhZGl1cyA6IDM1cHg7XG4gIH1cbiAgXG4gIC5zbGlkZXIucm91bmQ6YmVmb3JlIHtcbiAgICB3aWR0aCA6IDQzJTtcbiAgICBoZWlnaHQgOiA0MyU7XG4gICAgYm9yZGVyLXRvcC1sZWZ0LXJhZGl1cyA6IDUwcHg7XG4gICAgYm9yZGVyLXRvcC1yaWdodC1yYWRpdXMgOiA1MHB4O1xuICAgIHRyYW5zZm9ybSA6IHJvdGF0ZVooLTQ1ZGVnKTtcbiAgfSJdfQ== */"
+
+/***/ }),
+
+/***/ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.ts":
+/*!*************************************************************************************************!*\
+  !*** ./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.ts ***!
+  \*************************************************************************************************/
+/*! exports provided: ToggleSwitchComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ToggleSwitchComponent", function() { return ToggleSwitchComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var ToggleSwitchComponent = /** @class */ (function () {
+    function ToggleSwitchComponent() {
+        this.toggleOn = false;
+        this.toggleEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"](null);
+    }
+    ToggleSwitchComponent.prototype.ngOnInit = function () {
+    };
+    ToggleSwitchComponent.prototype.toggleEventHandler = function (event) {
+        this.toggleOn = !this.toggleOn;
+        this.toggleEvent.emit({ type: 'toggle', isOn: this.toggleOn });
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], ToggleSwitchComponent.prototype, "toggleEvent", void 0);
+    ToggleSwitchComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-toggle-switch',
+            template: __webpack_require__(/*! ./toggle-switch.component.html */ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.html"),
+            styles: [__webpack_require__(/*! ./toggle-switch.component.scss */ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], ToggleSwitchComponent);
+    return ToggleSwitchComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/modules/shared/shared-routing.module.ts":
 /*!*********************************************************!*\
   !*** ./src/app/modules/shared/shared-routing.module.ts ***!
@@ -1022,6 +1183,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _core_core_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../core/core.module */ "./src/app/modules/core/core.module.ts");
 /* harmony import */ var _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./component/global-loader/global-loader/global-loader.component */ "./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.ts");
+/* harmony import */ var _component_toggle_switch_toggle_switch_toggle_switch_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./component/toggle-switch/toggle-switch/toggle-switch.component */ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.ts");
+
 
 
 
@@ -1038,7 +1201,8 @@ var SharedModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             declarations: [
                 _component_sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_4__["SidebarComponent"],
-                _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"]
+                _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"],
+                _component_toggle_switch_toggle_switch_toggle_switch_component__WEBPACK_IMPORTED_MODULE_9__["ToggleSwitchComponent"]
             ],
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
@@ -1051,7 +1215,8 @@ var SharedModule = /** @class */ (function () {
             ],
             exports: [
                 _component_sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_4__["SidebarComponent"],
-                _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"]
+                _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"],
+                _component_toggle_switch_toggle_switch_toggle_switch_component__WEBPACK_IMPORTED_MODULE_9__["ToggleSwitchComponent"]
             ]
         })
     ], SharedModule);

@@ -7,16 +7,13 @@ const port = 3050
 //setup the neo4J data driver
 const neo4j = require('./neo4jDriverUtility');
 
-/* app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
- */
 app.use(cors());
 
 const graphRoutes = require('./routes/graphRoutes');
+const fileRoutes = require('./routes/fileRoutes');
+
 app.use('/api', graphRoutes);
+app.use('/file', fileRoutes);
 app.use('/v2', express.static(path.join(__dirname, 'client/dist/')));
 
 app.use(express.static(path.join(__dirname, 'client/dist/')));
@@ -24,9 +21,6 @@ app.use(express.static(path.join(__dirname, 'client/dist/')));
 
 
 app.listen(port, () => {
-    if (neo4j.initiate()){
-        console.log(`vis app server listening on port ${port}!`);
-    } else {
-        console.log('An error occured while burning up the server :(');
-    };
+    neo4j.initiate();
+    console.log(`network visualizer server is burining on ${port}!`);
 });
