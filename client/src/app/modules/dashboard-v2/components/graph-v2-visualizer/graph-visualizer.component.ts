@@ -3,7 +3,7 @@ import { GraphDataService } from 'src/app/modules/core/services/graph-data-servi
 import { Network, DataSet, Node, Edge, IdType } from 'vis';
 import * as _ from 'lodash';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
-import { elementOperation } from './../../interfaces/elementOperation'
+import { elementOperation } from './../../interfaces/elementOperation';
 
 @Component({
   selector: 'app-graph-visualizer',

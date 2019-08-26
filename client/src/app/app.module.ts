@@ -9,6 +9,7 @@ import { ShellModule } from './modules/shell/shell.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { SuiModule } from 'ng2-semantic-ui';
 import { CoreModule } from './modules/core/core.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { CoreModule } from './modules/core/core.module';
     SuiModule,
     ShellModule,
     SharedModule,
-    CoreModule
+    CoreModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
