@@ -10829,7 +10829,7 @@ var ColorPanelComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\" *ngIf=\"!showDeletedData\">\n    <div class=\"btn-group nodes\">\n        <button type=\"button\" (click)=\"createNode()\" data-toggle=\"modal\" data-target=\"#createNodeModal\" class=\"btn\" aria-expanded=\"false\">\n      Create Element\n    </button>\n    </div>\n    <div class=\"btn-group relationships\">\n        <button type=\"button\" (click)=\"createRelation()\" data-toggle=\"modal\" data-target=\"#createRelationModal\" class=\"btn\" aria-expanded=\"false\">\n      Create Relationship\n    </button>\n    </div>\n</div>\n<!--modal template to show when node is to be created-->\n<div class=\"modal fade\" id=\"createNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"NodeModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.createNodePopup === true\">Create Element</h5>\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.editNodePopup === true\">Element Details</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                    <span aria-hidden=\"true\">&times;</span>\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"modalItem\">\n                    <p class=\"sectionName\">\n                        {{TYPE_TEXT}}\n                    </p>\n                    <span class=\"inputSpan\">\n                        <ng-container *ngIf=\"selectedType !== ADD_NEW_LABEL\">\n                                <sui-select class=\"selection\"\n                                [(ngModel)]=\"selectedType\"\n                                (ngModelChange)=\"updateProperties($event)\"\n                                [options]=\"typeOptions\"\n                                [isSearchable]=\"true\"\n                                [isDisabled]=\"disabledBox\"\n                                #select>\n                        <sui-select-option *ngFor=\"let option of select.filteredOptions\"\n                                           [value]=\"option\">\n                        </sui-select-option>\n                                  </sui-select>\n                        </ng-container>\n                        <ng-container *ngIf=\"selectedType === ADD_NEW_LABEL\">\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_newLabelNode\"></span>\n                        </ng-container>\n                    </span>\n                </div>\n                <div class=\"modalItem\" *ngIf=\"labelProperties?.length > 0 && selectedType?.length > 0\">\n                    <h5 class=\"propertyLabel\">\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\n                    </h5>\n                    <!--container to display pre exisiting properties-->\n                    <ng-container *ngFor=\"let data of labelProperties\">\n                        <div class=\"modalItem\">\n                            <p class=\"sectionName\">{{data}}</p>\n                            <span class=\"inputSpan\">\n                                <ng-container *ngIf = \"data === 'Name'\">\n                                    <div class=\"ui corner labeled input normalTextBox\">\n                                        <input type=\"text\" placeholder=\"Enter Name...\" id=\"id_{{data}}\" [(ngModel)] = \"selectedPropertiesObject[data]\" (ngModelChange)=\"updateSelectedOption($event, data)\">\n                                        <div class=\"ui corner label\">\n                                            <i class=\"asterisk icon\"></i>\n                                        </div>\n                                    </div>\n                                </ng-container>\n                                <ng-container *ngIf=\"data !== 'Name'\">\n                                    <sui-select class=\"selection\" *ngIf=\"!availablePropertyList[data]?.enableNewProperty\"\n                                    [options]=\"availablePropertyList[data]['list']\" [(ngModel)]=\"selectedPropertiesObject[data]\"\n                                    (ngModelChange)=\"updateSelectedOption($event, data)\" [isSearchable]=\"true\"\n                                    [isDisabled]=\"false\" #Propertyselect>\n                                        <sui-select-option *ngFor=\"let option of Propertyselect.filteredOptions\" [value]=\"option\"></sui-select-option>\n                                    </sui-select>\n                                    <div class=\"ui corner labeled input normalTextBox\" *ngIf=\"availablePropertyList[data]?.enableNewProperty\">\n                                        <input type=\"text\" placeholder=\"Enter New Property...\" id=\"id_{{data}}\" [(ngModel)]=\"selectedPropertiesObject[data]\" (ngModelChange)=\"updateSelectedOption($event, data)\" (keyup)=\"updateNewPropertyValue($event,data)\">\n                                        <div class=\"ui corner label\">\n                                            <i class=\"asterisk icon\"></i>\n                                        </div>\n                                    </div>\n                                </ng-container>\n                            </span>\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty\" (click)=\"deleteProperty(data)\"><i class=\"far fa-trash-alt\"></i></span>\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty\" (click)=\"availablePropertyList[data].enableNewProperty = false\" ><i class=\"far fa-times-circle\" style=\"color: red;\"></i></span>\n                            <span class=\"supportIcons nameKey\" *ngIf=\"(data?.length > 0) && data === 'Name'\"> \n                                <i class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"right\" [title]=\"'Name is mandatory and cannot be deleted'\"></i>\n                            </span>\n                        </div>\n                    </ng-container>\n                    <!--container to display pre exisiting properties end-->\n\n                    <!--Template to add a new property-->\n                    \n                    <ng-container *ngIf=\"enableNewTemplate\">\n                        <form id=\"NewPropertyGroup\">\n                            <div class=\"modalItem\">\n                                <div class=\"ui divider\"></div>\n                                <p class=\"sectionName\">Property Name</p>\n                                <span class=\"inputSpan newTemplate\">\n                                    <div class=\"ui input focus\">\n                                        <input type=\"text\" placeholder=\"Property Value\" id=\"propertyKey\">\n                                    </div>\n                                </span>\n                                <span class=\"supportIcons customDelete\" (click)=\"enableNewTemplate = false\"><i class=\"far fa-trash-alt\"></i></span>\n                                <br>\n                                <div class=\"ui divider\"></div>\n                            </div>\n                        </form>\n                    </ng-container>\n                    <!--Template to add a new property ends-->\n                </div>\n                <a class=\"newLink\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && !enableNewTemplate\" (click)=\"addNewProperty('node')\">Add New Property</a>\n                <a class=\"newLink\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && enableNewTemplate\" (click)=\"saveNewProperty('node')\">Save Property</a>\n            </div>\n            <div class=\"modal-footer\" *ngIf=\"selectedType !== ADD_NEW_LABEL\">\n                <button type=\"button\" class=\"btn btn-danger deleteBtn\" *ngIf=\"popupConfig.editNodePopup === true\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'node')\">Delete</button>\n                <a class=\"mailBtn\" *ngIf=\"popupConfig.editNodePopup === true\" >Send Mail</a>\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal()\" *ngIf=\"popupConfig.createNodePopup === true\" [disabled]=\"(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])\">Create</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal('edit')\" *ngIf=\"popupConfig.editNodePopup === true\" [disabled]=\"(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])\" id=\"edit_btn\">Update</button>\n            </div>\n            <div class=\"modal-footer\" *ngIf=\"selectedType === ADD_NEW_LABEL\">\n                <button type=\"button\" class=\"btn btn-primary create\" id=\"edit_btn\" (click)=\"addNewLabel('node')\">Add Label</button>\n            </div>\n        </div>\n    </div>\n</div>\n<!--modal node create end-->\n\n\n<!--modal relationship start-->\n<div class=\"modal fade\" id=\"createRelationModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"createRelationPopup == true\">Create Relationship</h5>\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"editRelationPopup == true\">Relationship Details</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n            <span aria-hidden=\"true\">&times;</span>\n          </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"modalItem\">\n                    <p class=\"sectionName\">\n                        {{TYPE_TEXT}}\n                    </p>\n                    <span class=\"inputSpan\">\n                        <ng-container *ngIf=\"selectedType !== ADD_NEW_TYPE\">\n                                <sui-select class=\"selection\"\n                                [(ngModel)]=\"selectedType\"\n                                (ngModelChange)=\"updateRelProperties($event)\"\n                                [options]=\"relationTypeOptions\"\n                                [isSearchable]=\"true\"\n                                [isDisabled]=\"disabledBox\"\n                                #selectRelationBox>\n                        <sui-select-option *ngFor=\"let option of selectRelationBox.filteredOptions\"\n                                           [value]=\"option\">\n                        </sui-select-option>\n                    </sui-select>\n                        </ng-container>\n                        <ng-container *ngIf=\"selectedType === ADD_NEW_TYPE\">\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_newLabelRelation\"></span>\n                        </ng-container>\n                    </span>\n                </div>\n                <div class=\"modalItem\" *ngIf=\"typeProperties?.length > 0 && selectedType?.length > 0\">\n                    <h5 class=\"propertyLabel\">\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\n                    </h5>\n                    \n                    \n                    <ng-container *ngFor=\"let data of typeProperties\">\n                        <div class=\"modalItem\">\n                            <p class=\"sectionName\">{{data}}</p>\n                            <span class=\"inputSpan\">\n                                <ng-container *ngIf=\"data !== 'Name'\">\n                                    <sui-select class=\"selection\" *ngIf=\"!availablePropertyList[data]?.enableNewProperty\"\n                                     [options]=\"availablePropertyList[data]['list']\" [(ngModel)]=\"selectedPropertiesObject[data]\"\n                                     (ngModelChange)=\"updateSelectedOption($event, data)\" [isSearchable]=\"true\"\n                                     [isDisabled]=\"false\" #PropertyRelselect>\n                                        <sui-select-option *ngFor=\"let option of PropertyRelselect.filteredOptions\" [value]=\"option\"></sui-select-option>\n                                    </sui-select>\n                                    <div class=\"ui corner labeled input normalTextBox\" *ngIf=\"availablePropertyList[data]?.enableNewProperty\">\n                                        <input type=\"text\" placeholder=\"Enter New Property...\" id=\"id_{{data}}\" [(ngModel)]=\"selectedPropertiesObject[data]\" (ngModelChange)=\"updateSelectedOption($event, data)\" (keyup)=\"updateNewPropertyValue($event,data)\">\n                                        <div class=\"ui corner label\">\n                                            <i class=\"asterisk icon\"></i>\n                                        </div>\n                                    </div>\n                                </ng-container>\n                                <!-- <input type=\"text\" id=\"id_{{data}}\"> -->\n                            </span>\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty\" (click)=\"deleteProperty(data, 'relation')\"><i class=\"far fa-trash-alt\"></i></span>\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty\" (click)=\"availablePropertyList[data].enableNewProperty = false\" ><i class=\"far fa-times-circle\" style=\"color: red;\"></i></span>                            \n                            <span class=\"supportIcons nameKey\" *ngIf=\"(data?.length > 0) && data === 'Name'\">\n                                <i class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"right\" [title]=\"'Name is mandatory and cannot be deleted'\"></i>\n                            </span>\n                        </div>\n                    </ng-container>\n                </div>\n                        <form id=\"NewPropertyGroupRel\" *ngIf=\"enableNewTemplate\">\n                                <div class=\"modalItem\">\n                                    <div class=\"ui divider\"></div>\n                                    <p class=\"sectionName\">Property Name</p>\n                                    <span class=\"inputSpan newTemplate\">\n                                        <div class=\"ui input focus\">\n                                            <input type=\"text\" placeholder=\"Property Name\" id=\"propertyKeyRel\">\n                                        </div>\n                                    </span>\n                                    <span class=\"supportIcons customDelete\" (click)=\"enableNewTemplate = false\"><i class=\"far fa-trash-alt\"></i></span>\n                                    <br/>\n                                    <div class=\"ui divider lower\"></div>\n                                </div>\n                            </form>\n\n\n                <div class=\"modalItem buttonContainer\">\n                    <a class=\"newLink2\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && !enableNewTemplate\" (click)=\"addNewProperty('relation')\">Add New Property</a>\n                    <a class=\"newLink2\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && enableNewTemplate\" (click)=\"saveNewProperty('relation')\">Save Property</a>\n                </div>\n\n                <div class=\"relationScope\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE\">\n                    <div class=\"modalItem\">\n                            <h5 class=\"propertyLabel\">\n                                    Connection <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\n                                </h5>\n                        <p class=\"sectionName\">From</p>\n                        <span class=\"inputSpan\">\n                            <sui-select class=\"selection\"\n                                [(ngModel)]=\"selectedNodeNameSource\"\n                                (ngModelChange)=\"updateList('to',[selectedNodeNameSource])\"\n                                [options]=\"fromNames\"\n                                [isSearchable]=\"true\"\n                                [isDisabled]=\"disabledFromBox\"\n                                #NodeFromName>\n                                <sui-select-option *ngFor=\"let option of NodeFromName.filteredOptions\"\n                                    [value]=\"option\">\n                                </sui-select-option>\n                            </sui-select>\n                        </span>\n                    </div>\n                    <div class=\"modalItem\">\n                        <p class=\"sectionName\">To</p>\n                        <span class=\"inputSpan\">\n                            <sui-select class=\"selection\"\n                                [(ngModel)]=\"selectedNodeNameTarget\"\n                                (ngModelChange)=\"updateList('from',[selectedNodeNameTarget])\"\n                                [options]=\"toNames\"\n                                [isSearchable]=\"true\"\n                                [isDisabled]=\"disabledToBox\"\n                                #NodeToName>\n                                <sui-select-option *ngFor=\"let option of NodeToName.filteredOptions\"\n                                    [value]=\"option\">\n                                </sui-select-option>\n                            </sui-select> \n                        </span>\n                    </div>\n                </div>\n            </div>\n            <div class=\"modal-footer\" *ngIf=\"selectedType !== ADD_NEW_TYPE\">\n                <button type=\"button\" class=\"btn btn-danger deleteBtn left\" *ngIf=\"popupConfig.editRelationPopup === true\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'relation')\">Delete</button>\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal()\" *ngIf=\"popupConfig.createRelationPopup === true || createRelationPopup === true\" [disabled]=\"selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0\">Create</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal('edit')\" *ngIf=\"popupConfig.editRelationPopup === true\" [disabled]=\"selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0\" id=\"edit_btn\">Update</button>\n            </div>\n            <div class=\"modal-footer\" *ngIf=\"selectedType === ADD_NEW_TYPE\">\n                <button type=\"button\" class=\"btn btn-primary create\" id=\"edit_btn\" (click)=\"addNewLabel('relation')\">Add Type</button>\n            </div>\n        </div>\n    </div>\n</div>\n<!--modal relationship end-->\n\n<!-- Delete modal -->\n<div class=\"modal fade\" id=\"deleteModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"deleteModal\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"deleteModalTitle\">Delete</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n            </div>\n            <div class=\"modal-body\">\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:500;\">Are you sure you want to delete this {{deleteContext}} ?</b>\n                <h6 *ngIf=\"deleteContext === 'node'\" style=\"font-size: 14px; padding-top: 15px; font-weight: 400;\">[NOTE] : Deleting a node will also delete the relationships connected with the node. <span style=\"color: red;\">Proceed with caution</span></h6>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn ui-button-text later\" data-dismiss=\"modal\">Maybe Later</button>\n                <button type=\"button\" class=\"btn btn-danger\" (click)=\"submitDelete(deleteContext)\" id=\"del_btn\">Delete</button>\n            </div>\n        </div>\n    </div>\n</div>\n    <!--Delete modal end-->\n\n<!--create new relationship after node modal-->\n<div class=\"modal fade\" id=\"RelAfterNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelAfterNode\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"RelAfterNodeModalTitle\">New Relation</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n            </div>\n            <div class=\"modal-body\">\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:300;\">Do you wish to create a new relationship with respect to <span style=\"font-weight: 500;\">{{newNodeName}}</span> ?</b>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-default\" data-target=\"RelAfterNodeModal\" data-dismiss=\"modal\" style=\"color: red;\">Not Now</button>\n                <button type=\"button\" class=\"btn btn-primary\" (click)=\"promptRelation()\" id=\"rel_yes_btn\" data-dismiss=\"modal\">Yes</button>\n            </div>\n        </div>\n    </div>\n    </div>\n<!--create new relationship after node modal end-->"
+module.exports = "<div class=\"container-fluid\" *ngIf=\"!showDeletedData\">\n    <div class=\"btn-group nodes\">\n        <button type=\"button\" (click)=\"createNode()\" data-toggle=\"modal\" data-target=\"#createNodeModal\" class=\"btn\" aria-expanded=\"false\">\n      Create Element\n    </button>\n    </div>\n    <div class=\"btn-group relationships\">\n        <button type=\"button\" (click)=\"createRelation()\" data-toggle=\"modal\" data-target=\"#createRelationModal\" class=\"btn\" aria-expanded=\"false\">\n      Create Relationship\n    </button>\n    </div>\n</div>\n<!--modal template to show when node is to be created-->\n<div class=\"modal fade\" id=\"createNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"NodeModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.createNodePopup === true\">Create Element</h5>\n                <h5 class=\"modal-title\" id=\"NodeModalLabel\" *ngIf=\"popupConfig.editNodePopup === true\">Element Details</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                    <span aria-hidden=\"true\">&times;</span>\n                </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"modalItem\">\n                    <p class=\"sectionName\">\n                        {{TYPE_TEXT}}\n                    </p>\n                    <span class=\"inputSpan\">\n                        <ng-container *ngIf=\"selectedType !== ADD_NEW_LABEL\">\n                                <sui-select class=\"selection\"\n                                [(ngModel)]=\"selectedType\"\n                                (ngModelChange)=\"updateProperties($event)\"\n                                [options]=\"typeOptions\"\n                                [isSearchable]=\"true\"\n                                [isDisabled]=\"disabledBox\"\n                                #select>\n                        <sui-select-option *ngFor=\"let option of select.filteredOptions\"\n                                           [value]=\"option\">\n                        </sui-select-option>\n                                  </sui-select>\n                        </ng-container>\n                        <ng-container *ngIf=\"selectedType === ADD_NEW_LABEL\">\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_newLabelNode\"></span>\n                    </ng-container>\n                    </span>\n                </div>\n                <div class=\"modalItem\" *ngIf=\"labelProperties?.length > 0 && selectedType?.length > 0\">\n                    <h5 class=\"propertyLabel\">\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\n                    </h5>\n                    <!--container to display pre exisiting properties-->\n                    <ng-container *ngFor=\"let data of labelProperties\">\n                        <div class=\"modalItem\">\n                            <p class=\"sectionName\">{{data}}</p>\n                            <span class=\"inputSpan\">\n                                <ng-container *ngIf = \"data === 'Name'\">\n                                    <div class=\"ui corner labeled input normalTextBox\">\n                                        <input type=\"text\" placeholder=\"Enter Name...\" id=\"id_{{data}}\" [(ngModel)] = \"selectedPropertiesObject[data]\" (ngModelChange)=\"updateSelectedOption($event, data)\" [disabled]=\"restoreOptions === true\">\n                                        <div class=\"ui corner label\">\n                                            <i class=\"asterisk icon\"></i>\n                                        </div>\n                                    </div>\n                                </ng-container>\n                                <ng-container *ngIf=\"data !== 'Name'\">\n                                    <sui-select class=\"selection\" *ngIf=\"!availablePropertyList[data]?.enableNewProperty\"\n                                    [options]=\"availablePropertyList[data]['list']\" [(ngModel)]=\"selectedPropertiesObject[data]\"\n                                    (ngModelChange)=\"updateSelectedOption($event, data)\" [isSearchable]=\"true\"\n                                    [isDisabled]=\"restoreOptions\" #Propertyselect>\n                                        <sui-select-option *ngFor=\"let option of Propertyselect.filteredOptions\" [value]=\"option\"></sui-select-option>\n                                    </sui-select>\n                                    <div class=\"ui corner labeled input normalTextBox\" *ngIf=\"availablePropertyList[data]?.enableNewProperty\">\n                                        <input type=\"text\" placeholder=\"Enter New Property...\" id=\"id_{{data}}\" [(ngModel)]=\"selectedPropertiesObject[data]\" (ngModelChange)=\"updateSelectedOption($event, data)\" (keyup)=\"updateNewPropertyValue($event,data)\">\n                                        <div class=\"ui corner label\">\n                                            <i class=\"asterisk icon\"></i>\n                                        </div>\n                                    </div>\n                                </ng-container>\n                            </span>\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty && !restoreOptions\" (click)=\"deleteProperty(data)\"><i class=\"far fa-trash-alt\"></i></span>\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty && !restoreOptions\" (click)=\"availablePropertyList[data].enableNewProperty = false\"><i class=\"far fa-times-circle\" style=\"color: red;\"></i></span>\n                            <span class=\"supportIcons nameKey\" *ngIf=\"(data?.length > 0) && data === 'Name' && !restoreOptions\"> \n                                <i class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"right\" [title]=\"'Name is mandatory and cannot be deleted'\"></i>\n                            </span>\n                        </div>\n                    </ng-container>\n                    <!--container to display pre exisiting properties end-->\n\n                    <!--Template to add a new property-->\n\n                    <ng-container *ngIf=\"enableNewTemplate\">\n                        <form id=\"NewPropertyGroup\">\n                            <div class=\"modalItem\">\n                                <div class=\"ui divider\"></div>\n                                <p class=\"sectionName\">Property Name</p>\n                                <span class=\"inputSpan newTemplate\">\n                                    <div class=\"ui input focus\">\n                                        <input type=\"text\" placeholder=\"Property Value\" id=\"propertyKey\">\n                                    </div>\n                                </span>\n                                <span class=\"supportIcons customDelete\" (click)=\"enableNewTemplate = false\"><i class=\"far fa-trash-alt\"></i></span>\n                                <br>\n                                <div class=\"ui divider\"></div>\n                            </div>\n                        </form>\n                    </ng-container>\n                    <!--Template to add a new property ends-->\n                </div>\n                <a class=\"newLink\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && !enableNewTemplate && !restoreOptions\" (click)=\"addNewProperty('node')\">Add New Property</a>\n                <a class=\"newLink\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && enableNewTemplate && !restoreOptions\" (click)=\"saveNewProperty('node')\">Save Property</a>\n            </div>\n            <div class=\"modal-footer\" *ngIf=\"selectedType !== ADD_NEW_LABEL\">\n                <button type=\"button\" class=\"btn btn-danger deleteBtn\" *ngIf=\"popupConfig.editNodePopup === true && !restoreOptions\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'node')\">Delete</button>\n                <a class=\"mailBtn\" *ngIf=\"popupConfig.editNodePopup === true\">Send Mail</a>\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal()\" *ngIf=\"popupConfig.createNodePopup === true && !restoreOptions\" [disabled]=\"(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])\">Create</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitModal('edit')\" *ngIf=\"popupConfig.editNodePopup === true && !restoreOptions\" [disabled]=\"(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])\" id=\"edit_btn\">Update</button>\n                <button type=\"button\" id=\"restoreBtn\" class=\"btn btn-info restoreBtn\" *ngIf=\"(popupConfig.editNodePopup === true || editNodePopup === true) && restoreOptions\" style=\"color: white;\" (click)=\"restoreData('node')\">Restore </button>\n            </div>\n            <div class=\"modal-footer\" *ngIf=\"selectedType === ADD_NEW_LABEL\">\n                <button type=\"button\" class=\"btn btn-primary create\" id=\"edit_btn\" (click)=\"addNewLabel('node')\">Add Label</button>\n            </div>\n        </div>\n    </div>\n</div>\n<!--modal node create end-->\n\n\n<!--modal relationship start-->\n<div class=\"modal fade\" id=\"createRelationModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"createRelationPopup == true\">Create Relationship</h5>\n                <h5 class=\"modal-title\" id=\"RelModalLabel\" *ngIf=\"editRelationPopup == true\">Relationship Details</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n            <span aria-hidden=\"true\">&times;</span>\n          </button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"modalItem\">\n                    <p class=\"sectionName\">\n                        {{TYPE_TEXT}}\n                    </p>\n                    <span class=\"inputSpan\">\n                        <ng-container *ngIf=\"selectedType !== ADD_NEW_TYPE\">\n                                <sui-select class=\"selection\"\n                                [(ngModel)]=\"selectedType\"\n                                (ngModelChange)=\"updateRelProperties($event)\"\n                                [options]=\"relationTypeOptions\"\n                                [isSearchable]=\"true\"\n                                [isDisabled]=\"disabledBox\"\n                                #selectRelationBox>\n                        <sui-select-option *ngFor=\"let option of selectRelationBox.filteredOptions\"\n                                           [value]=\"option\">\n                        </sui-select-option>\n                    </sui-select>\n                        </ng-container>\n                        <ng-container *ngIf=\"selectedType === ADD_NEW_TYPE\">\n                            <span class=\"inputSpan\"><input type=\"text\" id=\"id_newLabelRelation\"></span>\n                    </ng-container>\n                    </span>\n                </div>\n                <div class=\"modalItem\" *ngIf=\"typeProperties?.length > 0 && selectedType?.length > 0\">\n                    <h5 class=\"propertyLabel\">\n                        Properties <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\n                    </h5>\n\n\n                    <ng-container *ngFor=\"let data of typeProperties\">\n                        <div class=\"modalItem\">\n                            <p class=\"sectionName\">{{data}}</p>\n                            <span class=\"inputSpan\">\n                                <ng-container *ngIf=\"data !== 'Name'\">\n                                    <sui-select class=\"selection\" *ngIf=\"!availablePropertyList[data]?.enableNewProperty\"\n                                     [options]=\"availablePropertyList[data]['list']\" [(ngModel)]=\"selectedPropertiesObject[data]\"\n                                     (ngModelChange)=\"updateSelectedOption($event, data)\" [isSearchable]=\"true\"\n                                     [isDisabled]=\"restoreOptions\" #PropertyRelselect>\n                                        <sui-select-option *ngFor=\"let option of PropertyRelselect.filteredOptions\" [value]=\"option\"></sui-select-option>\n                                    </sui-select>\n                                    <div class=\"ui corner labeled input normalTextBox\" *ngIf=\"availablePropertyList[data]?.enableNewProperty\">\n                                        <input type=\"text\" placeholder=\"Enter New Property...\" id=\"id_{{data}}\" [(ngModel)]=\"selectedPropertiesObject[data]\" (ngModelChange)=\"updateSelectedOption($event, data)\" (keyup)=\"updateNewPropertyValue($event,data)\">\n                                        <div class=\"ui corner label\">\n                                            <i class=\"asterisk icon\"></i>\n                                        </div>\n                                    </div>\n                                </ng-container>\n                                <!-- <input type=\"text\" id=\"id_{{data}}\"> -->\n                            </span>\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty && !restoreOptions\" (click)=\"deleteProperty(data, 'relation')\"><i class=\"far fa-trash-alt\"></i></span>\n                            <span class=\"supportIcons\" *ngIf=\"(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty && !restoreOptions\" (click)=\"availablePropertyList[data].enableNewProperty = false\"><i class=\"far fa-times-circle\" style=\"color: red;\"></i></span>\n                            <span class=\"supportIcons nameKey\" *ngIf=\"(data?.length > 0) && data === 'Name' && !restoreOptions\">\n                                <i class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"right\" [title]=\"'Name is mandatory and cannot be deleted'\" ></i>\n                            </span>\n                        </div>\n                    </ng-container>\n                </div>\n                <form id=\"NewPropertyGroupRel\" *ngIf=\"enableNewTemplate\">\n                    <div class=\"modalItem\">\n                        <div class=\"ui divider\"></div>\n                        <p class=\"sectionName\">Property Name</p>\n                        <span class=\"inputSpan newTemplate\">\n                                        <div class=\"ui input focus\">\n                                            <input type=\"text\" placeholder=\"Property Name\" id=\"propertyKeyRel\">\n                                        </div>\n                                    </span>\n                        <span class=\"supportIcons customDelete\" (click)=\"enableNewTemplate = false\"><i class=\"far fa-trash-alt\"></i></span>\n                        <br/>\n                        <div class=\"ui divider lower\"></div>\n                    </div>\n                </form>\n\n\n                <div class=\"modalItem buttonContainer\">\n                    <a class=\"newLink2\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && !enableNewTemplate && !restoreOptions\" (click)=\"addNewProperty('relation')\">Add New Property</a>\n                    <a class=\"newLink2\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE && enableNewTemplate && !restoreOptions\" (click)=\"saveNewProperty('relation')\">Save Property</a>\n                </div>\n\n                <div class=\"relationScope\" *ngIf=\"selectedType?.length > 0 && selectedType !== ADD_NEW_TYPE\">\n                    <div class=\"modalItem\">\n                        <h5 class=\"propertyLabel\">\n                            Connection <span class=\"fas fa-info-circle\" data-toggle=\"tooltip\" data-placement=\"top\" [title]=\"toolTipText\"></span>\n                        </h5>\n                        <p class=\"sectionName\">From</p>\n                        <span class=\"inputSpan\" *ngIf=\"!disabledFromBox\">\n                            <sui-select class=\"selection\"\n                                [(ngModel)]=\"selectedNodeNameSource\"\n                                (ngModelChange)=\"updateList('to',[selectedNodeNameSource])\"\n                                [optionsLookup]=\"optionLookUp\"\n                                labelField=\"key\"\n                                valueField=\"key\"\n                                [isSearchable]=\"true\"\n                                [isDisabled]=\"disabledFromBox\"\n                                #NodeFromName>\n                                <sui-select-option *ngFor=\"let option of NodeFromName.filteredOptions\"\n                                    [value]=\"option\">\n                                </sui-select-option>\n                            </sui-select>\n                        </span>\n                        <span class=\"inputSpan\" *ngIf=\"disabledFromBox\">\n                            <div class=\"ui corner labeled input normalTextBox\">\n                                <input type=\"text\" [(ngModel)] = \"selectedNodeNameSource\" (ngModelChange)=\"updateSelectedOption($event, data)\" [disabled]=\"restoreOptions || disabledFromBox\">\n                            </div>\n                        </span>\n                    </div>\n                    <div class=\"modalItem\">\n                        <p class=\"sectionName\">To</p>\n                        <span class=\"inputSpan\" *ngIf=\"!disabledToBox\">\n                            <sui-select class=\"selection\"\n                                [(ngModel)]=\"selectedNodeNameTarget\"\n                                (ngModelChange)=\"updateList('from',[selectedNodeNameTarget])\"\n                                [optionsLookup]=\"optionLookUp\"\n                                labelField=\"key\"\n                                valueField=\"key\"\n                                [isSearchable]=\"true\"\n                                [isDisabled]=\"disabledToBox\"\n                                #NodeToName>\n                                <sui-select-option *ngFor=\"let option of NodeToName.filteredOptions\"\n                                    [value]=\"option\">\n                                </sui-select-option>\n                            </sui-select> \n                        </span>\n                        <span class=\"inputSpan\" *ngIf=\"disabledToBox\">\n                            <div class=\"ui corner labeled input normalTextBox\">\n                                <input type=\"text\" [(ngModel)] = \"selectedNodeNameTarget\" (ngModelChange)=\"updateSelectedOption($event, data)\" [disabled]=\"restoreOptions || disabledToBox\">\n                            </div>\n                        </span>\n                    </div>\n                </div>\n            </div>\n            <div class=\"modal-footer\" *ngIf=\"selectedType !== ADD_NEW_TYPE\">\n                <button type=\"button\" class=\"btn btn-danger deleteBtn left\" *ngIf=\"(popupConfig.editRelationPopup === true || editRelationPopup === true) && !restoreOptions\" style=\"color: white;\" (click)=\"activateDelete('deleteModal', 'relation')\">Delete</button>\n                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" style=\"color: red;\">Cancel</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal()\" *ngIf=\"(popupConfig.createRelationPopup === true || createRelationPopup === true) && !restoreOptions\" [disabled]=\"selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0\">Create</button>\n                <button type=\"button\" class=\"btn btn-primary create\" (click)=\"submitRelModal('edit')\" *ngIf=\"(popupConfig.editRelationPopup === true || editRelationPopup === true) && !restoreOptions\" [disabled]=\"selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0\" id=\"edit_btn\">Update</button>\n                <button type=\"button\" id=\"restoreBtn\" class=\"btn btn-info restoreBtn\" *ngIf=\"(popupConfig.editRelationPopup === true || editRelationPopup === true) && restoreOptions\" style=\"color: white;\" (click)=\"restoreData('relation')\">Restore </button>\n\n            </div>\n            <div class=\"modal-footer\" *ngIf=\"selectedType === ADD_NEW_TYPE\">\n                <button type=\"button\" class=\"btn btn-primary create\" id=\"edit_btn\" (click)=\"addNewLabel('relation')\">Add Type</button>\n            </div>\n        </div>\n    </div>\n</div>\n<!--modal relationship end-->\n\n<!-- Delete modal -->\n<div class=\"modal fade\" id=\"deleteModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"deleteModal\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"deleteModalTitle\">Delete</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n            </div>\n            <div class=\"modal-body\">\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:500;\">Are you sure you want to delete this {{deleteContext}} ?</b>\n                <h6 *ngIf=\"deleteContext === 'node'\" style=\"font-size: 14px; padding-top: 15px; font-weight: 400;\">[NOTE] : Deleting a node will also delete the relationships connected with the node. <span style=\"color: red;\">Proceed with caution</span></h6>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn ui-button-text later\" data-dismiss=\"modal\">Maybe Later</button>\n                <button type=\"button\" class=\"btn btn-danger\" (click)=\"submitDelete(deleteContext)\" id=\"del_btn\">Delete</button>\n            </div>\n        </div>\n    </div>\n</div>\n<!--Delete modal end-->\n\n<!--create new relationship after node modal-->\n<div class=\"modal fade\" id=\"RelAfterNodeModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"RelAfterNode\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"RelAfterNodeModalTitle\">New Relation</h5>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n            </div>\n            <div class=\"modal-body\">\n                <b class=\"modal-text\" style=\"font-size: 17px; font-weight:300;\">Do you wish to create a new relationship with respect to <span style=\"font-weight: 500;\">{{newNodeName}}</span> ?</b>\n            </div>\n            <div class=\"modal-footer\">\n                <button type=\"button\" class=\"btn btn-default\" data-target=\"RelAfterNodeModal\" data-dismiss=\"modal\" style=\"color: red;\">Not Now</button>\n                <button type=\"button\" class=\"btn btn-primary\" (click)=\"promptRelation()\" id=\"rel_yes_btn\" data-dismiss=\"modal\">Yes</button>\n            </div>\n        </div>\n    </div>\n</div>\n<!--create new relationship after node modal end-->"
 
 /***/ }),
 
@@ -10840,7 +10840,7 @@ module.exports = "<div class=\"container-fluid\" *ngIf=\"!showDeletedData\">\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".container-fluid .btn-group {\n  margin-right: 20px; }\n  .container-fluid .btn-group button {\n    border-radius: 0;\n    background: #e4e4e4;\n    color: #000;\n    box-shadow: 2px 9px 17px -1px #cccccc; }\n  .container-fluid .btn-group button:active {\n    box-shadow: none;\n    transition: 0.5s; }\n  .btn-group:active {\n  outline: none;\n  text-decoration: none; }\n  .createLink,\n.editLink,\n.deleteLink {\n  text-decoration: none;\n  font-size: 12px; }\n  .dropdown-menu .dropdown-item {\n  cursor: pointer; }\n  .dropdown-menu .dropdown-item span {\n    margin-right: 8px; }\n  .dropdown-menu .dropdown-item:active {\n  background-color: white; }\n  .dropdown-menu .create:hover {\n  color: blue; }\n  .dropdown-menu .edit:hover {\n  color: green; }\n  .dropdown-menu .delete:hover {\n  color: red; }\n  .modal-header {\n  background: #5f5f5f;\n  color: white;\n  border-color: #5f5f5f; }\n  .modal-header button.close {\n    color: white; }\n  ::ng-deep .modalItem {\n  padding: 10px; }\n  ::ng-deep .modalItem .fa-info-circle {\n    font-size: 14px;\n    cursor: pointer; }\n  ::ng-deep .modalItem.buttonContainer {\n  position: relative; }\n  ::ng-deep .sectionName {\n  display: inline-block;\n  margin: 0;\n  max-width: 50%; }\n  ::ng-deep .inputSpan {\n  position: absolute;\n  left: 50%; }\n  ::ng-deep .inputSpan input {\n    border: 1px solid #acacac;\n    outline: none; }\n  ::ng-deep .propertyLabel {\n  padding-top: 13px;\n  padding-bottom: 13px;\n  text-align: center; }\n  ::ng-deep .supportIcons {\n  position: absolute;\n  right: 6%;\n  cursor: pointer;\n  cursor: pointer;\n  color: red; }\n  ::ng-deep .supportIcons.customDelete {\n  font-size: 20px; }\n  input#propertyKey {\n  height: 30px; }\n  ::ng-deep .newLink {\n  float: right;\n  padding: 5px 7px; }\n  .newLink2 {\n  position: absolute;\n  right: 0;\n  top: -2px;\n  padding: 5px 7px; }\n  .lower {\n  margin-top: 30px; }\n  .newLink:hover, .newLink2:hover {\n  background-color: #5f5f5f;\n  color: white !important;\n  transition: .5s;\n  cursor: pointer;\n  border-radius: 5px; }\n  .newTemplate {\n  max-width: 33% !important; }\n  .newTemplate div {\n    max-width: 100%; }\n  i.fas.fa-info-circle {\n  color: black !important; }\n  input[disabled=\"true\"] {\n  cursor: not-allowed; }\n  button:disabled {\n  cursor: not-allowed;\n  pointer-events: all !important; }\n  .deleteBtn, .mailBtn {\n  cursor: pointer !important; }\n  .later {\n  text-decoration: none;\n  cursor: pointer; }\n  .later:hover {\n  background-color: #5f5f5f;\n  color: white; }\n  .mailBtn, .left {\n  margin-right: auto; }\n  .mailBtn {\n  padding: 5px 8px; }\n  .mailBtn:hover {\n  transition: 0.5s;\n  background: #e4e4e4;\n  border-radius: .25rem;\n  color: #000;\n  box-shadow: 2px 9px 17px -1px #cccccc; }\n  .mailBtn:active {\n  box-shadow: none;\n  transition: .5s; }\n  ::ng-deep .newPropertyGroup {\n  width: 100%;\n  display: block;\n  background: #cccccc; }\n  ::ng-deep .normalTextBox {\n  max-width: 14em; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2NyZWF0ZS1ub2Rlcy9jcmVhdGUtbm9kZXMuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxrQkFBbUIsRUFBQTtFQUR2QjtJQUdRLGdCQUFnQjtJQUNoQixtQkFBbUI7SUFDbkIsV0FBVztJQUdYLHFDQUFvRCxFQUFBO0VBUjVEO0lBV1EsZ0JBQWdCO0lBQ2hCLGdCQUFnQixFQUFBO0VBSXhCO0VBQ0ksYUFBYTtFQUNiLHFCQUFxQixFQUFBO0VBR3pCOzs7RUFHSSxxQkFBcUI7RUFDckIsZUFBZSxFQUFBO0VBR25CO0VBRVEsZUFBZSxFQUFBO0VBRnZCO0lBSVksaUJBQWlCLEVBQUE7RUFKN0I7RUFRUSx1QkFBdUIsRUFBQTtFQVIvQjtFQVdRLFdBQVcsRUFBQTtFQVhuQjtFQWNRLFlBQVksRUFBQTtFQWRwQjtFQWlCUSxVQUFVLEVBQUE7RUFJbEI7RUFDSSxtQkFBbUI7RUFDbkIsWUFBWTtFQUNaLHFCQUFxQixFQUFBO0VBSHpCO0lBS1EsWUFBWSxFQUFBO0VBSXBCO0VBQ0ksYUFBYSxFQUFBO0VBRGpCO0lBR1EsZUFBZTtJQUNmLGVBQWUsRUFBQTtFQUl2QjtFQUNJLGtCQUFrQixFQUFBO0VBR3RCO0VBQ0kscUJBQXFCO0VBQ3JCLFNBQVM7RUFDVCxjQUFjLEVBQUE7RUFHbEI7RUFDSSxrQkFBa0I7RUFDbEIsU0FBUyxFQUFBO0VBRmI7SUFJUSx5QkFBeUI7SUFDekIsYUFBYSxFQUFBO0VBSXJCO0VBQ0ksaUJBQWlCO0VBQ2pCLG9CQUFvQjtFQUNwQixrQkFBa0IsRUFBQTtFQUV0QjtFQUNJLGtCQUFrQjtFQUNsQixTQUFVO0VBQ1YsZUFBZTtFQUNmLGVBQWU7RUFDZixVQUFXLEVBQUE7RUFHZjtFQUNJLGVBQWUsRUFBQTtFQUduQjtFQUNJLFlBQWEsRUFBQTtFQUVqQjtFQUNJLFlBQVk7RUFDWixnQkFBaUIsRUFBQTtFQUdyQjtFQUNJLGtCQUFrQjtFQUNsQixRQUFTO0VBQ1QsU0FBVTtFQUNWLGdCQUFpQixFQUFBO0VBRXJCO0VBQ0ksZ0JBQWlCLEVBQUE7RUFFckI7RUFDSSx5QkFBeUI7RUFDekIsdUJBQXdCO0VBQ3hCLGVBQWdCO0VBQ2hCLGVBQWU7RUFDZixrQkFBa0IsRUFBQTtFQUd0QjtFQUNJLHlCQUF5QixFQUFBO0VBRDdCO0lBR1EsZUFBZSxFQUFBO0VBSXZCO0VBQ0ksdUJBQXdCLEVBQUE7RUFHNUI7RUFDSSxtQkFBbUIsRUFBQTtFQUd2QjtFQUNJLG1CQUFtQjtFQUNuQiw4QkFBOEIsRUFBQTtFQUdsQztFQUNJLDBCQUEwQixFQUFBO0VBRzlCO0VBQ0kscUJBQXFCO0VBQ3JCLGVBQWUsRUFBQTtFQUduQjtFQUNJLHlCQUF5QjtFQUN6QixZQUFZLEVBQUE7RUFHaEI7RUFDQSxrQkFBa0IsRUFBQTtFQUdsQjtFQUNJLGdCQUFpQixFQUFBO0VBR3JCO0VBQ0ksZ0JBQWdCO0VBQ2hCLG1CQUFtQjtFQUNuQixxQkFBc0I7RUFDdEIsV0FBVztFQUNYLHFDQUFxQyxFQUFBO0VBR3pDO0VBQ0ksZ0JBQWdCO0VBQ2hCLGVBQWUsRUFBQTtFQUduQjtFQUNJLFdBQVk7RUFDWixjQUFlO0VBQ2YsbUJBQW1CLEVBQUE7RUFHdkI7RUFDSSxlQUFnQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9jcmVhdGUtbm9kZXMvY3JlYXRlLW5vZGVzLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmNvbnRhaW5lci1mbHVpZCAuYnRuLWdyb3VwIHtcbiAgICBtYXJnaW4tcmlnaHQgOiAyMHB4O1xuICAgIGJ1dHRvbiB7XG4gICAgICAgIGJvcmRlci1yYWRpdXM6IDA7XG4gICAgICAgIGJhY2tncm91bmQ6ICNlNGU0ZTQ7XG4gICAgICAgIGNvbG9yOiAjMDAwO1xuICAgICAgICAtd2Via2l0LWJveC1zaGFkb3c6IDJweCA5cHggMTdweCAtMXB4IHJnYmEoMjA0LCAyMDQsIDIwNCwgMSk7XG4gICAgICAgIC1tb3otYm94LXNoYWRvdzogMnB4IDlweCAxN3B4IC0xcHggcmdiYSgyMDQsIDIwNCwgMjA0LCAxKTtcbiAgICAgICAgYm94LXNoYWRvdzogMnB4IDlweCAxN3B4IC0xcHggcmdiYSgyMDQsIDIwNCwgMjA0LCAxKTtcbiAgICB9XG4gICAgYnV0dG9uOmFjdGl2ZSB7XG4gICAgICAgIGJveC1zaGFkb3c6IG5vbmU7XG4gICAgICAgIHRyYW5zaXRpb246IDAuNXM7XG4gICAgfVxufVxuXG4uYnRuLWdyb3VwOmFjdGl2ZSB7XG4gICAgb3V0bGluZTogbm9uZTtcbiAgICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG59XG5cbi5jcmVhdGVMaW5rLFxuLmVkaXRMaW5rLFxuLmRlbGV0ZUxpbmsge1xuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcbiAgICBmb250LXNpemU6IDEycHg7XG59XG5cbi5kcm9wZG93bi1tZW51IHtcbiAgICAuZHJvcGRvd24taXRlbSB7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgc3BhbiB7XG4gICAgICAgICAgICBtYXJnaW4tcmlnaHQ6IDhweDtcbiAgICAgICAgfVxuICAgIH1cbiAgICAuZHJvcGRvd24taXRlbTphY3RpdmUge1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICB9XG4gICAgLmNyZWF0ZTpob3ZlciB7XG4gICAgICAgIGNvbG9yOiBibHVlO1xuICAgIH1cbiAgICAuZWRpdDpob3ZlciB7XG4gICAgICAgIGNvbG9yOiBncmVlbjtcbiAgICB9XG4gICAgLmRlbGV0ZTpob3ZlciB7XG4gICAgICAgIGNvbG9yOiByZWQ7XG4gICAgfVxufVxuXG4ubW9kYWwtaGVhZGVyIHtcbiAgICBiYWNrZ3JvdW5kOiAjNWY1ZjVmO1xuICAgIGNvbG9yOiB3aGl0ZTtcbiAgICBib3JkZXItY29sb3I6ICM1ZjVmNWY7XG4gICAgYnV0dG9uLmNsb3NlIHtcbiAgICAgICAgY29sb3I6IHdoaXRlO1xuICAgIH1cbn1cblxuOjpuZy1kZWVwIC5tb2RhbEl0ZW0ge1xuICAgIHBhZGRpbmc6IDEwcHg7XG4gICAgLmZhLWluZm8tY2lyY2xlIHtcbiAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgfVxufVxuXG46Om5nLWRlZXAgLm1vZGFsSXRlbS5idXR0b25Db250YWluZXIge1xuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbn1cblxuOjpuZy1kZWVwIC5zZWN0aW9uTmFtZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICAgIG1hcmdpbjogMDtcbiAgICBtYXgtd2lkdGg6IDUwJTtcbn1cblxuOjpuZy1kZWVwIC5pbnB1dFNwYW4ge1xuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgaW5wdXQge1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCAjYWNhY2FjO1xuICAgICAgICBvdXRsaW5lOiBub25lO1xuICAgIH1cbn1cblxuOjpuZy1kZWVwIC5wcm9wZXJ0eUxhYmVsIHtcbiAgICBwYWRkaW5nLXRvcDogMTNweDtcbiAgICBwYWRkaW5nLWJvdHRvbTogMTNweDtcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG59XG46Om5nLWRlZXAgLnN1cHBvcnRJY29ucyB7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIHJpZ2h0IDogNiU7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICBjb2xvciA6IHJlZDtcbn1cblxuOjpuZy1kZWVwIC5zdXBwb3J0SWNvbnMuY3VzdG9tRGVsZXRlIHtcbiAgICBmb250LXNpemU6IDIwcHg7XG59XG5cbmlucHV0I3Byb3BlcnR5S2V5IHtcbiAgICBoZWlnaHQgOiAzMHB4O1xufVxuOjpuZy1kZWVwIC5uZXdMaW5rIHtcbiAgICBmbG9hdDogcmlnaHQ7XG4gICAgcGFkZGluZyA6IDVweCA3cHg7XG59XG5cbi5uZXdMaW5rMiB7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIHJpZ2h0IDogMDtcbiAgICB0b3AgOiAtMnB4O1xuICAgIHBhZGRpbmcgOiA1cHggN3B4O1xufVxuLmxvd2VyIHtcbiAgICBtYXJnaW4tdG9wIDogMzBweDtcbn1cbi5uZXdMaW5rOmhvdmVyLCAubmV3TGluazI6aG92ZXIge1xuICAgIGJhY2tncm91bmQtY29sb3I6ICM1ZjVmNWY7XG4gICAgY29sb3IgOiB3aGl0ZSAhaW1wb3J0YW50O1xuICAgIHRyYW5zaXRpb24gOiAuNXM7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1yYWRpdXM6IDVweDtcbn1cblxuLm5ld1RlbXBsYXRlIHtcbiAgICBtYXgtd2lkdGg6IDMzJSAhaW1wb3J0YW50O1xuICAgIGRpdiB7XG4gICAgICAgIG1heC13aWR0aDogMTAwJTtcbiAgICB9XG59XG5cbmkuZmFzLmZhLWluZm8tY2lyY2xlIHtcbiAgICBjb2xvciA6IGJsYWNrICFpbXBvcnRhbnQ7XG59XG5cbmlucHV0W2Rpc2FibGVkPVwidHJ1ZVwiXSB7XG4gICAgY3Vyc29yOiBub3QtYWxsb3dlZDtcbn1cblxuYnV0dG9uOmRpc2FibGVkIHtcbiAgICBjdXJzb3I6IG5vdC1hbGxvd2VkO1xuICAgIHBvaW50ZXItZXZlbnRzOiBhbGwgIWltcG9ydGFudDtcbiAgfVxuXG4uZGVsZXRlQnRuLCAubWFpbEJ0biB7XG4gICAgY3Vyc29yOiBwb2ludGVyICFpbXBvcnRhbnQ7XG59XG5cbi5sYXRlciB7XG4gICAgdGV4dC1kZWNvcmF0aW9uOiBub25lO1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbn1cblxuLmxhdGVyOmhvdmVyIHtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjNWY1ZjVmO1xuICAgIGNvbG9yOiB3aGl0ZTtcbn1cblxuLm1haWxCdG4sIC5sZWZ0IHtcbm1hcmdpbi1yaWdodDogYXV0bztcbn1cblxuLm1haWxCdG4ge1xuICAgIHBhZGRpbmcgOiA1cHggOHB4O1xufVxuXG4ubWFpbEJ0bjpob3ZlciB7XG4gICAgdHJhbnNpdGlvbjogMC41cztcbiAgICBiYWNrZ3JvdW5kOiAjZTRlNGU0O1xuICAgIGJvcmRlci1yYWRpdXMgOiAuMjVyZW07XG4gICAgY29sb3I6ICMwMDA7XG4gICAgYm94LXNoYWRvdzogMnB4IDlweCAxN3B4IC0xcHggI2NjY2NjYztcbn1cblxuLm1haWxCdG46YWN0aXZlIHtcbiAgICBib3gtc2hhZG93OiBub25lO1xuICAgIHRyYW5zaXRpb246IC41cztcbn1cblxuOjpuZy1kZWVwIC5uZXdQcm9wZXJ0eUdyb3VwIHtcbiAgICB3aWR0aCA6IDEwMCU7XG4gICAgZGlzcGxheSA6IGJsb2NrO1xuICAgIGJhY2tncm91bmQ6ICNjY2NjY2M7XG59XG5cbjo6bmctZGVlcCAubm9ybWFsVGV4dEJveCB7XG4gICAgbWF4LXdpZHRoIDogMTRlbTtcbn0iXX0= */"
+module.exports = ".container-fluid .btn-group {\n  margin-right: 20px; }\n  .container-fluid .btn-group button {\n    border-radius: 0;\n    background: #e4e4e4;\n    color: #000;\n    box-shadow: 2px 9px 17px -1px #cccccc; }\n  .container-fluid .btn-group button:active {\n    box-shadow: none;\n    transition: 0.5s; }\n  .btn-group:active {\n  outline: none;\n  text-decoration: none; }\n  .createLink,\n.editLink,\n.deleteLink {\n  text-decoration: none;\n  font-size: 12px; }\n  .dropdown-menu .dropdown-item {\n  cursor: pointer; }\n  .dropdown-menu .dropdown-item span {\n    margin-right: 8px; }\n  .dropdown-menu .dropdown-item:active {\n  background-color: white; }\n  .dropdown-menu .create:hover {\n  color: blue; }\n  .dropdown-menu .edit:hover {\n  color: green; }\n  .dropdown-menu .delete:hover {\n  color: red; }\n  .modal-header {\n  background: #5f5f5f;\n  color: white;\n  border-color: #5f5f5f; }\n  .modal-header button.close {\n    color: white; }\n  ::ng-deep .modalItem {\n  padding: 10px; }\n  ::ng-deep .modalItem .fa-info-circle {\n    font-size: 14px;\n    cursor: pointer; }\n  ::ng-deep .modalItem.buttonContainer {\n  position: relative; }\n  ::ng-deep .sectionName {\n  display: inline-block;\n  margin: 0;\n  max-width: 50%; }\n  ::ng-deep .inputSpan {\n  position: absolute;\n  left: 50%; }\n  ::ng-deep .inputSpan input {\n    border: 1px solid #acacac;\n    outline: none; }\n  ::ng-deep .propertyLabel {\n  padding-top: 13px;\n  padding-bottom: 13px;\n  text-align: center; }\n  ::ng-deep .supportIcons {\n  position: absolute;\n  right: 6%;\n  cursor: pointer;\n  cursor: pointer;\n  color: red; }\n  ::ng-deep .supportIcons.customDelete {\n  font-size: 20px; }\n  input#propertyKey {\n  height: 30px; }\n  ::ng-deep .newLink {\n  float: right;\n  padding: 5px 7px; }\n  .newLink2 {\n  position: absolute;\n  right: 0;\n  top: -2px;\n  padding: 5px 7px; }\n  .lower {\n  margin-top: 30px; }\n  .newLink:hover, .newLink2:hover {\n  background-color: #5f5f5f;\n  color: white !important;\n  transition: .5s;\n  cursor: pointer;\n  border-radius: 5px; }\n  .newTemplate {\n  max-width: 33% !important; }\n  .newTemplate div {\n    max-width: 100%; }\n  i.fas.fa-info-circle {\n  color: black !important; }\n  input[disabled=\"true\"] {\n  cursor: not-allowed; }\n  button:disabled {\n  cursor: not-allowed;\n  pointer-events: all !important; }\n  .deleteBtn, .mailBtn, .restoreBtn {\n  cursor: pointer !important; }\n  .later {\n  text-decoration: none;\n  cursor: pointer; }\n  .later:hover {\n  background-color: #5f5f5f;\n  color: white; }\n  .mailBtn, .left {\n  margin-right: auto; }\n  .mailBtn {\n  padding: 5px 8px; }\n  .mailBtn:hover {\n  transition: 0.5s;\n  background: #e4e4e4;\n  border-radius: .25rem;\n  color: #000;\n  box-shadow: 2px 9px 17px -1px #cccccc; }\n  .mailBtn:active {\n  box-shadow: none;\n  transition: .5s; }\n  ::ng-deep .newPropertyGroup {\n  width: 100%;\n  display: block;\n  background: #cccccc; }\n  ::ng-deep .normalTextBox {\n  max-width: 14em; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL2Rhc2hib2FyZC12Mi9jb21wb25lbnRzL2NyZWF0ZS1ub2Rlcy9jcmVhdGUtbm9kZXMuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSSxrQkFBbUIsRUFBQTtFQUR2QjtJQUdRLGdCQUFnQjtJQUNoQixtQkFBbUI7SUFDbkIsV0FBVztJQUdYLHFDQUFvRCxFQUFBO0VBUjVEO0lBV1EsZ0JBQWdCO0lBQ2hCLGdCQUFnQixFQUFBO0VBSXhCO0VBQ0ksYUFBYTtFQUNiLHFCQUFxQixFQUFBO0VBR3pCOzs7RUFHSSxxQkFBcUI7RUFDckIsZUFBZSxFQUFBO0VBR25CO0VBRVEsZUFBZSxFQUFBO0VBRnZCO0lBSVksaUJBQWlCLEVBQUE7RUFKN0I7RUFRUSx1QkFBdUIsRUFBQTtFQVIvQjtFQVdRLFdBQVcsRUFBQTtFQVhuQjtFQWNRLFlBQVksRUFBQTtFQWRwQjtFQWlCUSxVQUFVLEVBQUE7RUFJbEI7RUFDSSxtQkFBbUI7RUFDbkIsWUFBWTtFQUNaLHFCQUFxQixFQUFBO0VBSHpCO0lBS1EsWUFBWSxFQUFBO0VBSXBCO0VBQ0ksYUFBYSxFQUFBO0VBRGpCO0lBR1EsZUFBZTtJQUNmLGVBQWUsRUFBQTtFQUl2QjtFQUNJLGtCQUFrQixFQUFBO0VBR3RCO0VBQ0kscUJBQXFCO0VBQ3JCLFNBQVM7RUFDVCxjQUFjLEVBQUE7RUFHbEI7RUFDSSxrQkFBa0I7RUFDbEIsU0FBUyxFQUFBO0VBRmI7SUFJUSx5QkFBeUI7SUFDekIsYUFBYSxFQUFBO0VBSXJCO0VBQ0ksaUJBQWlCO0VBQ2pCLG9CQUFvQjtFQUNwQixrQkFBa0IsRUFBQTtFQUV0QjtFQUNJLGtCQUFrQjtFQUNsQixTQUFVO0VBQ1YsZUFBZTtFQUNmLGVBQWU7RUFDZixVQUFXLEVBQUE7RUFHZjtFQUNJLGVBQWUsRUFBQTtFQUduQjtFQUNJLFlBQWEsRUFBQTtFQUVqQjtFQUNJLFlBQVk7RUFDWixnQkFBaUIsRUFBQTtFQUdyQjtFQUNJLGtCQUFrQjtFQUNsQixRQUFTO0VBQ1QsU0FBVTtFQUNWLGdCQUFpQixFQUFBO0VBRXJCO0VBQ0ksZ0JBQWlCLEVBQUE7RUFFckI7RUFDSSx5QkFBeUI7RUFDekIsdUJBQXdCO0VBQ3hCLGVBQWdCO0VBQ2hCLGVBQWU7RUFDZixrQkFBa0IsRUFBQTtFQUd0QjtFQUNJLHlCQUF5QixFQUFBO0VBRDdCO0lBR1EsZUFBZSxFQUFBO0VBSXZCO0VBQ0ksdUJBQXdCLEVBQUE7RUFHNUI7RUFDSSxtQkFBbUIsRUFBQTtFQUd2QjtFQUNJLG1CQUFtQjtFQUNuQiw4QkFBOEIsRUFBQTtFQUdsQztFQUNJLDBCQUEwQixFQUFBO0VBRzlCO0VBQ0kscUJBQXFCO0VBQ3JCLGVBQWUsRUFBQTtFQUduQjtFQUNJLHlCQUF5QjtFQUN6QixZQUFZLEVBQUE7RUFHaEI7RUFDQSxrQkFBa0IsRUFBQTtFQUdsQjtFQUNJLGdCQUFpQixFQUFBO0VBR3JCO0VBQ0ksZ0JBQWdCO0VBQ2hCLG1CQUFtQjtFQUNuQixxQkFBc0I7RUFDdEIsV0FBVztFQUNYLHFDQUFxQyxFQUFBO0VBR3pDO0VBQ0ksZ0JBQWdCO0VBQ2hCLGVBQWUsRUFBQTtFQUduQjtFQUNJLFdBQVk7RUFDWixjQUFlO0VBQ2YsbUJBQW1CLEVBQUE7RUFHdkI7RUFDSSxlQUFnQixFQUFBIiwiZmlsZSI6InNyYy9hcHAvbW9kdWxlcy9kYXNoYm9hcmQtdjIvY29tcG9uZW50cy9jcmVhdGUtbm9kZXMvY3JlYXRlLW5vZGVzLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmNvbnRhaW5lci1mbHVpZCAuYnRuLWdyb3VwIHtcbiAgICBtYXJnaW4tcmlnaHQgOiAyMHB4O1xuICAgIGJ1dHRvbiB7XG4gICAgICAgIGJvcmRlci1yYWRpdXM6IDA7XG4gICAgICAgIGJhY2tncm91bmQ6ICNlNGU0ZTQ7XG4gICAgICAgIGNvbG9yOiAjMDAwO1xuICAgICAgICAtd2Via2l0LWJveC1zaGFkb3c6IDJweCA5cHggMTdweCAtMXB4IHJnYmEoMjA0LCAyMDQsIDIwNCwgMSk7XG4gICAgICAgIC1tb3otYm94LXNoYWRvdzogMnB4IDlweCAxN3B4IC0xcHggcmdiYSgyMDQsIDIwNCwgMjA0LCAxKTtcbiAgICAgICAgYm94LXNoYWRvdzogMnB4IDlweCAxN3B4IC0xcHggcmdiYSgyMDQsIDIwNCwgMjA0LCAxKTtcbiAgICB9XG4gICAgYnV0dG9uOmFjdGl2ZSB7XG4gICAgICAgIGJveC1zaGFkb3c6IG5vbmU7XG4gICAgICAgIHRyYW5zaXRpb246IDAuNXM7XG4gICAgfVxufVxuXG4uYnRuLWdyb3VwOmFjdGl2ZSB7XG4gICAgb3V0bGluZTogbm9uZTtcbiAgICB0ZXh0LWRlY29yYXRpb246IG5vbmU7XG59XG5cbi5jcmVhdGVMaW5rLFxuLmVkaXRMaW5rLFxuLmRlbGV0ZUxpbmsge1xuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcbiAgICBmb250LXNpemU6IDEycHg7XG59XG5cbi5kcm9wZG93bi1tZW51IHtcbiAgICAuZHJvcGRvd24taXRlbSB7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgc3BhbiB7XG4gICAgICAgICAgICBtYXJnaW4tcmlnaHQ6IDhweDtcbiAgICAgICAgfVxuICAgIH1cbiAgICAuZHJvcGRvd24taXRlbTphY3RpdmUge1xuICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgICB9XG4gICAgLmNyZWF0ZTpob3ZlciB7XG4gICAgICAgIGNvbG9yOiBibHVlO1xuICAgIH1cbiAgICAuZWRpdDpob3ZlciB7XG4gICAgICAgIGNvbG9yOiBncmVlbjtcbiAgICB9XG4gICAgLmRlbGV0ZTpob3ZlciB7XG4gICAgICAgIGNvbG9yOiByZWQ7XG4gICAgfVxufVxuXG4ubW9kYWwtaGVhZGVyIHtcbiAgICBiYWNrZ3JvdW5kOiAjNWY1ZjVmO1xuICAgIGNvbG9yOiB3aGl0ZTtcbiAgICBib3JkZXItY29sb3I6ICM1ZjVmNWY7XG4gICAgYnV0dG9uLmNsb3NlIHtcbiAgICAgICAgY29sb3I6IHdoaXRlO1xuICAgIH1cbn1cblxuOjpuZy1kZWVwIC5tb2RhbEl0ZW0ge1xuICAgIHBhZGRpbmc6IDEwcHg7XG4gICAgLmZhLWluZm8tY2lyY2xlIHtcbiAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgfVxufVxuXG46Om5nLWRlZXAgLm1vZGFsSXRlbS5idXR0b25Db250YWluZXIge1xuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbn1cblxuOjpuZy1kZWVwIC5zZWN0aW9uTmFtZSB7XG4gICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICAgIG1hcmdpbjogMDtcbiAgICBtYXgtd2lkdGg6IDUwJTtcbn1cblxuOjpuZy1kZWVwIC5pbnB1dFNwYW4ge1xuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgaW5wdXQge1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCAjYWNhY2FjO1xuICAgICAgICBvdXRsaW5lOiBub25lO1xuICAgIH1cbn1cblxuOjpuZy1kZWVwIC5wcm9wZXJ0eUxhYmVsIHtcbiAgICBwYWRkaW5nLXRvcDogMTNweDtcbiAgICBwYWRkaW5nLWJvdHRvbTogMTNweDtcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG59XG46Om5nLWRlZXAgLnN1cHBvcnRJY29ucyB7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIHJpZ2h0IDogNiU7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICBjb2xvciA6IHJlZDtcbn1cblxuOjpuZy1kZWVwIC5zdXBwb3J0SWNvbnMuY3VzdG9tRGVsZXRlIHtcbiAgICBmb250LXNpemU6IDIwcHg7XG59XG5cbmlucHV0I3Byb3BlcnR5S2V5IHtcbiAgICBoZWlnaHQgOiAzMHB4O1xufVxuOjpuZy1kZWVwIC5uZXdMaW5rIHtcbiAgICBmbG9hdDogcmlnaHQ7XG4gICAgcGFkZGluZyA6IDVweCA3cHg7XG59XG5cbi5uZXdMaW5rMiB7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIHJpZ2h0IDogMDtcbiAgICB0b3AgOiAtMnB4O1xuICAgIHBhZGRpbmcgOiA1cHggN3B4O1xufVxuLmxvd2VyIHtcbiAgICBtYXJnaW4tdG9wIDogMzBweDtcbn1cbi5uZXdMaW5rOmhvdmVyLCAubmV3TGluazI6aG92ZXIge1xuICAgIGJhY2tncm91bmQtY29sb3I6ICM1ZjVmNWY7XG4gICAgY29sb3IgOiB3aGl0ZSAhaW1wb3J0YW50O1xuICAgIHRyYW5zaXRpb24gOiAuNXM7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1yYWRpdXM6IDVweDtcbn1cblxuLm5ld1RlbXBsYXRlIHtcbiAgICBtYXgtd2lkdGg6IDMzJSAhaW1wb3J0YW50O1xuICAgIGRpdiB7XG4gICAgICAgIG1heC13aWR0aDogMTAwJTtcbiAgICB9XG59XG5cbmkuZmFzLmZhLWluZm8tY2lyY2xlIHtcbiAgICBjb2xvciA6IGJsYWNrICFpbXBvcnRhbnQ7XG59XG5cbmlucHV0W2Rpc2FibGVkPVwidHJ1ZVwiXSB7XG4gICAgY3Vyc29yOiBub3QtYWxsb3dlZDtcbn1cblxuYnV0dG9uOmRpc2FibGVkIHtcbiAgICBjdXJzb3I6IG5vdC1hbGxvd2VkO1xuICAgIHBvaW50ZXItZXZlbnRzOiBhbGwgIWltcG9ydGFudDtcbiAgfVxuXG4uZGVsZXRlQnRuLCAubWFpbEJ0biwgLnJlc3RvcmVCdG4ge1xuICAgIGN1cnNvcjogcG9pbnRlciAhaW1wb3J0YW50O1xufVxuXG4ubGF0ZXIge1xuICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG59XG5cbi5sYXRlcjpob3ZlciB7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzVmNWY1ZjtcbiAgICBjb2xvcjogd2hpdGU7XG59XG5cbi5tYWlsQnRuLCAubGVmdCB7XG5tYXJnaW4tcmlnaHQ6IGF1dG87XG59XG5cbi5tYWlsQnRuIHtcbiAgICBwYWRkaW5nIDogNXB4IDhweDtcbn1cblxuLm1haWxCdG46aG92ZXIge1xuICAgIHRyYW5zaXRpb246IDAuNXM7XG4gICAgYmFja2dyb3VuZDogI2U0ZTRlNDtcbiAgICBib3JkZXItcmFkaXVzIDogLjI1cmVtO1xuICAgIGNvbG9yOiAjMDAwO1xuICAgIGJveC1zaGFkb3c6IDJweCA5cHggMTdweCAtMXB4ICNjY2NjY2M7XG59XG5cbi5tYWlsQnRuOmFjdGl2ZSB7XG4gICAgYm94LXNoYWRvdzogbm9uZTtcbiAgICB0cmFuc2l0aW9uOiAuNXM7XG59XG5cbjo6bmctZGVlcCAubmV3UHJvcGVydHlHcm91cCB7XG4gICAgd2lkdGggOiAxMDAlO1xuICAgIGRpc3BsYXkgOiBibG9jaztcbiAgICBiYWNrZ3JvdW5kOiAjY2NjY2NjO1xufVxuXG46Om5nLWRlZXAgLm5vcm1hbFRleHRCb3gge1xuICAgIG1heC13aWR0aCA6IDE0ZW07XG59Il19 */"
 
 /***/ }),
 
@@ -10875,6 +10875,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var CreateNodesComponent = /** @class */ (function () {
     function CreateNodesComponent(SharedSrvc, graphSrvc, sharedGraphSrvc, fb) {
+        var _this = this;
         this.SharedSrvc = SharedSrvc;
         this.graphSrvc = graphSrvc;
         this.sharedGraphSrvc = sharedGraphSrvc;
@@ -10883,8 +10884,10 @@ var CreateNodesComponent = /** @class */ (function () {
         this.nodeBtnEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.edgeBtnEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.cleanData = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
+        this.restoreEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.nodeTypes = [];
         this.newNodeCreated = null;
+        this.restoredDataResponse = null;
         // constants
         this.TYPE_TEXT = 'Type';
         this.ADD_NEW_LABEL = 'Add New Label';
@@ -10914,6 +10917,7 @@ var CreateNodesComponent = /** @class */ (function () {
         this.createRelationPopup = false;
         this.editRelationPopup = false;
         this.deleteRelationPopup = false;
+        this.restoreOptions = false;
         this.disabledBox = false;
         this.enableNewTemplate = false;
         this.clickedNodeID = null;
@@ -10937,6 +10941,29 @@ var CreateNodesComponent = /** @class */ (function () {
         this.availablePropertyList = {};
         this.selectedPropertiesObject = {};
         this.showDeletedData = false;
+        this.totalName = [];
+        // private variables to be used by the class
+        this.allowedRestoreEvents = ['node', 'relation'];
+        // to set dropdown of from and to 
+        this.optionLookUp = function (query, initial) {
+            // to change lookup option according to search 
+            if (!!query && query.length > 0) {
+                var regex_1;
+                try {
+                    regex_1 = new RegExp(query, "i");
+                }
+                catch (e) {
+                    regex_1 = query;
+                }
+                return new Promise(function (resolve) {
+                    return setTimeout(function () { return resolve(_this.totalName.filter(function (item) { return item.key.match(regex_1); })); }, 500);
+                });
+            }
+            else {
+                // to set initial dropdown
+                return Promise.resolve(_this.totalName);
+            }
+        };
     }
     CreateNodesComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -10969,6 +10996,13 @@ var CreateNodesComponent = /** @class */ (function () {
             // set to false by default
             console.error('An error occured while subscribing to the toggle for deleted data', err);
             _this.showDeletedData = false;
+        });
+        this.sharedGraphSrvc.nameArray.subscribe(function (response) {
+            _this.totalName = response;
+            // to change format for lookup option
+            _this.totalName = _this.totalName.map(function (name) {
+                return { key: name };
+            });
         });
     };
     CreateNodesComponent.prototype.createNode = function () {
@@ -11107,7 +11141,6 @@ var CreateNodesComponent = /** @class */ (function () {
             _this.deleteRelationPopup = false;
             _this.setAllToFalse('node');
             _this.cleanData.emit('afterCreateNode');
-            _this.newNodeCreated = null;
         });
         $('#createNodeModal').on('hidden.bs.modal', function (e) {
             // this event will reset the popupConfig object so that everytime correct data is accessed
@@ -11131,13 +11164,15 @@ var CreateNodesComponent = /** @class */ (function () {
             _this.deleteNodePopup = false;
             _this.deleteRelationPopup = false;
             _this.cleanData.emit('relation');
+            _this.fromNames = [];
+            _this.toNames = [];
         });
         if ((!!this.editData && !!this.editData.length) || (!!this.editData && !!Object.keys(this.editData).length)) {
             this.disabledBox = true;
             // store the data in internal variable and clear this
             var editNodeData_1 = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](this.editData);
             this.editData = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](null);
-            console.log('edit data recieved is ', editNodeData_1);
+            // console.log('edit data recieved is ', editNodeData);
             this.editNodeConfig = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"]({
                 properties: editNodeData_1['properties'],
                 type: editNodeData_1['type'][0],
@@ -11146,6 +11181,23 @@ var CreateNodesComponent = /** @class */ (function () {
             this.clickedNodeID = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](this.editNodeConfig['id']);
             // console.log('editNodeConfig is ', this.editNodeConfig);
             this.selectedType = null;
+            // check if the node is already deleted or not, if yes, simply don't let the user to update it
+            // tslint:disable-next-line: max-line-length
+            if (this.editNodeConfig['properties'].hasOwnProperty('deleted') &&
+                (this.editNodeConfig['properties']['deleted'] === 'true' || this.editNodeConfig['properties']['deleted'] === true)) {
+                // make changes so that user cannot update the node but rather restore it
+                console.log('recieved node is deleted type');
+                // let responseBool = true;
+                window.setTimeout(function () {
+                    _this.restoreOptions = true;
+                }, 0);
+            }
+            else {
+                window.setTimeout(function () {
+                    _this.restoreOptions = false;
+                }, 0);
+                console.log('restore options is false for this node');
+            }
             this.getNodeTypes().subscribe(function (data) {
                 _this.typeOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](data);
                 _this.selectedType = _this.editNodeConfig['type'];
@@ -11180,6 +11232,18 @@ var CreateNodesComponent = /** @class */ (function () {
                 to: this.editRelData['to']
             };
             this.clickedRelationID = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](editRelConfig_1['id']);
+            // tslint:disable-next-line: max-line-length
+            if (editRelConfig_1['properties'].hasOwnProperty('deleted') &&
+                (editRelConfig_1['properties']['deleted'] === 'true' || editRelConfig_1['properties']['deleted'] === true)) {
+                // make changes so that user cannot update the node but rather restore it
+                console.log('recieved relation is deleted type');
+                var responseBool = true;
+                this.restoreOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](responseBool);
+            }
+            else {
+                var responseBool = false;
+                this.restoreOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](responseBool);
+            }
             this.getRelationTypes().subscribe(function (response) {
                 console.log('fetched relationship types successfully');
                 // once types are loaded, set a default type which is the type of selected relation
@@ -11221,6 +11285,30 @@ var CreateNodesComponent = /** @class */ (function () {
                 }
             }
         }
+        // detect if nodes / relationships have been restored successfully
+        console.log('restored recieved options are ', this.restoredDataResponse);
+        if (!!this.restoredDataResponse && Object.keys(this.restoredDataResponse).length) {
+            console.log('Recieved restored information as ', this.restoredDataResponse);
+            if (this.restoredDataResponse.hasOwnProperty('nodes') &&
+                Array.isArray(this.restoredDataResponse['nodes']) &&
+                this.restoredDataResponse['nodes'].length > 0) {
+                // hide the node modal
+                this.hideModal('createNodeModal');
+            }
+            if (this.restoredDataResponse.hasOwnProperty('relations') &&
+                Array.isArray(this.restoredDataResponse['relations']) &&
+                this.restoredDataResponse['relations'].length > 0) {
+                // hide the node modal
+                this.hideModal('createRelationModal');
+            }
+            window.setTimeout(function () {
+                _this.restoreOptions = false;
+            }, 0);
+            // clean all the events
+            this.cleanData.emit('restore');
+            this.cleanData.emit('node');
+            this.cleanData.emit('relation');
+        }
     };
     CreateNodesComponent.prototype.prefillConnectedNodes = function (RelationData) {
         if (RelationData.hasOwnProperty('from') && RelationData.hasOwnProperty('to')) {
@@ -11228,12 +11316,13 @@ var CreateNodesComponent = /** @class */ (function () {
             this.fetchNodeNameFromID(nodeIDs);
         }
     };
-    CreateNodesComponent.prototype.fetchNodeNameFromID = function (nodeIDArray) {
+    CreateNodesComponent.prototype.fetchNodeNameFromID = function (nodeIDArray, isRestore) {
+        if (isRestore === void 0) { isRestore = false; }
         // this function will send the node id to the graph visualilzer which has all the information of the nodes
         // the graph visualizer will fetch the node details using the provided node id and send the details back here
         if (!!nodeIDArray.length) {
             console.log('asking for details of ', nodeIDArray);
-            this.sharedGraphSrvc.getNodeDetails(nodeIDArray);
+            this.sharedGraphSrvc.getNodeDetails(nodeIDArray, isRestore);
         }
         else {
             console.warn('nodeID was not valid while sending event to read node details');
@@ -11275,7 +11364,12 @@ var CreateNodesComponent = /** @class */ (function () {
                       }
                     }); */
                     // add id of the node to the modal
-                    _this.addAttribute('edit_btn', type + "_id", IDToSupply);
+                    if (!_this.restoreOptions) {
+                        _this.addAttribute('edit_btn', type + "_id", IDToSupply);
+                    }
+                    else {
+                        _this.addAttribute('restoreBtn', type + "_id", IDToSupply);
+                    }
                 });
             }
             else {
@@ -11422,6 +11516,9 @@ var CreateNodesComponent = /** @class */ (function () {
         catch (e) {
             console.log(e);
         }
+        // clear from to data
+        this.fromNames = [];
+        this.fromNames = [];
     };
     CreateNodesComponent.prototype.insertIntoPropertyList = function (propertiesToUpdate) {
         var _this = this;
@@ -11543,7 +11640,6 @@ var CreateNodesComponent = /** @class */ (function () {
         }
     };
     CreateNodesComponent.prototype.updateRelProperties = function (event, relProperties) {
-        var _this = this;
         if (relProperties === void 0) { relProperties = null; }
         // fetch the properties of selected type and display it in the dropdown
         if (!relProperties || !relProperties.hasOwnProperty('properties')) {
@@ -11554,24 +11650,6 @@ var CreateNodesComponent = /** @class */ (function () {
             relProperties = relProperties['properties'];
         }
         this.typeProperties = this.getRelProperties([event], relProperties);
-        // trigger an api to get all the names of the nodes in the graph
-        this.graphSrvc.getNodeLabelData().subscribe(function (response) {
-            var temname = [];
-            if (response && response.length > 0) {
-                response.forEach(function (data) {
-                    var keyName = Object.keys(data)[0];
-                    if (keyName === "Name") {
-                        temname = data['Name'];
-                    }
-                });
-                _this.fromNames = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](temname);
-                _this.toNames = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](temname);
-            }
-        }, function (error) {
-            console.log(error);
-            _this.fromNames = [];
-            _this.toNames = [];
-        });
     };
     CreateNodesComponent.prototype.getProperties = function (labelName, editProperties) {
         var _this = this;
@@ -12124,6 +12202,27 @@ var CreateNodesComponent = /** @class */ (function () {
             }
         }
     };
+    CreateNodesComponent.prototype.restoreData = function (restoreType) {
+        // fetch the id of element requested to restore
+        var clickedElementID = this.getAttribute('restoreBtn', restoreType + "_id");
+        clickedElementID = isNaN(clickedElementID) ? null : parseInt(clickedElementID, 10);
+        // now send the data to restore the element
+        if ((clickedElementID !== null && clickedElementID !== undefined) && this.allowedRestoreEvents.indexOf(restoreType) > -1) {
+            // emit data for node restore
+            this.restoreEvent.emit({ type: restoreType, data: { id: clickedElementID } });
+        }
+        else {
+            // tslint:disable-next-line: max-line-length
+            console.error('An error occured while restoring the data, either clickedElementID is not valid or the event type is not of node/relation');
+        }
+    };
+    CreateNodesComponent.prototype.getAttribute = function (elementID, attributeKey) {
+        return $("#" + elementID).attr("" + attributeKey);
+    };
+    CreateNodesComponent.prototype.ngDoCheck = function () {
+        // resetting the value so that it stays updated anytime needed, temporary bug fix for restoredOptions variable not setting properly
+        this.restoreOptions = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](this.restoreOptions);
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
@@ -12136,6 +12235,10 @@ var CreateNodesComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
     ], CreateNodesComponent.prototype, "cleanData", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], CreateNodesComponent.prototype, "restoreEvent", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
@@ -12156,6 +12259,10 @@ var CreateNodesComponent = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
     ], CreateNodesComponent.prototype, "newNodeCreated", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], CreateNodesComponent.prototype, "restoredDataResponse", void 0);
     CreateNodesComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
             selector: 'app-create-nodes',
@@ -12415,6 +12522,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
             _this.nameOptions = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"]([]);
             var temp = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](temname);
             _this.nameOptions = temp;
+            _this.sharedGraphData.setFromToData(_this.nameOptions);
             // send the types array for further use to the modals
             // this.nodeTypesEvent.emit(temtype);
             _this.representOptions = temrepresent;
@@ -12799,7 +12907,7 @@ var GraphExporterComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\n<app-color-panel *ngIf=\"!loader\"></app-color-panel>\n<div class=\"wrapper-countlimit\" *ngIf=\"!loader\">\n    <div class=\"selected-count\">{{selectedCount}} Elements Found</div>\n    <div class=\"nodeLimit\">\n        <p class=\"nodelimit-head\">Element Limit :</p>\n        <input type=\"text\" [(ngModel)]=nodeLimit (ngModelChange)=\"limitChange(nodeLimit, popup)\" suiPopup popupText=\"{{errorMessage}}\" popupTrigger=\"manual\" #popup=\"suiPopup\" (keyup)=\"sendLimit($event, nodeLimit)\">\n    </div>\n    <div class=\"creationToolbar\">\n        <app-create-nodes [nodeTypes]=\"totalTypesArray\" \n        [editData]=\"editNodeData\" [editRelData]=\"editRelationData\" \n        [hideDelModal]=\"hideDelModal\" (nodeBtnEvent)=\"nodeEventCapture($event)\" \n        (edgeBtnEvent)=\"edgeEventCapture($event)\" [newNodeCreated]=\"promptRelationCreateAfterNode\"\n        (cleanData)=\"cleanPropertyBindingData($event)\"></app-create-nodes>\n    </div>\n    <!-- graph exporter -->\n    <div class=\"export\">\n        <app-graph-exporter></app-graph-exporter>\n    </div>\n</div>\n<div class=\"graph-container\" id=\"graphViewer\">\n</div>\n<ng-template *ngIf=\"showlimiterror\" let-popup #popupTemplate>\n    <div class=\"header\">Rating</div>\n    <div class=\"content\">\n        <sui-rating class=\"star\" (click)=\"popup.close()\"></sui-rating>\n    </div>\n</ng-template>"
+module.exports = "<app-global-loader *ngIf=\"loader\"></app-global-loader>\n<app-color-panel *ngIf=\"!loader\"></app-color-panel>\n<div class=\"wrapper-countlimit\" *ngIf=\"!loader\">\n    <div class=\"selected-count\">{{selectedCount}} Elements Found</div>\n    <div class=\"nodeLimit\">\n        <p class=\"nodelimit-head\">Element Limit :</p>\n        <input type=\"text\" [(ngModel)]=nodeLimit (ngModelChange)=\"limitChange(nodeLimit, popup)\" suiPopup popupText=\"{{errorMessage}}\" popupTrigger=\"manual\" #popup=\"suiPopup\" (keyup)=\"sendLimit($event, nodeLimit)\">\n    </div>\n    <div class=\"creationToolbar\">\n        <app-create-nodes [nodeTypes]=\"totalTypesArray\" \n        [editData]=\"editNodeData\" [editRelData]=\"editRelationData\" \n        [hideDelModal]=\"hideDelModal\" (nodeBtnEvent)=\"nodeEventCapture($event)\" \n        (edgeBtnEvent)=\"edgeEventCapture($event)\" [newNodeCreated]=\"promptRelationCreateAfterNode\"\n        (cleanData)=\"cleanPropertyBindingData($event)\" (restoreEvent)=\"initRestoreData($event)\"\n        [restoredDataResponse]=\"restoredData\"></app-create-nodes>\n    </div>\n    <!-- graph exporter -->\n    <div class=\"export\">\n        <app-graph-exporter></app-graph-exporter>\n    </div>\n</div>\n<div class=\"graph-container\" id=\"graphViewer\">\n</div>\n<ng-template *ngIf=\"showlimiterror\" let-popup #popupTemplate>\n    <div class=\"header\">Rating</div>\n    <div class=\"content\">\n        <sui-rating class=\"star\" (click)=\"popup.close()\"></sui-rating>\n    </div>\n</ng-template>"
 
 /***/ }),
 
@@ -12886,10 +12994,15 @@ var GraphVisualizerComponent = /** @class */ (function () {
             deletedColor: {
                 colorCode: '#C0C0C0',
                 highlightColorCode: '#9a9a9a'
+            },
+            restoreColor: {
+                colorCode: '#96C1FA',
+                highlightColorCode: '#249BFC'
             }
         };
         this.editNodeData = null;
         this.editRelationData = null;
+        this.restoredData = null;
         this.networkInstance = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.hideDelModal = false;
         // graph options to change the visualization configuration of visjs
@@ -12967,7 +13080,7 @@ var GraphVisualizerComponent = /** @class */ (function () {
                 _this.allGraphData['nodes'] = result['seperateNodes'];
                 _this.allGraphData['edges'] = result['seperateEdges'];
                 // to update filtered data
-                _this.removeDeletedData();
+                _this.setFilteredData();
                 // check for show deleted toggel
                 if (_this.showDeletedData) {
                     // show all data
@@ -13075,8 +13188,9 @@ var GraphVisualizerComponent = /** @class */ (function () {
                 // store all data without any filter
                 // this.allGraphData['nodes'] = new DataSet(result['seperateNodes']); 
                 _this.allGraphData['nodes'] = result['seperateNodes'];
+                _this.allGraphData['edges'] = result['seperateEdges'];
                 // to update filtered data
-                _this.removeDeletedData();
+                _this.setFilteredData();
                 //check for show deleted 
                 if (_this.showDeletedData) {
                     // show all data
@@ -13089,7 +13203,12 @@ var GraphVisualizerComponent = /** @class */ (function () {
                 _this.selectedCount = _this.graphData['nodes'].length;
             }
             if (result.hasOwnProperty('seperateEdges')) {
-                _this.graphData['edges'] = new vis__WEBPACK_IMPORTED_MODULE_3__["DataSet"](result['seperateEdges']);
+                if (_this.showDeletedData) {
+                    _this.graphData['edges'] = new vis__WEBPACK_IMPORTED_MODULE_3__["DataSet"](_this.allGraphData['edges']);
+                }
+                else {
+                    _this.graphData['edges'] = new vis__WEBPACK_IMPORTED_MODULE_3__["DataSet"](_this.filteredGraphData['edges']);
+                }
             }
             // console.log('graphData :', this.graphData);
             // display data
@@ -13195,12 +13314,18 @@ var GraphVisualizerComponent = /** @class */ (function () {
                             // add additional data for vis layout
                             // newNodeForVis = this.addData(newNodeForVis, clickEvent, event);
                             try {
-                                var visNode = _this.addData(response['seperateNodes'][0], clickEvent, event);
+                                var visNode = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](_this.addData(response['seperateNodes'][0], clickEvent, event));
+                                // to remove deleted key from tooltip
+                                visNode['title'] = _this.stringifyProperties(visNode);
                                 // add the new node to the vis
                                 _this.graphData['nodes'].add([visNode]);
                                 // to update all data array while a new node is created
-                                _this.allGraphData['nodes'].push(response['seperateNodes'][0]);
-                                _this.removeDeletedData();
+                                var eleObj = {
+                                    element: 'nodes',
+                                    event: "create",
+                                    data: response['seperateNodes'][0]
+                                };
+                                _this.updateGraphArray(eleObj);
                                 // emit the createNodes component that a node has been put into the graph, prompt user to create a relation
                                 // send the data of new node for relationPrompt
                                 _this.promptRelationCreateAfterNode = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"]({ created: true, node: visNode });
@@ -13253,7 +13378,21 @@ var GraphVisualizerComponent = /** @class */ (function () {
                             visNode['type'] = updatedNode['type'];
                             console.log('update node details are ', visNode);
                             // node was present, simply update it now
-                            _this.graphData['nodes'].update(visNode);
+                            if (_this.showDeletedData) {
+                                _this.graphData['nodes'].update(visNode);
+                            }
+                            else {
+                                var tem = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](visNode);
+                                tem['title'] = _this.stringifyProperties(tem);
+                                _this.graphData['nodes'].update(tem);
+                            }
+                            // update all+filtered graph array
+                            var eleObj = {
+                                element: 'nodes',
+                                event: "edit",
+                                data: visNode
+                            };
+                            _this.updateGraphArray(eleObj);
                             //update sidebar dropdown
                             _this.newNodeCreated.emit('NodeEvent_update' + response['seperateNodes'][0].id);
                         }
@@ -13281,28 +13420,32 @@ var GraphVisualizerComponent = /** @class */ (function () {
                     // remove the node in vis graph and connected edges, if any
                     var removedNode = response['seperateNodes'];
                     if (response['seperateEdges'].length > 0) {
-                        var removedEdges_1 = response['seperateEdges'];
+                        var removedEdges = response['seperateEdges'];
                         // update the edges
-                        _this.allGraphData['edges'].filter(function (edge) {
-                            removedEdges_1 = removedEdges_1.filter(function (removed) {
-                                removed['color']['color'] = _this.colorConfig.deletedColor.colorCode;
-                                removed['color']['highlight'] = _this.colorConfig.deletedColor.highlightColorCode;
-                                if (edge['id'] === removed['id']) {
-                                    edge['properties']['deleted'] = true;
-                                    edge['color']['color'] = removed['color']['color'];
-                                    edge['color']['highlight'] = removed['color']['highlight'];
-                                }
-                                return removed;
-                            });
+                        removedEdges.map(function (removed) {
+                            // update all+filtered graph array
+                            var eleObj = {
+                                element: 'edges',
+                                event: "delete",
+                                data: removed
+                            };
+                            _this.updateGraphArray(eleObj);
                         });
                         if (_this.showDeletedData) {
-                            _this.graphData['edges'].update(removedEdges_1);
+                            _this.graphData['edges'].update(removedEdges);
                         }
                         else {
-                            _this.graphData['edges'].remove(removedEdges_1);
+                            _this.graphData['edges'].remove(removedEdges);
                         }
                     }
-                    // update the node
+                    // update all+filtered array
+                    var eleObj = {
+                        element: 'nodes',
+                        event: "delete",
+                        data: response['seperateNodes'][0]
+                    };
+                    _this.updateGraphArray(eleObj);
+                    // update the node in vis
                     removedNode[0]['color'] = _this.colorConfig.deletedColor.colorCode;
                     if (_this.showDeletedData) {
                         _this.graphData['nodes'].update(removedNode);
@@ -13310,15 +13453,6 @@ var GraphVisualizerComponent = /** @class */ (function () {
                     else {
                         _this.graphData['nodes'].remove(removedNode);
                     }
-                    // to update deleted data from allGraphData
-                    _this.allGraphData['nodes'].filter(function (node) {
-                        if (node['label'] === response['seperateNodes'][0]['label']) {
-                            node['properties']['deleted'] = true;
-                            node['color'] = _this.colorConfig.deletedColor.colorCode;
-                        }
-                    });
-                    // to update filtered data
-                    _this.removeDeletedData();
                     _this.hideDelModal = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](true);
                     //update sidebar dropdown
                     _this.newNodeCreated.emit('NodeEvent_delete' + response['seperateNodes'][0].id);
@@ -13347,16 +13481,28 @@ var GraphVisualizerComponent = /** @class */ (function () {
                 this.graphService.createNewRelation(newRelationData).subscribe(function (response) {
                     console.log(response);
                     try {
-                        var visRelation = response['seperateEdges'][0];
+                        var visRelation = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](response['seperateEdges'][0]);
+                        // to remove deleted key from tooltip
+                        visRelation['title'] = _this.stringifyProperties(visRelation);
                         // add the new node to the vis
                         // first get the edge, if it is already present, simply update it else add it
                         var isAlreadyPresent = _this.graphData['edges'].get(visRelation['id']);
+                        var eleObj = {
+                            element: 'edges',
+                            event: "edit",
+                            data: response['seperateEdges'][0]
+                        };
                         if (isAlreadyPresent !== null) {
                             //update it 
                             _this.graphData['edges'].update([visRelation]);
+                            // update edge in allgraphdata and filtered data array
+                            _this.updateGraphArray(eleObj);
                         }
                         else {
                             _this.graphData['edges'].add([visRelation]);
+                            // add new edge to allgraphdata and filtered data array
+                            eleObj.event = "create";
+                            _this.updateGraphArray(eleObj);
                         }
                     }
                     catch (addErr) {
@@ -13396,24 +13542,21 @@ var GraphVisualizerComponent = /** @class */ (function () {
                         console.log('recieved some response', response['seperateEdges']);
                         // once database relation is deleted, remove it from visGraph also
                         var deletedRel = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](response['seperateEdges']);
-                        // update the edges
-                        deletedRel['color']['color'] = _this.colorConfig.deletedColor.colorCode;
-                        deletedRel['color']['highlight'] = _this.colorConfig.deletedColor.highlightColorCode;
-                        _this.allGraphData['edges'].filter(function (edge) {
-                            if (edge['id'] === deletedRel['id']) {
-                                edge['properties']['deleted'] = true;
-                                edge['color']['color'] = deletedRel['color']['color'];
-                                edge['color']['highlight'] = deletedRel['color']['highlight'];
-                            }
-                        });
+                        // update all+filtered graph array
+                        var eleObj = {
+                            element: 'edges',
+                            event: "delete",
+                            data: response['seperateEdges']
+                        };
+                        _this.updateGraphArray(eleObj);
                         if (_this.showDeletedData) {
+                            deletedRel['color']['color'] = _this.colorConfig.deletedColor.colorCode;
+                            deletedRel['color']['highlight'] = _this.colorConfig.deletedColor.highlightColorCode;
                             _this.graphData['edges'].update([deletedRel]);
                         }
                         else {
                             _this.graphData['edges'].remove([deletedRel]);
                         }
-                        // to update filtered data
-                        _this.removeDeletedData();
                         _this.hideDelModal = true;
                     }, function (err) {
                         console.error('An error occured while reading response for relation delete ', err);
@@ -13429,27 +13572,108 @@ var GraphVisualizerComponent = /** @class */ (function () {
             }
         }
     };
+    GraphVisualizerComponent.prototype.updateNodesInVis = function (nodesArray) {
+        var _this = this;
+        // update the nodes in the data set
+        if (Array.isArray(nodesArray)) {
+            nodesArray.forEach(function (node) {
+                var oldNodeID = node['id'];
+                var oldNode = _this.graphData['nodes'].get(oldNodeID);
+                // update the old node with new node
+                if (!!oldNode) {
+                    oldNode['properties'] = node['properties'];
+                    oldNode = _this.addNodeColor(node);
+                    // update all graph data array
+                    var index = lodash__WEBPACK_IMPORTED_MODULE_4__["findIndex"](_this.allGraphData['nodes'], { id: oldNodeID });
+                    if (index >= 0) {
+                        _this.allGraphData['nodes'][index] = oldNode;
+                    }
+                    // update filtered grpah data array
+                    var tem = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](oldNode);
+                    tem['title'] = _this.stringifyProperties(tem);
+                    _this.filteredGraphData['nodes'].push(tem);
+                    // set it back in VISJS
+                    _this.graphData['nodes'].update(oldNode);
+                    console.log('updated node ', oldNode);
+                }
+                else {
+                    console.error("Provided node " + oldNode + " is not present in VisGraph for restoration");
+                }
+            });
+        }
+        else {
+            console.error('Non array provided in updateNodesInVis');
+        }
+    };
     GraphVisualizerComponent.prototype.updateRelationinVIS = function (relation) {
         var oldRelationID = relation['id'];
         var oldRelation = this.graphData['edges'].get(oldRelationID);
         console.log('old relation is  ', oldRelation);
-        this.graphData['edges'].update([relation]);
+        if (this.showDeletedData) {
+            this.graphData['edges'].update([relation]);
+        }
+        else {
+            var tem = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](relation);
+            tem['title'] = this.stringifyProperties(tem);
+            this.graphData['edges'].update([tem]);
+        }
+        // update all+filtered graph array
+        var eleObj = {
+            element: "edges",
+            event: "edit",
+            data: relation
+        };
+        this.updateGraphArray(eleObj);
+    };
+    GraphVisualizerComponent.prototype.updateRelationsInVis = function (relationArray) {
+        var _this = this;
+        // update the relations present in the dataset
+        if (Array.isArray(relationArray)) {
+            relationArray.forEach(function (relation) {
+                var oldRelationID = relation['id'];
+                var oldRelation = _this.graphData['edges'].get(oldRelationID);
+                // update the old node with new node
+                if (!!oldRelation) {
+                    oldRelation['properties'] = relation['properties'];
+                    oldRelation['title'] = relation['title'];
+                    oldRelation['color']['color'] = _this.colorConfig.restoreColor.colorCode;
+                    oldRelation['color']['highlight'] = _this.colorConfig.restoreColor.highlightColorCode;
+                    // set it back in VisJS
+                    _this.graphData['edges'].update(oldRelation);
+                    // update allGraphData and filteredGraphData Array
+                    var index = lodash__WEBPACK_IMPORTED_MODULE_4__["findIndex"](_this.allGraphData['edges'], { id: oldRelationID });
+                    if (index >= 0) {
+                        _this.allGraphData['edges'][index] = oldRelation;
+                    }
+                    var tem = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](oldRelation);
+                    tem['title'] = _this.stringifyProperties(tem);
+                    _this.filteredGraphData['edges'].push(tem);
+                    console.log('updated relation ', oldRelation);
+                }
+                else {
+                    console.error("Provided relation " + oldRelation + " is not present in VisGraph for restoration");
+                }
+            });
+        }
+        else {
+            console.error('Non array provided in updateNodesInVis');
+        }
     };
     // to change key in tooltip
     GraphVisualizerComponent.prototype.stringifyProperties = function (propertyObject) {
         if (propertyObject.constructor === Object) {
             var finalString_1 = '';
-            lodash__WEBPACK_IMPORTED_MODULE_4__["forOwn"](Object.keys(propertyObject), function (key) {
-                if (propertyObject[key].hasOwnProperty('low')) {
-                    // if the key has an integer value then set the low value of it
-                    propertyObject[key] = propertyObject[key]['low'];
-                }
-                finalString_1 += "<strong>" + key + " :</strong> " + propertyObject[key] + " <br>";
-            });
+            if (propertyObject['properties'].hasOwnProperty('deleted')) {
+                Object.keys(propertyObject['properties']).filter(function (key) {
+                    if (key !== 'deleted') {
+                        finalString_1 += "<strong>" + key + " :</strong> " + propertyObject['properties'][key] + " <br>";
+                    }
+                });
+            }
             return finalString_1;
         }
         else {
-            return null;
+            return propertyObject['title'];
         }
     };
     GraphVisualizerComponent.prototype.addData = function (node, clickEvent, event) {
@@ -13520,25 +13744,29 @@ var GraphVisualizerComponent = /** @class */ (function () {
             }
         }
     };
-    // to remove deleted data
-    GraphVisualizerComponent.prototype.removeDeletedData = function () {
+    // to filter data from alldata array and store it to new array
+    GraphVisualizerComponent.prototype.setFilteredData = function () {
         var _this = this;
         this.filteredGraphData['nodes'] = [];
         this.filteredGraphData['edges'] = [];
         this.allGraphData['nodes'].filter(function (node) {
             if (node['properties']['deleted'] === "false" || node['properties']['deleted'] === false) {
-                _this.filteredGraphData['nodes'].push(node);
+                var tem = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](node);
+                tem['title'] = _this.stringifyProperties(tem);
+                _this.filteredGraphData['nodes'].push(tem);
             }
         });
         this.allGraphData['edges'].filter(function (edge) {
             if (edge['properties']['deleted'] === "false" || edge['properties']['deleted'] === false) {
-                _this.filteredGraphData['edges'].push(edge);
+                var tem = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](edge);
+                tem['title'] = _this.stringifyProperties(tem);
+                _this.filteredGraphData['edges'].push(tem);
             }
         });
     };
     // to show all data
     GraphVisualizerComponent.prototype.showAllData = function () {
-        // create dataset for all data    
+        // create dataset for all data 
         this.graphData['nodes'] = new vis__WEBPACK_IMPORTED_MODULE_3__["DataSet"](this.allGraphData['nodes']);
         this.graphData['edges'] = new vis__WEBPACK_IMPORTED_MODULE_3__["DataSet"](this.allGraphData['edges']);
         // to count graph element
@@ -13559,7 +13787,8 @@ var GraphVisualizerComponent = /** @class */ (function () {
         this.loader = false;
     };
     GraphVisualizerComponent.prototype.cleanPropertyBindingData = function (cleanType) {
-        if (this.editNodeData !== null || this.editRelationData !== null || this.promptRelationCreateAfterNode !== null) {
+        if (this.editNodeData !== null || this.editRelationData !== null ||
+            this.promptRelationCreateAfterNode !== null || this.restoredData !== null) {
             console.log('cleaning data for ', cleanType);
             if (!!cleanType) {
                 if (cleanType === 'node') {
@@ -13571,7 +13800,199 @@ var GraphVisualizerComponent = /** @class */ (function () {
                 else if (cleanType === 'afterCreateNode') {
                     this.promptRelationCreateAfterNode = null;
                 }
+                else if (cleanType === 'restore') {
+                    this.restoredData = null;
+                }
+                else {
+                    // nothing
+                }
             }
+        }
+    };
+    GraphVisualizerComponent.prototype.initRestoreData = function (restoreDataObj) {
+        var _this = this;
+        // this.loader = true;
+        if (Object.keys(restoreDataObj).length > 0 && restoreDataObj.hasOwnProperty('type') && restoreDataObj.hasOwnProperty('data')) {
+            var requestBodyObj = { nodes: [], relations: [] };
+            if (restoreDataObj['type'] === 'node_relation') {
+                // the data key should have both node and relation key with id array key inside them
+                if (Object.keys(restoreDataObj['data']).length > 0 && Object.keys(restoreDataObj['data']).length <= 2) {
+                    if (restoreDataObj['data'].hasOwnProperty('node') &&
+                        restoreDataObj['data']['node'].hasOwnProperty('id') &&
+                        Array.isArray(restoreDataObj['data']['node']['id'])) {
+                        requestBodyObj.nodes = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](restoreDataObj['data']['node']['id']);
+                    }
+                    else {
+                        // the data object does not have valid node key or id key
+                        console.error('the data object does not have valid node key or id key for initRestoreData');
+                    }
+                    if (restoreDataObj['data'].hasOwnProperty('relation') &&
+                        restoreDataObj['data']['relation'].hasOwnProperty('id') &&
+                        Array.isArray(restoreDataObj['data']['relation']['id'])) {
+                        requestBodyObj.nodes = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](restoreDataObj['data']['relation']['id']);
+                    }
+                    else {
+                        // the data object does not have valid relation key or id key
+                        console.error('the data object does not have valid relation key or id key for relation in initRestoreData');
+                    }
+                }
+                else {
+                    // providing irrelevant number of keys to the api in the data object
+                    console.error('irrelevant number of keys to the api in the data object in initRestoreData');
+                }
+            }
+            else {
+                if (restoreDataObj['type'] === 'node' && restoreDataObj['data'].hasOwnProperty('id')) {
+                    requestBodyObj.nodes = [restoreDataObj['data']['id']];
+                }
+                if (restoreDataObj['type'] === 'relation' && restoreDataObj['data'].hasOwnProperty('id')) {
+                    requestBodyObj.relations = [restoreDataObj['data']['id']];
+                }
+            }
+            // requestBody has been prepared
+            console.log('final request body is ', requestBodyObj);
+            this.graphService.restoreData(requestBodyObj).subscribe(function (response) {
+                // once the response if okay, send back the confirmation to the create nodes
+                var finalData = {
+                    nodes: response['seperateNodes'],
+                    relations: response['seperateEdges']
+                };
+                // update the nodes / relations in the visJS graph also and finally tell the modal to go away
+                var processedResponse = _this.updateRestoreDataInVis(finalData);
+                if (processedResponse.constructor === Boolean && processedResponse) {
+                    // this will be executed when a node has been restored
+                    _this.restoredData = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](finalData);
+                }
+                else {
+                    _this.restoredData = null;
+                    _this.loader = false;
+                }
+            }, function (error) {
+                console.error('An error occured while restoring the data from the API');
+                console.log(error);
+                _this.loader = false;
+            });
+        }
+        else {
+            console.error('Did not recieve any valid object data for restore');
+            this.loader = false;
+        }
+    };
+    GraphVisualizerComponent.prototype.updateRestoreDataInVis = function (restoredDataObj) {
+        try {
+            if (restoredDataObj.hasOwnProperty('nodes') && !!restoredDataObj['nodes'] && restoredDataObj['nodes'].length > 0) {
+                this.updateNodesInVis(restoredDataObj['nodes']);
+            }
+            if (restoredDataObj.hasOwnProperty('relations') && !!restoredDataObj['relations'] && restoredDataObj['relations'].length > 0) {
+                this.updateRelationsInVis(restoredDataObj['relations']);
+            }
+            return true;
+        }
+        catch (e) {
+            console.error('An error occured while updating visJS in updateRestoreDataInVis function ', e);
+            return false;
+        }
+        // the purpose of the function is to update the nodes / relations in VisJS dataSet
+    };
+    // to update allGraphData and filteredGraphData
+    GraphVisualizerComponent.prototype.updateGraphArray = function (obj) {
+        try {
+            if (obj.hasOwnProperty('event') && obj.event === 'create') {
+                this.insertIntoAllGraphArray(obj);
+                this.insertIntoFilteredGraphArray(obj);
+            }
+            else if (obj.hasOwnProperty('event') && obj.event === 'edit' || obj.event === 'delete' || obj.event === 'restore') {
+                this.updateAllGraphArray(obj);
+                this.updateFilteredGraphArray(obj);
+            }
+        }
+        catch (e) {
+            console.log("Method : updateGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
+        }
+    };
+    // update allgraphdata array
+    GraphVisualizerComponent.prototype.updateAllGraphArray = function (obj) {
+        try {
+            if (obj.hasOwnProperty('data')) {
+                var index = void 0;
+                // update in all graph data array
+                if (obj.hasOwnProperty('element') && obj.element === 'nodes') {
+                    // for node
+                    if (obj.hasOwnProperty('event') && obj.event === 'delete') {
+                        obj.data['color'] = this.colorConfig.deletedColor.colorCode;
+                    }
+                    index = lodash__WEBPACK_IMPORTED_MODULE_4__["findIndex"](this.allGraphData[obj.element], { label: obj.data['label'] });
+                }
+                else if (obj.hasOwnProperty('element') && obj.element === 'edges') {
+                    // for edge
+                    if (obj.hasOwnProperty('event') && obj.event === 'delete') {
+                        obj.data['color']['color'] = this.colorConfig.deletedColor.colorCode;
+                        obj.data['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
+                    }
+                    index = lodash__WEBPACK_IMPORTED_MODULE_4__["findIndex"](this.allGraphData[obj.element], { id: obj.data['id'] });
+                }
+                if (index >= 0) {
+                    // update in array
+                    this.allGraphData[obj.element][index] = obj.data;
+                }
+            }
+        }
+        catch (e) {
+            console.log("Method : updateAllGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
+        }
+    };
+    // update filteredgrapdata garray
+    GraphVisualizerComponent.prototype.updateFilteredGraphArray = function (obj) {
+        try {
+            if (obj.hasOwnProperty('data')) {
+                var index = void 0;
+                // update in all graph data array
+                if (obj.hasOwnProperty('element') && obj.element === 'nodes') {
+                    index = lodash__WEBPACK_IMPORTED_MODULE_4__["findIndex"](this.filteredGraphData[obj.element], { label: obj.data['label'] });
+                }
+                else if (obj.hasOwnProperty('element') && obj.element === 'edges') {
+                    // remove deleted edge from filtered data array
+                    index = lodash__WEBPACK_IMPORTED_MODULE_4__["findIndex"](this.filteredGraphData[obj.element], { id: obj.data['id'] });
+                }
+                if (index >= 0) {
+                    if (obj.hasOwnProperty('event') && obj.event === 'delete') {
+                        this.filteredGraphData[obj.element].splice(index, 1);
+                    }
+                    else if (obj.hasOwnProperty('event') && obj.event === 'edit') {
+                        // update filterd graph data
+                        var tem = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](obj.data);
+                        tem['title'] = this.stringifyProperties(tem);
+                        this.filteredGraphData[obj.element][index] = tem;
+                    }
+                }
+            }
+        }
+        catch (e) {
+            console.log("Method : updateFilteredGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
+        }
+    };
+    // insert into allgraphdata array
+    GraphVisualizerComponent.prototype.insertIntoAllGraphArray = function (obj) {
+        try {
+            if (obj.hasOwnProperty('data') && obj.hasOwnProperty('element')) {
+                this.allGraphData[obj.element].push(obj.data);
+            }
+        }
+        catch (e) {
+            console.log("Method : insertIntoAllGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
+        }
+    };
+    // insert into filtered graph array
+    GraphVisualizerComponent.prototype.insertIntoFilteredGraphArray = function (obj) {
+        try {
+            if (obj.hasOwnProperty('data') && obj.hasOwnProperty('element')) {
+                var tem = lodash__WEBPACK_IMPORTED_MODULE_4__["cloneDeep"](obj.data);
+                tem['title'] = this.stringifyProperties(tem);
+                this.filteredGraphData[obj.element].push(tem);
+            }
+        }
+        catch (e) {
+            console.log("Method : insertIntoFilteredGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
         }
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
