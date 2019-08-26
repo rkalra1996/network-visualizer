@@ -135,6 +135,10 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
             temconnection = data['Connection'];
           }else if(keyName === "Understanding of SP Thinking"){
             temunder = data['Understanding of SP Thinking'];
+          }else if(keyName === "labels"){
+            temtype = data['labels'].map(l=>{
+              return l[0];
+            })
           }
         // data['Type'].filter(nodeType => {
         //   // let x ={
@@ -161,18 +165,19 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       this.connectionOptions = temconnection;
       this.understandingOptions = temunder;
       this.statusOptions = temstatus;
-      temtype = [
-            "Philanthropy",
-            "NGO/CBO",
-            "Consulting",
-            "Research Institute",
-            "Private Sector",
-            "Government",
-            "Impact Investor",
-            "Media",
-            "Academia",
-            "International Agency"
-          ]
+      // temtype = [
+      //       "Philanthropy",
+      //       "NGO/CBO",
+      //       "Consulting",
+      //       "Research Institute",
+      //       "Private Sector",
+      //       "Government",
+      //       "Impact Investor",
+      //       "Media",
+      //       "Academia",
+      //       "International Agency"
+      //     ]
+      temtype = temtype.filter(this.onlyUnique);
      this.typeOptions = temtype;
      temrelation = [
           "Advisory",
