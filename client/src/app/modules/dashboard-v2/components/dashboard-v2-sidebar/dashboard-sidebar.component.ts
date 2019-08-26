@@ -3,7 +3,9 @@ import { GraphDataService } from 'src/app/modules/core/services/graph-data-servi
 import { Network, DataSet, Node, Edge, IdType } from 'vis';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
 import { Subscription } from 'rxjs';
+import { map, filter } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { SearchService } from 'src/app/modules/shared/services/search-service/search.service';
 @Component({
   selector: 'app-dashboard-sidebar',
   templateUrl: './dashboard-sidebar.component.html',
@@ -87,7 +89,24 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
   edgesNewObject: { type: string, nodeid: Array<number> }[] = [];
   nodesNewObject: { type: string, nodeid: Array<number> }[] = [];
   graphInitData: Array<object> = [];
-  constructor(private graphDataService: GraphDataService, private sharedGraphData: SharedGraphService) { }
+
+  public totalNodesProperties = {};
+  public totalRelationsProperties = {};
+  public processedData;
+  public nodeTypes2: Array<any> = [];
+
+  public relationTypeOptions: Array<any> = [];
+  public relationsData: any;
+  // Query to fetch all labels
+  public queryObj = {
+    raw: true,
+    query: `MATCH (p) WITH DISTINCT keys(p) AS keys,p
+     with DISTINCT labels(p) as label,keys 
+     UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields,label
+     RETURN collect(allfields),label`
+  };
+  
+  constructor(private graphDataService: GraphDataService, private sharedGraphData: SharedGraphService, private searchService: SearchService) { }
 
   ngOnInit() {
     this.getGraph();
@@ -113,79 +132,56 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
 
   // set all data in sidebar dropdown
   getGraph() {
-    this.graphDataService.getNodeLabelData().subscribe(response => {
-      // this.graphInitData.push(data);
-      let temname = [];
-      let temstatus = [];
-      let temrepresent = [];
-      let temconnection = [];
-      let temtype = [];
-      let temunder = [];
-      let temrelation = [];
-      if (response && response.length > 0) {
-        response.forEach(data => {
-          let keyName = Object.keys(data)[0];
-          if(keyName === "Name"){
-            temname = data['Name'];
-          }else if(keyName === "Status"){
-            temstatus = data['Status'];
-          }else if(keyName === "Represent"){
-            temrepresent = data['Represent'];
-          }else if(keyName === "Connection"){
-            temconnection = data['Connection'];
-          }else if(keyName === "Understanding of SP Thinking"){
-            temunder = data['Understanding of SP Thinking'];
-          }else if(keyName === "labels"){
-            temtype = data['labels'].map(l=>{
-              return l[0];
-            })
+    // fetch the properties of all the nodes and relationships
+    this.graphDataService.getGraphProperties()
+      .subscribe(response => {
+        if (response.hasOwnProperty('nodes')) {
+          this.totalNodesProperties = _.cloneDeep(response['nodes']);
+          this.sharedGraphData.setNodeProperties(this.totalNodesProperties);
+          let temname = [];
+          let temstatus = [];
+          let temrepresent = [];
+          let temconnection = [];
+          let temunder = [];
+          if (this.totalNodesProperties) {
+            Object.keys(this.totalNodesProperties).forEach(keyName => {
+              if(keyName === "Name"){
+                temname = this.totalNodesProperties['Name'];
+              }else if(keyName === "Status"){
+                temstatus = this.totalNodesProperties['Status'];
+              }else if(keyName === "Represent"){
+                temrepresent = this.totalNodesProperties['Represent'];
+              }else if(keyName === "Connection"){
+                temconnection = this.totalNodesProperties['Connection'];
+              }else if(keyName === "Understanding of SP Thinking"){
+                temunder = this.totalNodesProperties['Understanding of SP Thinking'];
+              }
+          });
           }
-        // data['Type'].filter(nodeType => {
-        //   // let x ={
-        //   //   name:node,
-        //   //   color:this.defaultColor[node]
-        //   // }
-        //   temtype.push(nodeType);
-        // });
-        
-        // data['Relationships'].filter(nodeRelations => {
-        //   temrelation.push(nodeRelations);
-        // });
-        
+          this.representOptions = temrepresent;
+          this.connectionOptions = temconnection;
+          this.understandingOptions = temunder;
+          this.statusOptions = temstatus;
+          this.nameOptions = temname;
+        if (response.hasOwnProperty('relations')) {
+          this.totalRelationsProperties = _.cloneDeep(response['relations']);
+          this.sharedGraphData.setRelationProperties(this.totalRelationsProperties);
+        }
+        console.log(this.totalNodesProperties, this.totalRelationsProperties);
+     }
+     }, err => {
+        console.error('Error while subscribing to graphProperties method -> ', err);
       });
-      }
-      this.nameOptions = _.cloneDeep([]);
-      let temp = _.cloneDeep(temname);
-      this.nameOptions = temp;
-      this.sharedGraphData.setFromToData(this.nameOptions);
-      
-      // send the types array for further use to the modals
-      // this.nodeTypesEvent.emit(temtype);
-      this.representOptions = temrepresent;
-      this.connectionOptions = temconnection;
-      this.understandingOptions = temunder;
-      this.statusOptions = temstatus;
-      // temtype = [
-      //       "Philanthropy",
-      //       "NGO/CBO",
-      //       "Consulting",
-      //       "Research Institute",
-      //       "Private Sector",
-      //       "Government",
-      //       "Impact Investor",
-      //       "Media",
-      //       "Academia",
-      //       "International Agency"
-      //     ]
-      temtype = temtype.filter(this.onlyUnique);
-     this.typeOptions = temtype;
-     temrelation = [
-          "Advisory",
-          "Collaborator",
-          "Partner",
-          "Service Provider"
-        ]
-     this.relationOptions = temrelation;
+
+     this.getNodeTypes().subscribe(data=>{
+       this.sharedGraphData.setProcessedData(this.processedData);
+       this.sharedGraphData.setNodeTypes2(this.nodeTypes2);
+       this.typeOptions = this.nodeTypes2;
+     });
+       
+   this.getRelationTypes().subscribe(response => {
+      // this.graphInitData.push(data);
+     this.relationOptions = this.relationTypeOptions;
     });
     }
 
@@ -434,4 +430,96 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     }
     this.sharedGraphData.sendToogleStatus(this.showDisabled);
     }
+
+
+  extractLabels(data) {
+    this.nodeTypes2 = [];
+    data.forEach(label => {
+      this.nodeTypes2.push(label.type[0]);
+    });
+    // console.log('types are ', this.nodeTypes2);
+  }
+
+
+  getNodeTypes() {
+    return  this.searchService.runQuery(this.queryObj).pipe(map(data => {
+      console.log('recieved label data from service ', data);
+      this.processedData = this.processData(data);
+      // extract types from the array
+      this.extractLabels(this.processedData);
+      // this.typeOptions = _.cloneDeep(this.nodeTypes2);
+      return this.nodeTypes2;
+    }));
+  }
+  processData(data) {
+    if (data.length > 0) {
+      let tempData = [];
+      data.forEach(label => {
+        tempData.push({ type: label._fields[1], properties: label._fields[0] });
+      });
+      return tempData;
+    } else return [];
+  }
+
+  getRelationTypes() {
+    return this.graphDataService.getGraphRelations().pipe(map(response => {
+
+      this.relationsData = this.filterRelationsData(response);
+      let extractedTypes = this.extractTypes(this.relationsData);
+      // pass it into the options for dropdown
+      this.relationTypeOptions = _.cloneDeep(extractedTypes);
+      this.sharedGraphData.setRelationTypeOptions(this.relationTypeOptions);
+      this.sharedGraphData.setRelationsData(this.relationsData);
+      return true;
+    }, err => {
+      console.error('An error occured while fetching relations ', err);
+      throw Error();
+    }));
+  }
+
+  filterRelationsData(response) {
+    let filteredObjectArray = [];
+    filteredObjectArray.push(response[0]);
+    response.splice(0, 1);
+    // clear relations response as there are duplicates inside
+    // steps to clear, process each relation type
+    // find all the keys which are of this type and collect its properties into a unique array of objects
+    let i = 0;
+    while (i <= response.length) {
+      if (response.length === 0) {
+        i = 1;
+      } else {
+        let matched = false;
+        filteredObjectArray.forEach(firstObj => {
+          if (firstObj.type === response[i].type) {
+            matched = true;
+            firstObj['properties'].push(...response[i].properties);
+          }
+        });
+        if (matched) {
+          response.splice(i, 1);
+          i = 0;
+        } else {
+          filteredObjectArray.push(response[i]);
+          response.splice(i, 1);
+        }
+      }
+    }
+    // make the properties of each type as unique
+    filteredObjectArray.map(typeObj => {
+      typeObj['properties'] = _.uniq(typeObj['properties']);
+      return typeObj;
+    });
+    console.log('final fetched types for relation is ', filteredObjectArray);
+    return filteredObjectArray;
+  }
+
+  extractTypes(ObjectArray: any): any {
+    let typesArray = [];
+    ObjectArray.forEach(obj => {
+      typesArray.push(obj['type']);
+    });
+    return typesArray;
+  }
+
 }

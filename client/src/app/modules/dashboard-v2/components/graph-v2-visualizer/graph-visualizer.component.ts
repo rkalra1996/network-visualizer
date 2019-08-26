@@ -543,6 +543,7 @@ export class GraphVisualizerComponent implements OnInit {
           try {
             let visRelation = _.cloneDeep(response['seperateEdges'][0]);
             // to remove deleted key from tooltip
+            this.newNodeCreated.emit("NodeEvent_create" + response['seperateEdges'][0]);
             visRelation['title'] = this.stringifyProperties(visRelation);
             // add the new node to the vis
             // first get the edge, if it is already present, simply update it else add it
