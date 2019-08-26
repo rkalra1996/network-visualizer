@@ -6,11 +6,13 @@ import { SuiSelectModule, SuiModule } from 'ng2-semantic-ui';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';
 import { GlobalLoaderComponent } from './component/global-loader/global-loader/global-loader.component';
+import { ToggleSwitchComponent } from './component/toggle-switch/toggle-switch/toggle-switch.component';
 
 @NgModule({
   declarations: [
     SidebarComponent,
-    GlobalLoaderComponent
+    GlobalLoaderComponent,
+    ToggleSwitchComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +25,8 @@ import { GlobalLoaderComponent } from './component/global-loader/global-loader/g
   ],
   exports:[
       SidebarComponent,
-      GlobalLoaderComponent
+      GlobalLoaderComponent,
+      ToggleSwitchComponent
     ]
 })
 export class SharedModule { }

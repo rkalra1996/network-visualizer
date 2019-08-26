@@ -3,8 +3,16 @@ const neo4j = require('neo4j-driver').v1;
 //import config file for database
 const neoConfig = require('./database_config/config.json');
 
+// import static strings
+const messages = require('./resource_config/static_content.json');
+
 //import serializer to serialize for visJS format
 const serializer = require('./utility/serializer');
+const serializerv2 = require('./utility/serializerv2');
+const labelSerializer = require('./utility/labelSerializer/labelSerializer');
+
+// import data utility to process data
+const dataUtility = require('./utility/dataUtility');
 
 const { user, password } = neoConfig;
 
@@ -18,7 +26,7 @@ var runQuery = (query) => {
         }
     } else {
         console.error('Empty query passed');
-        throw Error;
+        return  Promise.reject('Query to run on database is empty');
     }
 }
 
@@ -340,13 +348,15 @@ var searchQuery = (requestBody, raw = false) => {
     });
 
 }
-var getDataV2 = (query) => {
-    if (!query || query.length <= 0) {
-        query = neoConfig.initial_query_v2
+var getDataV2 = (queryObj) => {
+    let query = "";
+    if (!queryObj.query || queryObj.query.length <= 0) {
+        queryObj.query = neoConfig.initial_query_v2
     }
-    return runQuery(query)
+    console.log("Initial Query : ", queryObj.query);
+    return runQuery(queryObj.query)
         .then(result => {
-            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records), queryObj.showDeleted);
             console.log('serialized data is ', serializedData.seperateNodes.length, serializedData.seperateEdges.length);
             neo4Jdriver.close();
             return new Promise((res, rej) => {
@@ -385,16 +395,16 @@ var getGraphDataV2 = (req) => {
     if (req.body.hasOwnProperty('nodes') && req.body.nodes.length >= 0) {
         // data for nodes is present, get all the relevant information
         if (req.body.nodes.length == 1) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 1, limit: req.body.limit });
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 1, limit: req.body.limit, showDeleted: req.showDeleted });
         } else if (req.body.nodes.length == 2) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 2, limit: req.body.limit })
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 2, limit: req.body.limit, showDeleted: req.showDeleted })
         } else if (req.body.nodes.length === 3) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 3, limit: req.body.limit })
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 3, limit: req.body.limit, showDeleted: req.showDeleted })
         } else {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 0, limit: req.body.limit })
+            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 0, limit: req.body.limit, showDeleted: req.showDeleted })
         }
     } else if (req.body.hasOwnProperty('limit')) {
-        return limitBasedInitGraphShow({ limit: req.body.limit });
+        return limitBasedInitGraphShow({ limit: req.body.limit, showDeleted: req.body.showDeleted });
     } else {
         return new Promise((resolve, reject) => {
             // send back the data 
@@ -456,6 +466,7 @@ function runQueryWithTypesV2(dataObj) {
             }
             let queryStatement = '';
             if (!!dataObj.relation && dataObj.nodes.length > 0) {
+                // not in use : this is for combin search of element and relationship
                 queryStatement = `match (p)-[r${dataObj.relation}]-(q) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
                 if (dataObj.nodes.length == 1) {
                     if (dataObj.nodes[0].type === "Name") {
@@ -469,20 +480,29 @@ function runQueryWithTypesV2(dataObj) {
                     queryStatement = `match (p {Name:"Societal Platform Team"})-[r${dataObj.relation}]-(q) where labels(q) In [${dataObj.nodes[1].value}] and q.Name IN [${dataObj.nodes[0].value}] return p,r,q limit 50`;
                 }
             } else if (!!dataObj.relation) {
+                // for relationship filter
+                // queryStatement = `match (p {Name:"Societal Platform Team"}) <-[r${dataObj.relation}]->(q) where p.deleted = "false" and r.deleted = "false" and q.deleted = "false" return p,q,r limit ${dataObj.limit}`;
                 queryStatement = `match (p {Name:"Societal Platform Team"}) <-[r${dataObj.relation}]->(q) return p,q,r limit ${dataObj.limit}`;
             } else if (typeArray.length > 0) {
+                // for multiple selection of element with type
                 // queryStatement = `match (p)-[r]-(q) where labels(p) In [${dataObj.nodes[1].value}] p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
                 if (allSubQuery.length > 0) {
 
-                    queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where labels(q) In [${typeArray}] and ${allSubQuery} return p,r,q limit ${dataObj.limit}`;
+                    //queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where labels(q) In [${typeArray}] and ${allSubQuery} and p.deleted = false and r.deleted = false and q.deleted = false return p,r,q limit ${dataObj.limit}`;
+                    // queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and ${allSubQuery} and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
+                    queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and ${allSubQuery} and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
                 } else {
-                    queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where labels(q) In [${typeArray}] return p,r,q limit ${dataObj.limit}`;
+                    //queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where labels(q) In [${typeArray}] and p.deleted = false and r.deleted = false and q.deleted = false return p,r,q limit ${dataObj.limit}`;
+                    //queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
+                    queryStatement = `match (p)-[r]-(q) where labels(q) In [${typeArray}] and not q.Name in ["Societal Platform Team"] return p,r,q limit ${dataObj.limit}`;
                 }
 
             } else {
+                // if type not selected , apply on other elements only
+                //queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where ${allSubQuery} and p.deleted = "false" and r.deleted = "false" and q.deleted = "false" return p,r,q limit ${dataObj.limit}`;
                 queryStatement = `match (p {Name:"Societal Platform Team"})-[r]-(q) where ${allSubQuery} return p,r,q limit ${dataObj.limit}`;
             }
-            console.log('query for 1 node type is ', queryStatement);
+            console.log('query for filter ', queryStatement);
             return runQuery(queryStatement).then(result => {
                 let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
                 return new Promise((resolve, reject) => {
@@ -578,16 +598,16 @@ function runQueryWithTypesV2(dataObj) {
     }
 }
 
-
+// to get properties of node from database
 var getGraphLabelData = (query) => {
     let queryStatement = '';
 
-    queryStatement = `Match(n) RETURN n.Name,n.Connection,n.status,n.Represent,n.Url,n.\`Understanding of SP Thinking\`,labels(n) ORDER BY labels(n)`;
+    queryStatement = `Match(n) where n.deleted in ["false",false] RETURN n.Name,n.Connection,n.Status,n.Represent,n.Url,n.\`Understanding of SP Thinking\`,labels(n) ORDER BY labels(n)`;
 
-    console.log('query for lable is ', queryStatement);
+    console.log('query for label is ', queryStatement);
 
     return runQuery(queryStatement).then(result => {
-        let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+        let serializedData = labelSerializer.Neo4JtoJsonFormat(JSON.stringify(result.records));
         return new Promise((resolve, reject) => {
             resolve(serializedData);
         });
@@ -630,9 +650,15 @@ function limitBasedInitGraphShow(limitObj) {
     // check for limit empty or undefined
     limitObj.limit = getLimit(limitObj.limit);
     let queryStatement = '';
+    // add the showDeleted toggle value
+    let showDeleted = !!limitObj.showDeleted ? true : false;
 
-    queryStatement = `match (p) -[r]-> (q) return p,q,r limit ${limitObj.limit}`;
-
+    if (showDeleted) {
+        queryStatement = `match (p) -[r]-> (q) return p,r,q limit ${limitObj.limit}`;
+    } else {
+        // queryStatement = `match (p) -[r]-> (q) where p.deleted IN [${showDeleted}, "${showDeleted}"] and q.deleted IN [${showDeleted}, "${showDeleted}"] and r.deleted IN [${showDeleted}, "${showDeleted}"] return p,q,r limit ${limitObj.limit}`;
+        queryStatement = `match (p) -[r]-> (q) return p,q,r limit ${limitObj.limit}`;
+    }
     console.log('query created by graphDataV2 is ', queryStatement);
     return runQuery(queryStatement).then(result => {
         let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
@@ -647,6 +673,312 @@ function limitBasedInitGraphShow(limitObj) {
     });
 }
 
+function addProperties(properties) {
+    let queries = []
+    Object.keys(properties).forEach(key => {
+        queries.push(`\`${key}\`:"${properties[key]}"`);
+    });
+    if (queries.length) {
+        return '{' + queries.join(',') + '}';
+    } else {
+        // empty properties , no need to add anything to it
+        return '';
+    }
+}
+
+function createNewNodeQuery(data) {
+    let query = 'merge ';
+    let subQuery = '';
+
+    // first add the type to  the new node
+    subQuery = `(n:\`${data.type[0]}\` `;
+    // add deleted to be false by default
+    data.properties['deleted'] = false;
+    subQuery += addProperties(data.properties);
+    subQuery += ') return n';
+    query += subQuery;
+    console.log('\ncomplete query created as ', query + '\n');
+    return query;
+
+}
+
+function createNewRelationQuery(data) {
+    let source = data.from;
+    let target = data.to;
+    let relationType = data.type[0];
+    // let subQuery = addProperties(data.properties);
+    let subQuery = dataUtility.processProperties('r', data.properties);
+    // `merge (source)-[r:\`${data.type[0]}\`]-(target)`
+    let query = `Match (source {Name: "${source}"}),(target {Name: "${target}"})
+    MERGE (source)-[r: \`${relationType}\`]->(target)
+    ON CREATE SET ${subQuery}
+    ON MATCH SET ${subQuery}
+    RETURN source,target,r`
+    console.log('\nfinal query is ', query + '\n');
+    return query;
+}
+
+var createNode = (request) => {
+    // the task is to create a query basis the information provided
+    let data = request.body;
+
+    if (!data.hasOwnProperty('type')) {
+        console.log('API : node/create | ERROR encountered while reading data for creating a node -> type key missing');
+        return Promise.reject({ error: 'Cannot create a node without a type' });
+    } else {
+        // a type is present, can go further
+        let query = createNewNodeQuery(data);
+        return runQuery(query)
+            .then(response => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                return Promise.resolve(serializedData);
+            })
+            .catch(err => {
+                console.log('\nAn error occured while runnning the query for create node', err);
+                return Promise.reject('API : node/create | ERROR : Error encountered while reading from database');
+            });
+    }
+};
+
+var updateNode = (request) => {
+    // the task is to create a query basis the information provided
+    let data = request.body;
+
+    if (!data.hasOwnProperty('type')) {
+        console.log('API : node/update | ERROR encountered while reading data for updating a node -> type key missing');
+        return Promise.reject({ error: 'Cannot update a node without a type' });
+    } else {
+        let query = dataUtility.createUpdateNodeQuery(data);
+        console.log('update node query is ', query);
+        // run the query
+        return runQuery(query)
+            .then(response => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                return Promise.resolve(serializedData);
+            })
+            .catch(err => {
+                console.log('\nAn error occured while runnning the query to update a node', err);
+                return Promise.reject('API : node/update | ERROR : Error encountered while reading from database');
+            });
+    }
+}
+
+var createRelation = (request) => {
+    // the task is to create a query basis the information provided
+    let data = request.body;
+
+    if (!data.hasOwnProperty('type')) {
+        console.log('API : relation/create | ERROR encountered while reading data for creating a relation -> type key missing');
+        return Promise.reject({ error: messages.error.server.m001 });
+    } else {
+        if (!data.hasOwnProperty('from') || !data.hasOwnProperty('to')) {
+            console.log('API : relation/create | ERROR encountered while reading data for creating a relation -> either of "to"  or "from" key missing');
+            return Promise.reject({ error: 'Cannot create a relation without a source or target node' });
+        } else {
+            // data has all three, now proceed
+            // a type is present, can go further
+            // first add default deleted key to false
+            data.properties['deleted'] = false;
+            let query = createNewRelationQuery(data);
+            return runQuery(query).then(response => {
+                    let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                    return Promise.resolve(serializedData);
+                })
+                .catch(err => {
+                    console.log('\nAn error occured while runnning the query for create node', err);
+                    return Promise.reject('API : node/create | ERROR : Error encountered while reading from database');
+                });
+        }
+    }
+}
+
+var getRelations = () => {
+    let query = `match ()-[r]-() with type(r) as relation_types,keys(r) 
+      as relation_properties return distinct relation_types, relation_properties`;
+    return runQuery(query).then(response => {
+        // convert into neovis format and return
+        let serializedData = serializer.processRelations(JSON.stringify(response.records));
+        return Promise.resolve(serializedData);
+    }).catch(err => {
+        console.log('\nAn error occured while runnning the query for get relations', err);
+        return Promise.reject('API : graph/relations | ERROR : Error encountered while reading from database');
+    });
+}
+
+var updateRelationship = (request) => {
+    // the task is to create a query basis the information provided
+    let data = request.body;
+
+    if (!data.hasOwnProperty('type') || !data.hasOwnProperty('id')) {
+        console.log('API : relation/update | ERROR encountered while reading data for updating a relation -> type key or id missing');
+        return Promise.reject({ error: messages.error.server.m002 });
+    } else {
+        // data has all three, now proceed
+        // a type is present, can go further
+        let query = dataUtility.createUpdateRelationQuery(data);
+        return runQuery(query).then(response => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                return Promise.resolve(serializedData);
+            })
+            .catch(err => {
+                console.log('\nAn error occured while runnning the query for create node', err);
+                return Promise.reject(messages.error.API.relation.update.a001);
+            });
+        /* if (!data.hasOwnProperty('from') || !data.hasOwnProperty('to')) {
+           console.log('API : relation/update | ERROR encountered while reading data for updating a relation -> either of "to"  or "from" key missing');
+           return Promise.reject({error : messages.error.server.m003});
+        } else {
+            // data has all three, now proceed
+            // a type is present, can go further
+       let query = dataUtility.createUpdateRelationQuery(data);
+       return runQuery(query).then(response => {
+           let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+           return Promise.resolve(serializedData);
+           })
+           .catch(err => {
+               console.log('\nAn error occured while runnning the query for create node', err);
+               return Promise.reject(messages.error.API.relation.update.a001);
+           });
+        } */
+    }
+}
+
+// for run query provided by utility
+var neo4jRunQuery = (query) => {
+    return runQuery(query)
+        .then(response => {
+            console.log("query : ", query);
+            console.log('Data recieved from database')
+            let serializedData = labelSerializer.Neo4JtoJsonFormat(JSON.stringify(response.records));
+            return Promise.resolve(serializedData);
+        })
+        .catch(err => {
+            console.log('an error occured while retrieving metadata for nodes', err);
+            neo4Jdriver.close();
+        });
+}
+var deleteNode = (request) => {
+    let data = request.body;
+    // delete will precisely work like update, it will set the deleted property to true
+    if (data.hasOwnProperty('id')) {
+        //id of node is present, continue
+        // find the node with id
+        // set the deleted property to true
+        if (!data.hasOwnProperty('relations') || !data.relations.length) {
+            data['relations'] = [];
+        }
+        let query = dataUtility.createDeleteNodeQuery(data.id, data.relations);
+        return runQuery(query).then(response => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                return Promise.resolve(serializedData);
+            })
+            .catch(err => {
+                console.log('\nAn error occured while runnning the query for delete node', err);
+                return Promise.reject(messages.error.API.node.delete.c001);
+            });
+    } else {
+        console.log('cannot delete a node without specifying an id');
+        return Promise.reject({ error: messages.error.server.m004 });
+    }
+}
+
+var deleteRelationhip = (request) => {
+    let data = request.body;
+    // delete will precisely work like update, it will set the deleted property to true
+    if (data.hasOwnProperty('id')) {
+        //id of node is present, continue
+        // find the node with id
+        // set the deleted property to true
+        let query = dataUtility.createDeleteRelationQuery(data.id);
+        console.log('delete relation query is ', query);
+        return runQuery(query).then(response => {
+                let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+                // select only one from the two  responses which comes in case of bi directional relations
+                serializedData['seperateEdges'] = serializedData['seperateEdges'][0];
+                return Promise.resolve(serializedData);
+            })
+            .catch(err => {
+                console.log('\nAn error occured while runnning the query for delete relationship', err);
+                return Promise.reject(messages.error.API.node.delete.c001);
+            });
+    } else {
+        console.log('cannot delete a node without specifying an id');
+        return Promise.reject({ error: messages.error.server.m004 });
+    }
+}
+
+var fetchGraphProperties = () => {
+    // this function will return all the properties with the list of values used in the properties for nodes and relations seperately
+    let query = 'match (n) optional match (n)-[r]-() return distinct n,r'
+    console.log('fetch property query is --> ', query + '\n');
+    return runQuery(query)
+        .then(response => {
+            // work on the response and create the following patter
+            /**
+             *  response = {
+             *                  nodes : {
+             *                              property_Name : [values used in the property]
+             *                          }
+             *                  relations : {
+             *                              property_Name : [values used in the property]
+             *                          }
+             *              }
+             */
+            let processedData = dataUtility.processFetchedProperties(response.records);
+            return Promise.resolve(processedData);
+        })
+        .catch(err => {
+            console.log('\nAn error occured while runnning the query for fetch graph properties', err);
+            return Promise.reject(messages.error.API.properties.fetch.a001);
+        })
+}
+
+var restoreData = (request) => {
+    let data = request.body;
+    // extract the ids
+    let nodeIDArray = [];
+    let relationIDArray = [];
+
+    if (data.hasOwnProperty('nodes') && data.nodes.length > 0) {
+        if (Array.isArray(data.nodes)) {
+            nodeIDArray = data.nodes;
+        }
+        else {
+            console.error('Datatype of nodes key is not an array');
+            return Promise.reject('Datatype of nodes key is not an array');
+        }
+    }
+    if (data.hasOwnProperty('relations') && data.relations.length > 0) {
+        if (Array.isArray(data.relations)) {
+            relationIDArray = data.relations
+        }
+        else {
+            console.error('Datatype of relations key is not an array');
+            return Promise.reject('Datatype of relations key is not an array');
+        }
+    }
+
+    // process the data
+    let query = dataUtility.createQueryForRestore({nodes: nodeIDArray, relations: relationIDArray});
+    console.log('query for restore data is ', query + '\n');
+    return runQuery(query)
+    .then(response => {
+        let processedData;
+        if (response.hasOwnProperty('records') && response.records.length > 0) {
+            processedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+        } else {
+            // empty records
+            processedData = {"result" : "No data updated "};
+        }
+        return Promise.resolve(processedData);
+    })
+    .catch(err => {
+        console.log('\x1b[31m','\nAn error occured while runnning the query for restore graph data \n', err);
+        return Promise.reject(err);
+    });
+
+}
+
 module.exports = {
     initiate,
     getData,
@@ -656,5 +988,15 @@ module.exports = {
     getGraphDataV2,
     getDataV2,
     getGraphLabelData,
-    getGraphLabels
+    getGraphLabels,
+    createNode,
+    updateNode,
+    getRelations,
+    createRelation,
+    updateRelationship,
+    neo4jRunQuery,
+    deleteNode,
+    deleteRelationhip,
+    fetchGraphProperties,
+    restoreData
 }

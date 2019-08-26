@@ -1,14 +1,20 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angular/core';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
 import { Network, DataSet, Node, Edge, IdType } from 'vis';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
+import { Subscription } from 'rxjs';
+import * as _ from 'lodash';
 @Component({
   selector: 'app-dashboard-sidebar',
   templateUrl: './dashboard-sidebar.component.html',
   styleUrls: ['./dashboard-sidebar.component.scss']
 })
-export class DashboardSidebarComponent implements OnInit {
+export class DashboardSidebarComponent implements OnInit, OnChanges {
 
+  @Input() newNodeCreated: string;
+  // tslint:disable-next-line: no-input-rename
+  @Input('nodeLimitEnterEvent') nodeLimitOnEnter: any = null;
+  private showDisabled = false;
   public rotateObj = {
     Name: {
       rotate: false,
@@ -40,21 +46,21 @@ export class DashboardSidebarComponent implements OnInit {
     }
   };
   defaultColor = {
-    "Academia" : 'c_ff4444',
-    "Consulting" : 'c_ffbb33',
-    "Government" : 'c_00C851',
-    "Impact Investor" : 'c_33b5e5',
-    "International Agency" : 'c_CC0000',
-    "Media" : 'c_FF8800',
-    "NGO/CBO" : 'c_007E33',
-    "People" : 'c_0099CC',
-    "Philanthropy" : 'c_9933CC',
-    "Platform" : 'c_0d47a1',
-    "Private Sector" : 'c_2BBBAD',
-    "Research Institute" : 'c_c51162'
-
+    Academia : 'c_ff4444',
+    Consulting : 'c_ffbb33',
+    Government : 'c_00C851',
+    'Impact Investor' : 'c_33b5e5',
+    'International Agency' : 'c_CC0000',
+    Media : 'c_FF8800',
+    'NGO/CBO' : 'c_007E33',
+    People : 'c_0099CC',
+    Philanthropy : 'c_9933CC',
+    Platform : 'c_0d47a1',
+    'Private Sector' : 'c_2BBBAD',
+    'Research Institute' : 'c_c51162'
     };
   @Output() eventClicked = new EventEmitter<string>();
+  @Output() nodeTypesEvent = new EventEmitter<Array<any>>();
   nameOptions: Array<string> = [];
   relationOptions: Array<string> = [];
   typeOptions: Array<string> = [];
@@ -74,8 +80,8 @@ export class DashboardSidebarComponent implements OnInit {
   selectedUrl: Array<string> = [];
   selectedGraph: { type: string, value: Array<string> }[] = [];
   public graphData = {};
-  count: number = 1;
-  relstatus: boolean = false;
+  count  = 1;
+  relstatus = false;
   preSelectedRel: string;
 
   edgesNewObject: { type: string, nodeid: Array<number> }[] = [];
@@ -87,15 +93,28 @@ export class DashboardSidebarComponent implements OnInit {
     this.getGraph();
   }
 
-  networkElementClick(element) {
-    if (element) {
-      this.eventClicked.emit(element);
-    }
-  }
+   ngOnChanges() {
+    // update all dropdown when new node is created
+    // get the createdEvent
+    if (this.newNodeCreated) {
+      const nodeEvent = this.newNodeCreated.split('_')[0];
 
+      if (nodeEvent === 'NodeEvent') {
+        this.getGraph();
+      }
+    }
+    // detect if the user hit enter while entering the nodelimit value
+    if (!!this.nodeLimitOnEnter && !isNaN(this.nodeLimitOnEnter)) {
+      // user pressed entered after filling a valid number
+      console.log('enter detected after ', this.nodeLimitOnEnter);
+      this.searchGraph();
+    }
+    }
+
+  // set all data in sidebar dropdown
   getGraph() {
-    this.graphDataService.getNodeLabels().subscribe(data => {
-      this.graphInitData.push(data);
+    this.graphDataService.getNodeLabelData().subscribe(response => {
+      // this.graphInitData.push(data);
       let temname = [];
       let temstatus = [];
       let temrepresent = [];
@@ -103,43 +122,72 @@ export class DashboardSidebarComponent implements OnInit {
       let temtype = [];
       let temunder = [];
       let temrelation = [];
-      if (data) {
-        data['Name'].filter(node => {
-          temname.push(node);
-        });
-        data['Type'].filter(node => {
-          // let x ={
-          //   name:node,
-          //   color:this.defaultColor[node]
-          // }
-          temtype.push(node);
-        });
-        data['Status'].filter(node => {
-          temstatus.push(node);
-        });
-        data['Represent'].filter(node => {
-          temrepresent.push(node);
-        });
-        data['Connection'].filter(node => {
-          temconnection.push(node);
-        })
-        data['Understanding of SP Thinking'].filter(node => {
-          temunder.push(node);
-        })
-        data['Relationships'].filter(node=>{
-          temrelation.push(node);
-        });
-      
+      if (response && response.length > 0) {
+        response.forEach(data => {
+          let keyName = Object.keys(data)[0];
+          if(keyName === "Name"){
+            temname = data['Name'];
+          }else if(keyName === "Status"){
+            temstatus = data['Status'];
+          }else if(keyName === "Represent"){
+            temrepresent = data['Represent'];
+          }else if(keyName === "Connection"){
+            temconnection = data['Connection'];
+          }else if(keyName === "Understanding of SP Thinking"){
+            temunder = data['Understanding of SP Thinking'];
+          }else if(keyName === "labels"){
+            temtype = data['labels'].map(l=>{
+              return l[0];
+            })
+          }
+        // data['Type'].filter(nodeType => {
+        //   // let x ={
+        //   //   name:node,
+        //   //   color:this.defaultColor[node]
+        //   // }
+        //   temtype.push(nodeType);
+        // });
+        
+        // data['Relationships'].filter(nodeRelations => {
+        //   temrelation.push(nodeRelations);
+        // });
+        
+      });
       }
-      this.nameOptions = temname;
-      this.typeOptions = temtype;
+      this.nameOptions = _.cloneDeep([]);
+      let temp = _.cloneDeep(temname);
+      this.nameOptions = temp;
+      this.sharedGraphData.setFromToData(this.nameOptions);
+      
+      // send the types array for further use to the modals
+      // this.nodeTypesEvent.emit(temtype);
       this.representOptions = temrepresent;
       this.connectionOptions = temconnection;
       this.understandingOptions = temunder;
       this.statusOptions = temstatus;
-      this.relationOptions = temrelation;
+      // temtype = [
+      //       "Philanthropy",
+      //       "NGO/CBO",
+      //       "Consulting",
+      //       "Research Institute",
+      //       "Private Sector",
+      //       "Government",
+      //       "Impact Investor",
+      //       "Media",
+      //       "Academia",
+      //       "International Agency"
+      //     ]
+      temtype = temtype.filter(this.onlyUnique);
+     this.typeOptions = temtype;
+     temrelation = [
+          "Advisory",
+          "Collaborator",
+          "Partner",
+          "Service Provider"
+        ]
+     this.relationOptions = temrelation;
     });
-  }
+    }
 
   onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
@@ -147,40 +195,43 @@ export class DashboardSidebarComponent implements OnInit {
 
   searchGraph() {
     let requestBody;
-    if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0) {
+    // tslint:disable-next-line: max-line-length
+    if (
+      this.selectedName.length > 0 || this.selectedType.length > 0 ||
+      this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 ||
+      this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0
+      ) {
       this.selectedGraph = [];
-      if(this.selectedName.length>0){
-        this.selectedGraph.push({ type: "Name", value: this.selectedName });
+      if ( this.selectedName.length > 0 ) {
+        this.selectedGraph.push({ type: 'Name', value: this.selectedName });
       }
-      if(this.selectedType.length>0){
-        this.selectedGraph.push({ type: "Type", value: this.selectedType });
+      if ( this.selectedType.length > 0 ) {
+        this.selectedGraph.push({ type: 'Type', value: this.selectedType });
       }
-      if(this.selectedConnection.length>0){
-        this.selectedGraph.push({ type: "Connection", value: this.selectedConnection });
+      if ( this.selectedConnection.length > 0 ) {
+        this.selectedGraph.push({ type: 'Connection', value: this.selectedConnection });
       }
-      if(this.selectedRepresent.length>0){
-        this.selectedGraph.push({ type: "Represent", value: this.selectedRepresent });
+      if ( this.selectedRepresent.length > 0 ) {
+        this.selectedGraph.push({ type: 'Represent', value: this.selectedRepresent });
       }
-      if(this.selectedStatus.length>0){
-        this.selectedGraph.push({ type: "Status", value: this.selectedStatus });
+      if ( this.selectedStatus.length > 0 ) {
+        this.selectedGraph.push({ type: 'Status', value: this.selectedStatus });
       }
-      if(this.selectedUnderstanding.length>0){
-        this.selectedGraph.push({ type: "Understanding of SP Thinking", value: this.selectedUnderstanding });
+      if ( this.selectedUnderstanding.length > 0 ) {
+        this.selectedGraph.push({ type: 'Understanding of SP Thinking', value: this.selectedUnderstanding });
       }
-      if(this.selectedUrl.length>0){
-        this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
+      if ( this.selectedUrl.length > 0 ) {
+        this.selectedGraph.push({ type: 'Url', value: this.selectedUrl });
       }
       requestBody = { nodes: this.selectedGraph };
-    }else{
-      // if no selected element 
+    } else {
+      // if no selected element
       requestBody = { };
     }
-    
-
-      this.sharedGraphData.setGraphData(requestBody);
-      if (this.count === 1) {
-        this.eventClicked.emit('search' + this.count);
-        this.count = 2;
+    this.sharedGraphData.setGraphData(requestBody);
+    if (this.count === 1) {
+      this.eventClicked.emit('search' + this.count);
+      this.count = 2;
       } else {
         this.eventClicked.emit('search' + this.count);
         this.count = 1;
@@ -290,7 +341,7 @@ export class DashboardSidebarComponent implements OnInit {
   }
 
   // return all nodes with selected relation
-  relationSearchGraph(){
+  relationSearchGraph() {
     let requestBody;
      if (this.selectedRelation.length > 0) {
       this.selectedRelationship = [];
@@ -328,7 +379,7 @@ export class DashboardSidebarComponent implements OnInit {
   }
 
   // this return selected name and type
-  private selectedNodeCheck(){
+  private selectedNodeCheck() {
       if(this.selectedName.length > 0 && this.selectedType.length > 0){
         let temNodeArray = [];
         temNodeArray.push({ type: "Name", value: this.selectedName });
@@ -340,7 +391,7 @@ export class DashboardSidebarComponent implements OnInit {
         return [{ type: "Name", value: this.selectedName }];
       }
   }
-  noderelationSearchGraph(){
+  noderelationSearchGraph() {
     if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0 && this.selectedRelation.length > 0) {
       this.selectedRelationship = [];
       this.selectedRelation.map(rel=>{
@@ -367,4 +418,20 @@ export class DashboardSidebarComponent implements OnInit {
       }
 
   }
+
+
+  networkElementClick(element) {}
+
+
+  //
+  NodeLimitToggleHandler(event) {
+    try {
+      if (event.constructor === Object) {
+        this.showDisabled = event['isOn'];
+      }
+    } catch (e) {
+      this.showDisabled = false;
+    }
+    this.sharedGraphData.sendToogleStatus(this.showDisabled);
+    }
 }

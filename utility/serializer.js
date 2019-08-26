@@ -5,7 +5,7 @@ const colorManager = require('./graphColorManager');
 var seperateNodes = [];
 var seperateEdges = [];
 
-var Neo4JtoVisFormat = (data) => {
+var Neo4JtoVisFormat = (data, showDeleted = false) => {
     // clean the data containers before processing
     seperateNodes = [];
     seperateEdges = [];
@@ -19,12 +19,14 @@ var Neo4JtoVisFormat = (data) => {
                 // node are at index 0 and 1, edge is at position 2
                 let realNodes = dataNode._fields;
                 realNodes.forEach(someData => {
-                    if (someData.hasOwnProperty('start') && someData.hasOwnProperty('end')) {
-                        // this someData is an edge
-                        seperateEdges.push(someData);
-                    } else {
-                        //it is a node
-                        seperateNodes.push(someData);
+                    if (!!someData) {
+                        if (someData.hasOwnProperty('start') && someData.hasOwnProperty('end')) {
+                            // this someData is an edge
+                            seperateEdges.push(someData);
+                        } else {
+                            //it is a node
+                            seperateNodes.push(someData);
+                        }
                     }
                 });
                 /* let node1 = dataNode._fields[0];
@@ -44,8 +46,10 @@ var Neo4JtoVisFormat = (data) => {
          * Edges should be array objects with each object having from and to key also
          */
         try {
-            seperateNodes = processNodes(seperateNodes);
+            seperateNodes = processNodes(seperateNodes, showDeleted);
             seperateEdges = processEdges(seperateEdges);
+            seperateNodes = _.uniqBy(seperateNodes, 'id');
+            seperateEdges = _.uniqBy(seperateEdges, (edge) => { return [edge.from, edge.to, edge.label].join(); });
         } catch (e) {
             console.error('An error occured while serializing the edges accordingly', e);
         }
@@ -54,7 +58,7 @@ var Neo4JtoVisFormat = (data) => {
     }
 }
 
-function serializeProperties(propertyObject) {
+function serializeProperties(propertyObject, showDeleted = false) {
     if (propertyObject.constructor === Object) {
         let finalString = '';
         _.forOwn(Object.keys(propertyObject), (key) => {
@@ -68,11 +72,8 @@ function serializeProperties(propertyObject) {
     } else return null
 }
 
-function processNodes(nodeArray) {
+function processNodes(nodeArray, showDeleted = false) {
     let processedNode = [];
-    console.log("done");
-    var x = 5;
-    console.log(x);
     let preprocessedNodeFiltered = [];
     if (nodeArray.length > 0) {
         // serialize edges accordingly
@@ -84,14 +85,22 @@ function processNodes(nodeArray) {
                     node.properties['Type'] = node.labels[0];
                 }
                 preprocessedNode = {
-                    properties: node.properties || null,
-                    type: node.labels || null,
-                    id: node.identity.low,
-                    label: node.properties.Name || 'No Name',
-                    font: { align: 'middle' },
-                    value: 30,
-                    title: serializeProperties(node.properties),
-                }
+                        properties: node.properties || null,
+                        type: node.labels || null,
+                        id: node.identity.low,
+                        label: node.properties.Name || 'No Name',
+                        font: { align: 'middle' },
+                        value: 30
+                    }
+                    // check show deleted
+                    // if (!showDeleted) {
+                    //     // remove the deleted property as it is not required in the frontend
+                    //     if (preprocessedNode.properties.hasOwnProperty('deleted')) {
+                    //         delete preprocessedNode.properties.deleted;
+                    //     }
+                    // }
+                    //add the new title veresion of properties
+                preprocessedNode['title'] = serializeProperties(preprocessedNode.properties, showDeleted);
                 return preprocessedNode;
             });
             // make them unique
@@ -114,17 +123,21 @@ function processEdges(edgeArray) {
             processedEdge = edgeArray.map(edge => {
                 let preprocessedEdge = edge;
                 preprocessedEdge = {
-                    from: edge.start.low,
-                    to: edge.end.low,
-                    properties: edge.properties || null,
-                    type: edge.type || null,
-                    identity: edge.identity || null,
-                    label: edge.type || 'Name not available',
-                    arrows: 'to',
-                    font: { align: 'bottom' },
-                    title: serializeProperties(edge.properties),
-                    color: colorManager.getEdgeColors(edge.type)
-                }
+                        from: edge.start.low,
+                        to: edge.end.low,
+                        properties: edge.properties || null,
+                        type: edge.type || null,
+                        id: edge.identity.low || null,
+                        label: edge.type || 'Name not available',
+                        arrows: 'to',
+                        font: { align: 'bottom' },
+                        color: colorManager.getEdgeColors(edge.type)
+                    }
+                    // if (preprocessedEdge.properties.hasOwnProperty('deleted')) {
+                    //     delete preprocessedEdge.properties.deleted;
+                    // }
+                    // add the text format of updated properties
+                preprocessedEdge['title'] = serializeProperties(preprocessedEdge.properties);
                 return preprocessedEdge;
             });
         } catch (e) {
@@ -137,7 +150,31 @@ function processEdges(edgeArray) {
     }
 }
 
+var processRelations = (relations) => {
+    if (!!relations.length) {
+        try {
+            let data = JSON.parse(relations);
+
+            // data is ready now process it
+            let extractedData = [];
+            data.forEach(record => {
+                if (record.hasOwnProperty('_fields')) {
+                    extractedData.push({ type: record._fields[0], properties: record._fields[1] });
+                }
+            });
+            return extractedData;
+        } catch (e) {
+            // Error occured while parsing the data
+            console.error('Error occured while parsing the relations data in processRelations() ->', e);
+        }
+    } else {
+        // the relations string is empty
+        console.error('Cannot parse an empty string ---> error in processRelations()');
+    }
+}
+
 
 module.exports = {
-    Neo4JtoVisFormat
+    Neo4JtoVisFormat,
+    processRelations
 }
