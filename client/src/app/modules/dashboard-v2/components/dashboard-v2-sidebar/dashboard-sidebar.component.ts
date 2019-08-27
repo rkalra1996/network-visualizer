@@ -17,78 +17,35 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
   // tslint:disable-next-line: no-input-rename
   @Input('nodeLimitEnterEvent') nodeLimitOnEnter: any = null;
   private showDisabled = false;
-  public rotateObj = {
-    Name: {
-      rotate: false,
-      color: '#D2E5FE'
-    },
-    Type: {
-      rotate: false,
-      color: '#D2E5FE'
-    },
-    Represent: {
-      rotate: false,
-      color: '#D2E5FE'
-    },
-    Connection: {
-      rotate: false,
-      color: '#D2E5FE'
-    },
-    Status: {
-      rotate: false,
-      color: '#D2E5FE'
-    },
-    Understanding: {
-      rotate: false,
-      color: '#D2E5FE'
-    },
-    Url: {
-      rotate: false,
-      color: '#D2E5FE'
-    }
-  };
+  public rotateObj = {};
   defaultColor = {
-    Academia : 'c_ff4444',
-    Consulting : 'c_ffbb33',
-    Government : 'c_00C851',
-    'Impact Investor' : 'c_33b5e5',
-    'International Agency' : 'c_CC0000',
-    Media : 'c_FF8800',
-    'NGO/CBO' : 'c_007E33',
-    People : 'c_0099CC',
-    Philanthropy : 'c_9933CC',
-    Platform : 'c_0d47a1',
-    'Private Sector' : 'c_2BBBAD',
-    'Research Institute' : 'c_c51162'
-    };
-  @Output() eventClicked = new EventEmitter<string>();
+    Academia: 'c_ff4444',
+    Consulting: 'c_ffbb33',
+    Government: 'c_00C851',
+    'Impact Investor': 'c_33b5e5',
+    'International Agency': 'c_CC0000',
+    Media: 'c_FF8800',
+    'NGO/CBO': 'c_007E33',
+    People: 'c_0099CC',
+    Philanthropy: 'c_9933CC',
+    Platform: 'c_0d47a1',
+    'Private Sector': 'c_2BBBAD',
+    'Research Institute': 'c_c51162'
+  };
+  @Output() eventClicked = new EventEmitter<object>();
   @Output() nodeTypesEvent = new EventEmitter<Array<any>>();
-  nameOptions: Array<string> = [];
-  relationOptions: Array<string> = [];
-  typeOptions: Array<string> = [];
-  representOptions: Array<string> = [];
-  connectionOptions: Array<string> = [];
-  statusOptions: Array<string> = [];
-  understandingOptions: Array<string> = [];
-  urlOptions: Array<string> = [];
-  selectedRelationship: { type: string }[] = [];
-  selectedName: Array<string> = [];
-  selectedRelation: Array<string> = [];
-  selectedType: Array<string> = [];
-  selectedRepresent: Array<string> = [];
-  selectedConnection: Array<string> = [];
-  selectedStatus: Array<string> = [];
-  selectedUnderstanding: Array<string> = [];
-  selectedUrl: Array<string> = [];
-  selectedGraph: { type: string, value: Array<string> }[] = [];
+  public relationOptions: Array<string> = [];
+  public selectedRelationship: { type: string }[] = [];
+  public selectedRelation: Array<string> = [];
+  public selectedAttributeOptions: Array<object> = [];;
+  public selectedGraph: { type: string, value: Array<string> }[] = [];
   public graphData = {};
-  count  = 1;
-  relstatus = false;
-  preSelectedRel: string;
+  public relstatus = false;
+  public preSelectedRel: string;
 
-  edgesNewObject: { type: string, nodeid: Array<number> }[] = [];
-  nodesNewObject: { type: string, nodeid: Array<number> }[] = [];
-  graphInitData: Array<object> = [];
+  public edgesNewObject: { type: string, nodeid: Array<number> }[] = [];
+  public nodesNewObject: { type: string, nodeid: Array<number> }[] = [];
+  public graphInitData: Array<object> = [];
 
   public totalNodesProperties = {};
   public totalRelationsProperties = {};
@@ -97,6 +54,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
 
   public relationTypeOptions: Array<any> = [];
   public relationsData: any;
+  public totalAtrributeOptions: Array<object> = [];
   // Query to fetch all labels
   public queryObj = {
     raw: true,
@@ -105,21 +63,27 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
      UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields,label
      RETURN collect(allfields),label`
   };
-  
+
   constructor(private graphDataService: GraphDataService, private sharedGraphData: SharedGraphService, private searchService: SearchService) { }
 
   ngOnInit() {
     this.getGraph();
   }
 
-   ngOnChanges() {
+  ngOnChanges() {
     // update all dropdown when new node is created
     // get the createdEvent
     if (this.newNodeCreated) {
+      const nodeData = this.newNodeCreated.split('_');
       const nodeEvent = this.newNodeCreated.split('_')[0];
 
       if (nodeEvent === 'NodeEvent') {
-        this.getGraph();
+        if(nodeData[1] === 'restore'){
+          this.updateSidebar(nodeData[2]);
+        }else{
+          this.getGraph();
+        }
+        
       }
     }
     // detect if the user hit enter while entering the nodelimit value
@@ -128,62 +92,54 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       console.log('enter detected after ', this.nodeLimitOnEnter);
       this.searchGraph();
     }
-    }
+  }
 
   // set all data in sidebar dropdown
   getGraph() {
+    this.totalAtrributeOptions = [];
     // fetch the properties of all the nodes and relationships
     this.graphDataService.getGraphProperties()
       .subscribe(response => {
         if (response.hasOwnProperty('nodes')) {
           this.totalNodesProperties = _.cloneDeep(response['nodes']);
           this.sharedGraphData.setNodeProperties(this.totalNodesProperties);
-          let temname = [];
-          let temstatus = [];
-          let temrepresent = [];
-          let temconnection = [];
-          let temunder = [];
           if (this.totalNodesProperties) {
             Object.keys(this.totalNodesProperties).forEach(keyName => {
-              if(keyName === "Name"){
-                temname = this.totalNodesProperties['Name'];
-              }else if(keyName === "Status"){
-                temstatus = this.totalNodesProperties['Status'];
-              }else if(keyName === "Represent"){
-                temrepresent = this.totalNodesProperties['Represent'];
-              }else if(keyName === "Connection"){
-                temconnection = this.totalNodesProperties['Connection'];
-              }else if(keyName === "Understanding of SP Thinking"){
-                temunder = this.totalNodesProperties['Understanding of SP Thinking'];
-              }
-          });
+              if (keyName !== 'deleted')
+                this.totalAtrributeOptions.push({ attribute: keyName, options: this.totalNodesProperties[keyName] });
+              this.rotateObj[keyName] = { rotate: false };
+              this.selectedAttributeOptions[keyName] = [];
+            });
           }
-          this.representOptions = temrepresent;
-          this.connectionOptions = temconnection;
-          this.understandingOptions = temunder;
-          this.statusOptions = temstatus;
-          this.nameOptions = temname;
-        if (response.hasOwnProperty('relations')) {
-          this.totalRelationsProperties = _.cloneDeep(response['relations']);
-          this.sharedGraphData.setRelationProperties(this.totalRelationsProperties);
+          if (response.hasOwnProperty('relations')) {
+            this.totalRelationsProperties = _.cloneDeep(response['relations']);
+            this.sharedGraphData.setRelationProperties(this.totalRelationsProperties);
+          }
+          console.log(this.totalNodesProperties, this.totalRelationsProperties);
         }
-        console.log(this.totalNodesProperties, this.totalRelationsProperties);
-     }
-     }, err => {
+      }, err => {
         console.error('Error while subscribing to graphProperties method -> ', err);
       });
 
-     this.getNodeTypes().subscribe(data=>{
-       this.sharedGraphData.setProcessedData(this.processedData);
-       this.sharedGraphData.setNodeTypes2(this.nodeTypes2);
-       this.typeOptions = this.nodeTypes2;
-     });
-       
-   this.getRelationTypes().subscribe(response => {
-      // this.graphInitData.push(data);
-     this.relationOptions = this.relationTypeOptions;
+    this.getNodeTypes().subscribe(data => {
+      this.sharedGraphData.setProcessedData(this.processedData);
+      this.sharedGraphData.setNodeTypes2(this.nodeTypes2);
+      // this.typeOptions = this.nodeTypes2;
+      this.totalAtrributeOptions.push({ attribute: 'Type', options: this.nodeTypes2 });
+      this.rotateObj['Type'] = { rotate: false };
+
+      // push type to second position
+      let index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === "Name")
+      this.swap(this.totalAtrributeOptions, index, 0);
+      this.swap(this.totalAtrributeOptions, this.totalAtrributeOptions.length - 1, 1);
+
     });
-    }
+
+    this.getRelationTypes().subscribe(response => {
+      // this.graphInitData.push(data);
+      this.relationOptions = this.relationTypeOptions;
+    });
+  }
 
   onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
@@ -191,48 +147,23 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
 
   searchGraph() {
     let requestBody;
-    // tslint:disable-next-line: max-line-length
-    if (
-      this.selectedName.length > 0 || this.selectedType.length > 0 ||
-      this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 ||
-      this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0
-      ) {
-      this.selectedGraph = [];
-      if ( this.selectedName.length > 0 ) {
-        this.selectedGraph.push({ type: 'Name', value: this.selectedName });
+    this.selectedGraph = [];
+    if (this.selectedAttributeOptions) {
+      Object.keys(this.selectedAttributeOptions).forEach(selectedKey => {
+        if (this.selectedAttributeOptions[selectedKey].length > 0) {
+          this.selectedGraph.push({ type: selectedKey, value: this.selectedAttributeOptions[selectedKey] });
+        }
+      });
+      if (this.selectedGraph.length > 0) {
+        requestBody = { nodes: this.selectedGraph };
+      } else {
+        // if no selected element
+        requestBody = {};
       }
-      if ( this.selectedType.length > 0 ) {
-        this.selectedGraph.push({ type: 'Type', value: this.selectedType });
-      }
-      if ( this.selectedConnection.length > 0 ) {
-        this.selectedGraph.push({ type: 'Connection', value: this.selectedConnection });
-      }
-      if ( this.selectedRepresent.length > 0 ) {
-        this.selectedGraph.push({ type: 'Represent', value: this.selectedRepresent });
-      }
-      if ( this.selectedStatus.length > 0 ) {
-        this.selectedGraph.push({ type: 'Status', value: this.selectedStatus });
-      }
-      if ( this.selectedUnderstanding.length > 0 ) {
-        this.selectedGraph.push({ type: 'Understanding of SP Thinking', value: this.selectedUnderstanding });
-      }
-      if ( this.selectedUrl.length > 0 ) {
-        this.selectedGraph.push({ type: 'Url', value: this.selectedUrl });
-      }
-      requestBody = { nodes: this.selectedGraph };
-    } else {
-      // if no selected element
-      requestBody = { };
     }
     this.sharedGraphData.setGraphData(requestBody);
-    if (this.count === 1) {
-      this.eventClicked.emit('search' + this.count);
-      this.count = 2;
-      } else {
-        this.eventClicked.emit('search' + this.count);
-        this.count = 1;
-      }
-
+    let obj = { event: 'search' };
+    this.eventClicked.emit(obj);
   }
 
   // Method gives new edgesArray with related node ids
@@ -297,19 +228,14 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
 
   resetGraph() {
     this.getGraph();
-    this.selectedName = [];
-    this.selectedType = [];
-    this.selectedRepresent = [];
-    this.selectedStatus = [];
-    this.selectedConnection = [];
-    this.selectedUnderstanding = [];
-    this.selectedUrl = [];
+    this.selectedAttributeOptions = [];
     this.selectedRelation = [];
     if (this.preSelectedRel) {
       var element = document.getElementById(this.preSelectedRel);
       element.classList.remove("selected");
     }
-    this.eventClicked.emit('reset');
+    let obj = { event: 'reset' };
+    this.eventClicked.emit(obj);
   }
 
 
@@ -326,22 +252,17 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     let requestBody = { nodes: [], edges: this.selectedRelationship };
     console.log("re", requestBody);
     this.sharedGraphData.setGraphData(requestBody);
-    if (this.count === 1) {
-      this.eventClicked.emit('search' + this.count);
-      this.count = 2;
-    } else {
-      this.eventClicked.emit('search' + this.count);
-      this.count = 1;
-    }
+    let obj = { event: 'search' }
+    this.eventClicked.emit(obj);
     this.preSelectedRel = selectedRelation;
   }
 
   // return all nodes with selected relation
   relationSearchGraph() {
     let requestBody;
-     if (this.selectedRelation.length > 0) {
+    if (this.selectedRelation.length > 0) {
       this.selectedRelationship = [];
-      this.selectedRelation.map(rel=>{
+      this.selectedRelation.map(rel => {
         this.selectedRelationship.push({ type: rel });
       })
       // let temNodes = [];
@@ -356,67 +277,54 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       //   if(temNodes.length > 0){
       //      requestBody= { nodes: temNodes, edges: this.selectedRelationship };
       //   }else{
-           requestBody= { nodes: [], edges: this.selectedRelationship };
-        // }
-      } else{
-        // if no selected element 
-        requestBody = { };
-      }
-      this.sharedGraphData.setGraphData(requestBody);
-      if (this.count === 1) {
-        this.eventClicked.emit('search' + this.count);
-        this.count = 2;
-      } else {
-        this.eventClicked.emit('search' + this.count);
-        this.count = 1;
-      }
-
-    
+      requestBody = { nodes: [], edges: this.selectedRelationship };
+      // }
+    } else {
+      // if no selected element 
+      requestBody = {};
+    }
+    this.sharedGraphData.setGraphData(requestBody);
+    let obj = { event: 'search' }
+    this.eventClicked.emit(obj);
   }
 
   // this return selected name and type
-  private selectedNodeCheck() {
-      if(this.selectedName.length > 0 && this.selectedType.length > 0){
-        let temNodeArray = [];
-        temNodeArray.push({ type: "Name", value: this.selectedName });
-        temNodeArray.push({ type: "Type", value: this.selectedType});
-        return temNodeArray;
-      }else if(this.selectedType.length > 0){
-          return [{ type: "Type", value: this.selectedType }];
-      }else if(this.selectedName.length > 0){
-        return [{ type: "Name", value: this.selectedName }];
-      }
+  selectedNodeCheck() {
+    if (this.selectedName.length > 0 && this.selectedType.length > 0) {
+      let temNodeArray = [];
+      temNodeArray.push({ type: "Name", value: this.selectedName });
+      temNodeArray.push({ type: "Type", value: this.selectedType });
+      return temNodeArray;
+    } else if (this.selectedType.length > 0) {
+      return [{ type: "Type", value: this.selectedType }];
+    } else if (this.selectedName.length > 0) {
+      return [{ type: "Name", value: this.selectedName }];
+    }
   }
   noderelationSearchGraph() {
     if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0 && this.selectedRelation.length > 0) {
       this.selectedRelationship = [];
-      this.selectedRelation.map(rel=>{
+      this.selectedRelation.map(rel => {
         this.selectedRelationship.push({ type: rel });
       })
     }
     this.selectedGraph = [];
-      this.selectedGraph.push({ type: "Name", value: this.selectedName });
-      this.selectedGraph.push({ type: "Type", value: this.selectedType });
-      this.selectedGraph.push({ type: "Connection", value: this.selectedConnection });
-      this.selectedGraph.push({ type: "Represent", value: this.selectedRepresent });
-      this.selectedGraph.push({ type: "Status", value: this.selectedStatus });
-      this.selectedGraph.push({ type: "Thinking", value: this.selectedUnderstanding });
-      this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
-      let requestBody = { nodes: this.selectedGraph, edges: this.selectedRelationship };
+    this.selectedGraph.push({ type: "Name", value: this.selectedName });
+    this.selectedGraph.push({ type: "Type", value: this.selectedType });
+    this.selectedGraph.push({ type: "Connection", value: this.selectedConnection });
+    this.selectedGraph.push({ type: "Represent", value: this.selectedRepresent });
+    this.selectedGraph.push({ type: "Status", value: this.selectedStatus });
+    this.selectedGraph.push({ type: "Thinking", value: this.selectedUnderstanding });
+    this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
+    let requestBody = { nodes: this.selectedGraph, edges: this.selectedRelationship };
 
-      this.sharedGraphData.setGraphData(requestBody);
-      if (this.count === 1) {
-        this.eventClicked.emit('search' + this.count);
-        this.count = 2;
-      } else {
-        this.eventClicked.emit('search' + this.count);
-        this.count = 1;
-      }
-
+    this.sharedGraphData.setGraphData(requestBody);
+    let obj = { event: 'search' }
+    this.eventClicked.emit(obj);
   }
 
 
-  networkElementClick(element) {}
+  networkElementClick(element) { }
 
 
   //
@@ -429,7 +337,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       this.showDisabled = false;
     }
     this.sharedGraphData.sendToogleStatus(this.showDisabled);
-    }
+  }
 
 
   extractLabels(data) {
@@ -442,7 +350,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
 
 
   getNodeTypes() {
-    return  this.searchService.runQuery(this.queryObj).pipe(map(data => {
+    return this.searchService.runQuery(this.queryObj).pipe(map(data => {
       console.log('recieved label data from service ', data);
       this.processedData = this.processData(data);
       // extract types from the array
@@ -522,4 +430,17 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     return typesArray;
   }
 
+  swap(ArrayForSwapping, swapFromIndex, swapToIndex) {
+    const temp = ArrayForSwapping[swapFromIndex];
+    ArrayForSwapping[swapFromIndex] = ArrayForSwapping[swapToIndex];
+    ArrayForSwapping[swapToIndex] = temp;
+    return ArrayForSwapping;
+  }
+
+  updateSidebar(nodeData){
+    if(nodeData){
+      let index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === "Name")
+      this.totalAtrributeOptions[index]['options'].push(nodeData);
+    }
+  }
 }

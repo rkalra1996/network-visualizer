@@ -183,7 +183,7 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     this.disabledBox = false;
       let extractedTypes = this.relationTypeOptions;
       // add the new type option on top
-      let index = this.relationTypeOptions.indexOf(extractedTypes);
+      let index = extractedTypes.indexOf(this.ADD_NEW_TYPE);
       if(index < 0){
         extractedTypes = this.pushOnTop(this.ADD_NEW_TYPE, extractedTypes);
       }

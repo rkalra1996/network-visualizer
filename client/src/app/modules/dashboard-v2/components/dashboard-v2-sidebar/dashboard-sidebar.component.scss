@@ -67,6 +67,7 @@
     font-size: 16px;
     width: 100%;
     padding: 0;
+    // height: 20%;
     // padding-left: 30px;
     span {
         margin-right: 20px;
@@ -76,6 +77,15 @@
 .hoverable:hover {
     font-size: 18px;
     transition: 0.5s;
+}
+
+.item-container {
+    height: 40vh;
+    overflow-y: auto;
+}
+
+.item-container::-webkit-scrollbar {
+    display: none;
 }
 
 .item,
@@ -254,8 +264,9 @@ span.ele-count.count-org {
 .spanWrapper {
     font-family: 'Kanit', sans-serif;
     font-weight: bold;
-    max-width : 135px;
+    max-width: 135px;
 }
+
 // an attempt to make it a bit responsive
 @media screen and (max-width: '1100px') {
     .sidebar-wrapper {

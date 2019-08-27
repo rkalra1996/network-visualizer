@@ -3,25 +3,28 @@
         <div class="sidebarBodyTitle">
             <p>Filter By Attributes</p>
         </div>
-        <div class="sidebarElements">
-            <div class="item">
-                <span class=""></span><a class="item-text hoverable" (click)="networkElementClick('Name');rotateObj.Name.rotate = !rotateObj.Name.rotate" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"
-                    [ngClass]="{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}">Names<span class="ele-count count-org">{{nameOptions.length}}</span></a>
-                <span class="fas fa-chevron-right" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" (click)="rotateObj.Name.rotate = !rotateObj.Name.rotate" [ngClass]="{'rotate': rotateObj?.Name.rotate, 'no-rotate': !rotateObj?.Name.rotate}"></span>
-                <div class="collapse" id="collapseExample">
-                    <sui-multi-select [(ngModel)]="selectedName" [options]="nameOptions" [maxSelected]="15" (ngModelChange)="searchElement()" #names>
-                        <div class="ui icon search input">
-                            <i class="search icon"></i>
-                            <input suiSelectSearch type="text" placeholder="Search Name...">
-                        </div>
-                        <div class="scrolling menu">
-                            <sui-select-option *ngFor="let o of names.filteredOptions" [value]="o"></sui-select-option>
-                        </div>
-                    </sui-multi-select>
+        <div class="sidebarElements" *ngIf="totalAtrributeOptions?.length > 0">
+            <div class="item-container">
+                <div class="item" *ngFor="let attributeOptions of totalAtrributeOptions; let i = index">
+                    <span class=""></span><a class="item-text hoverable" (click)="networkElementClick(attributeOptions['attribute']);rotateObj[attributeOptions['attribute']]['rotate'] = !rotateObj[attributeOptions['attribute']]['rotate']" data-toggle="collapse"
+                        href="#collapseExample{{i}}" role="button" aria-expanded="false" [attr.aria-controls]="'collapseExample'+i" [ngClass]="{'rotate': rotateObj[attributeOptions['attribute']]['rotate'], 'no-rotate': !rotateObj[attributeOptions['attribute']]['rotate']}">{{attributeOptions['attribute']}}<span class="ele-count count-org">{{attributeOptions['options'].length}}</span></a>
+                    <span class="fas fa-chevron-right" data-toggle="collapse" [attr.href]="'#collapseExample'+i" role="button" aria-expanded="false" [attr.aria-controls]="'collapseExample'+i" (click)="rotateObj[attributeOptions['attribute']]['rotate'] = !rotateObj[attributeOptions['attribute']]['rotate']"
+                        [ngClass]="{'rotate': rotateObj[attributeOptions['attribute']]['rotate'], 'no-rotate': !rotateObj[attributeOptions['attribute']]['rotate']}"></span>
+                    <div class="collapse" id="collapseExample{{i}}">
+                        <sui-multi-select [(ngModel)]="selectedAttributeOptions[attributeOptions['attribute']]" [options]="attributeOptions['options']" [maxSelected]="15" (ngModelChange)="searchElement()" #totalAtrributeOptions>
+                            <div class="ui icon search input">
+                                <i class="search icon"></i>
+                                <input suiSelectSearch type="text" placeholder="Search {{attributeOptions['attribute']}}...">
+                            </div>
+                            <div class="scrolling menu">
+                                <sui-select-option *ngFor="let o of totalAtrributeOptions.filteredOptions" [value]="o"></sui-select-option>
+                            </div>
+                        </sui-multi-select>
+                    </div>
                 </div>
             </div>
-            <div class="item">
-                <span class=""></span><a class="item-text hoverable" (click)="networkElementClick('Type');rotateObj.Type.rotate = !rotateObj.Type.rotate" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2"
+            <!-- <div class="item">
+                <span class=""></span><a class="item-text hoverable" (click)="networkElementClick('Type');rotateObj.Type.rotate = !rotateObj[Type]rotate" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2"
                     [ngClass]="{'rotate': rotateObj?.Type.rotate, 'no-rotate': !rotateObj?.Type.rotate}">Type<span class="ele-count count-department">{{typeOptions.length}}</span></a>
                 <span class="fas fa-chevron-right" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2" (click)="rotateObj.Type.rotate = !rotateObj.Type.rotate" [ngClass]="{'rotate': rotateObj?.Type.rotate, 'no-rotate': !rotateObj?.Type.rotate}"></span>
                 <div class="collapse" id="collapseExample2">
@@ -118,7 +121,7 @@
                         </div>
                     </sui-multi-select>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="btn-container d-flex justify-content-around">
             <div class="searchBtnWrapper btn-sidebar">
@@ -159,7 +162,7 @@
                 </div>
                 <div class="btn-container d-flex justify-content-around">
                     <span>Show deleted data</span>
-                    <app-toggle-switch (toggleEvent) = "NodeLimitToggleHandler($event)"></app-toggle-switch>
+                    <app-toggle-switch (toggleEvent)="NodeLimitToggleHandler($event)"></app-toggle-switch>
                 </div>
             </div>
         </div>

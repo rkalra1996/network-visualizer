@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="!showDeletedData">
+<div class="container-fluid">
     <div class="btn-group nodes">
         <button type="button" (click)="createNode()" data-toggle="modal" data-target="#createNodeModal" class="btn" aria-expanded="false">
       Create Element
@@ -41,7 +41,7 @@
                                   </sui-select>
                         </ng-container>
                         <ng-container *ngIf="selectedType === ADD_NEW_LABEL">
-                            <span class="inputSpan"><input type="text" id="id_newLabelNode"></span>
+                            <div class="ui input typeTextBox"><input type="text" placeholder="Enter Type..." id="id_newLabelNode"></div>
                     </ng-container>
                     </span>
                 </div>
@@ -157,7 +157,7 @@
                     </sui-select>
                         </ng-container>
                         <ng-container *ngIf="selectedType === ADD_NEW_TYPE">
-                            <span class="inputSpan"><input type="text" id="id_newLabelRelation"></span>
+                            <div class="ui input typeTextBox"><input type="text" placeholder="Enter Type..." id="id_newLabelRelation"></div>
                     </ng-container>
                     </span>
                 </div>
@@ -272,7 +272,8 @@
                 <button type="button" class="btn btn-danger deleteBtn left" *ngIf="(popupConfig.editRelationPopup === true || editRelationPopup === true) && !restoreOptions" style="color: white;" (click)="activateDelete('deleteModal', 'relation')">Delete</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
                 <button type="button" class="btn btn-primary create" (click)="submitRelModal()" *ngIf="(popupConfig.createRelationPopup === true || createRelationPopup === true) && !restoreOptions" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0">Create</button>
-                <button type="button" class="btn btn-primary create" (click)="submitRelModal('edit')" *ngIf="(popupConfig.editRelationPopup === true || editRelationPopup === true) && !restoreOptions" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0" id="edit_btn">Update</button>
+                <button type="button" class="btn btn-primary create" (click)="submitRelModal('edit')" *ngIf="(popupConfig.editRelationPopup === true || editRelationPopup === true) && !restoreOptions" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0"
+                    id="edit_btn">Update</button>
                 <button type="button" id="restoreBtn" class="btn btn-info restoreBtn" *ngIf="(popupConfig.editRelationPopup === true || editRelationPopup === true) && restoreOptions" style="color: white;" (click)="restoreData('relation')">Restore </button>
 
             </div>

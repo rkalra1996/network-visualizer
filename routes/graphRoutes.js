@@ -100,7 +100,7 @@ router.get('/initialdatav2', (req, res) => {
     if (req.query.hasOwnProperty('deleted')) {
         showDeleted = req.query.deleted === 'true' ? true : false;
     }
-    neo4j.getDataV2({query : "", showDeleted})
+    neo4j.getDataV2({ query: "", showDeleted })
         .then(response => {
             res.send(response);
         })
@@ -127,29 +127,30 @@ router.post('/graph/datav2', (req, res) => {
         res.status(400).send({ 'error': 'Request Body is required to access the API' });
     }
 });
-router.get('/graph/labeldata', (req, res) => {
-    console.log('label data');
-    // get initial data from the data base
-    neo4j.getGraphLabelData()
-        .then(response => {
-            res.send(response);
-        })
-        .catch(err => {
-            console.log('err occured while sending back graph labels data', err);
-            res.sendStatus(500);
-        });
-});
 
-router.get('/graph/labels', (req, res) => {
-    neo4j.getGraphLabels()
-        .then(result => {
-            res.send(result);
-        })
-        .catch(err => {
-            console.log('err occured while sending back labels');
-            res.status(500).send(err);
-        })
-})
+// router.get('/graph/labeldata', (req, res) => {
+//     console.log('label data');
+//     // get initial data from the data base
+//     neo4j.getGraphLabelData()
+//         .then(response => {
+//             res.send(response);
+//         })
+//         .catch(err => {
+//             console.log('err occured while sending back graph labels data', err);
+//             res.sendStatus(500);
+//         });
+// });
+
+// router.get('/graph/labels', (req, res) => {
+//     neo4j.getGraphLabels()
+//         .then(result => {
+//             res.send(result);
+//         })
+//         .catch(err => {
+//             console.log('err occured while sending back labels');
+//             res.status(500).send(err);
+//         })
+// })
 
 router.post('/graph/node/create', (req, res) => {
     console.log('create node hit');
@@ -239,7 +240,7 @@ router.get('/graph/relations', (req, res) => {
         })
 });
 
-router.post('/graph/node/delete', (req,res) => {
+router.post('/graph/node/delete', (req, res) => {
     console.log('delete node hit');
     // get the body, else return the error that no body is provided
     if (!!Object.keys(req.body).length) {
@@ -258,7 +259,7 @@ router.post('/graph/node/delete', (req,res) => {
     }
 });
 
-router.post('/graph/relation/delete', (req,res) => {
+router.post('/graph/relation/delete', (req, res) => {
     console.log('delete relation hit');
     // get the body, else return the error that no body is provided
     if (!!Object.keys(req.body).length) {
@@ -277,35 +278,34 @@ router.post('/graph/relation/delete', (req,res) => {
     }
 });
 
-router.get('/graph/properties', (req,res) => {
+router.get('/graph/properties', (req, res) => {
     console.log('/graph/properties hit\n');
     neo4j.fetchGraphProperties()
-    .then(response => {
-        console.log('sending back  data from /graph/properties');
-        res.send(response);
-    })
-    .catch(err => {
-        console.error('An Error occured while sending back relations data ->', err);
-        res.status(500).send({ error: 'Something went wrong while sending back the data' });
-    })
+        .then(response => {
+            console.log('sending back  data from /graph/properties');
+            res.send(response);
+        })
+        .catch(err => {
+            console.error('An Error occured while sending back relations data ->', err);
+            res.status(500).send({ error: 'Something went wrong while sending back the data' });
+        })
 });
 
-router.post('/graph/data/restore', (req,res)=> {
+router.post('/graph/data/restore', (req, res) => {
     // to restore the nodes / relationships provided as array
     console.log('\x1b[36m%s\x1b[0m', '/graph/data/restore hit');
     if (!!Object.keys(req.body).length) {
         neo4j.restoreData(req)
-        .then(response => {
-            console.log("\x1b[32m", 'Returning response from /graph/data/restore');
-            res.status(200).send(response);
-        })
-        .catch( err => {
-            res.status(500).send({'error': 'An error occured while processing your request'});
-        })
-    }
-    else {
+            .then(response => {
+                console.log("\x1b[32m", 'Returning response from /graph/data/restore');
+                res.status(200).send(response);
+            })
+            .catch(err => {
+                res.status(500).send({ 'error': 'An error occured while processing your request' });
+            })
+    } else {
         console.log('\x1b[31m', 'Body not provided to access the API');
-        res.status(400).send({'error': 'Request body is required to access the API'});
+        res.status(400).send({ 'error': 'Request body is required to access the API' });
     }
 });
 

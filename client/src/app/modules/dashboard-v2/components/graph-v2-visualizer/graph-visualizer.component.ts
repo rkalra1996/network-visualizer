@@ -12,7 +12,7 @@ import { elementOperation } from './../../interfaces/elementOperation'
 })
 export class GraphVisualizerComponent implements OnInit {
 
-  @Input() event: String;
+  @Input() event: Object;
   @Input() totalTypesArray = [];
   @Output() newNodeCreated = new EventEmitter<string>();
   @Output() nodeLimitEvent = new EventEmitter<string | null>();
@@ -193,10 +193,16 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.changeNodeColor();
+    if (this.event) {
+      const searchEvent = this.event['event'];
+      if (searchEvent === 'search' || searchEvent === 'reset') {
+        this.event = searchEvent;
+        this.changeNodeColor();
+      }
+    }
   }
   changeNodeColor() {
-    if (this.event === 'search1' || this.event === 'search2') {
+    if (this.event === 'search') {
       this.loader = true;
       this.showGraphData();
     } else if (this.event === 'reset') {
@@ -646,6 +652,8 @@ export class GraphVisualizerComponent implements OnInit {
           let tem = _.cloneDeep(oldNode);
           tem['title'] = this.stringifyProperties(tem);
           this.filteredGraphData['nodes'].push(tem);
+          // update sidebar name
+          this.newNodeCreated.emit("NodeEvent_restore_" + node['label']);
           // set it back in VISJS
           this.graphData['nodes'].update(oldNode);
           console.log('updated node ', oldNode);
