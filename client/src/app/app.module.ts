@@ -10,10 +10,12 @@ import { SharedModule } from './modules/shared/shared.module';
 import { SuiModule } from 'ng2-semantic-ui';
 import { CoreModule } from './modules/core/core.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SnackbarComponent } from './modules/custom-material/components/snackbar/snackbar/snackbar.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SnackbarComponent
   ],
   imports: [
     BrowserModule,

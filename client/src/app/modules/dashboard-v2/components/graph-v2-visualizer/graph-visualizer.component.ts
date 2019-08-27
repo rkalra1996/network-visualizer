@@ -5,6 +5,8 @@ import * as _ from 'lodash';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
 import { elementOperation } from './../../interfaces/elementOperation';
 
+import {MaterialService} from './../../../custom-material/services/material-core/material.service';
+
 @Component({
   selector: 'app-graph-visualizer',
   templateUrl: './graph-visualizer.component.html',
@@ -16,6 +18,24 @@ export class GraphVisualizerComponent implements OnInit {
   @Input() totalTypesArray = [];
   @Output() newNodeCreated = new EventEmitter<string>();
   @Output() nodeLimitEvent = new EventEmitter<string | null>();
+
+  private NODE_CREATE_TEXT_SUCCESS = 'Node has been created successfully !';
+  private NODE_CREATE_TEXT_ERROR = 'An error occured while creating a new node !';
+  private NODE_CREATE_TEXT_ERROR_VIS = 'An error occured while displaying the new node !';
+  private NODE_UPDATE_TEXT_SUCCESS = 'Node has been updated successfully !';
+  private NODE_UPDATE_TEXT_ERROR = 'An error occured while updating the node !';
+  private NODE_UPDATE_TEXT_ERROR_VIS = 'An error occured while displaying updated node in the graph !';
+  private NODE_DELETE_TEXT_SUCCESS = 'Node has been deleted successfully !';
+  private NODE_DELETE_TEXT_ERROR = 'An error occured while deleting the Node !';
+  private RELATION_CREATE_TEXT_SUCCESS = 'New Relationship created successfully !';
+  private RELATION_CREATE_TEXT_ERROR = 'An error occured while creating new relationship !';
+  private RELATION_CREATE_TEXT_ERROR_VIS = 'An error occured while displaying the new relationship in graph !';
+  private RELATION_UPDATE_TEXT_SUCCESS = 'Relationship has been updated successfully !';
+  private RELATION_UPDATE_TEXT_ERROR = 'An error occured while upating the relationship !';
+  private RELATION_DELETE_TEXT_SUCCESS = 'Relationship has been deleted successfully !';
+  private RELATION_DELETE_TEXT_ERROR = 'An error occured while deleting the relationship from the database !';
+  private DATA_RESTORE_TEXT_SUCCESS = 'Data has been restored successfully !'
+  private DATA_RESTORE_TEXT_ERROR = 'An error occured while restoring the data !'
   private showDeletedData = null;
   public promptRelationCreateAfterNode = null;
   public requestedNodeDetails = null;
@@ -99,7 +119,10 @@ export class GraphVisualizerComponent implements OnInit {
   public allGraphData = {};
   public filteredGraphData = {};
 
-  constructor(private graphService: GraphDataService, private sharedGraphService: SharedGraphService) { }
+  constructor(
+    private graphService: GraphDataService,
+    private sharedGraphService: SharedGraphService,
+    private snackBar: MaterialService) { }
 
   ngOnInit() {
     this.loader = true;
@@ -393,12 +416,20 @@ export class GraphVisualizerComponent implements OnInit {
                 this.updateGraphArray(eleObj);
                 // emit the createNodes component that a node has been put into the graph, prompt user to create a relation
                 // send the data of new node for relationPrompt
+
+                // notify user
+                this.snackBar.success({message: this.NODE_CREATE_TEXT_SUCCESS});
+
                 this.promptRelationCreateAfterNode = _.cloneDeep({ created: true, node: visNode });
               } catch (addErr) {
                 console.error('Error while adding the data node to vis ', addErr['message']);
+                this.snackBar.error({message: this.NODE_CREATE_TEXT_ERROR_VIS});
+
               }
             }, error => {
               console.error('An error occured while creating node in  database ', error);
+              this.snackBar.error({message: this.NODE_CREATE_TEXT_ERROR});
+
             });
           }
         });
@@ -460,16 +491,18 @@ export class GraphVisualizerComponent implements OnInit {
               this.newNodeCreated.emit('NodeEvent_update' + response['seperateNodes'][0].id);
             }
             console.log(visNode);
+            this.snackBar.success({message: this.NODE_UPDATE_TEXT_SUCCESS});
 
           } catch (updateErr) {
             // any error encountered while updating the node in vis js
             console.error('Error while upating the data node to vis ', updateErr['message']);
+            this.snackBar.error({message: this.NODE_UPDATE_TEXT_ERROR_VIS});
           }
         }, err => {
           console.error('An error occured while updating node in database ', err);
+          this.snackBar.error({message: this.NODE_UPDATE_TEXT_ERROR});
         });
       } else if (event.action === 'delete') {
-        console.log('Node delete has been clicked', event.data);
         const nodeID = event.data.id;
         // get the list of relation ids which are connected to this node
         const connectedEdgeIDs = this.network.getConnectedEdges(nodeID);
@@ -516,8 +549,10 @@ export class GraphVisualizerComponent implements OnInit {
           this.hideDelModal = _.cloneDeep(true);
           //update sidebar dropdown
           this.newNodeCreated.emit('NodeEvent_delete' + response['seperateNodes'][0].id);
+          this.snackBar.success({message: this.NODE_DELETE_TEXT_SUCCESS});
         }, err => {
           console.error('An error occured while reading response for node delete ', err);
+          this.snackBar.error({message: this.NODE_DELETE_TEXT_ERROR});
         });
       } else {
         // invalid click event
@@ -563,15 +598,17 @@ export class GraphVisualizerComponent implements OnInit {
               eleObj.event = "create";
               this.updateGraphArray(eleObj);
             }
+            this.snackBar.success({message: this.RELATION_CREATE_TEXT_SUCCESS});
           } catch (addErr) {
             console.log('Error while adding the data relation to vis ', addErr['message']);
+            this.snackBar.error({message: this.RELATION_CREATE_TEXT_ERROR_VIS});
           }
         }, error => {
           console.log('error while reading new relation data from service ', error);
+          this.snackBar.error({message: this.RELATION_CREATE_TEXT_ERROR});
         });
       } else if (event.action === 'edit') {
         // capture the details of the relationship clicked by the user, clean it if needed and send for use
-        console.log('Relation edit is being clicked');
         // hit the update relation service and updae it in visJS too
         const relationData = _.cloneDeep(event.data);
         if (relationData.hasOwnProperty('id') && relationData.hasOwnProperty('type')) {
@@ -579,13 +616,14 @@ export class GraphVisualizerComponent implements OnInit {
           this.graphService.updateRelation(relationData).subscribe(response => {
             const newRelation = response['seperateEdges'][0];
             this.updateRelationinVIS(newRelation);
+            this.snackBar.success({message: this.RELATION_UPDATE_TEXT_SUCCESS});
           }, err => {
             console.error('An error occured while reading the updated relation data', err);
+            this.snackBar.error({message: this.RELATION_UPDATE_TEXT_ERROR});
           });
         }
       } else if (event.action === 'delete') {
         // handle the functionality of deleting the node
-        console.log('realtion delete has been clicked', event.data);
         let relationID = null;
         // capture the relation id and send delete request
         if (event.data.hasOwnProperty('id')) {
@@ -613,8 +651,10 @@ export class GraphVisualizerComponent implements OnInit {
               this.graphData['edges'].remove([deletedRel]);
             }
             this.hideDelModal = true;
+            this.snackBar.success({message: this.RELATION_DELETE_TEXT_SUCCESS});
           }, err => {
             console.error('An error occured while reading response for relation delete ', err);
+            this.snackBar.error({message: this.RELATION_DELETE_TEXT_ERROR});
           });
         } else {
           console.warn('did not recieve the id of relation for deletion in edgeEventCapture');
@@ -917,11 +957,12 @@ export class GraphVisualizerComponent implements OnInit {
           this.restoredData = null;
           this.loader = false;
         }
-
+        this.snackBar.success({message: this.DATA_RESTORE_TEXT_SUCCESS});
       }, error => {
         console.error('An error occured while restoring the data from the API');
         console.log(error);
         this.loader = false;
+        this.snackBar.error({message: this.DATA_RESTORE_TEXT_ERROR});
       });
     } else {
       console.error('Did not recieve any valid object data for restore');

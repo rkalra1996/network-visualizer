@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ColorServiceService } from './../../../services/colorService/color-service.service';
 import { SharedGraphService } from './../../../../core/services/shared-graph.service';
 import * as _ from "lodash";
-import { MatSnackBar } from '@angular/material/snack-bar';
+// import { MatSnackBar } from '@angular/material/snack-bar'
+import {MaterialService} from './../../../../custom-material/services/material-core/material.service';
 
 @Component({
   selector: 'app-color-panel',
@@ -20,7 +21,7 @@ export class ColorPanelComponent implements OnInit {
   constructor(
     private colorSrvc: ColorServiceService,
     private sharedGraphSrvc: SharedGraphService,
-    private sb: MatSnackBar
+    private sb: MaterialService
     ) { }
 
   ngOnInit() {
@@ -80,8 +81,7 @@ export class ColorPanelComponent implements OnInit {
 
   openSnackBar() {
       // opening snackbar
-      console.log('called');
-      this.sb.open('Helo', 'This  is action', {duration: 2000, verticalPosition : 'top'});
+      this.sb.warn('Loaded successfully');
   }
 
 }

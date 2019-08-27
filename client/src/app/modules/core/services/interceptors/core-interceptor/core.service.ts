@@ -26,8 +26,7 @@ export class CoreService implements HttpInterceptor {
     if (req.method === 'POST') {
       let request = req.clone({body : { ...req.body, showDeleted : this.showDeletedData}});
       return next.handle(request);
-    } else if (req.method === 'GET') {
-      console.log(req.params);
+    } else if (req.method === 'GET' && req.url.split('/').indexOf('config') <= 0) {
       let request = req.clone({url: req.url + `?deleted=${this.showDeletedData}`});
       console.log('new get request created is ', request);
       return next.handle(request);
