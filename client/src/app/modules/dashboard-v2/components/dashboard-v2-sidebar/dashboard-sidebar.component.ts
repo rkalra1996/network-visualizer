@@ -289,39 +289,39 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
   }
 
   // this return selected name and type
-  selectedNodeCheck() {
-    if (this.selectedName.length > 0 && this.selectedType.length > 0) {
-      let temNodeArray = [];
-      temNodeArray.push({ type: "Name", value: this.selectedName });
-      temNodeArray.push({ type: "Type", value: this.selectedType });
-      return temNodeArray;
-    } else if (this.selectedType.length > 0) {
-      return [{ type: "Type", value: this.selectedType }];
-    } else if (this.selectedName.length > 0) {
-      return [{ type: "Name", value: this.selectedName }];
-    }
-  }
-  noderelationSearchGraph() {
-    if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0 && this.selectedRelation.length > 0) {
-      this.selectedRelationship = [];
-      this.selectedRelation.map(rel => {
-        this.selectedRelationship.push({ type: rel });
-      })
-    }
-    this.selectedGraph = [];
-    this.selectedGraph.push({ type: "Name", value: this.selectedName });
-    this.selectedGraph.push({ type: "Type", value: this.selectedType });
-    this.selectedGraph.push({ type: "Connection", value: this.selectedConnection });
-    this.selectedGraph.push({ type: "Represent", value: this.selectedRepresent });
-    this.selectedGraph.push({ type: "Status", value: this.selectedStatus });
-    this.selectedGraph.push({ type: "Thinking", value: this.selectedUnderstanding });
-    this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
-    let requestBody = { nodes: this.selectedGraph, edges: this.selectedRelationship };
+  // selectedNodeCheck() {
+  //   if (this.selectedName.length > 0 && this.selectedType.length > 0) {
+  //     let temNodeArray = [];
+  //     temNodeArray.push({ type: "Name", value: this.selectedName });
+  //     temNodeArray.push({ type: "Type", value: this.selectedType });
+  //     return temNodeArray;
+  //   } else if (this.selectedType.length > 0) {
+  //     return [{ type: "Type", value: this.selectedType }];
+  //   } else if (this.selectedName.length > 0) {
+  //     return [{ type: "Name", value: this.selectedName }];
+  //   }
+  // }
+  // noderelationSearchGraph() {
+  //   if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0 && this.selectedRelation.length > 0) {
+  //     this.selectedRelationship = [];
+  //     this.selectedRelation.map(rel => {
+  //       this.selectedRelationship.push({ type: rel });
+  //     })
+  //   }
+  //   this.selectedGraph = [];
+  //   this.selectedGraph.push({ type: "Name", value: this.selectedName });
+  //   this.selectedGraph.push({ type: "Type", value: this.selectedType });
+  //   this.selectedGraph.push({ type: "Connection", value: this.selectedConnection });
+  //   this.selectedGraph.push({ type: "Represent", value: this.selectedRepresent });
+  //   this.selectedGraph.push({ type: "Status", value: this.selectedStatus });
+  //   this.selectedGraph.push({ type: "Thinking", value: this.selectedUnderstanding });
+  //   this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
+  //   let requestBody = { nodes: this.selectedGraph, edges: this.selectedRelationship };
 
-    this.sharedGraphData.setGraphData(requestBody);
-    let obj = { event: 'search' }
-    this.eventClicked.emit(obj);
-  }
+  //   this.sharedGraphData.setGraphData(requestBody);
+  //   let obj = { event: 'search' }
+  //   this.eventClicked.emit(obj);
+  // }
 
 
   networkElementClick(element) { }

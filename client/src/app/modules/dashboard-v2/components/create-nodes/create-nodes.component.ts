@@ -1084,6 +1084,7 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     } else {
       // nothing
     }
+    this.hideModal('deleteModal');
   }
 
   addNewProperty() {
@@ -1186,17 +1187,17 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     }
   }
 
-  getPropertyValues() {
-    // get the label information from the graph and then seperate different keys and their already filled options
-    this.graphSrvc.getNodeLabelData().pipe(map(data => {
-      if (!data.length) {
-        return of({});
-      }
-      // recieveing some data, filter out the name and labels key and send the rest
-      console.log('label data is ', data);
-      return of(data);
-    }));
-  }
+  // getPropertyValues() {
+  //   // get the label information from the graph and then seperate different keys and their already filled options
+  //   this.graphSrvc.getNodeLabelData().pipe(map(data => {
+  //     if (!data.length) {
+  //       return of({});
+  //     }
+  //     // recieveing some data, filter out the name and labels key and send the rest
+  //     console.log('label data is ', data);
+  //     return of(data);
+  //   }));
+  // }
 
   promptRelation() {
     // call create relation procedure
