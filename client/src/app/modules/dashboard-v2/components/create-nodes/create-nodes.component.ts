@@ -1,12 +1,17 @@
-import { Component, OnInit, EventEmitter, Output, Input, OnChanges, SimpleChanges, ChangeDetectorRef, AfterViewInit, DoCheck } from '@angular/core';
+import {
+  Component, OnInit, EventEmitter, Output, 
+  Input, OnChanges, SimpleChanges,DoCheck
+} from '@angular/core';
+
 import {SearchService} from './../../../shared/services/search-service/search.service';
 import * as _ from 'lodash';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
-import { map, filter } from 'rxjs/operators';
+import { map} from 'rxjs/operators';
 
 import { SharedGraphService } from './../../../core/services/shared-graph.service';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
+import {MaterialService} from './../../../custom-material/services/material-core/material.service';
 
 declare var $: any;
 
@@ -38,6 +43,7 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
   public toolTipText = '';
   public deleteContext = 'node';
   public newNodeName = 'Not Available';
+  public newTypeColor: string | null = null;
   // object to handle modals
   public popupConfig = {
     createNodePopup: false,
@@ -92,7 +98,8 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
       private SharedSrvc: SearchService,
       private graphSrvc: GraphDataService,
       private sharedGraphSrvc: SharedGraphService,
-      private fb: FormBuilder) {
+      private fb: FormBuilder,
+      private snackbar: MaterialService) {
     }
 
   ngOnInit() {
@@ -228,6 +235,8 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
       this.deleteNodePopup = false;
       this.deleteRelationPopup = false;
       this.editData = null;
+      // clear the selected color
+      this.newTypeColor = null;
       this.cleanData.emit('node');
     });
     $('#createRelationModal').on('hidden.bs.modal', (e) => {
@@ -518,6 +527,8 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     console.log('properties object on submit is  ', this.selectedPropertiesObject);
     // pass the captured data into the object and move ahead
     nodeData.properties = _.cloneDeep(this.selectedPropertiesObject);
+    // Add the selected color to this new type, if selected
+    nodeData.properties = this.addNewColorInProperties(nodeData.properties);
     try {
       nodeData = this.validateNodeData(nodeData);
       // hide the modal once the data is created properly
@@ -538,6 +549,14 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  addNewColorInProperties(properties) {
+    if (this.newTypeColor) {
+      // user selected a color code
+      properties['color'] = this.newTypeColor;
+    }
+    return properties;
   }
 
 
@@ -752,7 +771,7 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
       this.setPropertyList(fetchedProperties);
 
       return fetchedProperties.filter(ele => {
-        return ele !== 'deleted';
+        return (ele !== 'deleted' && ele !== 'color');
       });
     } else {
       return [];
@@ -1321,5 +1340,16 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
   ngDoCheck() {
     // resetting the value so that it stays updated anytime needed, temporary bug fix for restoredOptions variable not setting properly
     this.restoreOptions = _.cloneDeep(this.restoreOptions);
+  }
+
+  selectedColorForNewType(event) {
+    console.log('event from parent ', event);
+    this.newTypeColor = event;
+    if (Object.keys(this.totalNodesProperties).indexOf('color') > -1 && this.totalNodesProperties['color'].indexOf(event) > -1) {
+      // the color is already used
+      this.snackbar.warn({message: 'This color is already used, select another one !'});
+    } else {
+      console.log('This is the new color');
+    }
   }
 }

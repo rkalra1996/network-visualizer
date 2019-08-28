@@ -66,7 +66,10 @@ function serializeProperties(propertyObject, showDeleted = false) {
                 // if the key has an integer value then set the low value of it
                 propertyObject[key] = propertyObject[key]['low']
             }
-            finalString += `<strong>${key} :</strong> ${propertyObject[key]} <br>`
+            // no need to put color property in the tooltip title key
+            if (key !== 'color') {
+                finalString += `<strong>${key} :</strong> ${propertyObject[key]} <br>`
+            }
         });
         return finalString;
     } else return null

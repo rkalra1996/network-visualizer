@@ -1,0 +1,5 @@
+<input [(colorPicker)]="newTypeColor" 
+[style.background]="newTypeColor" [cpPosition]="left" 
+id="newTypeColor" [cpFallbackColor]="newTypeColor"
+[cpOKButton]="true" [cpOKButtonText]="'Select'"
+(colorPickerSelect)="selectedColor($event)"/>

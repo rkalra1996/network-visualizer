@@ -16,7 +16,10 @@ export class ColorPanelComponent implements OnInit {
   public objectKeys = [];
   public colorData = [];
   public showDropDown = true;
-  constructor(private colorSrvc: ColorServiceService, private sharedGraphSrvc: SharedGraphService) { }
+  constructor(
+    private colorSrvc: ColorServiceService,
+    private sharedGraphSrvc: SharedGraphService
+    ) { }
 
   ngOnInit() {
     // get color panel details

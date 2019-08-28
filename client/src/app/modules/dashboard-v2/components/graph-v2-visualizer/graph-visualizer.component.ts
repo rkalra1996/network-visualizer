@@ -3,7 +3,9 @@ import { GraphDataService } from 'src/app/modules/core/services/graph-data-servi
 import { Network, DataSet, Node, Edge, IdType } from 'vis';
 import * as _ from 'lodash';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
-import { elementOperation } from './../../interfaces/elementOperation'
+import { elementOperation } from './../../interfaces/elementOperation';
+
+import {MaterialService} from './../../../custom-material/services/material-core/material.service';
 
 @Component({
   selector: 'app-graph-visualizer',
@@ -16,6 +18,24 @@ export class GraphVisualizerComponent implements OnInit {
   @Input() totalTypesArray = [];
   @Output() newNodeCreated = new EventEmitter<object>();
   @Output() nodeLimitEvent = new EventEmitter<string | null>();
+
+  private NODE_CREATE_TEXT_SUCCESS = 'Node has been created successfully !';
+  private NODE_CREATE_TEXT_ERROR = 'An error occured while creating a new node !';
+  private NODE_CREATE_TEXT_ERROR_VIS = 'An error occured while displaying the new node !';
+  private NODE_UPDATE_TEXT_SUCCESS = 'Node has been updated successfully !';
+  private NODE_UPDATE_TEXT_ERROR = 'An error occured while updating the node !';
+  private NODE_UPDATE_TEXT_ERROR_VIS = 'An error occured while displaying updated node in the graph !';
+  private NODE_DELETE_TEXT_SUCCESS = 'Node has been deleted successfully !';
+  private NODE_DELETE_TEXT_ERROR = 'An error occured while deleting the Node !';
+  private RELATION_CREATE_TEXT_SUCCESS = 'New Relationship created successfully !';
+  private RELATION_CREATE_TEXT_ERROR = 'An error occured while creating new relationship !';
+  private RELATION_CREATE_TEXT_ERROR_VIS = 'An error occured while displaying the new relationship in graph !';
+  private RELATION_UPDATE_TEXT_SUCCESS = 'Relationship has been updated successfully !';
+  private RELATION_UPDATE_TEXT_ERROR = 'An error occured while upating the relationship !';
+  private RELATION_DELETE_TEXT_SUCCESS = 'Relationship has been deleted successfully !';
+  private RELATION_DELETE_TEXT_ERROR = 'An error occured while deleting the relationship from the database !';
+  private DATA_RESTORE_TEXT_SUCCESS = 'Data has been restored successfully !'
+  private DATA_RESTORE_TEXT_ERROR = 'An error occured while restoring the data !'
   private showDeletedData = null;
   public promptRelationCreateAfterNode = null;
   public requestedNodeDetails = null;
@@ -99,7 +119,10 @@ export class GraphVisualizerComponent implements OnInit {
   public allGraphData = {};
   public filteredGraphData = {};
 
-  constructor(private graphService: GraphDataService, private sharedGraphService: SharedGraphService) { }
+  constructor(
+    private graphService: GraphDataService,
+    private sharedGraphService: SharedGraphService,
+    private snackBar: MaterialService) { }
 
   ngOnInit() {
     this.loader = true;
@@ -150,7 +173,7 @@ export class GraphVisualizerComponent implements OnInit {
         this.allGraphData['nodes'] = result['seperateNodes'];
         this.allGraphData['edges'] = result['seperateEdges'];
         // to update filtered data
-        this.setFilteredData();
+        this.setFilteredData(this.showDeletedData);
         // check for show deleted toggel
         if (this.showDeletedData) {
           // show all data
@@ -304,7 +327,11 @@ export class GraphVisualizerComponent implements OnInit {
         if (node['properties']['deleted'] === "true" || node['properties']['deleted'] === true) {
           node['color'] = this.colorConfig.deletedColor.colorCode;
         } else {
-          node['color'] = this.colorConfig.defaultColor[node.type[0]];
+          // if the node has a color property, assign that else assign the defaults one
+          node = this.shiftColorKey(node);
+          if (!node.hasOwnProperty('color')) {
+            node['color'] = this.colorConfig.defaultColor[node.type[0]];
+          }
         }
         // node['color'] = this.showDeletedData ? this.colorConfig.deletedColor.colorCode : this.colorConfig.defaultColor[node.type[0]];
         // // temporary fix, add exception for societal platform
@@ -387,6 +414,9 @@ export class GraphVisualizerComponent implements OnInit {
               try {
                 let visNode = _.cloneDeep(this.addData(response['seperateNodes'][0], clickEvent, event));
                 // to remove deleted key from tooltip
+                // Add the color to the newly created node
+                visNode['color'] = newNodeData.properties['color'];
+
                 visNode['title'] = this.stringifyProperties(visNode);
                 // add the new node to the vis
                 this.graphData['nodes'].add([visNode]);
@@ -399,12 +429,20 @@ export class GraphVisualizerComponent implements OnInit {
                 this.updateGraphArray(eleObj);
                 // emit the createNodes component that a node has been put into the graph, prompt user to create a relation
                 // send the data of new node for relationPrompt
+
+                // notify user
+                this.snackBar.success({message: this.NODE_CREATE_TEXT_SUCCESS});
+
                 this.promptRelationCreateAfterNode = _.cloneDeep({ created: true, node: visNode });
               } catch (addErr) {
                 console.error('Error while adding the data node to vis ', addErr['message']);
+                this.snackBar.error({message: this.NODE_CREATE_TEXT_ERROR_VIS});
+
               }
             }, error => {
               console.error('An error occured while creating node in  database ', error);
+              this.snackBar.error({message: this.NODE_CREATE_TEXT_ERROR});
+
             });
           }
         });
@@ -466,16 +504,18 @@ export class GraphVisualizerComponent implements OnInit {
               this.newNodeCreated.emit({ event: 'NodeEvent_update' + response['seperateNodes'][0].id });
             }
             console.log(visNode);
+            this.snackBar.success({message: this.NODE_UPDATE_TEXT_SUCCESS});
 
           } catch (updateErr) {
             // any error encountered while updating the node in vis js
             console.error('Error while upating the data node to vis ', updateErr['message']);
+            this.snackBar.error({message: this.NODE_UPDATE_TEXT_ERROR_VIS});
           }
         }, err => {
           console.error('An error occured while updating node in database ', err);
+          this.snackBar.error({message: this.NODE_UPDATE_TEXT_ERROR});
         });
       } else if (event.action === 'delete') {
-        console.log('Node delete has been clicked', event.data);
         const nodeID = event.data.id;
         // get the list of relation ids which are connected to this node
         const connectedEdgeIDs = this.network.getConnectedEdges(nodeID);
@@ -522,8 +562,10 @@ export class GraphVisualizerComponent implements OnInit {
           this.hideDelModal = _.cloneDeep(true);
           //update sidebar dropdown
           this.newNodeCreated.emit({ event: 'NodeEvent_delete' + response['seperateNodes'][0].id });
+          this.snackBar.success({message: this.NODE_DELETE_TEXT_SUCCESS});
         }, err => {
           console.error('An error occured while reading response for node delete ', err);
+          this.snackBar.error({message: this.NODE_DELETE_TEXT_ERROR});
         });
       } else {
         // invalid click event
@@ -570,15 +612,17 @@ export class GraphVisualizerComponent implements OnInit {
               eleObj.event = "create";
               this.updateGraphArray(eleObj);
             }
+            this.snackBar.success({message: this.RELATION_CREATE_TEXT_SUCCESS});
           } catch (addErr) {
             console.log('Error while adding the data relation to vis ', addErr['message']);
+            this.snackBar.error({message: this.RELATION_CREATE_TEXT_ERROR_VIS});
           }
         }, error => {
           console.log('error while reading new relation data from service ', error);
+          this.snackBar.error({message: this.RELATION_CREATE_TEXT_ERROR});
         });
       } else if (event.action === 'edit') {
         // capture the details of the relationship clicked by the user, clean it if needed and send for use
-        console.log('Relation edit is being clicked');
         // hit the update relation service and updae it in visJS too
         const relationData = _.cloneDeep(event.data);
         if (relationData.hasOwnProperty('id') && relationData.hasOwnProperty('type')) {
@@ -586,13 +630,14 @@ export class GraphVisualizerComponent implements OnInit {
           this.graphService.updateRelation(relationData).subscribe(response => {
             const newRelation = response['seperateEdges'][0];
             this.updateRelationinVIS(newRelation);
+            this.snackBar.success({message: this.RELATION_UPDATE_TEXT_SUCCESS});
           }, err => {
             console.error('An error occured while reading the updated relation data', err);
+            this.snackBar.error({message: this.RELATION_UPDATE_TEXT_ERROR});
           });
         }
       } else if (event.action === 'delete') {
         // handle the functionality of deleting the node
-        console.log('realtion delete has been clicked', event.data);
         let relationID = null;
         // capture the relation id and send delete request
         if (event.data.hasOwnProperty('id')) {
@@ -620,8 +665,10 @@ export class GraphVisualizerComponent implements OnInit {
               this.graphData['edges'].remove([deletedRel]);
             }
             this.hideDelModal = true;
+            this.snackBar.success({message: this.RELATION_DELETE_TEXT_SUCCESS});
           }, err => {
             console.error('An error occured while reading response for relation delete ', err);
+            this.snackBar.error({message: this.RELATION_DELETE_TEXT_ERROR});
           });
         } else {
           console.warn('did not recieve the id of relation for deletion in edgeEventCapture');
@@ -721,7 +768,7 @@ export class GraphVisualizerComponent implements OnInit {
       let finalString = '';
       if (propertyObject['properties'].hasOwnProperty('deleted')) {
         Object.keys(propertyObject['properties']).filter(key => {
-          if (key !== 'deleted') {
+          if (key !== 'deleted' && key !== 'color') {
             finalString += `<strong>${key} :</strong> ${propertyObject['properties'][key]} <br>`;
           }
         });
@@ -743,7 +790,10 @@ export class GraphVisualizerComponent implements OnInit {
       node['color'] = colorCode;
       return node;
     } else {
-      console.warn('Error while adding color to the node ', node['label']);
+      node = this.shiftColorKey(node);
+      if (!node['properties'].hasOwnProperty('color')) {
+        console.warn('Error while adding color to the node ', node['label']);
+      }
       return node;
     }
   }
@@ -799,12 +849,15 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   // to filter data from alldata array and store it to new array
-  setFilteredData() {
+  setFilteredData(isDeletedToggle = false) {
     this.filteredGraphData['nodes'] = [];
     this.filteredGraphData['edges'] = [];
     this.allGraphData['nodes'].filter(node => {
       if (node['properties']['deleted'] === "false" || node['properties']['deleted'] === false) {
         let tem = _.cloneDeep(node);
+        if (isDeletedToggle) {
+          delete tem['color'];
+        }
         tem['title'] = this.stringifyProperties(tem);
         this.filteredGraphData['nodes'].push(tem);
       }
@@ -923,11 +976,12 @@ export class GraphVisualizerComponent implements OnInit {
           this.restoredData = null;
           this.loader = false;
         }
-
+        this.snackBar.success({message: this.DATA_RESTORE_TEXT_SUCCESS});
       }, error => {
         console.error('An error occured while restoring the data from the API');
         console.log(error);
         this.loader = false;
+        this.snackBar.error({message: this.DATA_RESTORE_TEXT_ERROR});
       });
     } else {
       console.error('Did not recieve any valid object data for restore');
@@ -955,6 +1009,8 @@ export class GraphVisualizerComponent implements OnInit {
   updateGraphArray(obj: elementOperation): void {
     try {
       if (obj.hasOwnProperty('event') && obj.event === 'create') {
+        // verify if color property is present and add it as is
+        obj.data = this.shiftColorKey(obj.data);
         this.insertIntoAllGraphArray(obj);
         this.insertIntoFilteredGraphArray(obj);
       } else if (obj.hasOwnProperty('event') && obj.event === 'edit' || obj.event === 'delete' || obj.event === 'restore') {
@@ -1035,6 +1091,18 @@ export class GraphVisualizerComponent implements OnInit {
       }
     } catch (e) {
       console.log("Method : insertIntoAllGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
+    }
+  }
+
+  shiftColorKey(elementObject, previousObject = null) {
+    // To add a new color key in the root level if color is present in properties key
+    if (elementObject.hasOwnProperty('properties') && elementObject['properties'].hasOwnProperty('color')) {
+      elementObject['color'] = elementObject['properties']['color'];
+      return elementObject;
+    } else if (previousObject !== null) {
+      return previousObject;
+    } else {
+      return elementObject;
     }
   }
 

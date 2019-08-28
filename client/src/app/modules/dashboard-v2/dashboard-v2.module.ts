@@ -14,8 +14,13 @@ import { CreateNodesComponent } from './components/create-nodes/create-nodes.com
 import { GraphExporterComponent } from './components/graph-exporter/graph-exporter.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
+
+// Material design components from custom Material module
+import {CustomMaterialModule} from './../custom-material/custom-material/custom-material.module';
+import { MaterialService } from '../custom-material/services/material-core/material.service';
+
 @NgModule({
-  declarations: [MainComponent, GraphVisualizerComponent, DashboardSidebarComponent, DashboardHeaderComponent, 
+  declarations: [MainComponent, GraphVisualizerComponent, DashboardSidebarComponent, DashboardHeaderComponent,
     ColorPanelComponent, CreateNodesComponent, GraphExporterComponent],
   imports: [
     CommonModule,
@@ -23,7 +28,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     SuiSelectModule, SuiModule,
     SharedModule,
+    CustomMaterialModule,
     DashboardV2RoutingModule
-  ]
+  ],
+  providers : [MaterialService]
 })
 export class DashboardModule { }
