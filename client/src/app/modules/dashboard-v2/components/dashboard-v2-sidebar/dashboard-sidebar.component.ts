@@ -17,7 +17,6 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
   // tslint:disable-next-line: no-input-rename
   @Input('nodeLimitEnterEvent') nodeLimitOnEnter: any = null;
   private showDisabled = false;
-  public rotateObj = {};
   defaultColor = {
     Academia: 'c_ff4444',
     Consulting: 'c_ffbb33',
@@ -74,14 +73,15 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     // update all dropdown when new node is created
     // get the createdEvent
     if (this.newNodeCreated) {
-      const nodeData = this.newNodeCreated.split('_');
-      const nodeEvent = this.newNodeCreated.split('_')[0];
+      const nodeData = this.newNodeCreated['event'].split('_');
+      const nodeEvent = this.newNodeCreated['event'].split('_')[0];
 
       if (nodeEvent === 'NodeEvent') {
         if(nodeData[1] === 'restore'){
           this.updateSidebar(nodeData[2]);
         }else{
           this.getGraph();
+          this.newNodeCreated = '';
         }
         
       }
@@ -106,9 +106,8 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
           if (this.totalNodesProperties) {
             Object.keys(this.totalNodesProperties).forEach(keyName => {
               if (keyName !== 'deleted')
-                this.totalAtrributeOptions.push({ attribute: keyName, options: this.totalNodesProperties[keyName] });
-              this.rotateObj[keyName] = { rotate: false };
-              this.selectedAttributeOptions[keyName] = [];
+                this.totalAtrributeOptions.push({ attribute: keyName, options: this.totalNodesProperties[keyName], rotate: false });
+              // this.selectedAttributeOptions[keyName] = [];
             });
           }
           if (response.hasOwnProperty('relations')) {
@@ -117,6 +116,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
           }
           console.log(this.totalNodesProperties, this.totalRelationsProperties);
         }
+        this.checkRotate();
       }, err => {
         console.error('Error while subscribing to graphProperties method -> ', err);
       });
@@ -125,14 +125,14 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       this.sharedGraphData.setProcessedData(this.processedData);
       this.sharedGraphData.setNodeTypes2(this.nodeTypes2);
       // this.typeOptions = this.nodeTypes2;
-      this.totalAtrributeOptions.push({ attribute: 'Type', options: this.nodeTypes2 });
-      this.rotateObj['Type'] = { rotate: false };
-
+      this.totalAtrributeOptions.push({ attribute: 'Type', options: this.nodeTypes2, rotate: false });
       // push type to second position
       let index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === "Name")
       this.swap(this.totalAtrributeOptions, index, 0);
       this.swap(this.totalAtrributeOptions, this.totalAtrributeOptions.length - 1, 1);
-
+      this.checkRotate();
+    }, err => {
+      console.error('Error while subscribing to graphProperties method -> ', err);
     });
 
     this.getRelationTypes().subscribe(response => {
@@ -442,5 +442,24 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       let index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === "Name")
       this.totalAtrributeOptions[index]['options'].push(nodeData);
     }
+  }
+
+  // check for rotate object
+  checkRotate(){
+        // check for selected value so the dropdown should not close on refresh
+        if(this.selectedAttributeOptions){
+          Object.keys(this.selectedAttributeOptions).forEach(selectedKey => {
+            if (this.selectedAttributeOptions[selectedKey].length > 0) {
+              this.totalAtrributeOptions = this.totalAtrributeOptions.filter(attr=>{
+                if (attr && attr['attribute'] === selectedKey){
+                  attr['rotate'] = true;
+                  return attr;
+                }else{
+                  return attr;
+                }
+              })
+            }
+        });
+      }
   }
 }

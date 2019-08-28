@@ -107,12 +107,12 @@
 
 .rotate {
     transform: rotate(90deg);
-    transition: .8s;
+    // transition: .8s;
 }
 
 .no-rotate {
     transform: rotate(0deg);
-    transition: .8s;
+    // transition: .8s;
 }
 
 .click-pink {
@@ -125,6 +125,16 @@
 
 .show {
     display: block;
+}
+
+.show-drop {
+    -webkit-transition: all linear 0.5s;
+    transition: all linear 0.5s;
+    display: block;
+}
+
+.hide-drop {
+    display: none;
 }
 
 .ui.teal.left.pointing.label {

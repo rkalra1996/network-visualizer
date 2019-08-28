@@ -7,11 +7,17 @@
             <div class="item-container">
                 <div class="item" *ngFor="let attributeOptions of totalAtrributeOptions; let i = index">
                     <div *ngIf="attributeOptions">
-                        <span class=""></span><a class="item-text hoverable" (click)="networkElementClick(attributeOptions['attribute']);rotateObj[attributeOptions['attribute']]['rotate'] = !rotateObj[attributeOptions['attribute']]['rotate']" data-toggle="collapse"
-                            href="#collapseExample{{i}}" role="button" aria-expanded="false" [attr.aria-controls]="'collapseExample'+i" [ngClass]="{'rotate': rotateObj[attributeOptions['attribute']]['rotate'], 'no-rotate': !rotateObj[attributeOptions['attribute']]['rotate']}">{{attributeOptions['attribute']}}<span class="ele-count count-org">{{attributeOptions['options'].length}}</span></a>
-                        <span class="fas fa-chevron-right" data-toggle="collapse" [attr.href]="'#collapseExample'+i" role="button" aria-expanded="false" [attr.aria-controls]="'collapseExample'+i" (click)="rotateObj[attributeOptions['attribute']]['rotate'] = !rotateObj[attributeOptions['attribute']]['rotate']"
-                            [ngClass]="{'rotate': rotateObj[attributeOptions['attribute']]['rotate'], 'no-rotate': !rotateObj[attributeOptions['attribute']]['rotate']}"></span>
-                        <div class="collapse" id="collapseExample{{i}}">
+                        <span class="">
+
+                        </span>
+                        <a class="item-text hoverable" (click)="networkElementClick(attributeOptions['attribute']);attributeOptions['rotate'] = !attributeOptions['rotate']" data-toggle="collapse" href="#collapseExample{{i}}" role="button" [attr.aria-expanded]="attributeOptions['rotate']"
+                            [attr.aria-controls]="'collapseExample'+i" [ngClass]="{'rotate': attributeOptions['rotate'], 'no-rotate': !attributeOptions['rotate']}">{{attributeOptions['attribute']}}
+                            <span class="ele-count count-org">{{attributeOptions['options'].length}}</span>
+                        </a>
+                        <span class="fas fa-chevron-right" data-toggle="collapse" [attr.href]="'#collapseExample'+i" role="button" [attr.aria-expanded]="attributeOptions?.rotate" [attr.aria-controls]="'collapseExample'+i" (click)="attributeOptions['rotate'] = !attributeOptions['rotate']"
+                            [ngClass]="{'rotate': attributeOptions?.rotate, 'no-rotate': !attributeOptions?.rotate}">
+                        </span>
+                        <div class="collapse" [ngClass]="{'show-drop': attributeOptions?.rotate, 'hide-drop': !attributeOptions?.rotate}">
                             <sui-multi-select [(ngModel)]="selectedAttributeOptions[attributeOptions['attribute']]" [options]="attributeOptions['options']" [maxSelected]="15" (ngModelChange)="searchElement()" #totalAtrributeOptions>
                                 <div class="ui icon search input">
                                     <i class="search icon"></i>
