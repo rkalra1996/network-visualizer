@@ -1,0 +1,13 @@
+#newTypeColor {
+    max-width : 50px;
+    cursor: pointer;
+}
+
+::ng-deep .cp-ok-button-class {
+    background: rgb(49, 140, 224);
+    min-width: 65px;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    line-height: 2em;
+}

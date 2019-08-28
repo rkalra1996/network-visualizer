@@ -173,7 +173,7 @@ export class GraphVisualizerComponent implements OnInit {
         this.allGraphData['nodes'] = result['seperateNodes'];
         this.allGraphData['edges'] = result['seperateEdges'];
         // to update filtered data
-        this.setFilteredData();
+        this.setFilteredData(this.showDeletedData);
         // check for show deleted toggel
         if (this.showDeletedData) {
           // show all data
@@ -321,7 +321,11 @@ export class GraphVisualizerComponent implements OnInit {
         if (node['properties']['deleted'] === "true" || node['properties']['deleted'] === true) {
           node['color'] = this.colorConfig.deletedColor.colorCode;
         } else {
-          node['color'] = this.colorConfig.defaultColor[node.type[0]];
+          // if the node has a color property, assign that else assign the defaults one
+          node = this.shiftColorKey(node);
+          if (!node.hasOwnProperty('color')) {
+            node['color'] = this.colorConfig.defaultColor[node.type[0]];
+          }
         }
         // node['color'] = this.showDeletedData ? this.colorConfig.deletedColor.colorCode : this.colorConfig.defaultColor[node.type[0]];
         // // temporary fix, add exception for societal platform
@@ -404,6 +408,9 @@ export class GraphVisualizerComponent implements OnInit {
               try {
                 let visNode = _.cloneDeep(this.addData(response['seperateNodes'][0], clickEvent, event));
                 // to remove deleted key from tooltip
+                // Add the color to the newly created node
+                visNode['color'] = newNodeData.properties['color'];
+
                 visNode['title'] = this.stringifyProperties(visNode);
                 // add the new node to the vis
                 this.graphData['nodes'].add([visNode]);
@@ -755,7 +762,7 @@ export class GraphVisualizerComponent implements OnInit {
       let finalString = '';
       if (propertyObject['properties'].hasOwnProperty('deleted')) {
         Object.keys(propertyObject['properties']).filter(key => {
-          if (key !== 'deleted') {
+          if (key !== 'deleted' && key !== 'color') {
             finalString += `<strong>${key} :</strong> ${propertyObject['properties'][key]} <br>`;
           }
         });
@@ -777,7 +784,10 @@ export class GraphVisualizerComponent implements OnInit {
       node['color'] = colorCode;
       return node;
     } else {
-      console.warn('Error while adding color to the node ', node['label']);
+      node = this.shiftColorKey(node);
+      if (!node['properties'].hasOwnProperty('color')) {
+        console.warn('Error while adding color to the node ', node['label']);
+      }
       return node;
     }
   }
@@ -833,12 +843,15 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   // to filter data from alldata array and store it to new array
-  setFilteredData() {
+  setFilteredData(isDeletedToggle = false) {
     this.filteredGraphData['nodes'] = [];
     this.filteredGraphData['edges'] = [];
     this.allGraphData['nodes'].filter(node => {
       if (node['properties']['deleted'] === "false" || node['properties']['deleted'] === false) {
         let tem = _.cloneDeep(node);
+        if (isDeletedToggle) {
+          delete tem['color'];
+        }
         tem['title'] = this.stringifyProperties(tem);
         this.filteredGraphData['nodes'].push(tem);
       }
@@ -987,9 +1000,11 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   // to update allGraphData and filteredGraphData
-  updateGraphArray(obj : elementOperation) : void {
+  updateGraphArray(obj: elementOperation): void {
     try {
       if (obj.hasOwnProperty('event') && obj.event === 'create') {
+        // verify if color property is present and add it as is
+        obj.data = this.shiftColorKey(obj.data);
         this.insertIntoAllGraphArray(obj);
         this.insertIntoFilteredGraphArray(obj);
       } else if (obj.hasOwnProperty('event') && obj.event === 'edit' || obj.event === 'delete' || obj.event === 'restore') {
@@ -1061,13 +1076,25 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   // insert into allgraphdata array
-  insertIntoAllGraphArray(obj : elementOperation) : void {
+  insertIntoAllGraphArray(obj: elementOperation): void {
     try {
       if (obj.hasOwnProperty('data') && obj.hasOwnProperty('element')) {
         this.allGraphData[obj.element].push(obj.data);
       }
     } catch (e) {
       console.log("Method : insertIntoAllGraphArray", "Component : GraphVisualizerComponent", "Error : ", e);
+    }
+  }
+
+  shiftColorKey(elementObject, previousObject = null) {
+    // To add a new color key in the root level if color is present in properties key
+    if (elementObject.hasOwnProperty('properties') && elementObject['properties'].hasOwnProperty('color')) {
+      elementObject['color'] = elementObject['properties']['color'];
+      return elementObject;
+    } else if (previousObject !== null) {
+      return previousObject;
+    } else {
+      return elementObject;
     }
   }
 

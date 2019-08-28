@@ -42,6 +42,11 @@
                         </ng-container>
                         <ng-container *ngIf="selectedType === ADD_NEW_LABEL">
                             <span class="inputSpan"><input type="text" id="id_newLabelNode"></span>
+                            <span>
+                                <app-color-picker [elWidth]="'50px'" [elDefault]="'#36cc95'"
+                            (selectedColorCode)="selectedColorForNewType($event)"
+                            ></app-color-picker>
+                            </span>
                     </ng-container>
                     </span>
                 </div>
