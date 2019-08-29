@@ -35,17 +35,17 @@ export class GraphDataService {
       }
     }));
   }
-  getNodeLabelData(): Observable<any> {
-    // const url = 'http://localhost:3050/api/graph/labeldata';
-    const url = '/api/graph/labeldata';
-    return this.publicHttp.get(url).pipe(map(data => {
-      if (!!data) {
-        return data;
-      } else {
-        return of({});
-      }
-    }));
-  }
+  // getNodeLabelData(): Observable<any> {
+  //   // const url = 'http://localhost:3050/api/graph/labeldata';
+  //   const url = '/api/graph/labeldata';
+  //   return this.publicHttp.get(url).pipe(map(data => {
+  //     if (!!data) {
+  //       return data;
+  //     } else {
+  //       return of({});
+  //     }
+  //   }));
+  // }
   getInitialDataV2() {
     // const url = 'http://localhost:3050/api/initialdatav2';
     const url = '/api/initialdatav2';

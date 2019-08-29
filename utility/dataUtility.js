@@ -119,17 +119,21 @@ function extractProperties(entitiesArray, type = 'node') {
             entitiesArray.forEach(entity => {
                 if (Object.keys(entity).length > 0) {
                     Object.keys(entity).forEach(entityKey => {
-                        if (Object.keys(idealObject).indexOf(entityKey) > -1) {
-                            idealObject[entityKey].push(entity[entityKey]);
+                        if (entityKey === 'Name' && entity['deleted'] === 'true' | entity['deleted'] === true) {
+
+                        } else {
+                            if (Object.keys(idealObject).indexOf(entityKey) > -1) {
+                                idealObject[entityKey].push(entity[entityKey]);
+                            } else {
+                                idealObject[entityKey] = [];
+                                idealObject[entityKey].push(entity[entityKey]);
+                            }
                         }
-                        else {
-                            idealObject[entityKey] = [];
-                            idealObject[entityKey].push(entity[entityKey]);
-                        }
+
                     });
                 }
             });
-            
+
             // make all the keys unique
             Object.keys(idealObject).forEach(key => {
                 idealObject[key] = _.uniq(idealObject[key]);
@@ -147,10 +151,10 @@ function extractProperties(entitiesArray, type = 'node') {
 var processFetchedProperties = (rawGraphResponse) => {
     // iterate to all the nodes and relations and collect all the possible values used in the properties
     let responseObj = {
-        nodes : [],
-        relations : []
-    }
-    // seperate nodes and relations properties
+            nodes: [],
+            relations: []
+        }
+        // seperate nodes and relations properties
     rawGraphResponse.forEach(record => {
         // index 0 is for node, 1 for relation
         try {
@@ -165,8 +169,8 @@ var processFetchedProperties = (rawGraphResponse) => {
         }
     });
     return {
-        nodes : extractProperties(responseObj.nodes, 'node'), 
-        relations : extractProperties(responseObj.relations, 'relation')
+        nodes: extractProperties(responseObj.nodes, 'node'),
+        relations: extractProperties(responseObj.relations, 'relation')
     };
 }
 
@@ -202,10 +206,10 @@ var createQueryForRestore = (dataObj) => {
             return '';
         }
         return query;
-        } else {
-            return '';
-        }
+    } else {
+        return '';
     }
+}
 
 function convertToArrayString(ArrayData) {
     if (ArrayData.length > 0) {
@@ -214,8 +218,7 @@ function convertToArrayString(ArrayData) {
             arrayStatements.push(`${item}`);
         });
         return `[${arrayStatements.join(",")}]`;
-    }
-    else return null;
+    } else return null;
 }
 
 module.exports = {

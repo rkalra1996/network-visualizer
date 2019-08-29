@@ -10,8 +10,17 @@ export class SharedGraphService {
   public connectedNodeDetails = new BehaviorSubject<any>(null);
   public getNodeByIDs = new BehaviorSubject<Array<any>>([]);
   public showDeletedData = new BehaviorSubject<boolean>(null);
-  public nameArray = new BehaviorSubject<Array<any>>(null);
+  public totalNodesProperties = new BehaviorSubject<Array<any>>(null);
+  public totalRelationsProperties = new BehaviorSubject<Array<any>>(null);
+
+  public processedData = new BehaviorSubject<any>(null);
+  public nodeTypes2 = new BehaviorSubject<Array<any>>(null);
+
   private restoreConnectedNodesData = false;
+
+  public relationTypeOptions = new BehaviorSubject<any>(null);
+  public relationsData = new BehaviorSubject<any>(null);
+
   constructor() { }
   setGraphData(graphdata){
     this.graphData = graphdata;
@@ -39,8 +48,25 @@ export class SharedGraphService {
     this.showDeletedData.next(status);
   }
 
-  // to set from and to data
-  setFromToData(nameArray){
-    this.nameArray.next(nameArray);
+  // to set node and relation properties
+  setNodeProperties(nodeProperties){
+    this.totalNodesProperties.next(nodeProperties);
+  }
+  setRelationProperties(relProperties){
+    this.totalRelationsProperties.next(relProperties);
+  }
+  // to set processedData and nodeTypes2
+  setProcessedData(proData){
+    this.processedData.next(proData);
+  }
+  setNodeTypes2(nodeTypes){
+    this.nodeTypes2.next(nodeTypes);
+  }
+  // set relationTypeOptions and relationsData
+  setRelationTypeOptions(relTypeOptions){
+    this.relationTypeOptions.next(relTypeOptions);
+  }
+  setRelationsData(relData){
+    this.relationsData.next(relData);
   }
 }

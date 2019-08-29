@@ -8,7 +8,6 @@ const messages = require('./resource_config/static_content.json');
 
 //import serializer to serialize for visJS format
 const serializer = require('./utility/serializer');
-const serializerv2 = require('./utility/serializerv2');
 const labelSerializer = require('./utility/labelSerializer/labelSerializer');
 
 // import data utility to process data
@@ -26,7 +25,7 @@ var runQuery = (query) => {
         }
     } else {
         console.error('Empty query passed');
-        return  Promise.reject('Query to run on database is empty');
+        return Promise.reject('Query to run on database is empty');
     }
 }
 
@@ -665,8 +664,8 @@ function limitBasedInitGraphShow(limitObj) {
     if (showDeleted) {
         queryStatement = `match (p) -[r]-> (q) return p,r,q limit ${limitObj.limit}`;
     } else {
-        // queryStatement = `match (p) -[r]-> (q) where p.deleted IN [${showDeleted}, "${showDeleted}"] and q.deleted IN [${showDeleted}, "${showDeleted}"] and r.deleted IN [${showDeleted}, "${showDeleted}"] return p,q,r limit ${limitObj.limit}`;
-        queryStatement = `match (p) -[r]-> (q) return p,q,r limit ${limitObj.limit}`;
+        queryStatement = `match (p) -[r]-> (q) where p.deleted IN [${showDeleted}, "${showDeleted}"] and q.deleted IN [${showDeleted}, "${showDeleted}"] and r.deleted IN [${showDeleted}, "${showDeleted}"] return p,q,r limit ${limitObj.limit}`;
+        // queryStatement = `match (p) -[r]-> (q) return p,q,r limit ${limitObj.limit}`;
     }
     console.log('query created by graphDataV2 is ', queryStatement);
     return runQuery(queryStatement).then(result => {
@@ -951,8 +950,7 @@ var restoreData = (request) => {
     if (data.hasOwnProperty('nodes') && data.nodes.length > 0) {
         if (Array.isArray(data.nodes)) {
             nodeIDArray = data.nodes;
-        }
-        else {
+        } else {
             console.error('Datatype of nodes key is not an array');
             return Promise.reject('Datatype of nodes key is not an array');
         }
@@ -960,31 +958,30 @@ var restoreData = (request) => {
     if (data.hasOwnProperty('relations') && data.relations.length > 0) {
         if (Array.isArray(data.relations)) {
             relationIDArray = data.relations
-        }
-        else {
+        } else {
             console.error('Datatype of relations key is not an array');
             return Promise.reject('Datatype of relations key is not an array');
         }
     }
 
     // process the data
-    let query = dataUtility.createQueryForRestore({nodes: nodeIDArray, relations: relationIDArray});
+    let query = dataUtility.createQueryForRestore({ nodes: nodeIDArray, relations: relationIDArray });
     console.log('query for restore data is ', query + '\n');
     return runQuery(query)
-    .then(response => {
-        let processedData;
-        if (response.hasOwnProperty('records') && response.records.length > 0) {
-            processedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
-        } else {
-            // empty records
-            processedData = {"result" : "No data updated "};
-        }
-        return Promise.resolve(processedData);
-    })
-    .catch(err => {
-        console.log('\x1b[31m','\nAn error occured while runnning the query for restore graph data \n', err);
-        return Promise.reject(err);
-    });
+        .then(response => {
+            let processedData;
+            if (response.hasOwnProperty('records') && response.records.length > 0) {
+                processedData = serializer.Neo4JtoVisFormat(JSON.stringify(response.records));
+            } else {
+                // empty records
+                processedData = { "result": "No data updated " };
+            }
+            return Promise.resolve(processedData);
+        })
+        .catch(err => {
+            console.log('\x1b[31m', '\nAn error occured while runnning the query for restore graph data \n', err);
+            return Promise.reject(err);
+        });
 
 }
 

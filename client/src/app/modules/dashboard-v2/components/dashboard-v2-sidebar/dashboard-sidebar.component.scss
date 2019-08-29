@@ -67,6 +67,7 @@
     font-size: 16px;
     width: 100%;
     padding: 0;
+    // height: 20%;
     // padding-left: 30px;
     span {
         margin-right: 20px;
@@ -76,6 +77,15 @@
 .hoverable:hover {
     font-size: 18px;
     transition: 0.5s;
+}
+
+.item-container {
+    height: 40vh;
+    overflow-y: auto;
+}
+
+.item-container::-webkit-scrollbar {
+    display: none;
 }
 
 .item,
@@ -97,12 +107,12 @@
 
 .rotate {
     transform: rotate(90deg);
-    transition: .8s;
+    // transition: .8s;
 }
 
 .no-rotate {
     transform: rotate(0deg);
-    transition: .8s;
+    // transition: .8s;
 }
 
 .click-pink {
@@ -115,6 +125,16 @@
 
 .show {
     display: block;
+}
+
+.show-drop {
+    -webkit-transition: all linear 0.5s;
+    transition: all linear 0.5s;
+    display: block;
+}
+
+.hide-drop {
+    display: none;
 }
 
 .ui.teal.left.pointing.label {
@@ -254,8 +274,9 @@ span.ele-count.count-org {
 .spanWrapper {
     font-family: 'Kanit', sans-serif;
     font-weight: bold;
-    max-width : 135px;
+    max-width: 135px;
 }
+
 // an attempt to make it a bit responsive
 @media screen and (max-width: '1100px') {
     .sidebar-wrapper {
