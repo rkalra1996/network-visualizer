@@ -1,4 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-color-picker',
@@ -11,14 +12,15 @@ export class ColorPickerComponent implements OnInit, OnChanges {
   public newTypeColor;
 
   // Private variables for component
-  public default = '#36cc95';
-
+  // public default = '#36cc95';
+  public default = '#96C1FA';
+  
   // Input variables from parent
   @Input() elDefault: string | null = null;
   @Input() elWidth: string | null = '50px';
 
   // Output from the component to parent
-  @Output() selectedColorCode = new EventEmitter<any>(null);
+  @Output() selectedColorCode = new BehaviorSubject<string>(this.default);
 
   constructor() { }
 
@@ -32,7 +34,7 @@ export class ColorPickerComponent implements OnInit, OnChanges {
   selectedColor(SelectedColorEvent) {
     if (SelectedColorEvent.length) {
       console.log('user selected newcolor code', SelectedColorEvent);
-      this.selectedColorCode.emit(SelectedColorEvent);
+      this.selectedColorCode.next(SelectedColorEvent);
     }
   }
 

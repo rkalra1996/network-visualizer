@@ -105,11 +105,14 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
           this.sharedGraphData.setNodeProperties(this.totalNodesProperties);
           if (this.totalNodesProperties) {
             Object.keys(this.totalNodesProperties).forEach(keyName => {
-              if (keyName !== 'deleted')
+              if (keyName !== 'deleted' && keyName !== 'color')
                 this.totalAtrributeOptions.push({ attribute: keyName, options: this.totalNodesProperties[keyName], rotate: false });
               // this.selectedAttributeOptions[keyName] = [];
             });
           }
+          // push name to top
+          let index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === "Name")
+          this.swap(this.totalAtrributeOptions, index, 0);
           if (response.hasOwnProperty('relations')) {
             this.totalRelationsProperties = _.cloneDeep(response['relations']);
             this.sharedGraphData.setRelationProperties(this.totalRelationsProperties);
@@ -127,8 +130,6 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       // this.typeOptions = this.nodeTypes2;
       this.totalAtrributeOptions.push({ attribute: 'Type', options: this.nodeTypes2, rotate: false });
       // push type to second position
-      let index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === "Name")
-      this.swap(this.totalAtrributeOptions, index, 0);
       this.swap(this.totalAtrributeOptions, this.totalAtrributeOptions.length - 1, 1);
       this.checkRotate();
     }, err => {

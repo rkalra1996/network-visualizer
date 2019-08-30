@@ -6,6 +6,7 @@ import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.s
 import { elementOperation } from './../../interfaces/elementOperation';
 
 import {MaterialService} from './../../../custom-material/services/material-core/material.service';
+import { ColorServiceService } from '../../services/colorService/color-service.service';
 
 @Component({
   selector: 'app-graph-visualizer',
@@ -46,46 +47,47 @@ export class GraphVisualizerComponent implements OnInit {
   selectedCount;
   public nodeLimit: any = 149;
   public emptyNodeLimit = 179;
-  public colorConfig = {
-    defaultColor: {
-      Academia: '#ff4444',
-      Consulting: '#ffbb33',
-      Government: '#00C851',
-      'Impact Investor': '#33b5e5',
-      'International Agency': '#CC0000',
-      Media: '#FF8800',
-      'NGO/CBO': '#007E33',
-      People: '#0099CC',
-      Philanthropy: '#9933CC',
-      Platform: '#0d47a1',
-      'Private Sector': '#2BBBAD',
-      'Research Institute': '#c51162'
+  public colorConfig = {};
+  // public colorConfig = {
+  //   defaultColor: {
+  //     Academia: '#ff4444',
+  //     Consulting: '#ffbb33',
+  //     Government: '#00C851',
+  //     'Impact Investor': '#33b5e5',
+  //     'International Agency': '#CC0000',
+  //     Media: '#FF8800',
+  //     'NGO/CBO': '#007E33',
+  //     People: '#0099CC',
+  //     Philanthropy: '#9933CC',
+  //     Platform: '#0d47a1',
+  //     'Private Sector': '#2BBBAD',
+  //     'Research Institute': '#c51162'
 
-    },
-    selectedColor: {
-      Academia: '#ff4444',
-      Consulting: '#ffbb33',
-      Government: '#00C851',
-      'Impact Investor': '#33b5e5',
-      'International Agency': '#CC0000',
-      Media: '#FF8800',
-      'NGO/CBO': '#007E33',
-      People: '#0099CC',
-      Philanthropy: '#9933CC',
-      Platform: '#0d47a1',
-      'Private Sector': '#2BBBAD',
-      'Research Institute': '#c51162'
+  //   },
+  //   selectedColor: {
+  //     Academia: '#ff4444',
+  //     Consulting: '#ffbb33',
+  //     Government: '#00C851',
+  //     'Impact Investor': '#33b5e5',
+  //     'International Agency': '#CC0000',
+  //     Media: '#FF8800',
+  //     'NGO/CBO': '#007E33',
+  //     People: '#0099CC',
+  //     Philanthropy: '#9933CC',
+  //     Platform: '#0d47a1',
+  //     'Private Sector': '#2BBBAD',
+  //     'Research Institute': '#c51162'
 
-    },
-    deletedColor: {
-      colorCode: '#C0C0C0',
-      highlightColorCode: '#9a9a9a'
-    },
-    restoreColor: {
-      colorCode: '#96C1FA',
-      highlightColorCode: '#249BFC'
-    }
-  };
+  //   },
+  //   deletedColor: {
+  //     colorCode: '#C0C0C0',
+  //     highlightColorCode: '#9a9a9a'
+  //   },
+  //   restoreColor: {
+  //     colorCode: '#96C1FA',
+  //     highlightColorCode: '#249BFC'
+  //   }
+  // };
 
   public editNodeData = null;
   public editRelationData = null;
@@ -122,7 +124,8 @@ export class GraphVisualizerComponent implements OnInit {
   constructor(
     private graphService: GraphDataService,
     private sharedGraphService: SharedGraphService,
-    private snackBar: MaterialService) { }
+    private snackBar: MaterialService,
+    private colorService: ColorServiceService) { }
 
   ngOnInit() {
     this.loader = true;
@@ -153,12 +156,15 @@ export class GraphVisualizerComponent implements OnInit {
           this.showFilteredData();
         }
       }
-
     }, err => {
       // set to false by default
       console.error('An error occured while subscribing to the toggle for deleted data', err);
       this.showDeletedData = false;
       this.displayInitialGraph();
+    });
+
+    this.colorService.colorObj$.subscribe(response => {
+      this.colorConfig = response;
     });
   }
 
@@ -167,13 +173,15 @@ export class GraphVisualizerComponent implements OnInit {
       console.log('recieved data from graph service', result);
       // set data for vis
       if (result.hasOwnProperty('seperateNodes')) {
+        // set color config using nodes color properties
+        this.updateColorConfigObject(result);
         // add colors to nodes
         result = this.addColors(result);
         // store all data without any filter
         this.allGraphData['nodes'] = result['seperateNodes'];
         this.allGraphData['edges'] = result['seperateEdges'];
         // to update filtered data
-        this.setFilteredData(this.showDeletedData);
+      this.setFilteredData(this.showDeletedData);
         // check for show deleted toggel
         if (this.showDeletedData) {
           // show all data
@@ -320,17 +328,33 @@ export class GraphVisualizerComponent implements OnInit {
     });
   }
 
+  updateColorConfigObject(resultObj){
+    let temColorObj = {};
+    resultObj['seperateNodes'].forEach(node => {
+      if (node.hasOwnProperty('type') && node.type.length > 0 && node.hasOwnProperty('properties')) {
+        if(!temColorObj[node.type[0]]){
+          if(node['properties']['color']){
+            temColorObj[node.type[0]] = node['properties']['color'];
+          }else{
+            temColorObj[node.type[0]] = this.colorConfig['initialColor']['colorCode'];
+          }
+        }
+      }
+      });
+      this.colorService.updateDefaultColor(temColorObj);
+  }
+
   addColors(resultObj) {
     // if the user opted for deleted data, simply set deleted default color to all the nodes
     resultObj['seperateNodes'].forEach(node => {
       if (node.hasOwnProperty('type') && node.type.length > 0) {
         if (node['properties']['deleted'] === "true" || node['properties']['deleted'] === true) {
-          node['color'] = this.colorConfig.deletedColor.colorCode;
+          node['color'] = this.colorConfig['deletedColor']['colorCode'];
         } else {
           // if the node has a color property, assign that else assign the defaults one
           node = this.shiftColorKey(node);
           if (!node.hasOwnProperty('color')) {
-            node['color'] = this.colorConfig.defaultColor[node.type[0]];
+            node['color'] = this.colorConfig['defaultColor'][node.type[0]];
           }
         }
         // node['color'] = this.showDeletedData ? this.colorConfig.deletedColor.colorCode : this.colorConfig.defaultColor[node.type[0]];
@@ -344,8 +368,8 @@ export class GraphVisualizerComponent implements OnInit {
     resultObj['seperateEdges'].forEach(edge => {
       if (edge.hasOwnProperty('type') && edge.type.length > 0) {
         if (edge['properties']['deleted'] === "true" || edge['properties']['deleted'] === true) {
-          edge['color']['color'] = this.colorConfig.deletedColor.colorCode;
-          edge['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
+          edge['color']['color'] = this.colorConfig['deletedColor']['colorCode'];
+          edge['color']['highlight'] = this.colorConfig['deletedColor']['highlightColorCode'];
         } else {
           // edge['color'] = this.colorConfig.defaultColor[edge.type[0]];
         }
@@ -354,6 +378,20 @@ export class GraphVisualizerComponent implements OnInit {
     // console.log(nodeObj);
     return resultObj;
 
+  }
+
+  addColorProperty(node) {
+      if (node.hasOwnProperty('type') && node.type.length > 0 && node.hasOwnProperty('properties')) {
+        if (node['properties'].hasOwnProperty('color') && node['properties']['color'] === 'not available') {
+        let index;
+        let nodeType : string;
+        nodeType = node.type;
+        if(this.colorConfig['defaultColor'][nodeType]){
+            node['properties']['color'] = this.colorConfig['defaultColor'][nodeType];
+        }
+      }
+    }
+    return node;
   }
 
   private limitChange(limit, popup) {
@@ -397,6 +435,11 @@ export class GraphVisualizerComponent implements OnInit {
           } else {
             // user clicked on a good place to  create a node
             // console.log(this.graphData);
+            if(event.data.properties['color'] === 'not available'){
+              event.data = this.addColorProperty(event.data);
+            }else{
+              this.colorService.insertIntoDefaultColor({type: event.data.type,color: event.data.properties.color});
+            }
             let newNodeData = {
               id: event.data.id,
               label: event.data.properties.Name,
@@ -416,7 +459,6 @@ export class GraphVisualizerComponent implements OnInit {
                 // to remove deleted key from tooltip
                 // Add the color to the newly created node
                 visNode['color'] = newNodeData.properties['color'];
-
                 visNode['title'] = this.stringifyProperties(visNode);
                 // add the new node to the vis
                 this.graphData['nodes'].add([visNode]);
@@ -553,7 +595,7 @@ export class GraphVisualizerComponent implements OnInit {
           };
           this.updateGraphArray(eleObj);
           // update the node in vis
-          removedNode[0]['color'] = this.colorConfig.deletedColor.colorCode;
+          removedNode[0]['color'] = this.colorConfig['deletedColor']['colorCode'];
           if (this.showDeletedData) {
             this.graphData['nodes'].update(removedNode);
           } else {
@@ -658,8 +700,8 @@ export class GraphVisualizerComponent implements OnInit {
             };
             this.updateGraphArray(eleObj);
             if (this.showDeletedData) {
-              deletedRel['color']['color'] = this.colorConfig.deletedColor.colorCode;
-              deletedRel['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
+              deletedRel['color']['color'] = this.colorConfig['deletedColor']['colorCode'];
+              deletedRel['color']['highlight'] = this.colorConfig['deletedColor']['highlightColorCode'];
               this.graphData['edges'].update([deletedRel]);
             } else {
               this.graphData['edges'].remove([deletedRel]);
@@ -741,8 +783,8 @@ export class GraphVisualizerComponent implements OnInit {
         if (!!oldRelation) {
           oldRelation['properties'] = relation['properties'];
           oldRelation['title'] = relation['title'];
-          oldRelation['color']['color'] = this.colorConfig.restoreColor.colorCode;
-          oldRelation['color']['highlight'] = this.colorConfig.restoreColor.highlightColorCode;
+          oldRelation['color']['color'] = this.colorConfig['restoreColor']['colorCode'];
+          oldRelation['color']['highlight'] = this.colorConfig['restoreColor']['highlightColorCode'];
           // set it back in VisJS
           this.graphData['edges'].update(oldRelation);
           // update all+filtered graph array
@@ -780,12 +822,12 @@ export class GraphVisualizerComponent implements OnInit {
   addData(node, clickEvent, event) {
     node['x'] = clickEvent.pointer.canvas.x;
     node['y'] = clickEvent.pointer.canvas.y;
-    node['color'] = this.colorConfig.defaultColor[event.data.type];
+    node['color'] = this.colorConfig['defaultColor'][event.data.type];
     return node;
   }
 
   addNodeColor(node) {
-    const colorCode = this.colorConfig.defaultColor[node.type[0]] || null;
+    const colorCode = this.colorConfig['defaultColor'][node.type[0]] || null;
     if (colorCode) {
       node['color'] = colorCode;
       return node;
@@ -1032,14 +1074,14 @@ export class GraphVisualizerComponent implements OnInit {
         if (obj.hasOwnProperty('element') && obj.element === 'nodes') {
           // for node
           if (obj.hasOwnProperty('event') && obj.event === 'delete') {
-            obj.data['color'] = this.colorConfig.deletedColor.colorCode;
+            obj.data['color'] = this.colorConfig['deletedColor']['colorCode'];
           }
           index = _.findIndex(this.allGraphData[obj.element], { label: obj.data['label'] });
         } else if (obj.hasOwnProperty('element') && obj.element === 'edges') {
           // for edge
           if (obj.hasOwnProperty('event') && obj.event === 'delete') {
-            obj.data['color']['color'] = this.colorConfig.deletedColor.colorCode;
-            obj.data['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
+            obj.data['color']['color'] = this.colorConfig['deletedColor']['colorCode'];
+            obj.data['color']['highlight'] = this.colorConfig['deletedColor']['highlightColorCode'];
           }
           index = _.findIndex(this.allGraphData[obj.element], { id: obj.data['id'] })
         }
