@@ -374,6 +374,9 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
         this.restoredDataResponse['nodes'].length > 0) {
         // hide the node modal
         this.hideModal('createNodeModal');
+        this.cleanData.emit('node');
+        this.cleanData.emit('relation');
+        this.cleanData.emit('restore');
       }
       if (
         this.restoredDataResponse.hasOwnProperty('relations') &&
