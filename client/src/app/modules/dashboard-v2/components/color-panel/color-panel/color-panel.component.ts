@@ -26,9 +26,9 @@ export class ColorPanelComponent implements OnInit {
     this.colorSrvc.colorObj$.subscribe(data => {
       this.colorObject = data;
       // console.log('color object is ', this.colorObject);
-      this.objectKeys = Object.keys(this.colorObject);
+      this.objectKeys = Object.keys(this.colorObject['defaultColor']);
 
-      this.processColors(this.objectKeys, this.colorObject);
+      this.processColors(this.objectKeys, this.colorObject['defaultColor']);
       // console.log('processed color data is ', this.colorData);
     });
 
@@ -47,6 +47,7 @@ export class ColorPanelComponent implements OnInit {
   }
 
   processColors(keyArray, colorObj) {
+    this.colorData = [];
     if (!!keyArray.length || !!Object.keys(colorObj).length) {
       // both have the data , kindly process
       keyArray.map(key => {

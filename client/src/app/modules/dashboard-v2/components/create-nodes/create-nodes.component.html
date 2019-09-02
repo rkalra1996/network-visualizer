@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="!showDeletedData">
+<div class="container-fluid">
     <div class="btn-group nodes">
         <button type="button" (click)="createNode()" data-toggle="modal" data-target="#createNodeModal" class="btn" aria-expanded="false">
       Create Element
@@ -41,19 +41,27 @@
                                   </sui-select>
                         </ng-container>
                         <ng-container *ngIf="selectedType === ADD_NEW_LABEL">
-                            <span class="inputSpan"><input type="text" id="id_newLabelNode"></span>
-                    </ng-container>
-                    </span>
+                            <div class="ui input typeTextBox">
+                                    <span>
+                                            <app-color-picker [elWidth]="'50px'" [elDefault]="'#96C1FA'"
+                                        (selectedColorCode)="selectedColorForNewType($event)"
+                                        ></app-color-picker>
+                                        </span>
+                    <input type="text" placeholder="Enter Type..." id="id_newLabelNode">
                 </div>
-                <div class="modalItem" *ngIf="labelProperties?.length > 0 && selectedType?.length > 0">
-                    <h5 class="propertyLabel">
-                        Properties <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
-                    </h5>
-                    <!--container to display pre exisiting properties-->
-                    <ng-container *ngFor="let data of labelProperties">
-                        <div class="modalItem">
-                            <p class="sectionName">{{data}}</p>
-                            <span class="inputSpan">
+
+                </ng-container>
+                </span>
+            </div>
+            <div class="modalItem" *ngIf="labelProperties?.length > 0 && selectedType?.length > 0">
+                <h5 class="propertyLabel">
+                    Properties <span class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" [title]="toolTipText"></span>
+                </h5>
+                <!--container to display pre exisiting properties-->
+                <ng-container *ngFor="let data of labelProperties">
+                    <div class="modalItem">
+                        <p class="sectionName">{{data}}</p>
+                        <span class="inputSpan">
                                 <ng-container *ngIf = "data === 'Name'">
                                     <div class="ui corner labeled input normalTextBox">
                                         <input type="text" placeholder="Enter Name..." id="id_{{data}}" [(ngModel)] = "selectedPropertiesObject[data]" (ngModelChange)="updateSelectedOption($event, data)" [disabled]="restoreOptions === true">
@@ -77,51 +85,51 @@
                                     </div>
                                 </ng-container>
                             </span>
-                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty && !restoreOptions" (click)="deleteProperty(data)"><i class="far fa-trash-alt"></i></span>
-                            <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty && !restoreOptions" (click)="availablePropertyList[data].enableNewProperty = false"><i class="far fa-times-circle" style="color: red;"></i></span>
-                            <span class="supportIcons nameKey" *ngIf="(data?.length > 0) && data === 'Name' && !restoreOptions"> 
+                        <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && !availablePropertyList[data]?.enableNewProperty && !restoreOptions" (click)="deleteProperty(data)"><i class="far fa-trash-alt"></i></span>
+                        <span class="supportIcons" *ngIf="(data?.length > 0) && data !== 'Name' && availablePropertyList[data]?.enableNewProperty && !restoreOptions" (click)="availablePropertyList[data].enableNewProperty = false"><i class="far fa-times-circle" style="color: red;"></i></span>
+                        <span class="supportIcons nameKey" *ngIf="(data?.length > 0) && data === 'Name' && !restoreOptions"> 
                                 <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="right" [title]="'Name is mandatory and cannot be deleted'"></i>
                             </span>
-                        </div>
-                    </ng-container>
-                    <!--container to display pre exisiting properties end-->
+                    </div>
+                </ng-container>
+                <!--container to display pre exisiting properties end-->
 
-                    <!--Template to add a new property-->
+                <!--Template to add a new property-->
 
-                    <ng-container *ngIf="enableNewTemplate">
-                        <form id="NewPropertyGroup">
-                            <div class="modalItem">
-                                <div class="ui divider"></div>
-                                <p class="sectionName">Property Name</p>
-                                <span class="inputSpan newTemplate">
+                <ng-container *ngIf="enableNewTemplate">
+                    <form id="NewPropertyGroup">
+                        <div class="modalItem">
+                            <div class="ui divider"></div>
+                            <p class="sectionName">Property Name</p>
+                            <span class="inputSpan newTemplate">
                                     <div class="ui input focus">
                                         <input type="text" placeholder="Property Value" id="propertyKey">
                                     </div>
                                 </span>
-                                <span class="supportIcons customDelete" (click)="enableNewTemplate = false"><i class="far fa-trash-alt"></i></span>
-                                <br>
-                                <div class="ui divider"></div>
-                            </div>
-                        </form>
-                    </ng-container>
-                    <!--Template to add a new property ends-->
-                </div>
-                <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && !enableNewTemplate && !restoreOptions" (click)="addNewProperty('node')">Add New Property</a>
-                <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && enableNewTemplate && !restoreOptions" (click)="saveNewProperty('node')">Save Property</a>
+                            <span class="supportIcons customDelete" (click)="enableNewTemplate = false"><i class="far fa-trash-alt"></i></span>
+                            <br>
+                            <div class="ui divider"></div>
+                        </div>
+                    </form>
+                </ng-container>
+                <!--Template to add a new property ends-->
             </div>
-            <div class="modal-footer" *ngIf="selectedType !== ADD_NEW_LABEL">
-                <button type="button" class="btn btn-danger deleteBtn" *ngIf="popupConfig.editNodePopup === true && !restoreOptions" style="color: white;" (click)="activateDelete('deleteModal', 'node')">Delete</button>
-                <a class="mailBtn" *ngIf="popupConfig.editNodePopup === true">Send Mail</a>
-                <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
-                <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true && !restoreOptions" [disabled]="(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])">Create</button>
-                <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true && !restoreOptions" [disabled]="(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])" id="edit_btn">Update</button>
-                <button type="button" id="restoreBtn" class="btn btn-info restoreBtn" *ngIf="(popupConfig.editNodePopup === true || editNodePopup === true) && restoreOptions" style="color: white;" (click)="restoreData('node')">Restore </button>
-            </div>
-            <div class="modal-footer" *ngIf="selectedType === ADD_NEW_LABEL">
-                <button type="button" class="btn btn-primary create" id="edit_btn" (click)="addNewLabel('node')">Add Label</button>
-            </div>
+            <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && !enableNewTemplate && !restoreOptions" (click)="addNewProperty('node')">Add New Property</a>
+            <a class="newLink" *ngIf="selectedType?.length > 0 && selectedType !== ADD_NEW_LABEL && enableNewTemplate && !restoreOptions" (click)="saveNewProperty('node')">Save Property</a>
+        </div>
+        <div class="modal-footer" *ngIf="selectedType !== ADD_NEW_LABEL">
+            <button type="button" class="btn btn-danger deleteBtn" *ngIf="popupConfig.editNodePopup === true && !restoreOptions" style="color: white;" (click)="activateDelete('deleteModal', 'node')">Delete</button>
+            <a class="mailBtn" *ngIf="popupConfig.editNodePopup === true">Send Mail</a>
+            <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
+            <button type="button" class="btn btn-primary create" (click)="submitModal()" *ngIf="popupConfig.createNodePopup === true && !restoreOptions" [disabled]="(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])">Create</button>
+            <button type="button" class="btn btn-primary create" (click)="submitModal('edit')" *ngIf="popupConfig.editNodePopup === true && !restoreOptions" [disabled]="(selectedType?.length <= 0) || (!selectedPropertiesObject['Name'])" id="edit_btn">Update</button>
+            <button type="button" id="restoreBtn" class="btn btn-info restoreBtn" *ngIf="(popupConfig.editNodePopup === true || editNodePopup === true) && restoreOptions" style="color: white;" (click)="restoreData('node')">Restore </button>
+        </div>
+        <div class="modal-footer" *ngIf="selectedType === ADD_NEW_LABEL">
+            <button type="button" class="btn btn-primary create" id="edit_btn" (click)="addNewLabel('node')">Add Label</button>
         </div>
     </div>
+</div>
 </div>
 <!--modal node create end-->
 
@@ -157,7 +165,7 @@
                     </sui-select>
                         </ng-container>
                         <ng-container *ngIf="selectedType === ADD_NEW_TYPE">
-                            <span class="inputSpan"><input type="text" id="id_newLabelRelation"></span>
+                            <div class="ui input typeTextBox"><input type="text" placeholder="Enter Type..." id="id_newLabelRelation"></div>
                     </ng-container>
                     </span>
                 </div>
@@ -272,7 +280,8 @@
                 <button type="button" class="btn btn-danger deleteBtn left" *ngIf="(popupConfig.editRelationPopup === true || editRelationPopup === true) && !restoreOptions" style="color: white;" (click)="activateDelete('deleteModal', 'relation')">Delete</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" style="color: red;">Cancel</button>
                 <button type="button" class="btn btn-primary create" (click)="submitRelModal()" *ngIf="(popupConfig.createRelationPopup === true || createRelationPopup === true) && !restoreOptions" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0">Create</button>
-                <button type="button" class="btn btn-primary create" (click)="submitRelModal('edit')" *ngIf="(popupConfig.editRelationPopup === true || editRelationPopup === true) && !restoreOptions" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0" id="edit_btn">Update</button>
+                <button type="button" class="btn btn-primary create" (click)="submitRelModal('edit')" *ngIf="(popupConfig.editRelationPopup === true || editRelationPopup === true) && !restoreOptions" [disabled]="selectedType?.length <= 0 || selectedNodeNameTarget?.length <= 0 || selectedNodeNameSource?.length <= 0"
+                    id="edit_btn">Update</button>
                 <button type="button" id="restoreBtn" class="btn btn-info restoreBtn" *ngIf="(popupConfig.editRelationPopup === true || editRelationPopup === true) && restoreOptions" style="color: white;" (click)="restoreData('relation')">Restore </button>
 
             </div>

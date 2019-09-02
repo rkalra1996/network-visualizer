@@ -157,6 +157,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_shared_shared_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/shared/shared.module */ "./src/app/modules/shared/shared.module.ts");
 /* harmony import */ var ng2_semantic_ui__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ng2-semantic-ui */ "./node_modules/ng2-semantic-ui/dist/public.js");
 /* harmony import */ var _modules_core_core_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/core/core.module */ "./src/app/modules/core/core.module.ts");
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
+/* harmony import */ var _modules_custom_material_components_snackbar_snackbar_snackbar_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./modules/custom-material/components/snackbar/snackbar/snackbar.component */ "./src/app/modules/custom-material/components/snackbar/snackbar/snackbar.component.ts");
+
+
 
 
 
@@ -172,7 +176,8 @@ var AppModule = /** @class */ (function () {
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
             declarations: [
-                _app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"]
+                _app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"],
+                _modules_custom_material_components_snackbar_snackbar_snackbar_component__WEBPACK_IMPORTED_MODULE_10__["SnackbarComponent"]
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
@@ -180,7 +185,8 @@ var AppModule = /** @class */ (function () {
                 ng2_semantic_ui__WEBPACK_IMPORTED_MODULE_7__["SuiModule"],
                 _modules_shell_shell_module__WEBPACK_IMPORTED_MODULE_5__["ShellModule"],
                 _modules_shared_shared_module__WEBPACK_IMPORTED_MODULE_6__["SharedModule"],
-                _modules_core_core_module__WEBPACK_IMPORTED_MODULE_8__["CoreModule"]
+                _modules_core_core_module__WEBPACK_IMPORTED_MODULE_8__["CoreModule"],
+                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_9__["BrowserAnimationsModule"]
             ],
             providers: [],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"]]
@@ -466,18 +472,17 @@ var GraphDataService = /** @class */ (function () {
             }
         }));
     };
-    GraphDataService.prototype.getNodeLabelData = function () {
-        // const url = 'http://localhost:3050/api/graph/labeldata';
-        var url = '/api/graph/labeldata';
-        return this.publicHttp.get(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["map"])(function (data) {
-            if (!!data) {
-                return data;
-            }
-            else {
-                return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["of"])({});
-            }
-        }));
-    };
+    // getNodeLabelData(): Observable<any> {
+    //   // const url = 'http://localhost:3050/api/graph/labeldata';
+    //   const url = '/api/graph/labeldata';
+    //   return this.publicHttp.get(url).pipe(map(data => {
+    //     if (!!data) {
+    //       return data;
+    //     } else {
+    //       return of({});
+    //     }
+    //   }));
+    // }
     GraphDataService.prototype.getInitialDataV2 = function () {
         // const url = 'http://localhost:3050/api/initialdatav2';
         var url = '/api/initialdatav2';
@@ -716,8 +721,7 @@ var CoreService = /** @class */ (function () {
             var request = req.clone({ body: tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, req.body, { showDeleted: this.showDeletedData }) });
             return next.handle(request);
         }
-        else if (req.method === 'GET') {
-            console.log(req.params);
+        else if (req.method === 'GET' && req.url.split('/').indexOf('config') <= 0) {
             var request = req.clone({ url: req.url + ("?deleted=" + this.showDeletedData) });
             console.log('new get request created is ', request);
             return next.handle(request);
@@ -841,8 +845,13 @@ var SharedGraphService = /** @class */ (function () {
         this.connectedNodeDetails = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
         this.getNodeByIDs = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"]([]);
         this.showDeletedData = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
-        this.nameArray = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.totalNodesProperties = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.totalRelationsProperties = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.processedData = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.nodeTypes2 = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
         this.restoreConnectedNodesData = false;
+        this.relationTypeOptions = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
+        this.relationsData = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](null);
     }
     SharedGraphService.prototype.setGraphData = function (graphdata) {
         this.graphData = graphdata;
@@ -869,9 +878,26 @@ var SharedGraphService = /** @class */ (function () {
         console.log('sending new status for toggle ', status);
         this.showDeletedData.next(status);
     };
-    // to set from and to data
-    SharedGraphService.prototype.setFromToData = function (nameArray) {
-        this.nameArray.next(nameArray);
+    // to set node and relation properties
+    SharedGraphService.prototype.setNodeProperties = function (nodeProperties) {
+        this.totalNodesProperties.next(nodeProperties);
+    };
+    SharedGraphService.prototype.setRelationProperties = function (relProperties) {
+        this.totalRelationsProperties.next(relProperties);
+    };
+    // to set processedData and nodeTypes2
+    SharedGraphService.prototype.setProcessedData = function (proData) {
+        this.processedData.next(proData);
+    };
+    SharedGraphService.prototype.setNodeTypes2 = function (nodeTypes) {
+        this.nodeTypes2.next(nodeTypes);
+    };
+    // set relationTypeOptions and relationsData
+    SharedGraphService.prototype.setRelationTypeOptions = function (relTypeOptions) {
+        this.relationTypeOptions.next(relTypeOptions);
+    };
+    SharedGraphService.prototype.setRelationsData = function (relData) {
+        this.relationsData.next(relData);
     };
     SharedGraphService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -880,6 +906,149 @@ var SharedGraphService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
     ], SharedGraphService);
     return SharedGraphService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/custom-material/components/snackbar/snackbar/snackbar.component.html":
+/*!**********************************************************************************************!*\
+  !*** ./src/app/modules/custom-material/components/snackbar/snackbar/snackbar.component.html ***!
+  \**********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  snackbar works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/modules/custom-material/components/snackbar/snackbar/snackbar.component.scss":
+/*!**********************************************************************************************!*\
+  !*** ./src/app/modules/custom-material/components/snackbar/snackbar/snackbar.component.scss ***!
+  \**********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvY3VzdG9tLW1hdGVyaWFsL2NvbXBvbmVudHMvc25hY2tiYXIvc25hY2tiYXIvc25hY2tiYXIuY29tcG9uZW50LnNjc3MifQ== */"
+
+/***/ }),
+
+/***/ "./src/app/modules/custom-material/components/snackbar/snackbar/snackbar.component.ts":
+/*!********************************************************************************************!*\
+  !*** ./src/app/modules/custom-material/components/snackbar/snackbar/snackbar.component.ts ***!
+  \********************************************************************************************/
+/*! exports provided: SnackbarComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SnackbarComponent", function() { return SnackbarComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var SnackbarComponent = /** @class */ (function () {
+    function SnackbarComponent() {
+    }
+    SnackbarComponent.prototype.ngOnInit = function () {
+    };
+    SnackbarComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-snackbar',
+            template: __webpack_require__(/*! ./snackbar.component.html */ "./src/app/modules/custom-material/components/snackbar/snackbar/snackbar.component.html"),
+            styles: [__webpack_require__(/*! ./snackbar.component.scss */ "./src/app/modules/custom-material/components/snackbar/snackbar/snackbar.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], SnackbarComponent);
+    return SnackbarComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/shared/component/color-picker/color-picker.component.html":
+/*!***********************************************************************************!*\
+  !*** ./src/app/modules/shared/component/color-picker/color-picker.component.html ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<input [(colorPicker)]=\"newTypeColor\" \n[style.background]=\"newTypeColor\" [cpPosition]=\"left\" \nid=\"newTypeColor\" [cpFallbackColor]=\"newTypeColor\"\n[cpOKButton]=\"true\" [cpOKButtonText]=\"'Select'\"\n(colorPickerSelect)=\"selectedColor($event)\"/>\n"
+
+/***/ }),
+
+/***/ "./src/app/modules/shared/component/color-picker/color-picker.component.scss":
+/*!***********************************************************************************!*\
+  !*** ./src/app/modules/shared/component/color-picker/color-picker.component.scss ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "#newTypeColor {\n  max-width: 50px;\n  cursor: pointer;\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0; }\n\n::ng-deep .cp-ok-button-class {\n  background: #318ce0;\n  min-width: 65px;\n  color: white;\n  border: none;\n  border-radius: 3px;\n  line-height: 2em; }\n\ninput#newTypeColor {\n  color: transparent; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9ob21lL25laGEvTmVoYVZlcm1hL1N1bmJpcmQvUHJvamVjdHMvTmV0d29yay1WaXN1YWxpemVyL25ldHdvcmstdmlzdWFsaXplci9jbGllbnQvc3JjL2FwcC9tb2R1bGVzL3NoYXJlZC9jb21wb25lbnQvY29sb3ItcGlja2VyL2NvbG9yLXBpY2tlci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGVBQWU7RUFDZixlQUFlO0VBQ2YsMEJBQTBCO0VBQzFCLDZCQUE2QixFQUFBOztBQUdqQztFQUNJLG1CQUE2QjtFQUM3QixlQUFlO0VBQ2YsWUFBWTtFQUNaLFlBQVk7RUFDWixrQkFBa0I7RUFDbEIsZ0JBQWdCLEVBQUE7O0FBR3BCO0VBQ0ksa0JBQWtCLEVBQUEiLCJmaWxlIjoic3JjL2FwcC9tb2R1bGVzL3NoYXJlZC9jb21wb25lbnQvY29sb3ItcGlja2VyL2NvbG9yLXBpY2tlci5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIiNuZXdUeXBlQ29sb3Ige1xuICAgIG1heC13aWR0aDogNTBweDtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgYm9yZGVyLXRvcC1yaWdodC1yYWRpdXM6IDA7XG4gICAgYm9yZGVyLWJvdHRvbS1yaWdodC1yYWRpdXM6IDA7XG59XG5cbjo6bmctZGVlcCAuY3Atb2stYnV0dG9uLWNsYXNzIHtcbiAgICBiYWNrZ3JvdW5kOiByZ2IoNDksIDE0MCwgMjI0KTtcbiAgICBtaW4td2lkdGg6IDY1cHg7XG4gICAgY29sb3I6IHdoaXRlO1xuICAgIGJvcmRlcjogbm9uZTtcbiAgICBib3JkZXItcmFkaXVzOiAzcHg7XG4gICAgbGluZS1oZWlnaHQ6IDJlbTtcbn1cblxuaW5wdXQjbmV3VHlwZUNvbG9yIHtcbiAgICBjb2xvcjogdHJhbnNwYXJlbnQ7XG59Il19 */"
+
+/***/ }),
+
+/***/ "./src/app/modules/shared/component/color-picker/color-picker.component.ts":
+/*!*********************************************************************************!*\
+  !*** ./src/app/modules/shared/component/color-picker/color-picker.component.ts ***!
+  \*********************************************************************************/
+/*! exports provided: ColorPickerComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ColorPickerComponent", function() { return ColorPickerComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+
+
+
+var ColorPickerComponent = /** @class */ (function () {
+    function ColorPickerComponent() {
+        // Private variables for component
+        // public default = '#36cc95';
+        this.default = '#96C1FA';
+        // Input variables from parent
+        this.elDefault = null;
+        this.elWidth = '50px';
+        // Output from the component to parent
+        this.selectedColorCode = new rxjs__WEBPACK_IMPORTED_MODULE_2__["BehaviorSubject"](this.default);
+    }
+    ColorPickerComponent.prototype.ngOnInit = function () {
+    };
+    ColorPickerComponent.prototype.ngOnChanges = function () {
+        this.newTypeColor = this.elDefault || this.default;
+    };
+    ColorPickerComponent.prototype.selectedColor = function (SelectedColorEvent) {
+        if (SelectedColorEvent.length) {
+            console.log('user selected newcolor code', SelectedColorEvent);
+            this.selectedColorCode.next(SelectedColorEvent);
+        }
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
+    ], ColorPickerComponent.prototype, "elDefault", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
+    ], ColorPickerComponent.prototype, "elWidth", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], ColorPickerComponent.prototype, "selectedColorCode", void 0);
+    ColorPickerComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-color-picker',
+            template: __webpack_require__(/*! ./color-picker.component.html */ "./src/app/modules/shared/component/color-picker/color-picker.component.html"),
+            styles: [__webpack_require__(/*! ./color-picker.component.scss */ "./src/app/modules/shared/component/color-picker/color-picker.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], ColorPickerComponent);
+    return ColorPickerComponent;
 }());
 
 
@@ -1184,6 +1353,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core_core_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../core/core.module */ "./src/app/modules/core/core.module.ts");
 /* harmony import */ var _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./component/global-loader/global-loader/global-loader.component */ "./src/app/modules/shared/component/global-loader/global-loader/global-loader.component.ts");
 /* harmony import */ var _component_toggle_switch_toggle_switch_toggle_switch_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./component/toggle-switch/toggle-switch/toggle-switch.component */ "./src/app/modules/shared/component/toggle-switch/toggle-switch/toggle-switch.component.ts");
+/* harmony import */ var _component_color_picker_color_picker_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./component/color-picker/color-picker.component */ "./src/app/modules/shared/component/color-picker/color-picker.component.ts");
+/* harmony import */ var ngx_color_picker__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ngx-color-picker */ "./node_modules/ngx-color-picker/dist/ngx-color-picker.es5.js");
+
+
 
 
 
@@ -1202,12 +1375,14 @@ var SharedModule = /** @class */ (function () {
             declarations: [
                 _component_sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_4__["SidebarComponent"],
                 _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"],
-                _component_toggle_switch_toggle_switch_toggle_switch_component__WEBPACK_IMPORTED_MODULE_9__["ToggleSwitchComponent"]
+                _component_toggle_switch_toggle_switch_toggle_switch_component__WEBPACK_IMPORTED_MODULE_9__["ToggleSwitchComponent"],
+                _component_color_picker_color_picker_component__WEBPACK_IMPORTED_MODULE_10__["ColorPickerComponent"]
             ],
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
                 _shared_routing_module__WEBPACK_IMPORTED_MODULE_3__["SharedRoutingModule"],
                 ng2_semantic_ui__WEBPACK_IMPORTED_MODULE_5__["SuiSelectModule"],
+                ngx_color_picker__WEBPACK_IMPORTED_MODULE_11__["ColorPickerModule"],
                 ng2_semantic_ui__WEBPACK_IMPORTED_MODULE_5__["SuiModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_6__["FormsModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"],
@@ -1216,7 +1391,8 @@ var SharedModule = /** @class */ (function () {
             exports: [
                 _component_sidebar_sidebar_component__WEBPACK_IMPORTED_MODULE_4__["SidebarComponent"],
                 _component_global_loader_global_loader_global_loader_component__WEBPACK_IMPORTED_MODULE_8__["GlobalLoaderComponent"],
-                _component_toggle_switch_toggle_switch_toggle_switch_component__WEBPACK_IMPORTED_MODULE_9__["ToggleSwitchComponent"]
+                _component_toggle_switch_toggle_switch_toggle_switch_component__WEBPACK_IMPORTED_MODULE_9__["ToggleSwitchComponent"],
+                _component_color_picker_color_picker_component__WEBPACK_IMPORTED_MODULE_10__["ColorPickerComponent"]
             ]
         })
     ], SharedModule);
@@ -1421,18 +1597,21 @@ var environment = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/platform-browser-dynamic */ "./node_modules/@angular/platform-browser-dynamic/fesm5/platform-browser-dynamic.js");
-/* harmony import */ var _app_app_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app/app.module */ "./src/app/app.module.ts");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var hammerjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! hammerjs */ "./node_modules/hammerjs/hammer.js");
+/* harmony import */ var hammerjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(hammerjs__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/platform-browser-dynamic */ "./node_modules/@angular/platform-browser-dynamic/fesm5/platform-browser-dynamic.js");
+/* harmony import */ var _app_app_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app/app.module */ "./src/app/app.module.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./environments/environment */ "./src/environments/environment.ts");
 
 
 
 
-if (_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].production) {
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["enableProdMode"])();
+
+if (_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].production) {
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["enableProdMode"])();
 }
-Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformBrowserDynamic"])().bootstrapModule(_app_app_module__WEBPACK_IMPORTED_MODULE_2__["AppModule"])
+Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_2__["platformBrowserDynamic"])().bootstrapModule(_app_app_module__WEBPACK_IMPORTED_MODULE_3__["AppModule"])
     .catch(function (err) { return console.error(err); });
 
 

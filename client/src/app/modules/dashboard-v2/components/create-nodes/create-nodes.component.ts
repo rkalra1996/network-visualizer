@@ -1,12 +1,17 @@
-import { Component, OnInit, EventEmitter, Output, Input, OnChanges, SimpleChanges, ChangeDetectorRef, AfterViewInit, DoCheck } from '@angular/core';
+import {
+  Component, OnInit, EventEmitter, Output, 
+  Input, OnChanges, SimpleChanges,DoCheck
+} from '@angular/core';
+
 import {SearchService} from './../../../shared/services/search-service/search.service';
 import * as _ from 'lodash';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
-import { map, filter } from 'rxjs/operators';
+import { map} from 'rxjs/operators';
 
 import { SharedGraphService } from './../../../core/services/shared-graph.service';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
+import {MaterialService} from './../../../custom-material/services/material-core/material.service';
 
 declare var $: any;
 
@@ -38,6 +43,7 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
   public toolTipText = '';
   public deleteContext = 'node';
   public newNodeName = 'Not Available';
+  public newTypeColor: string | null = null;
   // object to handle modals
   public popupConfig = {
     createNodePopup: false,
@@ -46,14 +52,6 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     createRelationPopup: false,
     editRelationPopup: false,
     deleteRelationPopup: false
-  };
-  // Query to fetch all labels
-  public queryObj = {
-    raw: true,
-    query: `MATCH (p) WITH DISTINCT keys(p) AS keys,p
-     with DISTINCT labels(p) as label,keys 
-     UNWIND keys AS keyslisting WITH DISTINCT keyslisting AS allfields,label
-     RETURN collect(allfields),label`
   };
 
   // modal specific variables
@@ -100,25 +98,38 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
       private SharedSrvc: SearchService,
       private graphSrvc: GraphDataService,
       private sharedGraphSrvc: SharedGraphService,
-      private fb: FormBuilder) {
+      private fb: FormBuilder,
+      private snackbar: MaterialService) {
     }
 
   ngOnInit() {
     this.toolTipText = 'The Properties section can be left blank to set a default Node';
     $('.toolTipText').tooltip();
-    // fetch the properties of all the nodes and relationships
-    this.graphSrvc.getGraphProperties()
-      .subscribe(response => {
-        if (response.hasOwnProperty('nodes')) {
-          this.totalNodesProperties = _.cloneDeep(response['nodes']);
-        }
-        if (response.hasOwnProperty('relations')) {
-          this.totalRelationsProperties = _.cloneDeep(response['relations']);
-        }
-        console.log(this.totalNodesProperties, this.totalRelationsProperties);
-      }, err => {
-        console.error('Error while subscribing to graphProperties method -> ', err);
+    // to set total node and relation properties
+    this.sharedGraphSrvc.totalNodesProperties.subscribe(data=>{
+      this.totalNodesProperties = _.cloneDeep(data);
+      this.totalName = this.totalNodesProperties['Name'];
+      // to change format for lookup option
+      this.totalName = this.totalName.map(name => {
+        return { key: name };
       });
+    });
+    this.sharedGraphSrvc.totalRelationsProperties.subscribe(data=>{
+      this.totalRelationsProperties = data;
+    });
+    // to set processedData and nodeTypes2
+    this.sharedGraphSrvc.processedData.subscribe(data=>{
+      this.processedData = data;
+    })
+    this.sharedGraphSrvc.nodeTypes2.subscribe(data=>{
+      this.nodeTypes2 = data;
+    })
+    this.sharedGraphSrvc.relationTypeOptions.subscribe(data=>{
+      this.relationTypeOptions = data;
+    })
+    this.sharedGraphSrvc.relationsData.subscribe(data=>{
+      this.relationsData = data;
+    })
 
     this.sharedGraphSrvc.showDeletedData.subscribe(toggle => {
       if (toggle !== null && (toggle.toString() === 'true' || toggle.toString() === 'false')) {
@@ -134,13 +145,6 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
       console.error('An error occured while subscribing to the toggle for deleted data', err);
       this.showDeletedData = false;
     });
-    this.sharedGraphSrvc.nameArray.subscribe(response => {
-      this.totalName = response;
-      // to change format for lookup option
-      this.totalName = this.totalName.map(name => {
-        return { key: name };
-      });
-    })
   }
 
 
@@ -149,16 +153,14 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     this.createNodePopup = true;
     this.disabledBox = false;
     this.enableNewTemplate = false;
-
-    this.getNodeTypes().subscribe(data => {
-      let newOptions = data;
-      newOptions = this.pushOnTop(this.ADD_NEW_LABEL, newOptions);
-      this.typeOptions = _.cloneDeep(newOptions);
+      let index = this.nodeTypes2.indexOf(this.ADD_NEW_LABEL);
+      if(index < 0){
+        let newOptions = this.nodeTypes2;
+        newOptions = this.pushOnTop(this.ADD_NEW_LABEL, newOptions);
+        this.typeOptions = _.cloneDeep(newOptions);
+      }
       // add the option to add a new label on top
-    }, err => {
-      console.log('An error occured while reading label data from the database', err);
-      this.typeOptions = _.cloneDeep([]);
-    });
+    
   }
 
   pushOnTop(valueToAdd = 'null', ArrayToUse, index = 0) {
@@ -186,76 +188,20 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     this.createRelationPopup = true;
     this.enableNewTemplate = false;
     this.disabledBox = false;
-    this.getRelationTypes().subscribe(data => { });
+      let extractedTypes = this.relationTypeOptions;
+      // add the new type option on top
+      let index = extractedTypes.indexOf(this.ADD_NEW_TYPE);
+      if(index < 0){
+        extractedTypes = this.pushOnTop(this.ADD_NEW_TYPE, extractedTypes);
+      }
+      // pass it into the options for dropdown
+      this.relationTypeOptions = _.cloneDeep(extractedTypes);
+      return true;
     console.log('variables values are ', this.popupConfig.createRelationPopup + ' ' + this.createRelationPopup);
   }
 
   editRelation() {
     this.edgeBtnEvent.emit({ type: 'click', action: 'edit' });
-  }
-
-  getNodeTypes() {
-    return this.SharedSrvc.runQuery(this.queryObj).pipe(map(data => {
-      console.log('recieved label data from service ', data);
-      this.processedData = this.processData(data);
-      // extract types from the array
-      this.extractLabels(this.processedData);
-      // this.typeOptions = _.cloneDeep(this.nodeTypes2);
-      return this.nodeTypes2;
-    }));
-  }
-
-  getRelationTypes() {
-    return this.graphSrvc.getGraphRelations().pipe(map(response => {
-
-      this.relationsData = this.filterRelationsData(response);
-      let extractedTypes = this.extractTypes(this.relationsData);
-      // add the new type option on top
-      extractedTypes = this.pushOnTop(this.ADD_NEW_TYPE, extractedTypes);
-      // pass it into the options for dropdown
-      this.relationTypeOptions = _.cloneDeep(extractedTypes);
-      return true;
-    }, err => {
-      console.error('An error occured while fetching relations ', err);
-      throw Error();
-    }));
-  }
-
-  filterRelationsData(response) {
-    let filteredObjectArray = [];
-    filteredObjectArray.push(response[0]);
-    response.splice(0, 1);
-    // clear relations response as there are duplicates inside
-    // steps to clear, process each relation type
-    // find all the keys which are of this type and collect its properties into a unique array of objects
-    let i = 0;
-    while (i <= response.length) {
-      if (response.length === 0) {
-        i = 1;
-      } else {
-        let matched = false;
-        filteredObjectArray.forEach(firstObj => {
-          if (firstObj.type === response[i].type) {
-            matched = true;
-            firstObj['properties'].push(...response[i].properties);
-          }
-        });
-        if (matched) {
-          response.splice(i, 1);
-          i = 0;
-        } else {
-          filteredObjectArray.push(response[i]);
-          response.splice(i, 1);
-        }
-      }
-    }
-    // make the properties of each type as unique
-    filteredObjectArray.map(typeObj => {
-      typeObj['properties'] = _.uniq(typeObj['properties']);
-      return typeObj;
-    });
-    console.log('final fetched types for relation is ', filteredObjectArray);
-    return filteredObjectArray;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -289,6 +235,8 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
       this.deleteNodePopup = false;
       this.deleteRelationPopup = false;
       this.editData = null;
+      // clear the selected color
+      this.newTypeColor = null;
       this.cleanData.emit('node');
     });
     $('#createRelationModal').on('hidden.bs.modal', (e) => {
@@ -338,8 +286,7 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
         }, 0);
         console.log('restore options is false for this node');
       }
-      this.getNodeTypes().subscribe(data => {
-        this.typeOptions = _.cloneDeep(data);
+        this.typeOptions = _.cloneDeep(this.nodeTypes2);
         this.selectedType = this.editNodeConfig['type'];
         // trigger update properties to show data before hand
         this.updateProperties(this.selectedType, this.editNodeConfig);
@@ -352,10 +299,6 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
           // will allow the modal to be visible anyway
           console.error('An error occured while prefilling the data, did not recieve anyhting');
         }
-      }, err => {
-        console.log('An error occured while reading label data from the database');
-        this.typeOptions = [];
-      });
     } else if ((!!this.editRelData && !!this.editRelData.length) || (!!this.editRelData && !!Object.keys(this.editRelData).length)) {
       // execute this portion if edit relationship is triggred
       this.popupConfig.editRelationPopup = true;
@@ -384,8 +327,7 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
         let responseBool = false;
         this.restoreOptions = _.cloneDeep(responseBool);
       }
-      this.getRelationTypes().subscribe(response => {
-        console.log('fetched relationship types successfully');
+      console.log('fetched relationship types successfully');
         // once types are loaded, set a default type which is the type of selected relation
         // relationTypeOptions are already set
         this.selectedType = editRelConfig['type'];
@@ -404,11 +346,6 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
           this.selectedNodeNameSource = nodeDetailsArray[0]['label'] || '';
           this.selectedNodeNameTarget = nodeDetailsArray[1]['label'] || '';
         });
-
-      }, err => {
-        console.warn('An error occured while setting the types in the dropdown');
-        this.editRelData = null;
-      });
       // open the edit modal
       this.disabledBox = true;
       this.showModal('createRelationModal');
@@ -437,6 +374,9 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
         this.restoredDataResponse['nodes'].length > 0) {
         // hide the node modal
         this.hideModal('createNodeModal');
+        this.cleanData.emit('node');
+        this.cleanData.emit('relation');
+        this.cleanData.emit('restore');
       }
       if (
         this.restoredDataResponse.hasOwnProperty('relations') &&
@@ -590,6 +530,8 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     console.log('properties object on submit is  ', this.selectedPropertiesObject);
     // pass the captured data into the object and move ahead
     nodeData.properties = _.cloneDeep(this.selectedPropertiesObject);
+    // Add the selected color to this new type, if selected
+    nodeData.properties = this.addNewColorInProperties(nodeData.properties);
     try {
       nodeData = this.validateNodeData(nodeData);
       // hide the modal once the data is created properly
@@ -610,6 +552,14 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  addNewColorInProperties(properties) {
+    if (this.newTypeColor) {
+      // user selected a color code
+      properties['color'] = this.newTypeColor;
+    }
+    return properties;
   }
 
 
@@ -824,7 +774,7 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
       this.setPropertyList(fetchedProperties);
 
       return fetchedProperties.filter(ele => {
-        return ele !== 'deleted';
+        return (ele !== 'deleted' && ele !== 'color');
       });
     } else {
       return [];
@@ -993,14 +943,6 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     return relation;
   }
 
-  extractTypes(ObjectArray: any): any {
-    let typesArray = [];
-    ObjectArray.forEach(obj => {
-      typesArray.push(obj['type']);
-    });
-    return typesArray;
-  }
-
   /* updateRelProperties(event, relProperties = null) {
  // fetch the properties of selected type and display it in the dropdown
   if (!relProperties || !relProperties.hasOwnProperty('properties')) {
@@ -1164,6 +1106,7 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     } else {
       // nothing
     }
+    this.hideModal('deleteModal');
   }
 
   addNewProperty() {
@@ -1266,17 +1209,17 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     }
   }
 
-  getPropertyValues() {
-    // get the label information from the graph and then seperate different keys and their already filled options
-    this.graphSrvc.getNodeLabelData().pipe(map(data => {
-      if (!data.length) {
-        return of({});
-      }
-      // recieveing some data, filter out the name and labels key and send the rest
-      console.log('label data is ', data);
-      return of(data);
-    }));
-  }
+  // getPropertyValues() {
+  //   // get the label information from the graph and then seperate different keys and their already filled options
+  //   this.graphSrvc.getNodeLabelData().pipe(map(data => {
+  //     if (!data.length) {
+  //       return of({});
+  //     }
+  //     // recieveing some data, filter out the name and labels key and send the rest
+  //     console.log('label data is ', data);
+  //     return of(data);
+  //   }));
+  // }
 
   promptRelation() {
     // call create relation procedure
@@ -1400,5 +1343,16 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
   ngDoCheck() {
     // resetting the value so that it stays updated anytime needed, temporary bug fix for restoredOptions variable not setting properly
     this.restoreOptions = _.cloneDeep(this.restoreOptions);
+  }
+
+  selectedColorForNewType(event) {
+    console.log('event from parent ', event);
+    this.newTypeColor = event;
+    if (Object.keys(this.totalNodesProperties).indexOf('color') > -1 && this.totalNodesProperties['color'].indexOf(event) > -1) {
+      // the color is already used
+      this.snackbar.warn({message: 'This color is already used, select another one !'});
+    } else {
+      console.log('This is the new color');
+    }
   }
 }

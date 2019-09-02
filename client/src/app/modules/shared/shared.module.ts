@@ -7,17 +7,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from '../core/core.module';
 import { GlobalLoaderComponent } from './component/global-loader/global-loader/global-loader.component';
 import { ToggleSwitchComponent } from './component/toggle-switch/toggle-switch/toggle-switch.component';
+import { ColorPickerComponent } from './component/color-picker/color-picker.component';
+
+import {ColorPickerModule} from 'ngx-color-picker';
 
 @NgModule({
   declarations: [
     SidebarComponent,
     GlobalLoaderComponent,
-    ToggleSwitchComponent
+    ToggleSwitchComponent,
+    ColorPickerComponent
   ],
   imports: [
     CommonModule,
     SharedRoutingModule,
     SuiSelectModule,
+    ColorPickerModule,
     SuiModule,
     FormsModule,
     ReactiveFormsModule,
@@ -26,7 +31,8 @@ import { ToggleSwitchComponent } from './component/toggle-switch/toggle-switch/t
   exports:[
       SidebarComponent,
       GlobalLoaderComponent,
-      ToggleSwitchComponent
+      ToggleSwitchComponent,
+      ColorPickerComponent
     ]
 })
 export class SharedModule { }

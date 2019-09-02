@@ -1,5 +1,5 @@
 .container-fluid .btn-group {
-    margin-right : 20px;
+    margin-right: 20px;
     button {
         border-radius: 0;
         background: #e4e4e4;
@@ -88,12 +88,13 @@
     padding-bottom: 13px;
     text-align: center;
 }
+
 ::ng-deep .supportIcons {
     position: absolute;
-    right : 6%;
+    right: 6%;
     cursor: pointer;
     cursor: pointer;
-    color : red;
+    color: red;
 }
 
 ::ng-deep .supportIcons.customDelete {
@@ -101,39 +102,43 @@
 }
 
 input#propertyKey {
-    height : 30px;
+    height: 30px;
 }
+
 ::ng-deep .newLink {
     float: right;
-    padding : 5px 7px;
+    padding: 5px 7px;
 }
 
 .newLink2 {
     position: absolute;
-    right : 0;
-    top : -2px;
-    padding : 5px 7px;
+    right: 0;
+    top: 12px;
+    padding: 5px 7px;
 }
+
 .lower {
-    margin-top : 30px;
+    margin-top: 30px;
 }
-.newLink:hover, .newLink2:hover {
+
+.newLink:hover,
+.newLink2:hover {
     background-color: #5f5f5f;
-    color : white !important;
-    transition : .5s;
+    color: white !important;
+    transition: .5s;
     cursor: pointer;
     border-radius: 5px;
 }
 
 .newTemplate {
-    max-width: 33% !important;
+    max-width: 35% !important;
     div {
         max-width: 100%;
     }
 }
 
 i.fas.fa-info-circle {
-    color : black !important;
+    color: black !important;
 }
 
 input[disabled="true"] {
@@ -143,9 +148,11 @@ input[disabled="true"] {
 button:disabled {
     cursor: not-allowed;
     pointer-events: all !important;
-  }
+}
 
-.deleteBtn, .mailBtn, .restoreBtn {
+.deleteBtn,
+.mailBtn,
+.restoreBtn {
     cursor: pointer !important;
 }
 
@@ -159,18 +166,19 @@ button:disabled {
     color: white;
 }
 
-.mailBtn, .left {
-margin-right: auto;
+.mailBtn,
+.left {
+    margin-right: auto;
 }
 
 .mailBtn {
-    padding : 5px 8px;
+    padding: 5px 8px;
 }
 
 .mailBtn:hover {
     transition: 0.5s;
     background: #e4e4e4;
-    border-radius : .25rem;
+    border-radius: .25rem;
     color: #000;
     box-shadow: 2px 9px 17px -1px #cccccc;
 }
@@ -181,11 +189,28 @@ margin-right: auto;
 }
 
 ::ng-deep .newPropertyGroup {
-    width : 100%;
-    display : block;
+    width: 100%;
+    display: block;
     background: #cccccc;
 }
 
 ::ng-deep .normalTextBox {
-    max-width : 14em;
+    max-width: 14em;
+}
+
+::ng-deep .typeTextBox {
+    max-width: 20em;
+}
+
+.typeTextBox input {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
+.ui.input.typeTextBox {
+    width: 14em;
+}
+
+#id_newLabelNode {
+    padding-left: 3px;
 }

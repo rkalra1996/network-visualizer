@@ -6,6 +6,7 @@ import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.s
 import { elementOperation } from './../../interfaces/elementOperation';
 
 import {MaterialService} from './../../../custom-material/services/material-core/material.service';
+import { ColorServiceService } from '../../services/colorService/color-service.service';
 
 @Component({
   selector: 'app-graph-visualizer',
@@ -14,9 +15,9 @@ import {MaterialService} from './../../../custom-material/services/material-core
 })
 export class GraphVisualizerComponent implements OnInit {
 
-  @Input() event: String;
+  @Input() event: Object;
   @Input() totalTypesArray = [];
-  @Output() newNodeCreated = new EventEmitter<string>();
+  @Output() newNodeCreated = new EventEmitter<object>();
   @Output() nodeLimitEvent = new EventEmitter<string | null>();
 
   private NODE_CREATE_TEXT_SUCCESS = 'Node has been created successfully !';
@@ -46,46 +47,47 @@ export class GraphVisualizerComponent implements OnInit {
   selectedCount;
   public nodeLimit: any = 149;
   public emptyNodeLimit = 179;
-  public colorConfig = {
-    defaultColor: {
-      Academia: '#ff4444',
-      Consulting: '#ffbb33',
-      Government: '#00C851',
-      'Impact Investor': '#33b5e5',
-      'International Agency': '#CC0000',
-      Media: '#FF8800',
-      'NGO/CBO': '#007E33',
-      People: '#0099CC',
-      Philanthropy: '#9933CC',
-      Platform: '#0d47a1',
-      'Private Sector': '#2BBBAD',
-      'Research Institute': '#c51162'
+  public colorConfig = {};
+  // public colorConfig = {
+  //   defaultColor: {
+  //     Academia: '#ff4444',
+  //     Consulting: '#ffbb33',
+  //     Government: '#00C851',
+  //     'Impact Investor': '#33b5e5',
+  //     'International Agency': '#CC0000',
+  //     Media: '#FF8800',
+  //     'NGO/CBO': '#007E33',
+  //     People: '#0099CC',
+  //     Philanthropy: '#9933CC',
+  //     Platform: '#0d47a1',
+  //     'Private Sector': '#2BBBAD',
+  //     'Research Institute': '#c51162'
 
-    },
-    selectedColor: {
-      Academia: '#ff4444',
-      Consulting: '#ffbb33',
-      Government: '#00C851',
-      'Impact Investor': '#33b5e5',
-      'International Agency': '#CC0000',
-      Media: '#FF8800',
-      'NGO/CBO': '#007E33',
-      People: '#0099CC',
-      Philanthropy: '#9933CC',
-      Platform: '#0d47a1',
-      'Private Sector': '#2BBBAD',
-      'Research Institute': '#c51162'
+  //   },
+  //   selectedColor: {
+  //     Academia: '#ff4444',
+  //     Consulting: '#ffbb33',
+  //     Government: '#00C851',
+  //     'Impact Investor': '#33b5e5',
+  //     'International Agency': '#CC0000',
+  //     Media: '#FF8800',
+  //     'NGO/CBO': '#007E33',
+  //     People: '#0099CC',
+  //     Philanthropy: '#9933CC',
+  //     Platform: '#0d47a1',
+  //     'Private Sector': '#2BBBAD',
+  //     'Research Institute': '#c51162'
 
-    },
-    deletedColor: {
-      colorCode: '#C0C0C0',
-      highlightColorCode: '#9a9a9a'
-    },
-    restoreColor: {
-      colorCode: '#96C1FA',
-      highlightColorCode: '#249BFC'
-    }
-  };
+  //   },
+  //   deletedColor: {
+  //     colorCode: '#C0C0C0',
+  //     highlightColorCode: '#9a9a9a'
+  //   },
+  //   restoreColor: {
+  //     colorCode: '#96C1FA',
+  //     highlightColorCode: '#249BFC'
+  //   }
+  // };
 
   public editNodeData = null;
   public editRelationData = null;
@@ -122,7 +124,8 @@ export class GraphVisualizerComponent implements OnInit {
   constructor(
     private graphService: GraphDataService,
     private sharedGraphService: SharedGraphService,
-    private snackBar: MaterialService) { }
+    private snackBar: MaterialService,
+    private colorService: ColorServiceService) { }
 
   ngOnInit() {
     this.loader = true;
@@ -153,12 +156,15 @@ export class GraphVisualizerComponent implements OnInit {
           this.showFilteredData();
         }
       }
-
     }, err => {
       // set to false by default
       console.error('An error occured while subscribing to the toggle for deleted data', err);
       this.showDeletedData = false;
       this.displayInitialGraph();
+    });
+
+    this.colorService.colorObj$.subscribe(response => {
+      this.colorConfig = response;
     });
   }
 
@@ -167,13 +173,15 @@ export class GraphVisualizerComponent implements OnInit {
       console.log('recieved data from graph service', result);
       // set data for vis
       if (result.hasOwnProperty('seperateNodes')) {
+        // set color config using nodes color properties
+        this.updateColorConfigObject(result);
         // add colors to nodes
         result = this.addColors(result);
         // store all data without any filter
         this.allGraphData['nodes'] = result['seperateNodes'];
         this.allGraphData['edges'] = result['seperateEdges'];
         // to update filtered data
-        this.setFilteredData();
+      this.setFilteredData(this.showDeletedData);
         // check for show deleted toggel
         if (this.showDeletedData) {
           // show all data
@@ -216,10 +224,16 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.changeNodeColor();
+    if (this.event) {
+      const searchEvent = this.event['event'];
+      if (searchEvent === 'search' || searchEvent === 'reset') {
+        this.event = searchEvent;
+        this.changeNodeColor();
+      }
+    }
   }
   changeNodeColor() {
-    if (this.event === 'search1' || this.event === 'search2') {
+    if (this.event === 'search') {
       this.loader = true;
       this.showGraphData();
     } else if (this.event === 'reset') {
@@ -314,14 +328,34 @@ export class GraphVisualizerComponent implements OnInit {
     });
   }
 
+  updateColorConfigObject(resultObj){
+    let temColorObj = {};
+    resultObj['seperateNodes'].forEach(node => {
+      if (node.hasOwnProperty('type') && node.type.length > 0 && node.hasOwnProperty('properties')) {
+        if(!temColorObj[node.type[0]]){
+          if(node['properties']['color']){
+            temColorObj[node.type[0]] = node['properties']['color'];
+          }else{
+            temColorObj[node.type[0]] = this.colorConfig['initialColor']['colorCode'];
+          }
+        }
+      }
+      });
+      this.colorService.updateDefaultColor(temColorObj);
+  }
+
   addColors(resultObj) {
     // if the user opted for deleted data, simply set deleted default color to all the nodes
     resultObj['seperateNodes'].forEach(node => {
       if (node.hasOwnProperty('type') && node.type.length > 0) {
         if (node['properties']['deleted'] === "true" || node['properties']['deleted'] === true) {
-          node['color'] = this.colorConfig.deletedColor.colorCode;
+          node['color'] = this.colorConfig['deletedColor']['colorCode'];
         } else {
-          node['color'] = this.colorConfig.defaultColor[node.type[0]];
+          // if the node has a color property, assign that else assign the defaults one
+          node = this.shiftColorKey(node);
+          if (!node.hasOwnProperty('color')) {
+            node['color'] = this.colorConfig['defaultColor'][node.type[0]];
+          }
         }
         // node['color'] = this.showDeletedData ? this.colorConfig.deletedColor.colorCode : this.colorConfig.defaultColor[node.type[0]];
         // // temporary fix, add exception for societal platform
@@ -334,8 +368,8 @@ export class GraphVisualizerComponent implements OnInit {
     resultObj['seperateEdges'].forEach(edge => {
       if (edge.hasOwnProperty('type') && edge.type.length > 0) {
         if (edge['properties']['deleted'] === "true" || edge['properties']['deleted'] === true) {
-          edge['color']['color'] = this.colorConfig.deletedColor.colorCode;
-          edge['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
+          edge['color']['color'] = this.colorConfig['deletedColor']['colorCode'];
+          edge['color']['highlight'] = this.colorConfig['deletedColor']['highlightColorCode'];
         } else {
           // edge['color'] = this.colorConfig.defaultColor[edge.type[0]];
         }
@@ -344,6 +378,20 @@ export class GraphVisualizerComponent implements OnInit {
     // console.log(nodeObj);
     return resultObj;
 
+  }
+
+  addColorProperty(node) {
+      if (node.hasOwnProperty('type') && node.type.length > 0 && node.hasOwnProperty('properties')) {
+        if (node['properties'].hasOwnProperty('color') && node['properties']['color'] === 'not available') {
+        let index;
+        let nodeType : string;
+        nodeType = node.type;
+        if(this.colorConfig['defaultColor'][nodeType]){
+            node['properties']['color'] = this.colorConfig['defaultColor'][nodeType];
+        }
+      }
+    }
+    return node;
   }
 
   private limitChange(limit, popup) {
@@ -387,6 +435,11 @@ export class GraphVisualizerComponent implements OnInit {
           } else {
             // user clicked on a good place to  create a node
             // console.log(this.graphData);
+            if(event.data.properties['color'] === 'not available'){
+              event.data = this.addColorProperty(event.data);
+            }else{
+              this.colorService.insertIntoDefaultColor({type: event.data.type,color: event.data.properties.color});
+            }
             let newNodeData = {
               id: event.data.id,
               label: event.data.properties.Name,
@@ -398,20 +451,22 @@ export class GraphVisualizerComponent implements OnInit {
             // make a request to create a node, if it succeedes only then show in the graph
             this.graphService.createNewNode(newNodeData).subscribe(response => {
               //update sidebar dropdown
-              this.newNodeCreated.emit("NodeEvent_create" + response['seperateNodes'][0].id);
+              this.newNodeCreated.emit({ event: "NodeEvent_create" + response['seperateNodes'][0].id });
               // add additional data for vis layout
               // newNodeForVis = this.addData(newNodeForVis, clickEvent, event);
               try {
                 let visNode = _.cloneDeep(this.addData(response['seperateNodes'][0], clickEvent, event));
                 // to remove deleted key from tooltip
+                // Add the color to the newly created node
+                visNode['color'] = newNodeData.properties['color'];
                 visNode['title'] = this.stringifyProperties(visNode);
                 // add the new node to the vis
                 this.graphData['nodes'].add([visNode]);
                 // to update all data array while a new node is created
-                let eleObj : elementOperation = {
-                  element : 'nodes',
-                  event : "create",
-                  data : response['seperateNodes'][0]
+                let eleObj: elementOperation = {
+                  element: 'nodes',
+                  event: "create",
+                  data: response['seperateNodes'][0]
                 };
                 this.updateGraphArray(eleObj);
                 // emit the createNodes component that a node has been put into the graph, prompt user to create a relation
@@ -481,14 +536,14 @@ export class GraphVisualizerComponent implements OnInit {
               }
 
               // update all+filtered graph array
-              let eleObj : elementOperation = {
-                element : 'nodes',
-                event : "edit",
-                data : visNode
+              let eleObj: elementOperation = {
+                element: 'nodes',
+                event: "edit",
+                data: visNode
               };
               this.updateGraphArray(eleObj);
               //update sidebar dropdown
-              this.newNodeCreated.emit('NodeEvent_update' + response['seperateNodes'][0].id);
+              this.newNodeCreated.emit({ event: 'NodeEvent_update' + response['seperateNodes'][0].id });
             }
             console.log(visNode);
             this.snackBar.success({message: this.NODE_UPDATE_TEXT_SUCCESS});
@@ -519,10 +574,10 @@ export class GraphVisualizerComponent implements OnInit {
             // update the edges
             removedEdges.map(removed => {
               // update all+filtered graph array
-              let eleObj : elementOperation = {
-                element : 'edges',
-                event : "delete",
-                data : removed
+              let eleObj: elementOperation = {
+                element: 'edges',
+                event: "delete",
+                data: removed
               };
               this.updateGraphArray(eleObj);
             });
@@ -533,14 +588,14 @@ export class GraphVisualizerComponent implements OnInit {
             }
           }
           // update all+filtered array
-          let eleObj : elementOperation = {
-            element : 'nodes',
-            event : "delete",
-            data : response['seperateNodes'][0]
+          let eleObj: elementOperation = {
+            element: 'nodes',
+            event: "delete",
+            data: response['seperateNodes'][0]
           };
           this.updateGraphArray(eleObj);
           // update the node in vis
-          removedNode[0]['color'] = this.colorConfig.deletedColor.colorCode;
+          removedNode[0]['color'] = this.colorConfig['deletedColor']['colorCode'];
           if (this.showDeletedData) {
             this.graphData['nodes'].update(removedNode);
           } else {
@@ -548,7 +603,7 @@ export class GraphVisualizerComponent implements OnInit {
           }
           this.hideDelModal = _.cloneDeep(true);
           //update sidebar dropdown
-          this.newNodeCreated.emit('NodeEvent_delete' + response['seperateNodes'][0].id);
+          this.newNodeCreated.emit({ event: 'NodeEvent_delete' + response['seperateNodes'][0].id });
           this.snackBar.success({message: this.NODE_DELETE_TEXT_SUCCESS});
         }, err => {
           console.error('An error occured while reading response for node delete ', err);
@@ -578,14 +633,15 @@ export class GraphVisualizerComponent implements OnInit {
           try {
             let visRelation = _.cloneDeep(response['seperateEdges'][0]);
             // to remove deleted key from tooltip
+            this.newNodeCreated.emit({ event: "NodeEvent_create" + response['seperateEdges'][0] });
             visRelation['title'] = this.stringifyProperties(visRelation);
             // add the new node to the vis
             // first get the edge, if it is already present, simply update it else add it
             let isAlreadyPresent = this.graphData['edges'].get(visRelation['id']);
-            let eleObj : elementOperation = {
-              element : 'edges',
-              event : "edit",
-              data : response['seperateEdges'][0]
+            let eleObj: elementOperation = {
+              element: 'edges',
+              event: "edit",
+              data: response['seperateEdges'][0]
             };
             if (isAlreadyPresent !== null) {
               //update it 
@@ -637,15 +693,15 @@ export class GraphVisualizerComponent implements OnInit {
             // once database relation is deleted, remove it from visGraph also
             let deletedRel = _.cloneDeep(response['seperateEdges'])
             // update all+filtered graph array
-            let eleObj : elementOperation = {
-              element : 'edges',
-              event : "delete",
-              data : response['seperateEdges']
+            let eleObj: elementOperation = {
+              element: 'edges',
+              event: "delete",
+              data: response['seperateEdges']
             };
             this.updateGraphArray(eleObj);
             if (this.showDeletedData) {
-              deletedRel['color']['color'] = this.colorConfig.deletedColor.colorCode;
-              deletedRel['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
+              deletedRel['color']['color'] = this.colorConfig['deletedColor']['colorCode'];
+              deletedRel['color']['highlight'] = this.colorConfig['deletedColor']['highlightColorCode'];
               this.graphData['edges'].update([deletedRel]);
             } else {
               this.graphData['edges'].remove([deletedRel]);
@@ -676,15 +732,15 @@ export class GraphVisualizerComponent implements OnInit {
         if (!!oldNode) {
           oldNode['properties'] = node['properties'];
           oldNode = this.addNodeColor(node);
-          // update all graph data array
-          let index = _.findIndex(this.allGraphData['nodes'], { id: oldNodeID });
-          if (index >= 0) {
-            this.allGraphData['nodes'][index] = oldNode;
-          }
-          // update filtered grpah data array
-          let tem = _.cloneDeep(oldNode);
-          tem['title'] = this.stringifyProperties(tem);
-          this.filteredGraphData['nodes'].push(tem);
+          // update all+filtered graph array
+          let eleObj: elementOperation = {
+            element: 'nodes',
+            event: "restore",
+            data: oldNode
+          };
+          this.updateGraphArray(eleObj);
+          // update sidebar name
+          this.newNodeCreated.emit({ event: "NodeEvent_restore_" + node['label'] });
           // set it back in VISJS
           this.graphData['nodes'].update(oldNode);
           console.log('updated node ', oldNode);
@@ -727,18 +783,17 @@ export class GraphVisualizerComponent implements OnInit {
         if (!!oldRelation) {
           oldRelation['properties'] = relation['properties'];
           oldRelation['title'] = relation['title'];
-          oldRelation['color']['color'] = this.colorConfig.restoreColor.colorCode;
-          oldRelation['color']['highlight'] = this.colorConfig.restoreColor.highlightColorCode;
+          oldRelation['color']['color'] = this.colorConfig['restoreColor']['colorCode'];
+          oldRelation['color']['highlight'] = this.colorConfig['restoreColor']['highlightColorCode'];
           // set it back in VisJS
           this.graphData['edges'].update(oldRelation);
-          // update allGraphData and filteredGraphData Array
-          let index = _.findIndex(this.allGraphData['edges'], { id: oldRelationID });
-          if (index >= 0) {
-            this.allGraphData['edges'][index] = oldRelation;
-          }
-          let tem = _.cloneDeep(oldRelation);
-          tem['title'] = this.stringifyProperties(tem);
-          this.filteredGraphData['edges'].push(tem);
+          // update all+filtered graph array
+          let eleObj: elementOperation = {
+            element: 'edges',
+            event: "restore",
+            data: oldRelation
+          };
+          this.updateGraphArray(eleObj);
           console.log('updated relation ', oldRelation);
         } else {
           console.error(`Provided relation ${oldRelation} is not present in VisGraph for restoration`);
@@ -755,7 +810,7 @@ export class GraphVisualizerComponent implements OnInit {
       let finalString = '';
       if (propertyObject['properties'].hasOwnProperty('deleted')) {
         Object.keys(propertyObject['properties']).filter(key => {
-          if (key !== 'deleted') {
+          if (key !== 'deleted' && key !== 'color') {
             finalString += `<strong>${key} :</strong> ${propertyObject['properties'][key]} <br>`;
           }
         });
@@ -767,17 +822,20 @@ export class GraphVisualizerComponent implements OnInit {
   addData(node, clickEvent, event) {
     node['x'] = clickEvent.pointer.canvas.x;
     node['y'] = clickEvent.pointer.canvas.y;
-    node['color'] = this.colorConfig.defaultColor[event.data.type];
+    node['color'] = this.colorConfig['defaultColor'][event.data.type];
     return node;
   }
 
   addNodeColor(node) {
-    const colorCode = this.colorConfig.defaultColor[node.type[0]] || null;
+    const colorCode = this.colorConfig['defaultColor'][node.type[0]] || null;
     if (colorCode) {
       node['color'] = colorCode;
       return node;
     } else {
-      console.warn('Error while adding color to the node ', node['label']);
+      node = this.shiftColorKey(node);
+      if (!node['properties'].hasOwnProperty('color')) {
+        console.warn('Error while adding color to the node ', node['label']);
+      }
       return node;
     }
   }
@@ -833,12 +891,15 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   // to filter data from alldata array and store it to new array
-  setFilteredData() {
+  setFilteredData(isDeletedToggle = false) {
     this.filteredGraphData['nodes'] = [];
     this.filteredGraphData['edges'] = [];
     this.allGraphData['nodes'].filter(node => {
       if (node['properties']['deleted'] === "false" || node['properties']['deleted'] === false) {
         let tem = _.cloneDeep(node);
+        if (isDeletedToggle) {
+          delete tem['color'];
+        }
         tem['title'] = this.stringifyProperties(tem);
         this.filteredGraphData['nodes'].push(tem);
       }
@@ -987,9 +1048,11 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   // to update allGraphData and filteredGraphData
-  updateGraphArray(obj : elementOperation) : void {
+  updateGraphArray(obj: elementOperation): void {
     try {
       if (obj.hasOwnProperty('event') && obj.event === 'create') {
+        // verify if color property is present and add it as is
+        obj.data = this.shiftColorKey(obj.data);
         this.insertIntoAllGraphArray(obj);
         this.insertIntoFilteredGraphArray(obj);
       } else if (obj.hasOwnProperty('event') && obj.event === 'edit' || obj.event === 'delete' || obj.event === 'restore') {
@@ -1003,7 +1066,7 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   // update allgraphdata array
-  updateAllGraphArray(obj : elementOperation) : void {
+  updateAllGraphArray(obj: elementOperation): void {
     try {
       if (obj.hasOwnProperty('data')) {
         let index;
@@ -1011,14 +1074,14 @@ export class GraphVisualizerComponent implements OnInit {
         if (obj.hasOwnProperty('element') && obj.element === 'nodes') {
           // for node
           if (obj.hasOwnProperty('event') && obj.event === 'delete') {
-            obj.data['color'] = this.colorConfig.deletedColor.colorCode;
+            obj.data['color'] = this.colorConfig['deletedColor']['colorCode'];
           }
           index = _.findIndex(this.allGraphData[obj.element], { label: obj.data['label'] });
         } else if (obj.hasOwnProperty('element') && obj.element === 'edges') {
           // for edge
           if (obj.hasOwnProperty('event') && obj.event === 'delete') {
-            obj.data['color']['color'] = this.colorConfig.deletedColor.colorCode;
-            obj.data['color']['highlight'] = this.colorConfig.deletedColor.highlightColorCode;
+            obj.data['color']['color'] = this.colorConfig['deletedColor']['colorCode'];
+            obj.data['color']['highlight'] = this.colorConfig['deletedColor']['highlightColorCode'];
           }
           index = _.findIndex(this.allGraphData[obj.element], { id: obj.data['id'] })
         }
@@ -1033,7 +1096,7 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   // update filteredgrapdata garray
-  updateFilteredGraphArray(obj : elementOperation) : void {
+  updateFilteredGraphArray(obj: elementOperation): void {
     try {
       if (obj.hasOwnProperty('data')) {
         let index;
@@ -1053,6 +1116,8 @@ export class GraphVisualizerComponent implements OnInit {
             tem['title'] = this.stringifyProperties(tem);
             this.filteredGraphData[obj.element][index] = tem;
           }
+        } else if (obj.hasOwnProperty('event') && obj.event === 'restore') {
+          this.insertIntoFilteredGraphArray(obj);
         }
       }
     } catch (e) {
@@ -1061,7 +1126,7 @@ export class GraphVisualizerComponent implements OnInit {
   }
 
   // insert into allgraphdata array
-  insertIntoAllGraphArray(obj : elementOperation) : void {
+  insertIntoAllGraphArray(obj: elementOperation): void {
     try {
       if (obj.hasOwnProperty('data') && obj.hasOwnProperty('element')) {
         this.allGraphData[obj.element].push(obj.data);
@@ -1071,8 +1136,20 @@ export class GraphVisualizerComponent implements OnInit {
     }
   }
 
+  shiftColorKey(elementObject, previousObject = null) {
+    // To add a new color key in the root level if color is present in properties key
+    if (elementObject.hasOwnProperty('properties') && elementObject['properties'].hasOwnProperty('color')) {
+      elementObject['color'] = elementObject['properties']['color'];
+      return elementObject;
+    } else if (previousObject !== null) {
+      return previousObject;
+    } else {
+      return elementObject;
+    }
+  }
+
   // insert into filtered graph array
-  insertIntoFilteredGraphArray(obj : elementOperation) : void {
+  insertIntoFilteredGraphArray(obj: elementOperation): void {
     try {
       if (obj.hasOwnProperty('data') && obj.hasOwnProperty('element')) {
         let tem = _.cloneDeep(obj.data);
