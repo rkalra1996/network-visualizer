@@ -29672,12 +29672,14 @@ var CreateNodesComponent = /** @class */ (function () {
         $('.toolTipText').tooltip();
         // to set total node and relation properties
         this.sharedGraphSrvc.totalNodesProperties.subscribe(function (data) {
-            _this.totalNodesProperties = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](data);
-            _this.totalName = _this.totalNodesProperties['Name'];
-            // to change format for lookup option
-            _this.totalName = _this.totalName.map(function (name) {
-                return { key: name };
-            });
+            if (data) {
+                _this.totalNodesProperties = lodash__WEBPACK_IMPORTED_MODULE_3__["cloneDeep"](data);
+                _this.totalName = _this.totalNodesProperties['Name'];
+                // to change format for lookup option
+                _this.totalName = _this.totalName.map(function (name) {
+                    return { key: name };
+                });
+            }
         });
         this.sharedGraphSrvc.totalRelationsProperties.subscribe(function (data) {
             _this.totalRelationsProperties = data;
@@ -31026,10 +31028,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var src_app_modules_core_services_graph_data_service_graph_data_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/modules/core/services/graph-data-service/graph-data.service */ "./src/app/modules/core/services/graph-data-service/graph-data.service.ts");
 /* harmony import */ var src_app_modules_core_services_shared_graph_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/modules/core/services/shared-graph.service */ "./src/app/modules/core/services/shared-graph.service.ts");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var src_app_modules_shared_services_search_service_search_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/app/modules/shared/services/search-service/search.service */ "./src/app/modules/shared/services/search-service/search.service.ts");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var src_app_modules_shared_services_search_service_search_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/modules/shared/services/search-service/search.service */ "./src/app/modules/shared/services/search-service/search.service.ts");
+
 
 
 
@@ -31114,41 +31118,24 @@ var DashboardSidebarComponent = /** @class */ (function () {
         var _this = this;
         this.totalAtrributeOptions = [];
         // fetch the properties of all the nodes and relationships
-        this.graphDataService.getGraphProperties()
-            .subscribe(function (response) {
-            if (response.hasOwnProperty('nodes')) {
-                _this.totalNodesProperties = lodash__WEBPACK_IMPORTED_MODULE_5__["cloneDeep"](response['nodes']);
-                _this.sharedGraphData.setNodeProperties(_this.totalNodesProperties);
-                if (_this.totalNodesProperties) {
-                    Object.keys(_this.totalNodesProperties).forEach(function (keyName) {
-                        if (keyName !== 'deleted' && keyName !== 'color')
-                            _this.totalAtrributeOptions.push({ attribute: keyName, options: _this.totalNodesProperties[keyName], rotate: false });
-                        // this.selectedAttributeOptions[keyName] = [];
-                    });
-                }
+        Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["forkJoin"])([this.graphDataService.getGraphProperties(), this.getNodeTypes()]).subscribe(function (results) {
+            // results[0] is our character
+            // results[1] is our character homeworld
+            if (results[0].hasOwnProperty('nodes')) {
                 // push name to top
+                _this.setNodeProperties(results[0]);
                 var index = _this.totalAtrributeOptions.findIndex(function (obj) { return obj['attribute'] === "Name"; });
-                _this.swap(_this.totalAtrributeOptions, index, 0);
-                if (response.hasOwnProperty('relations')) {
-                    _this.totalRelationsProperties = lodash__WEBPACK_IMPORTED_MODULE_5__["cloneDeep"](response['relations']);
-                    _this.sharedGraphData.setRelationProperties(_this.totalRelationsProperties);
-                }
-                console.log(_this.totalNodesProperties, _this.totalRelationsProperties);
+                _this.totalAtrributeOptions = lodash__WEBPACK_IMPORTED_MODULE_6__["cloneDeep"](_this.swap(_this.totalAtrributeOptions, index, 0));
             }
-            _this.checkRotate();
+            if (results[1].length > 0) {
+                // push type to second position
+                _this.setTypes(results[1]);
+                var index = _this.totalAtrributeOptions.findIndex(function (obj) { return obj['attribute'] === "Type"; });
+                _this.totalAtrributeOptions = lodash__WEBPACK_IMPORTED_MODULE_6__["cloneDeep"](_this.swap(_this.totalAtrributeOptions, index, 1));
+            }
         }, function (err) {
-            console.error('Error while subscribing to graphProperties method -> ', err);
-        });
-        this.getNodeTypes().subscribe(function (data) {
-            _this.sharedGraphData.setProcessedData(_this.processedData);
-            _this.sharedGraphData.setNodeTypes2(_this.nodeTypes2);
-            // this.typeOptions = this.nodeTypes2;
-            _this.totalAtrributeOptions.push({ attribute: 'Type', options: _this.nodeTypes2, rotate: false });
-            // push type to second position
-            _this.swap(_this.totalAtrributeOptions, _this.totalAtrributeOptions.length - 1, 1);
-            _this.checkRotate();
-        }, function (err) {
-            console.error('Error while subscribing to graphProperties method -> ', err);
+            Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["throwError"])({ error: 'Error while reading graph properties' });
+            console.error(err);
         });
         this.getRelationTypes().subscribe(function (response) {
             // this.graphInitData.push(data);
@@ -31354,7 +31341,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
     };
     DashboardSidebarComponent.prototype.getNodeTypes = function () {
         var _this = this;
-        return this.searchService.runQuery(this.queryObj).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (data) {
+        return this.searchService.runQuery(this.queryObj).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (data) {
             console.log('recieved label data from service ', data);
             _this.processedData = _this.processData(data);
             // extract types from the array
@@ -31376,11 +31363,11 @@ var DashboardSidebarComponent = /** @class */ (function () {
     };
     DashboardSidebarComponent.prototype.getRelationTypes = function () {
         var _this = this;
-        return this.graphDataService.getGraphRelations().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(function (response) {
+        return this.graphDataService.getGraphRelations().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])(function (response) {
             _this.relationsData = _this.filterRelationsData(response);
             var extractedTypes = _this.extractTypes(_this.relationsData);
             // pass it into the options for dropdown
-            _this.relationTypeOptions = lodash__WEBPACK_IMPORTED_MODULE_5__["cloneDeep"](extractedTypes);
+            _this.relationTypeOptions = lodash__WEBPACK_IMPORTED_MODULE_6__["cloneDeep"](extractedTypes);
             _this.sharedGraphData.setRelationTypeOptions(_this.relationTypeOptions);
             _this.sharedGraphData.setRelationsData(_this.relationsData);
             return true;
@@ -31425,7 +31412,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
         }
         // make the properties of each type as unique
         filteredObjectArray.map(function (typeObj) {
-            typeObj['properties'] = lodash__WEBPACK_IMPORTED_MODULE_5__["uniq"](typeObj['properties']);
+            typeObj['properties'] = lodash__WEBPACK_IMPORTED_MODULE_6__["uniq"](typeObj['properties']);
             return typeObj;
         });
         console.log('final fetched types for relation is ', filteredObjectArray);
@@ -31439,10 +31426,11 @@ var DashboardSidebarComponent = /** @class */ (function () {
         return typesArray;
     };
     DashboardSidebarComponent.prototype.swap = function (ArrayForSwapping, swapFromIndex, swapToIndex) {
-        var temp = ArrayForSwapping[swapFromIndex];
-        ArrayForSwapping[swapFromIndex] = ArrayForSwapping[swapToIndex];
-        ArrayForSwapping[swapToIndex] = temp;
-        return ArrayForSwapping;
+        var temArrayForSwapping = lodash__WEBPACK_IMPORTED_MODULE_6__["cloneDeep"](ArrayForSwapping);
+        var temp = temArrayForSwapping[swapFromIndex];
+        temArrayForSwapping[swapFromIndex] = temArrayForSwapping[swapToIndex];
+        temArrayForSwapping[swapToIndex] = temp;
+        return temArrayForSwapping;
     };
     DashboardSidebarComponent.prototype.updateSidebar = function (nodeData) {
         if (nodeData) {
@@ -31470,6 +31458,38 @@ var DashboardSidebarComponent = /** @class */ (function () {
             });
         }
     };
+    // for node properties
+    DashboardSidebarComponent.prototype.setNodeProperties = function (response) {
+        var _this = this;
+        if (response.hasOwnProperty('nodes')) {
+            this.totalNodesProperties = lodash__WEBPACK_IMPORTED_MODULE_6__["cloneDeep"](response['nodes']);
+            this.sharedGraphData.setNodeProperties(this.totalNodesProperties);
+            if (this.totalNodesProperties) {
+                Object.keys(this.totalNodesProperties).forEach(function (keyName) {
+                    if (keyName !== 'deleted' && keyName !== 'color')
+                        _this.totalAtrributeOptions.push({ attribute: keyName, options: _this.totalNodesProperties[keyName], rotate: false });
+                    // this.selectedAttributeOptions[keyName] = [];
+                });
+            }
+            if (response.hasOwnProperty('relations')) {
+                this.totalRelationsProperties = lodash__WEBPACK_IMPORTED_MODULE_6__["cloneDeep"](response['relations']);
+                this.sharedGraphData.setRelationProperties(this.totalRelationsProperties);
+            }
+            console.log(this.totalNodesProperties, this.totalRelationsProperties);
+        }
+        this.checkRotate();
+    };
+    // for types
+    DashboardSidebarComponent.prototype.setTypes = function (response) {
+        if (response) {
+            this.sharedGraphData.setProcessedData(this.processedData);
+            this.sharedGraphData.setNodeTypes2(this.nodeTypes2);
+            // this.typeOptions = this.nodeTypes2;
+            this.totalAtrributeOptions.push({ attribute: 'Type', options: this.nodeTypes2, rotate: false });
+            this.checkRotate();
+            return true;
+        }
+    };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
@@ -31492,7 +31512,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./dashboard-sidebar.component.html */ "./src/app/modules/dashboard-v2/components/dashboard-v2-sidebar/dashboard-sidebar.component.html"),
             styles: [__webpack_require__(/*! ./dashboard-sidebar.component.scss */ "./src/app/modules/dashboard-v2/components/dashboard-v2-sidebar/dashboard-sidebar.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_modules_core_services_graph_data_service_graph_data_service__WEBPACK_IMPORTED_MODULE_2__["GraphDataService"], src_app_modules_core_services_shared_graph_service__WEBPACK_IMPORTED_MODULE_3__["SharedGraphService"], src_app_modules_shared_services_search_service_search_service__WEBPACK_IMPORTED_MODULE_6__["SearchService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [src_app_modules_core_services_graph_data_service_graph_data_service__WEBPACK_IMPORTED_MODULE_2__["GraphDataService"], src_app_modules_core_services_shared_graph_service__WEBPACK_IMPORTED_MODULE_3__["SharedGraphService"], src_app_modules_shared_services_search_service_search_service__WEBPACK_IMPORTED_MODULE_7__["SearchService"]])
     ], DashboardSidebarComponent);
     return DashboardSidebarComponent;
 }());
