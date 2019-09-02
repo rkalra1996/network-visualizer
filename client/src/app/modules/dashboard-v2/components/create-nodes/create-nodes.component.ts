@@ -107,12 +107,14 @@ export class CreateNodesComponent implements OnInit, OnChanges, DoCheck {
     $('.toolTipText').tooltip();
     // to set total node and relation properties
     this.sharedGraphSrvc.totalNodesProperties.subscribe(data=>{
-      this.totalNodesProperties = _.cloneDeep(data);
-      this.totalName = this.totalNodesProperties['Name'];
-      // to change format for lookup option
-      this.totalName = this.totalName.map(name => {
-        return { key: name };
-      });
+      if(data){
+        this.totalNodesProperties = _.cloneDeep(data);
+        this.totalName = this.totalNodesProperties['Name'];
+        // to change format for lookup option
+        this.totalName = this.totalName.map(name => {
+          return { key: name };
+        });
+      }
     });
     this.sharedGraphSrvc.totalRelationsProperties.subscribe(data=>{
       this.totalRelationsProperties = data;

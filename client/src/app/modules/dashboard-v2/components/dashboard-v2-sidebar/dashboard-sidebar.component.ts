@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angu
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
 import { Network, DataSet, Node, Edge, IdType } from 'vis';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin, of, Observable, throwError } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { SearchService } from 'src/app/modules/shared/services/search-service/search.service';
@@ -63,6 +63,8 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
      RETURN collect(allfields),label`
   };
 
+  public properties : Observable<boolean>;
+  public types : Observable<boolean>;
   constructor(private graphDataService: GraphDataService, private sharedGraphData: SharedGraphService, private searchService: SearchService) { }
 
   ngOnInit() {
@@ -98,44 +100,25 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
   getGraph() {
     this.totalAtrributeOptions = [];
     // fetch the properties of all the nodes and relationships
-    this.graphDataService.getGraphProperties()
-      .subscribe(response => {
-        if (response.hasOwnProperty('nodes')) {
-          this.totalNodesProperties = _.cloneDeep(response['nodes']);
-          this.sharedGraphData.setNodeProperties(this.totalNodesProperties);
-          if (this.totalNodesProperties) {
-            Object.keys(this.totalNodesProperties).forEach(keyName => {
-              if (keyName !== 'deleted' && keyName !== 'color')
-                this.totalAtrributeOptions.push({ attribute: keyName, options: this.totalNodesProperties[keyName], rotate: false });
-              // this.selectedAttributeOptions[keyName] = [];
-            });
-          }
-          // push name to top
-          let index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === "Name")
-          this.swap(this.totalAtrributeOptions, index, 0);
-          if (response.hasOwnProperty('relations')) {
-            this.totalRelationsProperties = _.cloneDeep(response['relations']);
-            this.sharedGraphData.setRelationProperties(this.totalRelationsProperties);
-          }
-          console.log(this.totalNodesProperties, this.totalRelationsProperties);
-        }
-        this.checkRotate();
-      }, err => {
-        console.error('Error while subscribing to graphProperties method -> ', err);
-      });
-
-    this.getNodeTypes().subscribe(data => {
-      this.sharedGraphData.setProcessedData(this.processedData);
-      this.sharedGraphData.setNodeTypes2(this.nodeTypes2);
-      // this.typeOptions = this.nodeTypes2;
-      this.totalAtrributeOptions.push({ attribute: 'Type', options: this.nodeTypes2, rotate: false });
-      // push type to second position
-      this.swap(this.totalAtrributeOptions, this.totalAtrributeOptions.length - 1, 1);
-      this.checkRotate();
+    forkJoin([this.graphDataService.getGraphProperties(), this.getNodeTypes()]).subscribe(results =>{
+      // results[0] is our character
+      // results[1] is our character homeworld
+      if(results[0].hasOwnProperty('nodes')){
+        // push name to top
+        this.setNodeProperties(results[0]);
+        let index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === "Name")
+        this.totalAtrributeOptions = _.cloneDeep(this.swap(this.totalAtrributeOptions, index, 0));
+      }
+      if(results[1].length > 0){
+        // push type to second position
+        this.setTypes(results[1]);
+        let index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === "Type")
+      this.totalAtrributeOptions = _.cloneDeep(this.swap(this.totalAtrributeOptions, index, 1));
+      }
     }, err => {
-      console.error('Error while subscribing to graphProperties method -> ', err);
+      throwError({error : 'Error while reading graph properties'});
+      console.error(err);
     });
-
     this.getRelationTypes().subscribe(response => {
       // this.graphInitData.push(data);
       this.relationOptions = this.relationTypeOptions;
@@ -432,10 +415,11 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
   }
 
   swap(ArrayForSwapping, swapFromIndex, swapToIndex) {
-    const temp = ArrayForSwapping[swapFromIndex];
-    ArrayForSwapping[swapFromIndex] = ArrayForSwapping[swapToIndex];
-    ArrayForSwapping[swapToIndex] = temp;
-    return ArrayForSwapping;
+    let temArrayForSwapping = _.cloneDeep(ArrayForSwapping);
+    const temp = temArrayForSwapping[swapFromIndex];
+    temArrayForSwapping[swapFromIndex] = temArrayForSwapping[swapToIndex];
+    temArrayForSwapping[swapToIndex] = temp;
+    return temArrayForSwapping;
   }
 
   updateSidebar(nodeData){
@@ -462,5 +446,40 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
             }
         });
       }
+  }
+
+  // for node properties
+  setNodeProperties(response){
+        if (response.hasOwnProperty('nodes')) {
+          this.totalNodesProperties = _.cloneDeep(response['nodes']);
+          this.sharedGraphData.setNodeProperties(this.totalNodesProperties);
+          if (this.totalNodesProperties) {
+            Object.keys(this.totalNodesProperties).forEach(keyName => {
+              if (keyName !== 'deleted' && keyName !== 'color')
+                this.totalAtrributeOptions.push({ attribute: keyName, options: this.totalNodesProperties[keyName], rotate: false });
+              // this.selectedAttributeOptions[keyName] = [];
+            });
+          }
+          if (response.hasOwnProperty('relations')) {
+            this.totalRelationsProperties = _.cloneDeep(response['relations']);
+            this.sharedGraphData.setRelationProperties(this.totalRelationsProperties);
+          }
+          console.log(this.totalNodesProperties, this.totalRelationsProperties);
+        }
+        this.checkRotate();
+        
+  }
+
+  // for types
+  setTypes(response){
+    if(response){
+      this.sharedGraphData.setProcessedData(this.processedData);
+      this.sharedGraphData.setNodeTypes2(this.nodeTypes2);
+      // this.typeOptions = this.nodeTypes2;
+      this.totalAtrributeOptions.push({ attribute: 'Type', options: this.nodeTypes2, rotate: false });
+      this.checkRotate();
+      return true;
+    }
+     
   }
 }
