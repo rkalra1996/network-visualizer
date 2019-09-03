@@ -448,6 +448,8 @@ function runQueryWithTypesV2(dataObj) {
         if (dataObj) {
             if (dataObj.limit) {
                 dataObj.limit = getLimit(dataObj.limit);
+            } else {
+                dataObj.limit = getLimit(dataObj.limit);
             }
             if (dataObj.nodes.length > 0) {
                 // dataObj.nodes[0].value = createProperString(dataObj.nodes[0].value);
