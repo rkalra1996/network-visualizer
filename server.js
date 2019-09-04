@@ -12,10 +12,11 @@ app.use(cors());
 const graphRoutes = require('./routes/graphRoutes');
 const fileRoutes = require('./routes/fileRoutes');
 const configRoutes = require('./routes/configRoutes');
+const logRoutes = require('./routes/logRoutes');
 
+app.use('/log', logRoutes);
 app.use('/api', graphRoutes);
 app.use('/file', fileRoutes);
-app.use('/v2', express.static(path.join(__dirname, 'client/dist/')));
 app.use('/config', configRoutes);
 
 app.use(express.static(path.join(__dirname, 'client/dist/')));
