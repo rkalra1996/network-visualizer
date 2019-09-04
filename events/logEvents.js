@@ -4,11 +4,14 @@ const fs = require('fs');
 const path = require('path');
 const BASE_DIR = path.join(__dirname, '../logs/frontend');
 
+const logUtility = require('./../utility/logUtility');
 
 var event = new E3.EventEmitter();
 
 event.on('write-log', (logData, response) => {
-    console.log('writing in base directory ', BASE_DIR, JSON.stringify(logData));
+
+    logUtility.validateDirectory(BASE_DIR);
+    
     fs.appendFile(BASE_DIR + '/' + logData.file, logData.log, (err) => {
         if (err) {
             console.log('An error occured while writing the log on '+ logData.currentFileName + '\n');
@@ -22,6 +25,9 @@ event.on('write-log', (logData, response) => {
 });
 
 event.on('clear-logs', (type,callback) => {
+
+    logUtility.validateDirectory(BASE_DIR);
+    
     if (!type.hasOwnProperty('constructor') && type.length > 0 && type === 'all') {
         fs.readdir(BASE_DIR, (err, fileNames) => {
             if (err) {

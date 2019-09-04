@@ -1,3 +1,4 @@
+const shell = require('shelljs');
 /**
  * To return the fileName corresponding to the current date
  * 
@@ -8,4 +9,13 @@ var getFileName = () => {
     return `${currentDate.toDateString().replace(/ /g, '_')}.log`
 }
 
-module.exports = {getFileName}
+// To check if all the directories in the given path are present, else create them
+var validateDirectory = (pathToVerify) => {
+    console.log('verify path ', pathToVerify);
+    shell.mkdir('-p',pathToVerify);
+}
+
+module.exports = {
+    getFileName,
+    validateDirectory
+}

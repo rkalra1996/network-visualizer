@@ -25,6 +25,7 @@ router.post('/write', (request,response) => {
     let logData = Object.keys(request.body).length ? request.body : null;
     if (logData) {
         const currentFileName = logUtility.getFileName();
+        console.log('file name is ', currentFileName);
         // append to the file designated for frontend logs
         const finalData = JSON.stringify(logData) + '\n';
         logEvents.emit('write-log', {file: currentFileName, log: finalData}, response);

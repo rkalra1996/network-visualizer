@@ -1,10 +1,8 @@
-const dbConfig = require('./../database_config/config.json');
-
 
 var searchAuth = (req,res,next) => {
     console.log('search auth middleware');
     if(req.headers.hasOwnProperty('database_authorization') && !!req.headers.database_authorization) {
-        if (req.headers.database_authorization === dbConfig.neo4j_search_token) {
+        if (req.headers.database_authorization === process.env.network_visualizer_neo4j_search_token) {
             console.log('database_authorization key is valid : ', req.headers.database_authorization);
             next();
         } else {
@@ -13,7 +11,7 @@ var searchAuth = (req,res,next) => {
         }
     } else {
         //unauthorised requests are not entertained
-        console.log('API : /search/neo4j | reques does not contain database_authorization header');
+        console.log('API : /search/neo4j | request does not contain database_authorization header');
         res.status(401).send({'Error': 'Unauthorized request / key database_authorization not provided'})
     }
 }

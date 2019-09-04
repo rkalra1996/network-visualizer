@@ -4,19 +4,22 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node -r dotenv/config server.js"
   },
   "author": "RK",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "dotenv": "^8.1.0",
     "eventemitter3": "^4.0.0",
     "express": "^4.17.1",
     "lodash": "^4.17.14",
     "neo4j-driver": "^1.7.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "shelljs": "^0.8.3",
     "vis": "^4.21.0"
   },
   "devDependencies": {
