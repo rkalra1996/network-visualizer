@@ -19,9 +19,20 @@ const logger = winston.createLogger({
     format: winston.format.combine(
         winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
         winston.format.errors({stack: true}),
-        winston.format.printf(info => `[${info.level}] -> [${info.timestamp}] :  message: ${info.message}`)
+        winston.format.printf(info => `[${info.level}] -> [${info.timestamp}] :  message: ${info.message} extraData : ${parseData(info.extraData)}`)
         )
 });
+
+function parseData(possibleParsedData) {
+    try {
+        if(possibleParsedData.constructor === Object) {
+            return JSON.stringify(possibleParsedData);
+        }
+    } catch (e) {
+        // it is not an object
+        return possibleParsedData;
+    }
+}
 
 module.exports = {
     winstonLogger: logger

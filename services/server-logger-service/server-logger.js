@@ -3,7 +3,11 @@ const winstonLogger = require('./../winston-service/winston-service').winstonLog
 class ServerLogger {
 
     _logInfo(logData) {
-        winstonLogger.log(logData.type, logData.log);
+        if (logData.hasOwnProperty('data')) {
+            winstonLogger.log(logData.type, logData.log, {extraData: logData.data});
+        } else {
+            winstonLogger.log(logData.type, logData.log);
+        }
     }
 
     _logSuccess(logData){
