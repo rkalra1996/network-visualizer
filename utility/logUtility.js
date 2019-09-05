@@ -11,7 +11,6 @@ var getFileName = () => {
 
 // To check if all the directories in the given path are present, else create them
 var validateDirectory = (pathToVerify) => {
-    console.log('verify path ', pathToVerify);
     shell.mkdir('-p',pathToVerify);
 }
 
