@@ -20,9 +20,12 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "shelljs": "^0.8.3",
-    "vis": "^4.21.0"
+    "typedi": "^0.8.0",
+    "vis": "^4.21.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/jquery": "^3.3.30"
+    "@types/jquery": "^3.3.30",
+    "@types/node": "^12.7.4"
   }
 }
