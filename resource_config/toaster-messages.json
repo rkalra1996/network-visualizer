@@ -1,0 +1,8 @@
+{
+    "DEFAULT_TITLE": "Default Title",
+    "DEFAULT_MESSAGE": "Default Message",
+    "GRAPH_ERROR_TITLE": "Problem while loading graph",
+    "GRAPH_ERROR_MESSAGE": "Make sure server is started",
+    "GRAPH_SUCCESS_TITILE": "Graph successfully loaded",
+    "GRPAH_SUCCESS_MESSAGE": ""
+}
