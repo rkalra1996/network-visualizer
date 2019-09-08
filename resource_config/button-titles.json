@@ -1,0 +1,7 @@
+{
+    "REST_BUTTON": "Reset",
+    "APPLY_BUTTON": "Apply",
+    "EXPORT_AS_CSV_BUTTON": "Export As CSv",
+    "CREATE_ELEMENT_BUTTON": "Create Element",
+    "CREATE_RELATIONSHIP_BUTTON": "Create Relationship"
+}
