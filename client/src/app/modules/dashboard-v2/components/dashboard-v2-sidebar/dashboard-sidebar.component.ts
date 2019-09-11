@@ -1,16 +1,17 @@
 import { Component, OnInit, Output, EventEmitter, Input, OnChanges } from '@angular/core';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
-import { Network, DataSet, Node, Edge, IdType } from 'vis';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
-import { Subscription, forkJoin, of, Observable, throwError } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { forkJoin, Observable, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { SearchService } from 'src/app/modules/shared/services/search-service/search.service';
+
 @Component({
   selector: 'app-dashboard-sidebar',
   templateUrl: './dashboard-sidebar.component.html',
   styleUrls: ['./dashboard-sidebar.component.scss']
 })
+
 export class DashboardSidebarComponent implements OnInit, OnChanges {
 
   @Input() newNodeCreated: string;
@@ -65,7 +66,9 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
 
   public properties : Observable<boolean>;
   public types : Observable<boolean>;
-  constructor(private graphDataService: GraphDataService, private sharedGraphData: SharedGraphService, private searchService: SearchService) { }
+  constructor(
+    private graphDataService: GraphDataService, private sharedGraphData: SharedGraphService,
+    private searchService: SearchService) { }
 
   ngOnInit() {
     this.getGraph();
@@ -79,13 +82,12 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       const nodeEvent = this.newNodeCreated['event'].split('_')[0];
 
       if (nodeEvent === 'NodeEvent') {
-        if(nodeData[1] === 'restore'){
+        if(nodeData[1] === 'restore') {
           this.updateSidebar(nodeData[2]);
-        }else{
+        } else {
           this.getGraph();
           this.newNodeCreated = '';
         }
-        
       }
     }
     // detect if the user hit enter while entering the nodelimit value
@@ -113,7 +115,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
         // push type to second position
         this.setTypes(results[1]);
         let index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === "Type")
-      this.totalAtrributeOptions = _.cloneDeep(this.swap(this.totalAtrributeOptions, index, 1));
+        this.totalAtrributeOptions = _.cloneDeep(this.swap(this.totalAtrributeOptions, index, 1));
       }
     }, err => {
       throwError({error : 'Error while reading graph properties'});
@@ -199,7 +201,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     //             }
     //           });
     //         });
-    //       }         
+    //       }
     //      });
     //      temdep = temdep.filter(this.onlyUnique);
     //      temper = temper.filter(this.onlyUnique);
@@ -215,28 +217,31 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     this.selectedAttributeOptions = [];
     this.selectedRelation = [];
     if (this.preSelectedRel) {
-      var element = document.getElementById(this.preSelectedRel);
-      element.classList.remove("selected");
+      let element = document.getElementById(this.preSelectedRel);
+      element.classList.remove('selected');
     }
-    let obj = { event: 'reset' };
+    const obj = { event: 'reset' };
     this.eventClicked.emit(obj);
   }
 
 
   relationclickEvent(selectedRelation) {
-    if (this.preSelectedRel) {
-      var element = document.getElementById(this.preSelectedRel);
-      element.classList.remove("selected");
+    let element;
+    if ( this.preSelectedRel) {
+      element = document.getElementById(this.preSelectedRel);
+      element.classList.remove('selected');
     }
-    var element = document.getElementById(selectedRelation);
-    element.classList.add("selected");
+
+    element = document.getElementById(selectedRelation);
+    element.classList.add('selected');
+
     this.selectedRelationship = [];
     this.relstatus = !this.relstatus;
     this.selectedRelationship.push({ type: selectedRelation });
     let requestBody = { nodes: [], edges: this.selectedRelationship };
     console.log("re", requestBody);
     this.sharedGraphData.setGraphData(requestBody);
-    let obj = { event: 'search' }
+    const obj = { event: 'search' };
     this.eventClicked.emit(obj);
     this.preSelectedRel = selectedRelation;
   }
@@ -248,27 +253,27 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       this.selectedRelationship = [];
       this.selectedRelation.map(rel => {
         this.selectedRelationship.push({ type: rel });
-      })
+      });
       // let temNodes = [];
       // if(this.selectedName.length > 0 || this.selectedType.length > 0){
       //   let temnode = [];
       //    temnode = this.selectedNodeCheck();
       //   temnode.filter(node=>{
-      //     temNodes.push(node);      
-      //   })       
+      //     temNodes.push(node);
+      //   })
       // }
-      // 
+      //
       //   if(temNodes.length > 0){
       //      requestBody= { nodes: temNodes, edges: this.selectedRelationship };
       //   }else{
       requestBody = { nodes: [], edges: this.selectedRelationship };
       // }
     } else {
-      // if no selected element 
+      // if no selected element
       requestBody = {};
     }
     this.sharedGraphData.setGraphData(requestBody);
-    let obj = { event: 'search' }
+    const obj = { event: 'search' };
     this.eventClicked.emit(obj);
   }
 
@@ -286,7 +291,15 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
   //   }
   // }
   // noderelationSearchGraph() {
-  //   if (this.selectedName.length > 0 || this.selectedType.length > 0 || this.selectedConnection.length > 0 || this.selectedRepresent.length > 0 || this.selectedStatus.length > 0 || this.selectedUnderstanding.length > 0 && this.selectedRelation.length > 0) {
+  //   if (
+  //        this.selectedName.length > 0
+  //        || this.selectedType.length > 0
+  //        || this.selectedConnection.length > 0
+  //        || this.selectedRepresent.length > 0
+  //        || this.selectedStatus.length > 0
+  //        || this.selectedUnderstanding.length > 0
+  //        && this.selectedRelation.length > 0
+  //        ) {
   //     this.selectedRelationship = [];
   //     this.selectedRelation.map(rel => {
   //       this.selectedRelationship.push({ type: rel });
@@ -350,7 +363,9 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
         tempData.push({ type: label._fields[1], properties: label._fields[0] });
       });
       return tempData;
-    } else return [];
+    } else {
+      return [];
+    }
   }
 
   getRelationTypes() {
@@ -424,22 +439,22 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
 
   updateSidebar(nodeData){
     if(nodeData){
-      let index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === "Name")
+      const index = this.totalAtrributeOptions.findIndex(obj => obj['attribute'] === 'Name');
       this.totalAtrributeOptions[index]['options'].push(nodeData);
     }
   }
 
   // check for rotate object
-  checkRotate(){
+  checkRotate() {
         // check for selected value so the dropdown should not close on refresh
         if(this.selectedAttributeOptions){
           Object.keys(this.selectedAttributeOptions).forEach(selectedKey => {
             if (this.selectedAttributeOptions[selectedKey].length > 0) {
-              this.totalAtrributeOptions = this.totalAtrributeOptions.filter(attr=>{
-                if (attr && attr['attribute'] === selectedKey){
+              this.totalAtrributeOptions = this.totalAtrributeOptions.filter(attr => {
+                if (attr && attr['attribute'] === selectedKey) {
                   attr['rotate'] = true;
                   return attr;
-                }else{
+                } else {
                   return attr;
                 }
               })
@@ -455,9 +470,9 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
           this.sharedGraphData.setNodeProperties(this.totalNodesProperties);
           if (this.totalNodesProperties) {
             Object.keys(this.totalNodesProperties).forEach(keyName => {
-              if (keyName !== 'deleted' && keyName !== 'color')
+              if (keyName !== 'deleted' && keyName !== 'color') {
                 this.totalAtrributeOptions.push({ attribute: keyName, options: this.totalNodesProperties[keyName], rotate: false });
-              // this.selectedAttributeOptions[keyName] = [];
+              }
             });
           }
           if (response.hasOwnProperty('relations')) {
@@ -467,12 +482,11 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
           console.log(this.totalNodesProperties, this.totalRelationsProperties);
         }
         this.checkRotate();
-        
   }
 
   // for types
-  setTypes(response){
-    if(response){
+  setTypes(response) {
+    if(response) {
       this.sharedGraphData.setProcessedData(this.processedData);
       this.sharedGraphData.setNodeTypes2(this.nodeTypes2);
       // this.typeOptions = this.nodeTypes2;
@@ -480,6 +494,5 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       this.checkRotate();
       return true;
     }
-     
   }
 }
