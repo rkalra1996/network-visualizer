@@ -18,6 +18,7 @@ app.use(cors());
 const graphRoutes = require('./routes/graphRoutes');
 app.use('/api', graphRoutes);
 app.use('/v2', express.static(path.join(__dirname, 'client/dist/')));
+app.use('/d3', express.static(path.join(__dirname, 'client/dist/')));
 
 app.use(express.static(path.join(__dirname, 'client/dist/')));
 
