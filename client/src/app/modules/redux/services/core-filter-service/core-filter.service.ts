@@ -16,7 +16,7 @@ export class CoreFilterService {
 
   updateAppliedFiltersData(newData) {
     // store the response data in the redux store
-    let reduxObject = {
+    const reduxObject = {
       type: AppliedFiltersActions.ADD_APPLIED_FILTERS_DATA,
       payload: {
         requestBody: {},

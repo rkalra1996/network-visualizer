@@ -13,15 +13,15 @@ export function updateObject(oldObject, newValues) {
 
 /**
  * Adds filtered data action
- * @param state 
- * @param action 
+ * @param state
+ * @param action
  * @returns  newState
  * @description The function accepts the current state in the store and the action to perform (to add the new AppliedFilters Object)
  */
 export function addFilteredDataAction(state, action) {
     console.log('inside addFilteredDataAction', action, state);
     // let newState = state;
-    let newState = {
+    const newState = {
         appliedFilters: {},
         lastUpdated: null
     }
