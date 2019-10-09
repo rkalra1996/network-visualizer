@@ -52,6 +52,7 @@ var MainComponent = /** @class */ (function () {
     ], MainComponent.prototype, "appliedFilters", void 0);
     MainComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            // tslint:disable-next-line: component-selector
             selector: 'algo-runner-statistics-main',
             template: __webpack_require__(/*! ./main.component.html */ "./src/app/modules/algo-runner/modules/statistics/components/main/main.component.html"),
             styles: [__webpack_require__(/*! ./main.component.scss */ "./src/app/modules/algo-runner/modules/statistics/components/main/main.component.scss")]
