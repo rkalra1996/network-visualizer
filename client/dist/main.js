@@ -1099,14 +1099,17 @@ function addFilteredDataAction(state, action) {
     console.log('inside addFilteredDataAction', action, state);
     // let newState = state;
     var newState = {
-        appliedFilters: {},
+        appliedFilters: {
+            requestBody: {},
+            filteredData: {}
+        },
         lastUpdated: null
     };
     newState.appliedFilters = action.payload;
     // add the current time
     newState.lastUpdated = new Date();
     console.log('returning final state as ', newState);
-    return updateObject(state, newState);
+    return newState;
 }
 
 
@@ -1193,14 +1196,15 @@ function rootReducer(state, action) {
         switch (action.type) {
             case _actions_actions__WEBPACK_IMPORTED_MODULE_0__["AppliedFiltersActions"].ADD_APPLIED_FILTERS_DATA:
                 return _services_applied_filters_service__WEBPACK_IMPORTED_MODULE_1__["addFilteredDataAction"](state, action);
-            case _actions_actions__WEBPACK_IMPORTED_MODULE_0__["AppliedFiltersActions"].REMOVE_APPLIED_FILTERS_DATA:
-                { }
-                break;
             case _actions_actions__WEBPACK_IMPORTED_MODULE_0__["AppliedFiltersActions"].CLEAR_STORE:
-                return _services_applied_filters_service__WEBPACK_IMPORTED_MODULE_1__["updateObject"](state, {
-                    appliedFilters: {},
-                    filteredData: []
-                });
+                var emptyObject = {
+                    appliedFilters: {
+                        requestBody: {},
+                        filteredData: []
+                    },
+                    lastUpdated: null
+                };
+                return _services_applied_filters_service__WEBPACK_IMPORTED_MODULE_1__["updateObject"](state, emptyObject);
         }
     }
     else {
