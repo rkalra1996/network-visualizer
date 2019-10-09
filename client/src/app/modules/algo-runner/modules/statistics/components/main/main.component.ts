@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import {select} from '@angular-redux/store';
 
 @Component({
+  // tslint:disable-next-line: component-selector
   selector: 'algo-runner-statistics-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
