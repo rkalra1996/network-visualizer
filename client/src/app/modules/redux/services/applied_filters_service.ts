@@ -1,4 +1,4 @@
-import {ActionInterface} from './../interfaces/redux_interface';
+
 import { IAppState } from '../store';
 
 /**
@@ -30,7 +30,7 @@ export function addFilteredDataAction(state: any, action: any): IAppState {
             filteredData: {}
         },
         lastUpdated: null
-    }
+    };
     newState.appliedFilters = action.payload;
     // add the current time
     newState.lastUpdated = new Date();
