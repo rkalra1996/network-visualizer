@@ -32,11 +32,22 @@
     outline: none;
 }
 
+.float-right-toolbar {
+    display: inline-flex;
+    width: 63%;
+    justify-content: flex-end;
+}
+
+
 .creationToolbar {
+    display: inline;
     top: 50px;
-    float: left;
     padding: 1em;
     outline: none;
+}
+
+.export {
+    margin-top: 15px;
 }
 
 .nodeLimit input {
@@ -60,11 +71,4 @@
     .selected-count {
         width: 75%;
     }
-}
-
-.export {
-    //position: absolute;
-    float: right;
-    margin-top: 15px;
-    margin-right: 170px;
 }
