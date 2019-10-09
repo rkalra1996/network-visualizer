@@ -4,6 +4,7 @@ import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../../store';
 
 import {AppliedFiltersActions} from './../../actions/actions';
+import { ActionInterface } from '../../interfaces/redux_interface';
 
 
 
@@ -16,7 +17,7 @@ export class CoreFilterService {
 
   updateAppliedFiltersData(newData) {
     // store the response data in the redux store
-    const reduxObject = {
+    const reduxObject: ActionInterface = {
       type: AppliedFiltersActions.ADD_APPLIED_FILTERS_DATA,
       payload: {
         requestBody: {},

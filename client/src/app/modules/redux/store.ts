@@ -6,7 +6,7 @@ import * as appliedFilterSrvc from './services/applied_filters_service';
 
 export interface IAppState {
     appliedFilters: AppliedFiltersInterface;
-    lastUpdated: Date;
+    lastUpdated: Date | null;
 }
 
 
@@ -24,14 +24,16 @@ export function rootReducer(state: IAppState, action): IAppState {
         switch (action.type) {
             case AppliedFiltersActions.ADD_APPLIED_FILTERS_DATA:
                 return appliedFilterSrvc.addFilteredDataAction(state, action);
-            case AppliedFiltersActions.REMOVE_APPLIED_FILTERS_DATA:
-                {}
-                break;
+
             case AppliedFiltersActions.CLEAR_STORE:
-                return appliedFilterSrvc.updateObject(state, {
-                    appliedFilters: {},
-                    filteredData: []
-                });
+                const emptyObject = {
+                    appliedFilters: {
+                        requestBody: {},
+                        filteredData: []
+                    },
+                    lastUpdated: null
+                };
+                return appliedFilterSrvc.updateObject(state, emptyObject);
         }
     } else {
       console.log('%c Type of action provided is not string', 'color: red; font-weight: bold;');
