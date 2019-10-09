@@ -1,3 +1,6 @@
+import {ActionInterface} from './../interfaces/redux_interface';
+import { IAppState } from '../store';
+
 /**
  * Updates object
  * @param oldObject the previous state
@@ -18,7 +21,7 @@ export function updateObject(oldObject, newValues) {
  * @returns  newState
  * @description The function accepts the current state in the store and the action to perform (to add the new AppliedFilters Object)
  */
-export function addFilteredDataAction(state, action) {
+export function addFilteredDataAction(state: IAppState, action: ActionInterface) {
     console.log('inside addFilteredDataAction', action, state);
     // let newState = state;
     const newState = {

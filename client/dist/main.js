@@ -1080,8 +1080,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addFilteredDataAction", function() { return addFilteredDataAction; });
 /**
  * Updates object
- * @param oldObject
- * @param newValues
+ * @param oldObject the previous state
+ * @param newValues the new values to update the state
  * @returns  new Object with updated values
  * @description This function is a basic utility function to mutate and return the existing object with new values
  */
@@ -1090,8 +1090,8 @@ function updateObject(oldObject, newValues) {
 }
 /**
  * Adds filtered data action
- * @param state
- * @param action
+ * @param state the previous state
+ * @param action current action object
  * @returns  newState
  * @description The function accepts the current state in the store and the action to perform (to add the new AppliedFilters Object)
  */
@@ -1181,8 +1181,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * Root reducer
- * @param state
- * @param action
+ * @param state previous state of the store
+ * @param action action to perform
  * @returns  new state
  * @description The Root Reducer is the one which will handle all the Action declarations.
  * This is the only reducer which will store the initial state. The purpose of the root reducer is
