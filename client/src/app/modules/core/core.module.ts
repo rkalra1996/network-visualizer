@@ -6,6 +6,7 @@ import { GraphVisualizerComponent } from './components/graph-visualizer/graph-vi
 
 // interceptors
 import { CoreService } from './services/interceptors/core-interceptor/core.service';
+import { CoreFilterService } from '../redux/services/core-filter-service/core-filter.service';
 @NgModule({
   declarations: [GraphVisualizerComponent],
   imports: [
@@ -14,7 +15,8 @@ import { CoreService } from './services/interceptors/core-interceptor/core.servi
     CoreRoutingModule
   ],
   providers : [
-    {provide : HTTP_INTERCEPTORS, useClass : CoreService, multi: true}
+    {provide : HTTP_INTERCEPTORS, useClass : CoreService, multi: true},
+    CoreFilterService
   ],
   exports:[GraphVisualizerComponent]
 })

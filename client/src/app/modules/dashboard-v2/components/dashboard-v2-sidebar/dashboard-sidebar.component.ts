@@ -5,6 +5,7 @@ import { forkJoin, Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { SearchService } from 'src/app/modules/shared/services/search-service/search.service';
+import { ToolbarSharedService } from 'src/app/modules/algo-runner/services/toolbar-shared-service/toolbar-shared.service';
 
 @Component({
   selector: 'app-dashboard-sidebar',
@@ -66,9 +67,11 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
 
   public properties : Observable<boolean>;
   public types : Observable<boolean>;
+
+  private nodeRelationsDetailsObject: {nodes: object, relations: object} = {nodes: {}, relations: {}};
   constructor(
     private graphDataService: GraphDataService, private sharedGraphData: SharedGraphService,
-    private searchService: SearchService) { }
+    private searchService: SearchService, private toolbarShrdSrvc: ToolbarSharedService) { }
 
   ngOnInit() {
     this.getGraph();
@@ -98,11 +101,39 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Updates node relation details object
+   * @description This function updates the global nodeRelationDetails object and send it to algo runner for further use
+   * @param detailsObj
+   */
+  updateNodeRelationDetailsObject(detailsObj: {nodeTypes?: object, relationTypes?: any, nodeProperties?: object, relationProperties?: object}) {
+    if (detailsObj.hasOwnProperty('nodeTypes')) {
+      this.nodeRelationsDetailsObject.nodes['types'] = detailsObj.nodeTypes;
+    }
+    if (detailsObj.hasOwnProperty('relationTypes')) {
+      this.nodeRelationsDetailsObject.relations['types'] = detailsObj.relationTypes;
+    }
+    if (detailsObj.hasOwnProperty('nodeProperties')) {
+      this.nodeRelationsDetailsObject.nodes['properties'] = detailsObj.nodeProperties;
+    }
+    if (detailsObj.hasOwnProperty('relationProperties')) {
+      this.nodeRelationsDetailsObject.relations['properties'] = detailsObj.relationProperties;
+    }
+    // send it to algo runner
+    this.toolbarShrdSrvc.sendNodeRelationDetails(this.nodeRelationsDetailsObject);
+    this.toolbarShrdSrvc.sendNodeRelationDetailsStatic(this.nodeRelationsDetailsObject);
+  }
+
   // set all data in sidebar dropdown
   getGraph() {
     this.totalAtrributeOptions = [];
     // fetch the properties of all the nodes and relationships
     forkJoin([this.graphDataService.getGraphProperties(), this.getNodeTypes()]).subscribe(results =>{
+      this.updateNodeRelationDetailsObject({
+        nodeTypes: results[1],
+        nodeProperties: results[0]['nodes'],
+        relationProperties: results[0]['relations']}
+        );
       // results[0] is our character
       // results[1] is our character homeworld
       if(results[0].hasOwnProperty('nodes')){
@@ -124,6 +155,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     this.getRelationTypes().subscribe(response => {
       // this.graphInitData.push(data);
       this.relationOptions = this.relationTypeOptions;
+      this.updateNodeRelationDetailsObject({relationTypes: this.relationTypeOptions});
     });
   }
 
@@ -254,20 +286,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       this.selectedRelation.map(rel => {
         this.selectedRelationship.push({ type: rel });
       });
-      // let temNodes = [];
-      // if(this.selectedName.length > 0 || this.selectedType.length > 0){
-      //   let temnode = [];
-      //    temnode = this.selectedNodeCheck();
-      //   temnode.filter(node=>{
-      //     temNodes.push(node);
-      //   })
-      // }
-      //
-      //   if(temNodes.length > 0){
-      //      requestBody= { nodes: temNodes, edges: this.selectedRelationship };
-      //   }else{
       requestBody = { nodes: [], edges: this.selectedRelationship };
-      // }
     } else {
       // if no selected element
       requestBody = {};
@@ -276,50 +295,6 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     const obj = { event: 'search' };
     this.eventClicked.emit(obj);
   }
-
-  // this return selected name and type
-  // selectedNodeCheck() {
-  //   if (this.selectedName.length > 0 && this.selectedType.length > 0) {
-  //     let temNodeArray = [];
-  //     temNodeArray.push({ type: "Name", value: this.selectedName });
-  //     temNodeArray.push({ type: "Type", value: this.selectedType });
-  //     return temNodeArray;
-  //   } else if (this.selectedType.length > 0) {
-  //     return [{ type: "Type", value: this.selectedType }];
-  //   } else if (this.selectedName.length > 0) {
-  //     return [{ type: "Name", value: this.selectedName }];
-  //   }
-  // }
-  // noderelationSearchGraph() {
-  //   if (
-  //        this.selectedName.length > 0
-  //        || this.selectedType.length > 0
-  //        || this.selectedConnection.length > 0
-  //        || this.selectedRepresent.length > 0
-  //        || this.selectedStatus.length > 0
-  //        || this.selectedUnderstanding.length > 0
-  //        && this.selectedRelation.length > 0
-  //        ) {
-  //     this.selectedRelationship = [];
-  //     this.selectedRelation.map(rel => {
-  //       this.selectedRelationship.push({ type: rel });
-  //     })
-  //   }
-  //   this.selectedGraph = [];
-  //   this.selectedGraph.push({ type: "Name", value: this.selectedName });
-  //   this.selectedGraph.push({ type: "Type", value: this.selectedType });
-  //   this.selectedGraph.push({ type: "Connection", value: this.selectedConnection });
-  //   this.selectedGraph.push({ type: "Represent", value: this.selectedRepresent });
-  //   this.selectedGraph.push({ type: "Status", value: this.selectedStatus });
-  //   this.selectedGraph.push({ type: "Thinking", value: this.selectedUnderstanding });
-  //   this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
-  //   let requestBody = { nodes: this.selectedGraph, edges: this.selectedRelationship };
-
-  //   this.sharedGraphData.setGraphData(requestBody);
-  //   let obj = { event: 'search' }
-  //   this.eventClicked.emit(obj);
-  // }
-
 
   networkElementClick(element) { }
 

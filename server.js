@@ -21,7 +21,7 @@ app.use('/api', graphRoutes);
 app.use('/file', fileRoutes);
 app.use('/config', configRoutes);
 
-app.use(express.static(path.join(__dirname, 'client/dist/')));
+app.use(['/algorithm','/algorithm*', ''],express.static(path.join(__dirname, 'client/dist/')));
 
 
 

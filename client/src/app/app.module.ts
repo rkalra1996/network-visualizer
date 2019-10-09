@@ -12,6 +12,9 @@ import { CoreModule } from './modules/core/core.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SnackbarComponent } from './modules/custom-material/components/snackbar/snackbar/snackbar.component';
 
+// import redux for state management
+import {ReduxModule} from './modules/redux/redux.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,6 +23,7 @@ import { SnackbarComponent } from './modules/custom-material/components/snackbar
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ReduxModule,
     SuiModule,
     ShellModule,
     SharedModule,

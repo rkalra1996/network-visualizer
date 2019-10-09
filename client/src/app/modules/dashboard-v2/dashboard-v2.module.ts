@@ -9,6 +9,7 @@ import { DashboardHeaderComponent } from './components/dashboard-v2-header/dashb
 
 import {SuiSelectModule, SuiModule} from 'ng2-semantic-ui';
 import { SharedModule } from '../shared/shared.module';
+import {AlgoRunnerModule} from './../algo-runner/algo-runner.module';
 import { ColorPanelComponent } from './components/color-panel/color-panel/color-panel.component';
 import { CreateNodesComponent } from './components/create-nodes/create-nodes.component';
 import { GraphExporterComponent } from './components/graph-exporter/graph-exporter.component';
@@ -29,8 +30,14 @@ import { MaterialService } from '../custom-material/services/material-core/mater
     SuiSelectModule, SuiModule,
     SharedModule,
     CustomMaterialModule,
-    DashboardV2RoutingModule
+    DashboardV2RoutingModule,
+    AlgoRunnerModule
   ],
+  exports: [
+    MainComponent, DashboardHeaderComponent,
+    DashboardSidebarComponent, ColorPanelComponent,
+    GraphExporterComponent, GraphVisualizerComponent,
+    CreateNodesComponent],
   providers : [MaterialService]
 })
 export class DashboardModule { }
