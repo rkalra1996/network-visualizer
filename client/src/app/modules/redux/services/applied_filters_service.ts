@@ -1,7 +1,7 @@
 /**
  * Updates object
- * @param oldObject
- * @param newValues
+ * @param oldObject the previous state
+ * @param newValues the new values to update the state
  * @returns  new Object with updated values
  * @description This function is a basic utility function to mutate and return the existing object with new values
  */
@@ -13,8 +13,8 @@ export function updateObject(oldObject, newValues) {
 
 /**
  * Adds filtered data action
- * @param state
- * @param action
+ * @param state the previous state
+ * @param action current action object
  * @returns  newState
  * @description The function accepts the current state in the store and the action to perform (to add the new AppliedFilters Object)
  */

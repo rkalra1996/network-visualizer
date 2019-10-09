@@ -12,8 +12,8 @@ export interface IAppState {
 
 /**
  * Root reducer
- * @param state
- * @param action
+ * @param state previous state of the store
+ * @param action action to perform
  * @returns  new state
  * @description The Root Reducer is the one which will handle all the Action declarations.
  * This is the only reducer which will store the initial state. The purpose of the root reducer is
