@@ -19,7 +19,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 // Material design components from custom Material module
 import {CustomMaterialModule} from './../custom-material/custom-material/custom-material.module';
 import { MaterialService } from '../custom-material/services/material-core/material.service';
-
 @NgModule({
   declarations: [MainComponent, GraphVisualizerComponent, DashboardSidebarComponent, DashboardHeaderComponent,
     ColorPanelComponent, CreateNodesComponent, GraphExporterComponent],
@@ -37,7 +36,7 @@ import { MaterialService } from '../custom-material/services/material-core/mater
     MainComponent, DashboardHeaderComponent,
     DashboardSidebarComponent, ColorPanelComponent,
     GraphExporterComponent, GraphVisualizerComponent,
-    CreateNodesComponent],
+    CreateNodesComponent,DashboardHeaderComponent],
   providers : [MaterialService]
 })
 export class DashboardModule { }

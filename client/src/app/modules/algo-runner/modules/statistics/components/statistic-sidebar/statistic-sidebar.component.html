@@ -1,0 +1,8 @@
+<div class="statistic-sidebar">
+ <div class="statistic-sidebar-header">
+   <p class="statistic-sidebar-heading">Statistics</p>
+ </div>
+ <div class="statistic-sidebar-algos">
+  <app-algo-list [data]="sideBarAlgoData" (clicked)="viewDetail($event)" [firstVisit]="true"></app-algo-list>
+ </div>
+</div>
