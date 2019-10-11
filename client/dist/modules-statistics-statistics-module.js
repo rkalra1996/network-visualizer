@@ -83,7 +83,7 @@ var AlgoListComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  {{name}} works!!!!!!!!!!!!!!!!!\n</p>\n"
+module.exports = "<algo-runner-statistical-toolbar></algo-runner-statistical-toolbar>\n<algo-runner-statistical-content [data]=\"name\"></algo-runner-statistical-content>\n<algo-runner-statistical-form></algo-runner-statistical-form>"
 
 /***/ }),
 
@@ -282,6 +282,178 @@ var StatisticSidebarComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/modules/algo-runner/modules/statistics/components/statistical-content/statistical-content.component.html":
+/*!**************************************************************************************************************************!*\
+  !*** ./src/app/modules/algo-runner/modules/statistics/components/statistical-content/statistical-content.component.html ***!
+  \**************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"statisticalDetails\">\nStatic Data of {{data}}\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/modules/algo-runner/modules/statistics/components/statistical-content/statistical-content.component.scss":
+/*!**************************************************************************************************************************!*\
+  !*** ./src/app/modules/algo-runner/modules/statistics/components/statistical-content/statistical-content.component.scss ***!
+  \**************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".statisticalDetails {\n  height: 423px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9hbGdvLXJ1bm5lci9tb2R1bGVzL3N0YXRpc3RpY3MvY29tcG9uZW50cy9zdGF0aXN0aWNhbC1jb250ZW50L0Q6XFxOZXR3b3JrX1Zpc3VhbGl6ZXJcXG5ldHdvcmstdmlzdWFsaXplclxcY2xpZW50L3NyY1xcYXBwXFxtb2R1bGVzXFxhbGdvLXJ1bm5lclxcbW9kdWxlc1xcc3RhdGlzdGljc1xcY29tcG9uZW50c1xcc3RhdGlzdGljYWwtY29udGVudFxcc3RhdGlzdGljYWwtY29udGVudC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGFBQWEsRUFBQSIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvYWxnby1ydW5uZXIvbW9kdWxlcy9zdGF0aXN0aWNzL2NvbXBvbmVudHMvc3RhdGlzdGljYWwtY29udGVudC9zdGF0aXN0aWNhbC1jb250ZW50LmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnN0YXRpc3RpY2FsRGV0YWlsc3tcclxuICAgIGhlaWdodDogNDIzcHg7XHJcbn0iXX0= */"
+
+/***/ }),
+
+/***/ "./src/app/modules/algo-runner/modules/statistics/components/statistical-content/statistical-content.component.ts":
+/*!************************************************************************************************************************!*\
+  !*** ./src/app/modules/algo-runner/modules/statistics/components/statistical-content/statistical-content.component.ts ***!
+  \************************************************************************************************************************/
+/*! exports provided: StatisticalContentComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StatisticalContentComponent", function() { return StatisticalContentComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var StatisticalContentComponent = /** @class */ (function () {
+    function StatisticalContentComponent() {
+    }
+    StatisticalContentComponent.prototype.ngOnInit = function () {
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], StatisticalContentComponent.prototype, "data", void 0);
+    StatisticalContentComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'algo-runner-statistical-content',
+            template: __webpack_require__(/*! ./statistical-content.component.html */ "./src/app/modules/algo-runner/modules/statistics/components/statistical-content/statistical-content.component.html"),
+            styles: [__webpack_require__(/*! ./statistical-content.component.scss */ "./src/app/modules/algo-runner/modules/statistics/components/statistical-content/statistical-content.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], StatisticalContentComponent);
+    return StatisticalContentComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/algo-runner/modules/statistics/components/statistical-form/statistical-form.component.html":
+/*!********************************************************************************************************************!*\
+  !*** ./src/app/modules/algo-runner/modules/statistics/components/statistical-form/statistical-form.component.html ***!
+  \********************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<p>\n  statistical-form works!\n</p>\n"
+
+/***/ }),
+
+/***/ "./src/app/modules/algo-runner/modules/statistics/components/statistical-form/statistical-form.component.scss":
+/*!********************************************************************************************************************!*\
+  !*** ./src/app/modules/algo-runner/modules/statistics/components/statistical-form/statistical-form.component.scss ***!
+  \********************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvYWxnby1ydW5uZXIvbW9kdWxlcy9zdGF0aXN0aWNzL2NvbXBvbmVudHMvc3RhdGlzdGljYWwtZm9ybS9zdGF0aXN0aWNhbC1mb3JtLmNvbXBvbmVudC5zY3NzIn0= */"
+
+/***/ }),
+
+/***/ "./src/app/modules/algo-runner/modules/statistics/components/statistical-form/statistical-form.component.ts":
+/*!******************************************************************************************************************!*\
+  !*** ./src/app/modules/algo-runner/modules/statistics/components/statistical-form/statistical-form.component.ts ***!
+  \******************************************************************************************************************/
+/*! exports provided: StatisticalFormComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StatisticalFormComponent", function() { return StatisticalFormComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var StatisticalFormComponent = /** @class */ (function () {
+    function StatisticalFormComponent() {
+    }
+    StatisticalFormComponent.prototype.ngOnInit = function () {
+    };
+    StatisticalFormComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'algo-runner-statistical-form',
+            template: __webpack_require__(/*! ./statistical-form.component.html */ "./src/app/modules/algo-runner/modules/statistics/components/statistical-form/statistical-form.component.html"),
+            styles: [__webpack_require__(/*! ./statistical-form.component.scss */ "./src/app/modules/algo-runner/modules/statistics/components/statistical-form/statistical-form.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], StatisticalFormComponent);
+    return StatisticalFormComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/modules/algo-runner/modules/statistics/components/statistical-toolbar/statistical-toolbar.component.html":
+/*!**************************************************************************************************************************!*\
+  !*** ./src/app/modules/algo-runner/modules/statistics/components/statistical-toolbar/statistical-toolbar.component.html ***!
+  \**************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"statisticalToolBar\">Toolbar</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/modules/algo-runner/modules/statistics/components/statistical-toolbar/statistical-toolbar.component.scss":
+/*!**************************************************************************************************************************!*\
+  !*** ./src/app/modules/algo-runner/modules/statistics/components/statistical-toolbar/statistical-toolbar.component.scss ***!
+  \**************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".statisticalToolBar {\n  height: 96px; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kdWxlcy9hbGdvLXJ1bm5lci9tb2R1bGVzL3N0YXRpc3RpY3MvY29tcG9uZW50cy9zdGF0aXN0aWNhbC10b29sYmFyL0Q6XFxOZXR3b3JrX1Zpc3VhbGl6ZXJcXG5ldHdvcmstdmlzdWFsaXplclxcY2xpZW50L3NyY1xcYXBwXFxtb2R1bGVzXFxhbGdvLXJ1bm5lclxcbW9kdWxlc1xcc3RhdGlzdGljc1xcY29tcG9uZW50c1xcc3RhdGlzdGljYWwtdG9vbGJhclxcc3RhdGlzdGljYWwtdG9vbGJhci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLFlBQVksRUFBQSIsImZpbGUiOiJzcmMvYXBwL21vZHVsZXMvYWxnby1ydW5uZXIvbW9kdWxlcy9zdGF0aXN0aWNzL2NvbXBvbmVudHMvc3RhdGlzdGljYWwtdG9vbGJhci9zdGF0aXN0aWNhbC10b29sYmFyLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnN0YXRpc3RpY2FsVG9vbEJhcntcclxuICAgIGhlaWdodDogOTZweDtcclxufSJdfQ== */"
+
+/***/ }),
+
+/***/ "./src/app/modules/algo-runner/modules/statistics/components/statistical-toolbar/statistical-toolbar.component.ts":
+/*!************************************************************************************************************************!*\
+  !*** ./src/app/modules/algo-runner/modules/statistics/components/statistical-toolbar/statistical-toolbar.component.ts ***!
+  \************************************************************************************************************************/
+/*! exports provided: StatisticalToolbarComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StatisticalToolbarComponent", function() { return StatisticalToolbarComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var StatisticalToolbarComponent = /** @class */ (function () {
+    function StatisticalToolbarComponent() {
+    }
+    StatisticalToolbarComponent.prototype.ngOnInit = function () {
+    };
+    StatisticalToolbarComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'algo-runner-statistical-toolbar',
+            template: __webpack_require__(/*! ./statistical-toolbar.component.html */ "./src/app/modules/algo-runner/modules/statistics/components/statistical-toolbar/statistical-toolbar.component.html"),
+            styles: [__webpack_require__(/*! ./statistical-toolbar.component.scss */ "./src/app/modules/algo-runner/modules/statistics/components/statistical-toolbar/statistical-toolbar.component.scss")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], StatisticalToolbarComponent);
+    return StatisticalToolbarComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/modules/algo-runner/modules/statistics/statistics-routing.module.ts":
 /*!*************************************************************************************!*\
   !*** ./src/app/modules/algo-runner/modules/statistics/statistics-routing.module.ts ***!
@@ -354,6 +526,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_statistic_sidebar_statistic_sidebar_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/statistic-sidebar/statistic-sidebar.component */ "./src/app/modules/algo-runner/modules/statistics/components/statistic-sidebar/statistic-sidebar.component.ts");
 /* harmony import */ var _components_algo_list_algo_list_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/algo-list/algo-list.component */ "./src/app/modules/algo-runner/modules/statistics/components/algo-list/algo-list.component.ts");
 /* harmony import */ var _components_details_page_details_page_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/details-page/details-page.component */ "./src/app/modules/algo-runner/modules/statistics/components/details-page/details-page.component.ts");
+/* harmony import */ var _components_statistical_toolbar_statistical_toolbar_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/statistical-toolbar/statistical-toolbar.component */ "./src/app/modules/algo-runner/modules/statistics/components/statistical-toolbar/statistical-toolbar.component.ts");
+/* harmony import */ var _components_statistical_content_statistical_content_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/statistical-content/statistical-content.component */ "./src/app/modules/algo-runner/modules/statistics/components/statistical-content/statistical-content.component.ts");
+/* harmony import */ var _components_statistical_form_statistical_form_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/statistical-form/statistical-form.component */ "./src/app/modules/algo-runner/modules/statistics/components/statistical-form/statistical-form.component.ts");
+
+
+
 
 
 
@@ -367,7 +545,7 @@ var StatisticsModule = /** @class */ (function () {
     }
     StatisticsModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-            declarations: [_components_main_main_component__WEBPACK_IMPORTED_MODULE_4__["MainComponent"], _components_statistic_sidebar_statistic_sidebar_component__WEBPACK_IMPORTED_MODULE_5__["StatisticSidebarComponent"], _components_algo_list_algo_list_component__WEBPACK_IMPORTED_MODULE_6__["AlgoListComponent"], _components_details_page_details_page_component__WEBPACK_IMPORTED_MODULE_7__["DetailsPageComponent"]],
+            declarations: [_components_main_main_component__WEBPACK_IMPORTED_MODULE_4__["MainComponent"], _components_statistic_sidebar_statistic_sidebar_component__WEBPACK_IMPORTED_MODULE_5__["StatisticSidebarComponent"], _components_algo_list_algo_list_component__WEBPACK_IMPORTED_MODULE_6__["AlgoListComponent"], _components_details_page_details_page_component__WEBPACK_IMPORTED_MODULE_7__["DetailsPageComponent"], _components_statistical_toolbar_statistical_toolbar_component__WEBPACK_IMPORTED_MODULE_8__["StatisticalToolbarComponent"], _components_statistical_content_statistical_content_component__WEBPACK_IMPORTED_MODULE_9__["StatisticalContentComponent"], _components_statistical_form_statistical_form_component__WEBPACK_IMPORTED_MODULE_10__["StatisticalFormComponent"]],
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
                 _statistics_routing_module__WEBPACK_IMPORTED_MODULE_3__["StatisticsRoutingModule"]
