@@ -384,15 +384,7 @@ var getDataV2 = (queryObj) => {
 }
 
 function processRequestBasedOnNodesLength(requestData) {
-    if (requestData.nodeLength == 1) {
-        return runQueryWithTypesV2({ relation: requestData.relationsArray, nodes: requestData.totalNodes, length: 1, limit: requestData.nodeLimit, showDeleted: requestData.showDeleted });
-    } else if (requestData.nodeLength == 2) {
-        return runQueryWithTypesV2({ relation: requestData.relationsArray, nodes: requestData.totalNodes, length: 2, limit: requestData.nodeLimit, showDeleted: requestData.showDeleted })
-    } else if (requestData.nodeLength === 3) {
-        return runQueryWithTypesV2({ relation: requestData.relationsArray, nodes: requestData.totalNodes, length: 3, limit: requestData.nodeLimit, showDeleted: requestData.showDeleted })
-    } else {
-        return runQueryWithTypesV2({ relation: requestData.relationsArray, nodes: requestData.totalNodes, length: 0, limit: requestData.nodeLimit, showDeleted: requestData.showDeleted })
-    }
+    return runQueryWithTypesV2({ relation: requestData.relationsArray, nodes: requestData.totalNodes, limit: requestData.nodeLimit, showDeleted: requestData.showDeleted });    
 }
 var getGraphDataV2 = (req) => {
     let relationshipTypesArray = [];
@@ -413,25 +405,36 @@ var getGraphDataV2 = (req) => {
     // 1. find all the types of nodes needed for the query
     if (req.body.hasOwnProperty('nodes') && req.body.nodes.length >= 0) {
         // data for nodes is present, get all the relevant information
-        let queryStatement = processRequestBasedOnNodesLength({
-            nodeLength: req.body.nodes.length, 
-            totalNodes: req.body.nodes, 
-            nodeLimit: req.body.limit, 
-            showDeleted: req.showDeleted, 
-            relationsArray: relationshipTypesArray
-        });
-        console.log('query to execute is ', queryStatement);
-        return runQuery(queryStatement).then(result => {
-            let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
-            return new Promise((resolve, reject) => {
-                resolve(serializedData);
+            let queryStatement = processRequestBasedOnNodesLength({
+                nodeLength: req.body.nodes.length, 
+                totalNodes: req.body.nodes, 
+                nodeLimit: req.body.limit, 
+                showDeleted: req.showDeleted, 
+                relationsArray: relationshipTypesArray
             });
-        }).catch(err => {
-            console.log('An error occured while runnning the query', err);
-            return new Promise((resolve, reject) => {
-                reject('API : get/data | ERROR : Error encountered while reading from database with 0 types');
-            });
-        });
+            
+            console.log('query to execute is ', queryStatement);
+
+            // if queryStattement is null means it did not validate successfully
+            if (!queryStatement) {
+            console.log('error occured while running function processRequestBasedOnNodesLength()');                
+                    return new Promise((resolve, reject) => {
+                        reject('API : get/data | ERROR : Error encountered while creating an appropriate query for the database');
+                    });
+            }
+            else {
+                return runQuery(queryStatement).then(result => {
+                    let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+                    return new Promise((resolve, reject) => {
+                        resolve(serializedData);
+                    });
+                }).catch(err => {
+                    console.log('An error occured while runnning the query', err);
+                    return new Promise((resolve, reject) => {
+                        reject('API : get/data | ERROR : Error encountered while reading from database with 0 types');
+                    });
+                });
+            }
 
     } else if (req.body.hasOwnProperty('limit')) {
         return limitBasedInitGraphShow({ limit: req.body.limit, showDeleted: req.body.showDeleted });
@@ -464,13 +467,24 @@ function getLimit(limit) {
 function isValidFiltersSearchObject(filterObjectToTest) {
     let passed = false;
     if (filterObjectToTest.constructor === Object && Object.keys(filterObjectToTest).length) {
+
+
         if (filterObjectToTest.hasOwnProperty('nodes') || filterObjectToTest.hasOwnProperty('relation')) {
-            passed = true;
+            if (
+                filterObjectToTest.hasOwnProperty('nodes') && Array.isArray(filterObjectToTest.nodes) && 
+                filterObjectToTest.hasOwnProperty('relation') && Array.isArray(filterObjectToTest.relation)
+                ) {
+                passed = true;
+            } else {
+                // type of nodes / relation keys should be array
+                passed = false;
+            }    
         }
         else {
-            // atleast nodes or relation key should be there apart from limit and showLimit
+            // object must contain atleast nodes / relation keys
             passed = false;
         }
+
     }
     else {
         // non object types / empty objects are not allowed
@@ -589,7 +603,9 @@ function runQueryWithTypesV2(dataObj) {
         return finalQuery;
     }
     else {
-        // the onject provided for applied filters is not a valid object
+        // the object provided for applied filters is not a valid object
+        console.log('An error occured while creating the query -> the object provided for applied filters is not a valid object', JSON.stringify(dataObj));
+                return null;
     }
 }
 
