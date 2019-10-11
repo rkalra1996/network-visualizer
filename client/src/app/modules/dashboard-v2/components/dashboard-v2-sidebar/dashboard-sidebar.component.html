@@ -18,7 +18,7 @@
                             [ngClass]="{'rotate': attributeOptions?.rotate, 'no-rotate': !attributeOptions?.rotate}">
                         </span>
                         <div class="collapse" [ngClass]="{'show-drop': attributeOptions?.rotate, 'hide-drop': !attributeOptions?.rotate}">
-                            <sui-multi-select [(ngModel)]="selectedAttributeOptions[attributeOptions['attribute']]" [options]="attributeOptions['options']" [maxSelected]="15" (ngModelChange)="searchElement()" #totalAtrributeOptions>
+                            <sui-multi-select [(ngModel)]="selectedAttributeOptions[attributeOptions['attribute']]" [options]="attributeOptions['options']" [maxSelected]="15"  #totalAtrributeOptions>
                                 <div class="ui icon search input">
                                     <i class="search icon"></i>
                                     <input suiSelectSearch type="text" placeholder="Search {{attributeOptions['attribute']}}...">
@@ -37,7 +37,7 @@
                 <button class="btn btn-default btn-md searchBtn" (click)="resetGraph()">Reset</button>
             </div>
             <div class="searchBtnWrapper btn-sidebar">
-                <button class="btn btn-default btn-md searchBtn" (click)="searchGraph()">Apply</button>
+                <button class="btn btn-default btn-md searchBtn" (click)="hitSearchGraph()">Apply</button>
             </div>
 
         </div>
@@ -65,7 +65,7 @@
                         <button class="btn btn-default btn-md searchBtn" (click)="resetGraph()">Reset</button>
                     </div>
                     <div class="searchBtnWrapper btn-sidebar">
-                        <button class="btn btn-default btn-md searchBtn" (click)="relationSearchGraph()">Apply</button>
+                        <button class="btn btn-default btn-md searchBtn" (click)="hitSearchGraph()">Apply</button>
                     </div>
 
                 </div>

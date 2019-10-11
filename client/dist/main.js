@@ -3417,7 +3417,7 @@ var DashboardHeaderComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"wrapper sidebar-wrapper\">\r\n    <div class=\"sidebarBody p-0\">\r\n        <div class=\"sidebarBodyTitle\">\r\n            <p>Filter By Attributes</p>\r\n        </div>\r\n        <div class=\"sidebarElements\" *ngIf=\"totalAtrributeOptions?.length > 0\">\r\n            <div class=\"item-container\">\r\n                <div class=\"item\" *ngFor=\"let attributeOptions of totalAtrributeOptions; let i = index\">\r\n                    <div *ngIf=\"attributeOptions\">\r\n                        <span class=\"\">\r\n\r\n                        </span>\r\n                        <a class=\"item-text hoverable\" (click)=\"networkElementClick(attributeOptions['attribute']);attributeOptions['rotate'] = !attributeOptions['rotate']\" data-toggle=\"collapse\" href=\"#collapseExample{{i}}\" role=\"button\" [attr.aria-expanded]=\"attributeOptions['rotate']\"\r\n                            [attr.aria-controls]=\"'collapseExample'+i\" [ngClass]=\"{'rotate': attributeOptions['rotate'], 'no-rotate': !attributeOptions['rotate']}\">{{attributeOptions['attribute']}}\r\n                            <span class=\"ele-count count-org\">{{attributeOptions['options'].length}}</span>\r\n                        </a>\r\n                        <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" [attr.href]=\"'#collapseExample'+i\" role=\"button\" [attr.aria-expanded]=\"attributeOptions?.rotate\" [attr.aria-controls]=\"'collapseExample'+i\" (click)=\"attributeOptions['rotate'] = !attributeOptions['rotate']\"\r\n                            [ngClass]=\"{'rotate': attributeOptions?.rotate, 'no-rotate': !attributeOptions?.rotate}\">\r\n                        </span>\r\n                        <div class=\"collapse\" [ngClass]=\"{'show-drop': attributeOptions?.rotate, 'hide-drop': !attributeOptions?.rotate}\">\r\n                            <sui-multi-select [(ngModel)]=\"selectedAttributeOptions[attributeOptions['attribute']]\" [options]=\"attributeOptions['options']\" [maxSelected]=\"15\" (ngModelChange)=\"searchElement()\" #totalAtrributeOptions>\r\n                                <div class=\"ui icon search input\">\r\n                                    <i class=\"search icon\"></i>\r\n                                    <input suiSelectSearch type=\"text\" placeholder=\"Search {{attributeOptions['attribute']}}...\">\r\n                                </div>\r\n                                <div class=\"scrolling menu\">\r\n                                    <sui-select-option *ngFor=\"let o of totalAtrributeOptions.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                                </div>\r\n                            </sui-multi-select>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"btn-container d-flex justify-content-around\">\r\n            <div class=\"searchBtnWrapper btn-sidebar\">\r\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\r\n            </div>\r\n            <div class=\"searchBtnWrapper btn-sidebar\">\r\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"searchGraph()\">Apply</button>\r\n            </div>\r\n\r\n        </div>\r\n        <div class=\"sidebarBodyTitle\">\r\n            <p>Filter By Relationships</p>\r\n        </div>\r\n        <div class=\"sidebarElements\">\r\n            <div class=\"item\">\r\n                <sui-multi-select [(ngModel)]=\"selectedRelation\" [options]=\"relationOptions\" [maxSelected]=\"5\" #relation>\r\n                    <div class=\"ui icon search input\">\r\n                        <i class=\"search icon\"></i>\r\n                        <input suiSelectSearch type=\"text\" placeholder=\"Search Relationships...\">\r\n                    </div>\r\n                    <div class=\"scrolling menu\">\r\n                        <sui-select-option *ngFor=\"let o of relation.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                    </div>\r\n                </sui-multi-select>\r\n                <!-- <div class=\"rel-tabs-container\" *ngFor=\"let r of relationOptions\">\r\n                    <div class=\"rel-tab\" (click)=\"relationclickEvent(r)\" id={{r}}>\r\n                        <p>{{r}}</p>\r\n                    </div>\r\n                </div> -->\r\n                <div class=\"btn-container d-flex justify-content-around\">\r\n                    <div class=\"searchBtnWrapper btn-sidebar\">\r\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\r\n                    </div>\r\n                    <div class=\"searchBtnWrapper btn-sidebar\">\r\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"relationSearchGraph()\">Apply</button>\r\n                    </div>\r\n\r\n                </div>\r\n                <div class=\"btn-container d-flex justify-content-around\">\r\n                    <span>Show deleted data</span>\r\n                    <app-toggle-switch (toggleEvent)=\"NodeLimitToggleHandler($event)\"></app-toggle-switch>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <!-- <div class=\"searchBtnWrapper btn-sidebar\">\r\n            <button class=\"btn btn-default btn-md searchBtn\" (click)=\"noderelationSearchGraph()\">Apply Both</button>\r\n        </div> -->\r\n    </div>\r\n\r\n</div>"
+module.exports = "<div class=\"wrapper sidebar-wrapper\">\r\n    <div class=\"sidebarBody p-0\">\r\n        <div class=\"sidebarBodyTitle\">\r\n            <p>Filter By Attributes</p>\r\n        </div>\r\n        <div class=\"sidebarElements\" *ngIf=\"totalAtrributeOptions?.length > 0\">\r\n            <div class=\"item-container\">\r\n                <div class=\"item\" *ngFor=\"let attributeOptions of totalAtrributeOptions; let i = index\">\r\n                    <div *ngIf=\"attributeOptions\">\r\n                        <span class=\"\">\r\n\r\n                        </span>\r\n                        <a class=\"item-text hoverable\" (click)=\"networkElementClick(attributeOptions['attribute']);attributeOptions['rotate'] = !attributeOptions['rotate']\" data-toggle=\"collapse\" href=\"#collapseExample{{i}}\" role=\"button\" [attr.aria-expanded]=\"attributeOptions['rotate']\"\r\n                            [attr.aria-controls]=\"'collapseExample'+i\" [ngClass]=\"{'rotate': attributeOptions['rotate'], 'no-rotate': !attributeOptions['rotate']}\">{{attributeOptions['attribute']}}\r\n                            <span class=\"ele-count count-org\">{{attributeOptions['options'].length}}</span>\r\n                        </a>\r\n                        <span class=\"fas fa-chevron-right\" data-toggle=\"collapse\" [attr.href]=\"'#collapseExample'+i\" role=\"button\" [attr.aria-expanded]=\"attributeOptions?.rotate\" [attr.aria-controls]=\"'collapseExample'+i\" (click)=\"attributeOptions['rotate'] = !attributeOptions['rotate']\"\r\n                            [ngClass]=\"{'rotate': attributeOptions?.rotate, 'no-rotate': !attributeOptions?.rotate}\">\r\n                        </span>\r\n                        <div class=\"collapse\" [ngClass]=\"{'show-drop': attributeOptions?.rotate, 'hide-drop': !attributeOptions?.rotate}\">\r\n                            <sui-multi-select [(ngModel)]=\"selectedAttributeOptions[attributeOptions['attribute']]\" [options]=\"attributeOptions['options']\" [maxSelected]=\"15\"  #totalAtrributeOptions>\r\n                                <div class=\"ui icon search input\">\r\n                                    <i class=\"search icon\"></i>\r\n                                    <input suiSelectSearch type=\"text\" placeholder=\"Search {{attributeOptions['attribute']}}...\">\r\n                                </div>\r\n                                <div class=\"scrolling menu\">\r\n                                    <sui-select-option *ngFor=\"let o of totalAtrributeOptions.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                                </div>\r\n                            </sui-multi-select>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"btn-container d-flex justify-content-around\">\r\n            <div class=\"searchBtnWrapper btn-sidebar\">\r\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\r\n            </div>\r\n            <div class=\"searchBtnWrapper btn-sidebar\">\r\n                <button class=\"btn btn-default btn-md searchBtn\" (click)=\"hitSearchGraph()\">Apply</button>\r\n            </div>\r\n\r\n        </div>\r\n        <div class=\"sidebarBodyTitle\">\r\n            <p>Filter By Relationships</p>\r\n        </div>\r\n        <div class=\"sidebarElements\">\r\n            <div class=\"item\">\r\n                <sui-multi-select [(ngModel)]=\"selectedRelation\" [options]=\"relationOptions\" [maxSelected]=\"5\" #relation>\r\n                    <div class=\"ui icon search input\">\r\n                        <i class=\"search icon\"></i>\r\n                        <input suiSelectSearch type=\"text\" placeholder=\"Search Relationships...\">\r\n                    </div>\r\n                    <div class=\"scrolling menu\">\r\n                        <sui-select-option *ngFor=\"let o of relation.filteredOptions\" [value]=\"o\"></sui-select-option>\r\n                    </div>\r\n                </sui-multi-select>\r\n                <!-- <div class=\"rel-tabs-container\" *ngFor=\"let r of relationOptions\">\r\n                    <div class=\"rel-tab\" (click)=\"relationclickEvent(r)\" id={{r}}>\r\n                        <p>{{r}}</p>\r\n                    </div>\r\n                </div> -->\r\n                <div class=\"btn-container d-flex justify-content-around\">\r\n                    <div class=\"searchBtnWrapper btn-sidebar\">\r\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"resetGraph()\">Reset</button>\r\n                    </div>\r\n                    <div class=\"searchBtnWrapper btn-sidebar\">\r\n                        <button class=\"btn btn-default btn-md searchBtn\" (click)=\"hitSearchGraph()\">Apply</button>\r\n                    </div>\r\n\r\n                </div>\r\n                <div class=\"btn-container d-flex justify-content-around\">\r\n                    <span>Show deleted data</span>\r\n                    <app-toggle-switch (toggleEvent)=\"NodeLimitToggleHandler($event)\"></app-toggle-switch>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <!-- <div class=\"searchBtnWrapper btn-sidebar\">\r\n            <button class=\"btn btn-default btn-md searchBtn\" (click)=\"noderelationSearchGraph()\">Apply Both</button>\r\n        </div> -->\r\n    </div>\r\n\r\n</div>"
 
 /***/ }),
 
@@ -3540,6 +3540,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
      * @description This function updates the global nodeRelationDetails object and send it to algo runner for further use
      * @param detailsObj
      */
+    // tslint:disable-next-line: max-line-length
     DashboardSidebarComponent.prototype.updateNodeRelationDetailsObject = function (detailsObj) {
         if (detailsObj.hasOwnProperty('nodeTypes')) {
             this.nodeRelationsDetailsObject.nodes['types'] = detailsObj.nodeTypes;
@@ -3595,6 +3596,10 @@ var DashboardSidebarComponent = /** @class */ (function () {
     DashboardSidebarComponent.prototype.onlyUnique = function (value, index, self) {
         return self.indexOf(value) === index;
     };
+    /**
+     * Search graph
+     * @description The function gets called whenever the apply filter on attributes is needed
+     */
     DashboardSidebarComponent.prototype.searchGraph = function () {
         var _this = this;
         var requestBody;
@@ -3613,9 +3618,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
                 requestBody = {};
             }
         }
-        this.sharedGraphData.setGraphData(requestBody);
-        var obj = { event: 'search' };
-        this.eventClicked.emit(obj);
+        return requestBody;
     };
     // Method gives new edgesArray with related node ids
     DashboardSidebarComponent.prototype.getRelatedNodeIdArrayFromEdges = function (selectedNodeId) {
@@ -3645,35 +3648,6 @@ var DashboardSidebarComponent = /** @class */ (function () {
             });
             return temId;
         }
-    };
-    DashboardSidebarComponent.prototype.searchElement = function () {
-        var temdep = [];
-        var temper = [];
-        //   if(this.graphInitData.length>0){
-        //   if(this.selectedName.length>0){
-        //     this.selectedName.filter(name=>{
-        //       let selectedNodeId=this.getSelectedNodeId(name);
-        //       console.log('id',selectedNodeId);
-        //       let temNewRelatedNodeId = this.getRelatedNodeIdArrayFromEdges(selectedNodeId);
-        //       console.log('new',temNewRelatedNodeId);
-        //       if(temNewRelatedNodeId){
-        //         temNewRelatedNodeId.filter(id=>{
-        //           this.graphInitData[0]['seperateNodes'].filter(node=>{
-        //           if(id === node.id && node.type[0] === 'Department'){
-        //             temdep.push(node.label);
-        //           }else if(id === node.id && node.type[0] === 'Person'){
-        //             temper.push(node.label);
-        //             }
-        //           });
-        //         });
-        //       }
-        //      });
-        //      temdep = temdep.filter(this.onlyUnique);
-        //      temper = temper.filter(this.onlyUnique);
-        //     this.typeOptions = temdep;
-        //     this.representOptions = temper;
-        //   }
-        // }
     };
     DashboardSidebarComponent.prototype.resetGraph = function () {
         this.getGraph();
@@ -3719,9 +3693,7 @@ var DashboardSidebarComponent = /** @class */ (function () {
             // if no selected element
             requestBody = {};
         }
-        this.sharedGraphData.setGraphData(requestBody);
-        var obj = { event: 'search' };
-        this.eventClicked.emit(obj);
+        return requestBody;
     };
     DashboardSidebarComponent.prototype.networkElementClick = function (element) { };
     //
@@ -3895,6 +3867,23 @@ var DashboardSidebarComponent = /** @class */ (function () {
             this.checkRotate();
             return true;
         }
+    };
+    /**
+     * Hits search graph
+     * @description The function is a common function which will gather the selected filters from the sidebar and send it furthur
+     */
+    DashboardSidebarComponent.prototype.hitSearchGraph = function () {
+        var selectedAttributes = this.searchGraph();
+        var selectedRelations = this.relationSearchGraph();
+        console.log('search graph and relation search graph has returned the following ');
+        console.log(selectedAttributes);
+        console.log(selectedRelations);
+        // join both the request bodies into one and send it for search
+        var RequestBody = Object.assign({}, selectedRelations, selectedAttributes);
+        this.sharedGraphData.setGraphData(RequestBody);
+        // send the click event to reload the graph
+        var obj = { event: 'search' };
+        this.eventClicked.emit(obj);
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),

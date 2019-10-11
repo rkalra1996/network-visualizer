@@ -106,6 +106,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
    * @description This function updates the global nodeRelationDetails object and send it to algo runner for further use
    * @param detailsObj
    */
+  // tslint:disable-next-line: max-line-length
   updateNodeRelationDetailsObject(detailsObj: {nodeTypes?: object, relationTypes?: any, nodeProperties?: object, relationProperties?: object}) {
     if (detailsObj.hasOwnProperty('nodeTypes')) {
       this.nodeRelationsDetailsObject.nodes['types'] = detailsObj.nodeTypes;
@@ -163,6 +164,10 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     return self.indexOf(value) === index;
   }
 
+  /**
+   * Search graph
+   * @description The function gets called whenever the apply filter on attributes is needed
+   */
   searchGraph() {
     let requestBody;
     this.selectedGraph = [];
@@ -179,9 +184,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
         requestBody = {};
       }
     }
-    this.sharedGraphData.setGraphData(requestBody);
-    let obj = { event: 'search' };
-    this.eventClicked.emit(obj);
+    return requestBody;
   }
 
   // Method gives new edgesArray with related node ids
@@ -211,37 +214,6 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       });
       return temId;
     }
-  }
-
-  searchElement() {
-    let temdep = [];
-    let temper = [];
-    //   if(this.graphInitData.length>0){
-    //   if(this.selectedName.length>0){
-    //     this.selectedName.filter(name=>{
-    //       let selectedNodeId=this.getSelectedNodeId(name);
-    //       console.log('id',selectedNodeId);
-    //       let temNewRelatedNodeId = this.getRelatedNodeIdArrayFromEdges(selectedNodeId);
-    //       console.log('new',temNewRelatedNodeId);
-    //       if(temNewRelatedNodeId){
-    //         temNewRelatedNodeId.filter(id=>{
-    //           this.graphInitData[0]['seperateNodes'].filter(node=>{
-    //           if(id === node.id && node.type[0] === 'Department'){
-    //             temdep.push(node.label);
-    //           }else if(id === node.id && node.type[0] === 'Person'){
-    //             temper.push(node.label);
-    //             }
-    //           });
-    //         });
-    //       }
-    //      });
-    //      temdep = temdep.filter(this.onlyUnique);
-    //      temper = temper.filter(this.onlyUnique);
-    //     this.typeOptions = temdep;
-    //     this.representOptions = temper;
-    //   }
-    // }
-
   }
 
   resetGraph() {
@@ -291,9 +263,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       // if no selected element
       requestBody = {};
     }
-    this.sharedGraphData.setGraphData(requestBody);
-    const obj = { event: 'search' };
-    this.eventClicked.emit(obj);
+    return requestBody;
   }
 
   networkElementClick(element) { }
@@ -469,5 +439,29 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       this.checkRotate();
       return true;
     }
+  }
+
+
+  /**
+   * Hits search graph
+   * @description The function is a common function which will gather the selected filters from the sidebar and send it furthur
+   */
+  hitSearchGraph() {
+
+    const selectedAttributes = this.searchGraph();
+    const selectedRelations = this.relationSearchGraph();
+
+    console.log('search graph and relation search graph has returned the following ');
+    console.log(selectedAttributes);
+    console.log(selectedRelations);
+
+    // join both the request bodies into one and send it for search
+
+    const RequestBody = Object.assign({}, selectedRelations, selectedAttributes);
+
+    this.sharedGraphData.setGraphData(RequestBody);
+    // send the click event to reload the graph
+    const obj = { event: 'search' };
+    this.eventClicked.emit(obj);
   }
 }
