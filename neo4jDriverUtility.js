@@ -515,14 +515,36 @@ function runQueryWithTypesV2(dataObj) {
 
             // STEP 1
             // prepare final subQuery for the node type and  all the node properties
-            let nodeTypeSubQuery = `[${createProperStringArray(typeArray[0])}]`;
+            let nodeTypeSubQuery;
+            // check if the user has selected any types for the nodes
+            if (typeArray.length > 0) {
+                nodeTypeSubQuery = `[${createProperStringArray(typeArray[0])}]`;
+            } else {
+                nodeTypeSubQuery = '';
+            }
+
+
+            // create a proper query based on the whether node type is provided or not
+            let subQueryWithType = ''
+            let postSubQueryWithType;
+            if (!!nodeTypeSubQuery) {
+                subQueryWithType = `where labels(${nodeName2}) IN ${nodeTypeSubQuery}`;
+                postSubQueryWithType = 'AND';
+            }
+            else {
+                subQueryWithType = ''
+                postSubQueryWithType = 'WHERE';
+            }   
+            
+            
             let joinedSubQueryForAttributes = attributeSubQueriesArray.join(' AND ');
 
             // add the properties if user has selected atleast one
             if (!!joinedSubQueryForAttributes) {
-                nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) where labels(${nodeName2}) IN ${nodeTypeSubQuery} AND ${joinedSubQueryForAttributes}`;
+                nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) ${subQueryWithType} ${postSubQueryWithType} ${joinedSubQueryForAttributes}`;
             } else {
-                nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) where labels(${nodeName2}) IN ${nodeTypeSubQuery}`;
+                // when no attributes are selected, only type is selected
+                nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) ${subQueryWithType}`;
             }
         } else {
             nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) `
@@ -551,7 +573,6 @@ function runQueryWithTypesV2(dataObj) {
         // add the limit phrase at the end
         let limit = getLimit(dataObj.limit);
         finalQuery = finalQuery + ` return ${nodeName}, ${relationName}, ${nodeName2} LIMIT ${limit};`;
-        console.log('')
         return finalQuery;
     }
     else {
