@@ -490,18 +490,12 @@ function createAttributeSubQuery(nodeToUse, nodeName = 'node') {
     return `${nodeName}.\`${nodeAttribute}\` IN ${AttributeValue2String}`;
 }
 
-function runQueryWithTypesV2(dataObj) {
-    // dynamically create a query based on the attributes and relations provided
-    if(isValidFiltersSearchObject(dataObj)) {
-        // proceed further
-        let attributeSubQueriesArray = [];
-        // create a seperate string for node types since type is different from node properties
-        let typeArray = [];
-        let nodeName = 'n';
-        let nodeName2 = 'q';
-        let relationName = 'r';
 
-        let nodeSubQuery;
+function generateSubQueryFromNodes(dataObj, nodeName, relationName, nodeName2) {
+    let nodeSubQuery;
+    let attributeSubQueriesArray = [];
+    // create a seperate string for node types since type is different from node properties
+    let typeArray = [];
         if (dataObj.hasOwnProperty('nodes') && dataObj.nodes.length > 0) {
             dataObj.nodes.forEach(nodeAttributeObject => {
                 if (nodeAttributeObject.type == 'Type') {
@@ -550,9 +544,11 @@ function runQueryWithTypesV2(dataObj) {
             nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) `
         }
 
-        // STEP 2
-        // create a subQuery for the relationship
-        let relationSubQuery;
+        return nodeSubQuery;
+}
+
+function generateSubQueryFromRelations(dataObj, relationName) {
+    let relationSubQuery;
         if (dataObj.hasOwnProperty('relation') && dataObj.relation.length > 0) {
             relationSubQueryArray2String = `[${dataObj.relation.map(d => `'${d}'`).join(',')}]`;
 
@@ -566,6 +562,23 @@ function runQueryWithTypesV2(dataObj) {
         } else {
             relationSubQuery = '';
         }
+
+        return relationSubQuery;
+}
+
+function runQueryWithTypesV2(dataObj) {
+    // dynamically create a query based on the attributes and relations provided
+    if(isValidFiltersSearchObject(dataObj)) {
+        // proceed further
+        let nodeName = 'n';
+        let nodeName2 = 'q';
+        let relationName = 'r';
+
+        let nodeSubQuery = generateSubQueryFromNodes(dataObj, nodeName, relationName, nodeName2);
+        // STEP 2
+        // create a subQuery for the relationship
+        let relationSubQuery = generateSubQueryFromRelations(dataObj, relationName);
+
         // STEP 3
         // join both the above subQueries
         let finalQuery = nodeSubQuery + relationSubQuery;
