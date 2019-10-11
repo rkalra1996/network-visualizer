@@ -14,6 +14,7 @@ import { SnackbarComponent } from './modules/custom-material/components/snackbar
 
 // import redux for state management
 import {ReduxModule} from './modules/redux/redux.module';
+import { DashboardModule } from './modules/dashboard-v2/dashboard-v2.module';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {ReduxModule} from './modules/redux/redux.module';
     ShellModule,
     SharedModule,
     CoreModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    DashboardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
