@@ -1,0 +1,19 @@
+#newTypeColor {
+    max-width: 50px;
+    cursor: pointer;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+::ng-deep .cp-ok-button-class {
+    background: rgb(49, 140, 224);
+    min-width: 65px;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    line-height: 2em;
+}
+
+input#newTypeColor {
+    color: transparent;
+}

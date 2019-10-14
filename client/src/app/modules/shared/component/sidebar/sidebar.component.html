@@ -1,0 +1,99 @@
+<div class="sidebar">
+    <div class="sidebar-header dr-menu">
+        <h2 class="dr-label">Network Elements</h2>
+    </div>
+    <!------------------Org---------------------->
+    <div class="side">
+        <nav class="dr-menu">
+            <div class="dr-trigger"><span class="fas fa-globe-asia"></span><a class="dr-label" (click)="networkElementClick('Organisation')">Organisation</a>
+                <sui-multi-select [(ngModel)]="selectedOrg" [options]="orgOptions" [maxSelected]="5" #organisation>
+                    <div class="ui icon search input">
+                        <i class="search icon"></i>
+                        <input suiSelectSearch type="text" placeholder="Search organisations...">
+                    </div>
+                    <div class="divider"></div>
+                    <div class="header">
+                        <i class="list icon"></i> Options
+                    </div>
+                    <div class="scrolling menu">
+                        <sui-select-option *ngFor="let o of organisation.filteredOptions" [value]="o"></sui-select-option>
+                    </div>
+                </sui-multi-select>
+            </div>
+        </nav>
+    </div>
+    <!------------------Org---------------------->
+    <!------------------Department---------------------->
+    <div class="side">
+        <nav class="dr-menu">
+            <div class="dr-trigger"><span class="fa fa-linode"></span><a class="dr-label" (click)="networkElementClick('Department')">Department</a>
+                <sui-multi-select [(ngModel)]="selectedDepartment" [options]="departmentOptions" [maxSelected]="5" #department>
+                    <div class="ui icon search input">
+                        <i class="search icon"></i>
+                        <input suiSelectSearch type="text" placeholder="Search department...">
+                    </div>
+                    <div class="divider"></div>
+                    <div class="header">
+                        <i class="list icon"></i> Options
+                    </div>
+                    <div class="scrolling menu">
+                        <sui-select-option *ngFor="let o of department.filteredOptions" [value]="o"></sui-select-option>
+                    </div>
+                </sui-multi-select>
+            </div>
+        </nav>
+    </div>
+    <!------------------Department---------------------->
+    <!------------------Person---------------------->
+    <div class="side">
+        <nav class="dr-menu">
+            <div class="dr-trigger"><span class="fa fa-user-o"></span><a class="dr-label" (click)="networkElementClick('Person')">Person</a>
+                <sui-multi-select [(ngModel)]="selectedPerson" [options]="personOptions" [maxSelected]="5" #person>
+                    <div class="ui icon search input">
+                        <i class="search icon"></i>
+                        <input suiSelectSearch type="text" placeholder="Search person...">
+                    </div>
+                    <div class="divider"></div>
+                    <div class="header">
+                        <i class="list icon"></i> Options
+                    </div>
+                    <div class="scrolling menu">
+                        <sui-select-option *ngFor="let o of person.filteredOptions" [value]="o"></sui-select-option>
+                    </div>
+                </sui-multi-select>
+            </div>
+        </nav>
+    </div>
+    <!------------------Person---------------------->
+    <!------------------Relationship type---------------------->
+    <div class="side">
+        <nav class="dr-menu">
+            <div class="dr-trigger"><span class="fas fa-code-branch"></span><a class="dr-label" (click)="networkElementClick('Relationship')">Relationships</a>
+                <sui-multi-select [(ngModel)]="selectedRelation" [options]="relationOptions" [maxSelected]="5" #relation>
+                    <div class="ui icon search input">
+                        <i class="search icon"></i>
+                        <input suiSelectSearch type="text" placeholder="Search relations...">
+                    </div>
+                    <div class="divider"></div>
+                    <div class="header">
+                        <i class="list icon"></i> Options
+                    </div>
+                    <div class="scrolling menu">
+                        <sui-select-option *ngFor="let o of relation.filteredOptions" [value]="o"></sui-select-option>
+                    </div>
+                </sui-multi-select>
+            </div>
+        </nav>
+    </div>
+    <!------------------Relationship type---------------------->
+    <!------------------Search---------------------->
+    <div class="search-btn">
+        <button class="btn search-graph" (click)="searchGraph()">Search Graph</button>
+    </div>
+    <div class="reload-btn">
+        <button class="btn search-graph" (click)="networkElementClick('Reload')">Reload</button>
+    </div>
+    <!------------------Search---------------------->
+
+
+</div>
