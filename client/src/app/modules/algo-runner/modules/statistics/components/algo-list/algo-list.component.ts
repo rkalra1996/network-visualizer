@@ -13,7 +13,7 @@ export class AlgoListComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log("List of algos",this.data);
+    console.log('List of algos', this.data);
   }
 
   // Emitting the name of algo selected

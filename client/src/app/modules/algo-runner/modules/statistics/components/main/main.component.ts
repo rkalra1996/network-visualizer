@@ -14,7 +14,7 @@ export class MainComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.appliedFilters.subscribe(res => {
+    this.appliedFilters.subscribe( res => {
       console.log('inside the new route ', res);
     });
   }
