@@ -27,3 +27,22 @@ describe('Statistic sidebar service', () => {
     });
   });
 });
+describe('Statistic sidebar data service using TestBed', () => {
+  let service: StatisticSidebarDataService;
+  beforeEach(() => {
+    TestBed.configureTestingModule({ providers: [StatisticSidebarDataService] });
+    service = TestBed.get(StatisticSidebarDataService);
+  });
+  it('List of algo length should be greter than zero', () => {
+    expect(service.listOfAlgo.length).toBeGreaterThan(0);
+  });
+  it('List of algo should be type of array', () => {
+    expect(Array.isArray(service.listOfAlgo)).toBe(true);
+  });
+  it('algoList$ should return a value from observable', (done: DoneFn) => {
+    service.algoList$.subscribe(value => {
+      expect(value).toEqual(service.listOfAlgo);
+      done();
+    });
+  });
+});
