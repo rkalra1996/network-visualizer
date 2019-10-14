@@ -9,12 +9,16 @@ import { DetailsPageComponent } from './components/details-page/details-page.com
 import { StatisticalToolbarComponent } from './components/statistical-toolbar/statistical-toolbar.component';
 import { StatisticalContentComponent } from './components/statistical-content/statistical-content.component';
 import { StatisticalFormComponent } from './components/statistical-form/statistical-form.component';
+import { AlgoRunnerModule } from '../../algo-runner.module';
+import { RouteButtonComponent } from './components/route-button/route-button.component';
 
 @NgModule({
-  declarations: [MainComponent, StatisticSidebarComponent, AlgoListComponent, DetailsPageComponent, StatisticalToolbarComponent, StatisticalContentComponent, StatisticalFormComponent],
+  declarations: [MainComponent, StatisticSidebarComponent, AlgoListComponent, DetailsPageComponent, StatisticalToolbarComponent, 
+    StatisticalContentComponent, StatisticalFormComponent, RouteButtonComponent],
   imports: [
     CommonModule,
-    StatisticsRoutingModule
+    StatisticsRoutingModule,
+    AlgoRunnerModule
   ],
   exports: [MainComponent]
 })
