@@ -10,7 +10,7 @@ import { StatisticSidebarDataService } from 'src/app/modules/algo-runner/service
   styleUrls: ['./details-page.component.scss']
 })
 export class DetailsPageComponent implements OnInit {
-  name: any;
+  selectedAlgo: any;
 
   constructor(public activatedRoute: ActivatedRoute, public statisticSideBarData: StatisticSidebarDataService) { }
 
@@ -19,14 +19,19 @@ export class DetailsPageComponent implements OnInit {
       this.initializeData(data);
     });
   }
+  /**
+   * Initializes data
+   * @param data Algo name from route
+   * @description selects a particular algo object from the list of all algorithms
+   */
   initializeData(data) {
        this.statisticSideBarData.algoList$.subscribe(list => {
         if (data === undefined) {
-          this.name = list[0];
+          this.selectedAlgo = list[0];
         } else {
           list.forEach( (item , i) => {
             if (data === ( list[i].title.replace(/\s/g, '')).toLowerCase()) {
-             this.name = list[i];
+             this.selectedAlgo = list[i];
               }
           });
        }

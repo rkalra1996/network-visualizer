@@ -17,9 +17,9 @@ export class AlgoListComponent implements OnInit {
   }
 
   // Emitting the name of algo selected
-emitData(data,index){
-  this.firstVisit = false;
-  this.selectedIndex=index;
-   this.clicked.emit(data);
-}
+  emitData(data, index) {
+    this.firstVisit = false;
+    this.selectedIndex = index;
+    this.clicked.emit(data);
+  }
 }

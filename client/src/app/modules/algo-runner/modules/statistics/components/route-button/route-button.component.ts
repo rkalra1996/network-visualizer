@@ -13,6 +13,10 @@ export class RouteButtonComponent implements OnInit {
 
   ngOnInit() {
   }
+/**
+ * Routes to filters
+ * @description navigate to home page
+ */
 routeToFilters() {
 this.router.navigate(['']);
 }

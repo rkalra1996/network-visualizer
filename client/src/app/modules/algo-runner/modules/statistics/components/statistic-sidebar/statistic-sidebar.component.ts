@@ -16,14 +16,17 @@ export class StatisticSidebarComponent implements OnInit {
   ngOnInit() {
     // Retrieving list of algorithms
     this.statisticSidebarData.algoList$.subscribe(data => {
-      debugger;
       data.forEach( (element) => {
         const title = element.title;
         this.sideBarAlgoData.push(title);
       });
     });
   }
-// Retrieving selected algo
+  /**
+   * Views detail
+   * @param data name of selected algo
+   * @description route to details page component
+   */
   viewDetail(data) {
     this.selectedAlgoName = (data.replace(/\s/g, '')).toLowerCase();
     this.router.navigate([{outlets: { Details : ['', this.selectedAlgoName]}}], {relativeTo: this.activatedRoute});
