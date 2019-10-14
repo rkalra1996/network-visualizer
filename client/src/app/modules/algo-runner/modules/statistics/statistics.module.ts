@@ -6,9 +6,12 @@ import { MainComponent } from './components/main/main.component';
 import { StatisticSidebarComponent } from './components/statistic-sidebar/statistic-sidebar.component';
 import { AlgoListComponent } from './components/algo-list/algo-list.component';
 import { DetailsPageComponent } from './components/details-page/details-page.component';
+import { StatisticalToolbarComponent } from './components/statistical-toolbar/statistical-toolbar.component';
+import { StatisticalContentComponent } from './components/statistical-content/statistical-content.component';
+import { StatisticalFormComponent } from './components/statistical-form/statistical-form.component';
 
 @NgModule({
-  declarations: [MainComponent, StatisticSidebarComponent, AlgoListComponent, DetailsPageComponent],
+  declarations: [MainComponent, StatisticSidebarComponent, AlgoListComponent, DetailsPageComponent, StatisticalToolbarComponent, StatisticalContentComponent, StatisticalFormComponent],
   imports: [
     CommonModule,
     StatisticsRoutingModule
