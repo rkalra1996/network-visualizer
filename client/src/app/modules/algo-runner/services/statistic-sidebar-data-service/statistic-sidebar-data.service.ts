@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,13 +7,14 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class StatisticSidebarDataService {
 private algoList = new BehaviorSubject<Array<any>>([]);
 public algoList$: Observable<Array<any>> = this.algoList.asObservable();
-/* listOfAlgo = ['Shortest Path', 'Top Connected Node', 'Top Interacting Node', 'Network Sentiments',
-'Recommended Skills', 'Recommended Nodes', 'Nodes Centrality'];
- */
-listOfAlgo = [{title: 'Shortest Path', description: `<p>The Shortest Path algorithm calculates the shortest (weighted)
+
+  private listOfAlgo = [{
+    title: 'Shortest Path', 
+    description: `<p>The Shortest Path algorithm calculates the shortest (weighted)
 path between a pair of nodes. In this category, Dijkstra’s algorithm is the most well known.</p>
  <p>This algorithm can help us to find directions between two physical locations with the lowest travel cost.</p>`,
- imageUrl: `../../../../../assets/shortest_path.png`},
+ imageUrl: `../../../../../assets/shortest_path.png`,
+algo_form: {}},
 {title: 'Top Connected Node' , description: `<p>Top Connected Node measures the number of incoming and outgoing
 relationships from a node.</p>
 <p>The Top Connected Node algorithm can help us find popular nodes in a graph.</p>
@@ -25,23 +26,50 @@ online auction. The weighted centrality for fraudsters is significantly higher b
  collude with each other to artificially increase the price of items. Read more in Two Step graph-based semi-supervised
   Learning for Online Auction Fraud Detection</p>
 <p></p>` ,
-imageUrl: `../../../../../assets/top_connected_node.png`},
+imageUrl: `../../../../../assets/top_connected_node.png`,
+algo_form: {}},
 
 {title: 'Top Interacting Node' , description: `` ,
- imageUrl: ``},
+ imageUrl: ``,
+algo_form: {}},
 
 {title: 'Network Sentiments' , description: ``,
-imageUrl: ``},
+imageUrl: ``,
+algo_form: {}},
 
 {title: 'Recommended Skills' , description: `` ,
- imageUrl: ``},
+ imageUrl: ``,
+algo_form: {}},
 
 { title: 'Recommended Nodes' , description: `` ,
- imageUrl: ``},
+ imageUrl: ``,
+algo_form: {}},
 
 { title: 'Nodes Centrality' , description: `` ,
- imageUrl: ``}];
+ imageUrl: ``,
+ algo_form: {}}
+];
   constructor() {
     this.algoList.next(this.listOfAlgo);
+  }
+
+  /**
+   * Gets algorithm details
+   * @param algoName The name of the algorithm whose data is needed
+   * @returns the selected algorithm or empty object otherwise
+   */
+  getAlgoDetailsByName(algoName: string): Observable<object> {
+    // to find the algo_formDetails object of specified algoName
+    if (!!algoName) {
+      const fetchedData = this.listOfAlgo.find(algoObject => algoObject.title === algoName);
+      if (fetchedData.hasOwnProperty('algo_form') && fetchedData.algo_form.constructor === Object) {
+        // everything is ok
+        return of(fetchedData);
+      }
+      return of ({});
+    } else {
+      console.warn('No Data recieved in the algoName to retrieve algo_form details');
+      return of({});
+    }
   }
 }

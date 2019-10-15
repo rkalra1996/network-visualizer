@@ -11,10 +11,11 @@ import { StatisticalContentComponent } from './components/statistical-content/st
 import { StatisticalFormComponent } from './components/statistical-form/statistical-form.component';
 import { AlgoRunnerModule } from '../../algo-runner.module';
 import { RouteButtonComponent } from './components/route-button/route-button.component';
+import { PriorityCardComponent } from './components/priority-card/priority-card.component';
 
 @NgModule({
   declarations: [MainComponent, StatisticSidebarComponent, AlgoListComponent, DetailsPageComponent, StatisticalToolbarComponent, 
-    StatisticalContentComponent, StatisticalFormComponent, RouteButtonComponent],
+    StatisticalContentComponent, StatisticalFormComponent, RouteButtonComponent, PriorityCardComponent],
   imports: [
     CommonModule,
     StatisticsRoutingModule,
