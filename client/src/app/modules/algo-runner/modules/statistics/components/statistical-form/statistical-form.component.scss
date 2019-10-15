@@ -1,10 +1,8 @@
 .form-data-container {
     display: flex;
-    .main-form-section {
+    .main-form-section, .sub-form-section {
         flex: 1;
-    }
-    .sub-form-section {
-        flex: 1;
+        min-height: 200px;
     }
 }
 

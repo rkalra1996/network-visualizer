@@ -3,6 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import { map } from 'rxjs/operators';
 // tslint:disable-next-line: max-line-length
 import { StatisticSidebarDataService } from 'src/app/modules/algo-runner/services/statistic-sidebar-data-service/statistic-sidebar-data.service';
+import { StatisticalFormUtilityService } from '../../services/statistical-form-utility/statistical-form-utility.service';
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'algo-runner-details-page',
@@ -11,8 +12,10 @@ import { StatisticSidebarDataService } from 'src/app/modules/algo-runner/service
 })
 export class DetailsPageComponent implements OnInit {
   selectedAlgo: any;
+  processedData: object;
 
-  constructor(public activatedRoute: ActivatedRoute, public statisticSideBarData: StatisticSidebarDataService) { }
+  constructor(public activatedRoute: ActivatedRoute, public statisticSideBarData: StatisticSidebarDataService,
+    private statiscticalUtilitySrvc: StatisticalFormUtilityService) { }
 
   ngOnInit() {
     this.activatedRoute.params.pipe(map(p => p.id)).subscribe(data => {
@@ -26,12 +29,14 @@ export class DetailsPageComponent implements OnInit {
    */
   initializeData(data) {
        this.statisticSideBarData.algoList$.subscribe(list => {
+         // process the data accordingly
+        this.processedData = this.statiscticalUtilitySrvc.processData(list);
         if (data === undefined) {
           this.selectedAlgo = list[0];
         } else {
-          list.forEach( (item , i) => {
-            if (data === ( list[i].title.replace(/\s/g, '')).toLowerCase()) {
-             this.selectedAlgo = list[i];
+          list.forEach( (item) => {
+            if (data === ( item.title.replace(/\s/g, '')).toLowerCase()) {
+             this.selectedAlgo = item;
               }
           });
        }

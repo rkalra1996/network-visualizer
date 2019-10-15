@@ -9,12 +9,52 @@ private algoList = new BehaviorSubject<Array<any>>([]);
 public algoList$: Observable<Array<any>> = this.algoList.asObservable();
 
   private listOfAlgo = [{
-    title: 'Shortest Path', 
+    title: 'Shortest Path',
     description: `<p>The Shortest Path algorithm calculates the shortest (weighted)
 path between a pair of nodes. In this category, Dijkstra’s algorithm is the most well known.</p>
  <p>This algorithm can help us to find directions between two physical locations with the lowest travel cost.</p>`,
  imageUrl: `../../../../../assets/shortest_path.png`,
-algo_form: {}},
+algo_form: {
+  priority_card: true,
+  priority_dependency: {
+    fields: [
+      {
+        key: 'Relationship Property',
+        type: 'dropdown',
+        search: 'properties',
+        code: 'nodes'
+      }
+    ]
+  },
+  fields: [
+    {
+      key: 'Source Node',
+      type: 'dropdown',
+      search: 'label',
+      code: 'nodes'
+    },
+    {
+      key: 'Target Node',
+      type: 'dropdown',
+      search: 'label',
+      code: 'nodes'
+    },
+    {
+      key: 'Relationship Type',
+      type: 'dropdown',
+      search: 'type',
+      code: 'edges'
+    },
+    {
+      key: 'Relationship Property',
+      type: 'dropdown',
+      search: 'properties',
+      code: 'edges'
+    }
+  ]
+}
+
+},
 {title: 'Top Connected Node' , description: `<p>Top Connected Node measures the number of incoming and outgoing
 relationships from a node.</p>
 <p>The Top Connected Node algorithm can help us find popular nodes in a graph.</p>
@@ -27,7 +67,27 @@ online auction. The weighted centrality for fraudsters is significantly higher b
   Learning for Online Auction Fraud Detection</p>
 <p></p>` ,
 imageUrl: `../../../../../assets/top_connected_node.png`,
-algo_form: {}},
+algo_form: {
+  priority_card: false,
+  alternate_priority_values: {
+    fields: [
+      {
+        key: 'Direction',
+        type: 'dropdown',
+        search: 'direction',
+        code: 'direction'
+      }
+    ]
+  },
+  fields: [
+    {
+      key: 'Relationship Type',
+      type: 'dropdown',
+      search: 'type',
+      code: 'edges'
+    }
+  ]
+}},
 
 {title: 'Top Interacting Node' , description: `` ,
  imageUrl: ``,
