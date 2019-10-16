@@ -382,6 +382,10 @@ var getDataV2 = (queryObj) => {
             neo4Jdriver.close();
         });
 }
+
+function processRequestBasedOnNodesLength(requestData) {
+    return runQueryWithTypesV2({ relation: requestData.relationsArray, nodes: requestData.totalNodes, limit: requestData.nodeLimit, showDeleted: requestData.showDeleted });    
+}
 var getGraphDataV2 = (req) => {
     let relationshipTypesArray = [];
 
@@ -396,21 +400,42 @@ var getGraphDataV2 = (req) => {
                 console.log(`API : graph/data | WARNING : The given edge ${JSON.stringify(edge)} has no property type\n`);
             }
         });
-        console.log(`Edge types are ${relationshipTypesArray}\n`);
     }
     // process nodes and edges in the given format
     // 1. find all the types of nodes needed for the query
     if (req.body.hasOwnProperty('nodes') && req.body.nodes.length >= 0) {
         // data for nodes is present, get all the relevant information
-        if (req.body.nodes.length == 1) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 1, limit: req.body.limit, showDeleted: req.showDeleted });
-        } else if (req.body.nodes.length == 2) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 2, limit: req.body.limit, showDeleted: req.showDeleted })
-        } else if (req.body.nodes.length === 3) {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 3, limit: req.body.limit, showDeleted: req.showDeleted })
-        } else {
-            return runQueryWithTypesV2({ relation: relationshipTypesArray, nodes: req.body.nodes, length: 0, limit: req.body.limit, showDeleted: req.showDeleted })
-        }
+            let queryStatement = processRequestBasedOnNodesLength({
+                nodeLength: req.body.nodes.length, 
+                totalNodes: req.body.nodes, 
+                nodeLimit: req.body.limit, 
+                showDeleted: req.showDeleted, 
+                relationsArray: relationshipTypesArray
+            });
+            
+            console.log('query to execute is ', queryStatement);
+
+            // if queryStattement is null means it did not validate successfully
+            if (!queryStatement) {
+            console.log('error occured while running function processRequestBasedOnNodesLength()');                
+                    return new Promise((resolve, reject) => {
+                        reject('API : get/data | ERROR : Error encountered while creating an appropriate query for the database');
+                    });
+            }
+            else {
+                return runQuery(queryStatement).then(result => {
+                    let serializedData = serializer.Neo4JtoVisFormat(JSON.stringify(result.records));
+                    return new Promise((resolve, reject) => {
+                        resolve(serializedData);
+                    });
+                }).catch(err => {
+                    console.log('An error occured while runnning the query', err);
+                    return new Promise((resolve, reject) => {
+                        reject('API : get/data | ERROR : Error encountered while reading from database with 0 types');
+                    });
+                });
+            }
+
     } else if (req.body.hasOwnProperty('limit')) {
         return limitBasedInitGraphShow({ limit: req.body.limit, showDeleted: req.body.showDeleted });
     } else {
@@ -439,7 +464,152 @@ function getLimit(limit) {
     }
 }
 
+function isValidFiltersSearchObject(filterObjectToTest) {
+    let passed = false;
+    if (filterObjectToTest.constructor === Object && Object.keys(filterObjectToTest).length) {
+
+
+        if (filterObjectToTest.hasOwnProperty('nodes') || filterObjectToTest.hasOwnProperty('relation')) {
+            if (
+                filterObjectToTest.hasOwnProperty('nodes') && Array.isArray(filterObjectToTest.nodes) && 
+                filterObjectToTest.hasOwnProperty('relation') && Array.isArray(filterObjectToTest.relation)
+                ) {
+                passed = true;
+            } else {
+                // type of nodes / relation keys should be array
+                passed = false;
+            }    
+        }
+        else {
+            // object must contain atleast nodes / relation keys
+            passed = false;
+        }
+
+    }
+    else {
+        // non object types / empty objects are not allowed
+        passed = false;
+    }
+
+    return passed;
+}
+
+function createAttributeSubQuery(nodeToUse, nodeName = 'node') {
+    // sample :  node.<Name> IN ['', '',''] AND node.<Status> IN ['','','']
+    let nodeAttribute = nodeToUse.type;
+    let nodeAttributeValuesArray = nodeToUse.value;
+
+    let AttributeValue2String = `[${nodeAttributeValuesArray.map(d => `'${d}'`).join(',')}]`;
+
+    return `${nodeName}.\`${nodeAttribute}\` IN ${AttributeValue2String}`;
+}
+
+
+function generateSubQueryFromNodes(dataObj, nodeName, relationName, nodeName2) {
+    let nodeSubQuery;
+    let attributeSubQueriesArray = [];
+    // create a seperate string for node types since type is different from node properties
+    let typeArray = [];
+        if (dataObj.hasOwnProperty('nodes') && dataObj.nodes.length > 0) {
+            dataObj.nodes.forEach(nodeAttributeObject => {
+                if (nodeAttributeObject.type == 'Type') {
+                    typeArray.push(nodeAttributeObject.value);
+                } else {
+                    // a general subQuery for Attributes which is not Type
+                    let attributeSubQuery = createAttributeSubQuery(nodeAttributeObject, nodeName2);
+                    attributeSubQueriesArray.push(attributeSubQuery);
+                }
+            });
+
+            // STEP 1
+            // prepare final subQuery for the node type and  all the node properties
+            let nodeTypeSubQuery;
+            // check if the user has selected any types for the nodes
+            if (typeArray.length > 0) {
+                nodeTypeSubQuery = `[${createProperStringArray(typeArray[0])}]`;
+            } else {
+                nodeTypeSubQuery = '';
+            }
+
+
+            // create a proper query based on the whether node type is provided or not
+            let subQueryWithType = ''
+            let postSubQueryWithType;
+            if (!!nodeTypeSubQuery) {
+                subQueryWithType = `where labels(${nodeName2}) IN ${nodeTypeSubQuery}`;
+                postSubQueryWithType = 'AND';
+            }
+            else {
+                subQueryWithType = ''
+                postSubQueryWithType = 'WHERE';
+            }   
+            
+            
+            let joinedSubQueryForAttributes = attributeSubQueriesArray.join(' AND ');
+
+            // add the properties if user has selected atleast one
+            if (!!joinedSubQueryForAttributes) {
+                nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) ${subQueryWithType} ${postSubQueryWithType} ${joinedSubQueryForAttributes}`;
+            } else {
+                // when no attributes are selected, only type is selected
+                nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) ${subQueryWithType}`;
+            }
+        } else {
+            nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) `
+        }
+
+        return nodeSubQuery;
+}
+
+function generateSubQueryFromRelations(dataObj, relationName) {
+    let relationSubQuery;
+        if (dataObj.hasOwnProperty('relation') && dataObj.relation.length > 0) {
+            relationSubQueryArray2String = `[${dataObj.relation.map(d => `'${d}'`).join(',')}]`;
+
+            let relationPreClause;
+            if (dataObj.hasOwnProperty('nodes') && dataObj.nodes.length > 0) {
+                relationPreClause = 'AND';
+            } else {
+                relationPreClause = 'WHERE';
+            }
+            relationSubQuery = ` ${relationPreClause} ` + `type(${relationName}) IN ${relationSubQueryArray2String}`
+        } else {
+            relationSubQuery = '';
+        }
+
+        return relationSubQuery;
+}
+
 function runQueryWithTypesV2(dataObj) {
+    // dynamically create a query based on the attributes and relations provided
+    if(isValidFiltersSearchObject(dataObj)) {
+        // proceed further
+        let nodeName = 'n';
+        let nodeName2 = 'q';
+        let relationName = 'r';
+
+        let nodeSubQuery = generateSubQueryFromNodes(dataObj, nodeName, relationName, nodeName2);
+        // STEP 2
+        // create a subQuery for the relationship
+        let relationSubQuery = generateSubQueryFromRelations(dataObj, relationName);
+
+        // STEP 3
+        // join both the above subQueries
+        let finalQuery = nodeSubQuery + relationSubQuery;
+        // STEP 4
+        // add the limit phrase at the end
+        let limit = getLimit(dataObj.limit);
+        finalQuery = finalQuery + ` return ${nodeName}, ${relationName}, ${nodeName2} LIMIT ${limit};`;
+        return finalQuery;
+    }
+    else {
+        // the object provided for applied filters is not a valid object
+        console.log('An error occured while creating the query -> the object provided for applied filters is not a valid object', JSON.stringify(dataObj));
+                return null;
+    }
+}
+
+/* function runQueryWithTypesV2(dataObj) {
     // check if the object is empty---> return error if it is
     if (dataObj.constructor === Object) {
         let allSubQuery = [];
@@ -477,7 +647,7 @@ function runQueryWithTypesV2(dataObj) {
             let queryStatement = '';
             if (!!dataObj.relation && dataObj.nodes.length > 0) {
                 // not in use : this is for combin search of element and relationship
-                queryStatement = `match (p)-[r${dataObj.relation}]-(q) where labels(p) In [${dataObj.nodes[1].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
+                queryStatement = `match (p)-[r${dataObj.relation}]-(q) where labels(p) In [${dataObj.nodes[0].value}] or p.Name IN [${dataObj.nodes[0].value}] or p.Connection IN [${dataObj.nodes[2].value}] or p.Represent in [${dataObj.nodes[3].value}] or p.Status in [${dataObj.nodes[4].value}] or p.\`Understanding of SP Thinking\` in [${dataObj.nodes[5].value}] return p,r,q limit 50`;
                 if (dataObj.nodes.length == 1) {
                     if (dataObj.nodes[0].type === "Name") {
                         queryStatement = `match (p)-[r${dataObj.relation}]-(q) where p.Name IN [${dataObj.nodes[0].value}] return p,r,q limit 50`;
@@ -606,7 +776,7 @@ function runQueryWithTypesV2(dataObj) {
     } else {
 
     }
-}
+} */
 
 // to get properties of node from database
 var getGraphLabelData = (query) => {

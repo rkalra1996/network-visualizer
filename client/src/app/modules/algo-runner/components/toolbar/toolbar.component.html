@@ -1,0 +1,6 @@
+<!--Toolbar contains the statistics and costing buttons-->
+<button class="circularBtn" (click)="openCostingModal()"><i class="fas fa-dollar-sign"></i></button>
+<button class="circularBtn" (click)="initiateStatistics()"><i class="fas fa-chart-bar"></i></button>
+
+<!--costing modal to open only when user clicks on costing-->
+<algo-runner-costing-modal [modalData]="nodeRelDataObject"></algo-runner-costing-modal>

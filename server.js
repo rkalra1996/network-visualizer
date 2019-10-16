@@ -1,3 +1,6 @@
+// load environment variables
+require('dotenv').config()
+
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
@@ -21,7 +24,7 @@ app.use('/api', graphRoutes);
 app.use('/file', fileRoutes);
 app.use('/config', configRoutes);
 
-app.use(express.static(path.join(__dirname, 'client/dist/')));
+app.use(['/algorithm','/algorithm*', ''],express.static(path.join(__dirname, 'client/dist/')));
 
 
 

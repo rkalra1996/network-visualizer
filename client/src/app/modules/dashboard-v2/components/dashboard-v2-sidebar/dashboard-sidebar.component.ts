@@ -5,6 +5,7 @@ import { forkJoin, Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { SearchService } from 'src/app/modules/shared/services/search-service/search.service';
+import { ToolbarSharedService } from 'src/app/modules/algo-runner/services/toolbar-shared-service/toolbar-shared.service';
 
 @Component({
   selector: 'app-dashboard-sidebar',
@@ -66,9 +67,11 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
 
   public properties : Observable<boolean>;
   public types : Observable<boolean>;
+
+  private nodeRelationsDetailsObject: {nodes: object, relations: object} = {nodes: {}, relations: {}};
   constructor(
     private graphDataService: GraphDataService, private sharedGraphData: SharedGraphService,
-    private searchService: SearchService) { }
+    private searchService: SearchService, private toolbarShrdSrvc: ToolbarSharedService) { }
 
   ngOnInit() {
     this.getGraph();
@@ -98,11 +101,40 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Updates node relation details object
+   * @description This function updates the global nodeRelationDetails object and send it to algo runner for further use
+   * @param detailsObj
+   */
+  // tslint:disable-next-line: max-line-length
+  updateNodeRelationDetailsObject(detailsObj: {nodeTypes?: object, relationTypes?: any, nodeProperties?: object, relationProperties?: object}) {
+    if (detailsObj.hasOwnProperty('nodeTypes')) {
+      this.nodeRelationsDetailsObject.nodes['types'] = detailsObj.nodeTypes;
+    }
+    if (detailsObj.hasOwnProperty('relationTypes')) {
+      this.nodeRelationsDetailsObject.relations['types'] = detailsObj.relationTypes;
+    }
+    if (detailsObj.hasOwnProperty('nodeProperties')) {
+      this.nodeRelationsDetailsObject.nodes['properties'] = detailsObj.nodeProperties;
+    }
+    if (detailsObj.hasOwnProperty('relationProperties')) {
+      this.nodeRelationsDetailsObject.relations['properties'] = detailsObj.relationProperties;
+    }
+    // send it to algo runner
+    this.toolbarShrdSrvc.sendNodeRelationDetails(this.nodeRelationsDetailsObject);
+    this.toolbarShrdSrvc.sendNodeRelationDetailsStatic(this.nodeRelationsDetailsObject);
+  }
+
   // set all data in sidebar dropdown
   getGraph() {
     this.totalAtrributeOptions = [];
     // fetch the properties of all the nodes and relationships
     forkJoin([this.graphDataService.getGraphProperties(), this.getNodeTypes()]).subscribe(results =>{
+      this.updateNodeRelationDetailsObject({
+        nodeTypes: results[1],
+        nodeProperties: results[0]['nodes'],
+        relationProperties: results[0]['relations']}
+        );
       // results[0] is our character
       // results[1] is our character homeworld
       if(results[0].hasOwnProperty('nodes')){
@@ -124,6 +156,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     this.getRelationTypes().subscribe(response => {
       // this.graphInitData.push(data);
       this.relationOptions = this.relationTypeOptions;
+      this.updateNodeRelationDetailsObject({relationTypes: this.relationTypeOptions});
     });
   }
 
@@ -131,6 +164,10 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
     return self.indexOf(value) === index;
   }
 
+  /**
+   * Search graph
+   * @description The function gets called whenever the apply filter on attributes is needed
+   */
   searchGraph() {
     let requestBody;
     this.selectedGraph = [];
@@ -147,9 +184,7 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
         requestBody = {};
       }
     }
-    this.sharedGraphData.setGraphData(requestBody);
-    let obj = { event: 'search' };
-    this.eventClicked.emit(obj);
+    return requestBody;
   }
 
   // Method gives new edgesArray with related node ids
@@ -179,37 +214,6 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       });
       return temId;
     }
-  }
-
-  searchElement() {
-    let temdep = [];
-    let temper = [];
-    //   if(this.graphInitData.length>0){
-    //   if(this.selectedName.length>0){
-    //     this.selectedName.filter(name=>{
-    //       let selectedNodeId=this.getSelectedNodeId(name);
-    //       console.log('id',selectedNodeId);
-    //       let temNewRelatedNodeId = this.getRelatedNodeIdArrayFromEdges(selectedNodeId);
-    //       console.log('new',temNewRelatedNodeId);
-    //       if(temNewRelatedNodeId){
-    //         temNewRelatedNodeId.filter(id=>{
-    //           this.graphInitData[0]['seperateNodes'].filter(node=>{
-    //           if(id === node.id && node.type[0] === 'Department'){
-    //             temdep.push(node.label);
-    //           }else if(id === node.id && node.type[0] === 'Person'){
-    //             temper.push(node.label);
-    //             }
-    //           });
-    //         });
-    //       }
-    //      });
-    //      temdep = temdep.filter(this.onlyUnique);
-    //      temper = temper.filter(this.onlyUnique);
-    //     this.typeOptions = temdep;
-    //     this.representOptions = temper;
-    //   }
-    // }
-
   }
 
   resetGraph() {
@@ -254,72 +258,13 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       this.selectedRelation.map(rel => {
         this.selectedRelationship.push({ type: rel });
       });
-      // let temNodes = [];
-      // if(this.selectedName.length > 0 || this.selectedType.length > 0){
-      //   let temnode = [];
-      //    temnode = this.selectedNodeCheck();
-      //   temnode.filter(node=>{
-      //     temNodes.push(node);
-      //   })
-      // }
-      //
-      //   if(temNodes.length > 0){
-      //      requestBody= { nodes: temNodes, edges: this.selectedRelationship };
-      //   }else{
       requestBody = { nodes: [], edges: this.selectedRelationship };
-      // }
     } else {
       // if no selected element
       requestBody = {};
     }
-    this.sharedGraphData.setGraphData(requestBody);
-    const obj = { event: 'search' };
-    this.eventClicked.emit(obj);
+    return requestBody;
   }
-
-  // this return selected name and type
-  // selectedNodeCheck() {
-  //   if (this.selectedName.length > 0 && this.selectedType.length > 0) {
-  //     let temNodeArray = [];
-  //     temNodeArray.push({ type: "Name", value: this.selectedName });
-  //     temNodeArray.push({ type: "Type", value: this.selectedType });
-  //     return temNodeArray;
-  //   } else if (this.selectedType.length > 0) {
-  //     return [{ type: "Type", value: this.selectedType }];
-  //   } else if (this.selectedName.length > 0) {
-  //     return [{ type: "Name", value: this.selectedName }];
-  //   }
-  // }
-  // noderelationSearchGraph() {
-  //   if (
-  //        this.selectedName.length > 0
-  //        || this.selectedType.length > 0
-  //        || this.selectedConnection.length > 0
-  //        || this.selectedRepresent.length > 0
-  //        || this.selectedStatus.length > 0
-  //        || this.selectedUnderstanding.length > 0
-  //        && this.selectedRelation.length > 0
-  //        ) {
-  //     this.selectedRelationship = [];
-  //     this.selectedRelation.map(rel => {
-  //       this.selectedRelationship.push({ type: rel });
-  //     })
-  //   }
-  //   this.selectedGraph = [];
-  //   this.selectedGraph.push({ type: "Name", value: this.selectedName });
-  //   this.selectedGraph.push({ type: "Type", value: this.selectedType });
-  //   this.selectedGraph.push({ type: "Connection", value: this.selectedConnection });
-  //   this.selectedGraph.push({ type: "Represent", value: this.selectedRepresent });
-  //   this.selectedGraph.push({ type: "Status", value: this.selectedStatus });
-  //   this.selectedGraph.push({ type: "Thinking", value: this.selectedUnderstanding });
-  //   this.selectedGraph.push({ type: "Url", value: this.selectedUrl });
-  //   let requestBody = { nodes: this.selectedGraph, edges: this.selectedRelationship };
-
-  //   this.sharedGraphData.setGraphData(requestBody);
-  //   let obj = { event: 'search' }
-  //   this.eventClicked.emit(obj);
-  // }
-
 
   networkElementClick(element) { }
 
@@ -494,5 +439,29 @@ export class DashboardSidebarComponent implements OnInit, OnChanges {
       this.checkRotate();
       return true;
     }
+  }
+
+
+  /**
+   * Hits search graph
+   * @description The function is a common function which will gather the selected filters from the sidebar and send it furthur
+   */
+  hitSearchGraph() {
+
+    const selectedAttributes = this.searchGraph();
+    const selectedRelations = this.relationSearchGraph();
+
+    console.log('search graph and relation search graph has returned the following ');
+    console.log(selectedAttributes);
+    console.log(selectedRelations);
+
+    // join both the request bodies into one and send it for search
+
+    const RequestBody = Object.assign({}, selectedRelations, selectedAttributes);
+
+    this.sharedGraphData.setGraphData(RequestBody);
+    // send the click event to reload the graph
+    const obj = { event: 'search' };
+    this.eventClicked.emit(obj);
   }
 }

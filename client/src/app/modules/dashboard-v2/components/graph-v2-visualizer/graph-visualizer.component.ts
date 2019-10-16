@@ -1,12 +1,16 @@
 import { Component, OnInit, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
 import { GraphDataService } from 'src/app/modules/core/services/graph-data-service/graph-data.service';
-import { Network, DataSet, Node, Edge, IdType } from 'vis';
+import { Network, DataSet} from 'vis';
 import * as _ from 'lodash';
 import { SharedGraphService } from 'src/app/modules/core/services/shared-graph.service';
+
 import { elementOperation } from './../../interfaces/elementOperation';
+import {AlgoRunnerExportInterface} from './../../interfaces/algo-runner-export';
 
 import {MaterialService} from './../../../custom-material/services/material-core/material.service';
 import { ColorServiceService } from '../../services/colorService/color-service.service';
+import { ToolbarSharedService } from 'src/app/modules/algo-runner/services/toolbar-shared-service/toolbar-shared.service';
+import { CoreFilterService } from 'src/app/modules/redux/services/core-filter-service/core-filter.service';
 
 @Component({
   selector: 'app-graph-visualizer',
@@ -48,47 +52,6 @@ export class GraphVisualizerComponent implements OnInit {
   public nodeLimit: any = 149;
   public emptyNodeLimit = 179;
   public colorConfig = {};
-  // public colorConfig = {
-  //   defaultColor: {
-  //     Academia: '#ff4444',
-  //     Consulting: '#ffbb33',
-  //     Government: '#00C851',
-  //     'Impact Investor': '#33b5e5',
-  //     'International Agency': '#CC0000',
-  //     Media: '#FF8800',
-  //     'NGO/CBO': '#007E33',
-  //     People: '#0099CC',
-  //     Philanthropy: '#9933CC',
-  //     Platform: '#0d47a1',
-  //     'Private Sector': '#2BBBAD',
-  //     'Research Institute': '#c51162'
-
-  //   },
-  //   selectedColor: {
-  //     Academia: '#ff4444',
-  //     Consulting: '#ffbb33',
-  //     Government: '#00C851',
-  //     'Impact Investor': '#33b5e5',
-  //     'International Agency': '#CC0000',
-  //     Media: '#FF8800',
-  //     'NGO/CBO': '#007E33',
-  //     People: '#0099CC',
-  //     Philanthropy: '#9933CC',
-  //     Platform: '#0d47a1',
-  //     'Private Sector': '#2BBBAD',
-  //     'Research Institute': '#c51162'
-
-  //   },
-  //   deletedColor: {
-  //     colorCode: '#C0C0C0',
-  //     highlightColorCode: '#9a9a9a'
-  //   },
-  //   restoreColor: {
-  //     colorCode: '#96C1FA',
-  //     highlightColorCode: '#249BFC'
-  //   }
-  // };
-
   public editNodeData = null;
   public editRelationData = null;
   public restoredData = null;
@@ -121,11 +84,15 @@ export class GraphVisualizerComponent implements OnInit {
   public allGraphData = {};
   public filteredGraphData = {};
 
+  // Variable to send the graph data and filtered query object to algo runner for future use
+  private algoRunnerData: AlgoRunnerExportInterface = {};
+
   constructor(
     private graphService: GraphDataService,
     private sharedGraphService: SharedGraphService,
     private snackBar: MaterialService,
-    private colorService: ColorServiceService) { }
+    private colorService: ColorServiceService, private algoRunnerShrdSrvc: ToolbarSharedService,
+    private CoreFilterSrvc: CoreFilterService) { }
 
   ngOnInit() {
     this.loader = true;
@@ -280,6 +247,8 @@ export class GraphVisualizerComponent implements OnInit {
     } else {
       requestBody["limit"] = this.defaultNodeLimit;
     }
+    // send the data to algo runner for future use
+    this.updateAlgoRunnerObject({nodeFilter: requestBody});
 
     this.graphService.getSearchDataV2(requestBody).subscribe(result => {
       // console.log('recieved data from graph service', result);
@@ -314,6 +283,18 @@ export class GraphVisualizerComponent implements OnInit {
       }
       // console.log('graphData :', this.graphData);
       // display data
+
+      // send the data to algo runner for future use
+      let dataForAlgoRunner = {
+        completeGraph: this.allGraphData,
+        deletedGraph: this.filteredGraphData,
+        propjectedGraph: this.graphData
+      }
+      this.updateAlgoRunnerObject(dataForAlgoRunner);
+
+      // update the redux store with this data
+      this.CoreFilterSrvc.updateAppliedFiltersData({request: requestBody, data: dataForAlgoRunner});
+
       const container = document.getElementById('graphViewer');
       this.network = new Network(container, this.graphData, this.graphOptions);
       this.network.on('doubleClick', (event) => {
@@ -326,6 +307,31 @@ export class GraphVisualizerComponent implements OnInit {
       this.loader = true;
       this.graphData = {};
     });
+  }
+
+  /**
+   * Updates algo runner object
+   * @description It is used to update the global algo runner object at various times the apply/reset/showDeleted buttons are used
+   * @param newObject
+   */
+  updateAlgoRunnerObject(newObject: AlgoRunnerExportInterface) {
+    if (newObject.hasOwnProperty('completeGraph')) {
+      this.algoRunnerData.completeGraph = newObject.completeGraph;
+    }
+    if (newObject.hasOwnProperty('deletedGraph')) {
+      this.algoRunnerData.deletedGraph = newObject.deletedGraph;
+    }
+    if (newObject.hasOwnProperty('nodeFilter')) {
+      this.algoRunnerData.nodeFilter = newObject.nodeFilter;
+    }
+    if (newObject.hasOwnProperty('relationFilter')) {
+      this.algoRunnerData.relationFilter = newObject.relationFilter;
+    }
+    if (newObject.hasOwnProperty('propjectedGraph')) {
+      this.algoRunnerData.propjectedGraph = newObject.propjectedGraph;
+    }
+    // send the final prepared object
+    this.algoRunnerShrdSrvc.sendRecentFilters(this.algoRunnerData);
   }
 
   updateColorConfigObject(resultObj){

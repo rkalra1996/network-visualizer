@@ -1,0 +1,10 @@
+<div class="row">
+    <label for="typeahead-basic" class="costingKey">{{labelName}}</label>
+    <input 
+    id="typeahead-basic" type="text" 
+    class="form-control DropdownContainer" (ngModelChange)="onDropdownChange($event)" 
+    [ngbTypeahead]="search"
+    (focus)="focus$.next($event.target.value)"
+    #instance="ngbTypeahead"
+    />
+</div>

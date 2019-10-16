@@ -3,12 +3,12 @@ import { Routes, RouterModule } from "@angular/router";
 
 const routes: Routes = [
   {
-    path: "v2",
-    loadChildren: "./modules/dashboard/dashboard.module#DashboardModule"
+    path: 'algorithm',
+    loadChildren: './modules/algo-runner/algo-runner.module#AlgoRunnerModule'
   },
   {
-    path: "",
-    loadChildren: "./modules/dashboard-v2/dashboard-v2.module#DashboardModule"
+    path: '',
+    loadChildren: './modules/dashboard-v2/dashboard-v2.module#DashboardModule'
   }
 ];
 

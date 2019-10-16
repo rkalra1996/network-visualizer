@@ -1,7 +1,7 @@
 .container-fluid .btn-group {
     margin-right: 20px;
     button {
-        border-radius: 0;
+        border-radius: 50%;
         background: #e4e4e4;
         color: #000;
         -webkit-box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
@@ -47,14 +47,14 @@
     }
 }
 
-.modal-header {
+/* .modal-header {
     background: #5f5f5f;
     color: white;
     border-color: #5f5f5f;
     button.close {
         color: white;
     }
-}
+} */
 
 ::ng-deep .modalItem {
     padding: 10px;
@@ -213,4 +213,32 @@ button:disabled {
 
 #id_newLabelNode {
     padding-left: 3px;
+}
+
+.circularBtn {
+    font-size: 1.5rem;
+    width: 40px;
+    padding-left: 0px;
+    border-radius: 50%;
+    height: 40px;
+    border: 0;
+    -webkit-box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+    -moz-box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+    box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+    img {
+        width: 40px;
+    }
+}
+
+.circularBtn:active {
+    box-shadow: none;
+    transition: .5s;
+}
+
+.circularBtn:focus {
+    outline: 0;
+}
+
+.algorithms {
+    padding-right: 0;
 }
