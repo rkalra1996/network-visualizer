@@ -1,0 +1,23 @@
+button {
+    margin-right : 14px;
+}
+
+.circularBtn {
+    font-size: 1.5rem;
+    width: 44px;
+    border-radius: 50%;
+    height: 42px;
+    border: 0;
+    -webkit-box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+    -moz-box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+    box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+}
+
+.circularBtn:active {
+    box-shadow: none;
+    transition: .5s;
+}
+
+.circularBtn:focus {
+    outline: 0;
+}

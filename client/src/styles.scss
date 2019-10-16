@@ -1,0 +1,62 @@
+/* You can add global styles to this file, and also import other style files */
+@import './assets//scss//modal.scss';
+
+body {
+    background: #F5F5F5;
+}
+
+button {
+    cursor: pointer !important;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+// snackbar css
+.cdk-overlay-pane {
+    min-width: 100%;
+}
+
+.mat-snack-bar-container {
+    min-width: 30% !important;
+}
+
+.bg-black {
+    // default
+}
+
+.bg-error {
+    background-color: rgba(203, 36, 49, 1) !important;
+    box-shadow: 16px 25px 33px -11px rgba(221, 39, 54, 1) !important;
+    color: white;
+}
+
+.bg-success {
+    background-color: #33691E !important;
+    box-shadow: 16px 25px 33px -11px #33691E !important;
+    color: white;
+}
+
+.bg-warn {
+    background-color: rgba(240, 182, 58, 1) !important;
+    box-shadow: 16px 25px 33px -11px rgb(255, 177, 95) !important;
+    color: white;
+    min-width: 100%;
+}
+
+.bg-black,
+.bg-success,
+.bg-error,
+.bg-warn {
+    .mat-simple-snackbar-action {
+        background-color: transparent !important;
+        color: white !important;
+    }
+}

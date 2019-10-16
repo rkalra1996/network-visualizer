@@ -1,0 +1,244 @@
+.container-fluid .btn-group {
+    margin-right: 20px;
+    button {
+        border-radius: 50%;
+        background: #e4e4e4;
+        color: #000;
+        -webkit-box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+        -moz-box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+        box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+    }
+    button:active {
+        box-shadow: none;
+        transition: 0.5s;
+    }
+}
+
+.btn-group:active {
+    outline: none;
+    text-decoration: none;
+}
+
+.createLink,
+.editLink,
+.deleteLink {
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.dropdown-menu {
+    .dropdown-item {
+        cursor: pointer;
+        span {
+            margin-right: 8px;
+        }
+    }
+    .dropdown-item:active {
+        background-color: white;
+    }
+    .create:hover {
+        color: blue;
+    }
+    .edit:hover {
+        color: green;
+    }
+    .delete:hover {
+        color: red;
+    }
+}
+
+/* .modal-header {
+    background: #5f5f5f;
+    color: white;
+    border-color: #5f5f5f;
+    button.close {
+        color: white;
+    }
+} */
+
+::ng-deep .modalItem {
+    padding: 10px;
+    .fa-info-circle {
+        font-size: 14px;
+        cursor: pointer;
+    }
+}
+
+::ng-deep .modalItem.buttonContainer {
+    position: relative;
+}
+
+::ng-deep .sectionName {
+    display: inline-block;
+    margin: 0;
+    max-width: 50%;
+}
+
+::ng-deep .inputSpan {
+    position: absolute;
+    left: 50%;
+    input {
+        border: 1px solid #acacac;
+        outline: none;
+    }
+}
+
+::ng-deep .propertyLabel {
+    padding-top: 13px;
+    padding-bottom: 13px;
+    text-align: center;
+}
+
+::ng-deep .supportIcons {
+    position: absolute;
+    right: 6%;
+    cursor: pointer;
+    cursor: pointer;
+    color: red;
+}
+
+::ng-deep .supportIcons.customDelete {
+    font-size: 20px;
+}
+
+input#propertyKey {
+    height: 30px;
+}
+
+::ng-deep .newLink {
+    float: right;
+    padding: 5px 7px;
+}
+
+.newLink2 {
+    position: absolute;
+    right: 0;
+    top: 12px;
+    padding: 5px 7px;
+}
+
+.lower {
+    margin-top: 30px;
+}
+
+.newLink:hover,
+.newLink2:hover {
+    background-color: #5f5f5f;
+    color: white !important;
+    transition: .5s;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.newTemplate {
+    max-width: 35% !important;
+    div {
+        max-width: 100%;
+    }
+}
+
+i.fas.fa-info-circle {
+    color: black !important;
+}
+
+input[disabled="true"] {
+    cursor: not-allowed;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    pointer-events: all !important;
+}
+
+.deleteBtn,
+.mailBtn,
+.restoreBtn {
+    cursor: pointer !important;
+}
+
+.later {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.later:hover {
+    background-color: #5f5f5f;
+    color: white;
+}
+
+.mailBtn,
+.left {
+    margin-right: auto;
+}
+
+.mailBtn {
+    padding: 5px 8px;
+}
+
+.mailBtn:hover {
+    transition: 0.5s;
+    background: #e4e4e4;
+    border-radius: .25rem;
+    color: #000;
+    box-shadow: 2px 9px 17px -1px #cccccc;
+}
+
+.mailBtn:active {
+    box-shadow: none;
+    transition: .5s;
+}
+
+::ng-deep .newPropertyGroup {
+    width: 100%;
+    display: block;
+    background: #cccccc;
+}
+
+::ng-deep .normalTextBox {
+    max-width: 14em;
+}
+
+::ng-deep .typeTextBox {
+    max-width: 20em;
+}
+
+.typeTextBox input {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
+.ui.input.typeTextBox {
+    width: 14em;
+}
+
+#id_newLabelNode {
+    padding-left: 3px;
+}
+
+.circularBtn {
+    font-size: 1.5rem;
+    width: 40px;
+    padding-left: 0px;
+    border-radius: 50%;
+    height: 40px;
+    border: 0;
+    -webkit-box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+    -moz-box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+    box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+    img {
+        width: 40px;
+    }
+}
+
+.circularBtn:active {
+    box-shadow: none;
+    transition: .5s;
+}
+
+.circularBtn:focus {
+    outline: 0;
+}
+
+.algorithms {
+    padding-right: 0;
+}

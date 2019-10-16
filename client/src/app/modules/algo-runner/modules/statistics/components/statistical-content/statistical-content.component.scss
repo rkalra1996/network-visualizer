@@ -1,0 +1,38 @@
+.statisticalDetails{
+    height: 429px;
+}
+.staticData{
+    position: absolute;
+    width: 46%;
+}
+::ng-deep .staticText{
+    p {
+        font-size: 1.5rem;
+        color: #7F7F7F;
+    }
+}
+
+.sampleImg{
+    float: right;
+    width: 42%;
+}
+.staticText{
+    padding: 1.5rem;
+}
+h1{
+    padding-left: 1.375rem;
+}
+.staticText{
+    height: 300px;
+    overflow-y: auto;
+}
+.imgContainer{
+ float: right;
+ margin-right: 35px;   
+}
+p{
+    text-align: center;
+    font-size: 5rem;
+    color: #7F7F7F;
+    padding-top: 8%;
+}

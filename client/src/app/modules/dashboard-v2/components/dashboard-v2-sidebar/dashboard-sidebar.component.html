@@ -1,0 +1,83 @@
+<div class="wrapper sidebar-wrapper">
+    <div class="sidebarBody p-0">
+        <div class="sidebarBodyTitle">
+            <p>Filter By Attributes</p>
+        </div>
+        <div class="sidebarElements" *ngIf="totalAtrributeOptions?.length > 0">
+            <div class="item-container">
+                <div class="item" *ngFor="let attributeOptions of totalAtrributeOptions; let i = index">
+                    <div *ngIf="attributeOptions">
+                        <span class="">
+
+                        </span>
+                        <a class="item-text hoverable" (click)="networkElementClick(attributeOptions['attribute']);attributeOptions['rotate'] = !attributeOptions['rotate']" data-toggle="collapse" href="#collapseExample{{i}}" role="button" [attr.aria-expanded]="attributeOptions['rotate']"
+                            [attr.aria-controls]="'collapseExample'+i" [ngClass]="{'rotate': attributeOptions['rotate'], 'no-rotate': !attributeOptions['rotate']}">{{attributeOptions['attribute']}}
+                            <span class="ele-count count-org">{{attributeOptions['options'].length}}</span>
+                        </a>
+                        <span class="fas fa-chevron-right" data-toggle="collapse" [attr.href]="'#collapseExample'+i" role="button" [attr.aria-expanded]="attributeOptions?.rotate" [attr.aria-controls]="'collapseExample'+i" (click)="attributeOptions['rotate'] = !attributeOptions['rotate']"
+                            [ngClass]="{'rotate': attributeOptions?.rotate, 'no-rotate': !attributeOptions?.rotate}">
+                        </span>
+                        <div class="collapse" [ngClass]="{'show-drop': attributeOptions?.rotate, 'hide-drop': !attributeOptions?.rotate}">
+                            <sui-multi-select [(ngModel)]="selectedAttributeOptions[attributeOptions['attribute']]" [options]="attributeOptions['options']" [maxSelected]="15"  #totalAtrributeOptions>
+                                <div class="ui icon search input">
+                                    <i class="search icon"></i>
+                                    <input suiSelectSearch type="text" placeholder="Search {{attributeOptions['attribute']}}...">
+                                </div>
+                                <div class="scrolling menu">
+                                    <sui-select-option *ngFor="let o of totalAtrributeOptions.filteredOptions" [value]="o"></sui-select-option>
+                                </div>
+                            </sui-multi-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="btn-container d-flex justify-content-around">
+            <div class="searchBtnWrapper btn-sidebar">
+                <button class="btn btn-default btn-md searchBtn" (click)="resetGraph()">Reset</button>
+            </div>
+            <div class="searchBtnWrapper btn-sidebar">
+                <button class="btn btn-default btn-md searchBtn" (click)="hitSearchGraph()">Apply</button>
+            </div>
+
+        </div> -->
+        <div class="sidebarBodyTitle">
+            <p>Filter By Relationships</p>
+        </div>
+        <div class="sidebarElements">
+            <div class="item">
+                <sui-multi-select [(ngModel)]="selectedRelation" [options]="relationOptions" [maxSelected]="5" #relation>
+                    <div class="ui icon search input">
+                        <i class="search icon"></i>
+                        <input suiSelectSearch type="text" placeholder="Search Relationships...">
+                    </div>
+                    <div class="scrolling menu">
+                        <sui-select-option *ngFor="let o of relation.filteredOptions" [value]="o"></sui-select-option>
+                    </div>
+                </sui-multi-select>
+                <!-- <div class="rel-tabs-container" *ngFor="let r of relationOptions">
+                    <div class="rel-tab" (click)="relationclickEvent(r)" id={{r}}>
+                        <p>{{r}}</p>
+                    </div>
+                </div> -->
+                <div class="btn-container d-flex justify-content-around custom-space">
+                    <div class="searchBtnWrapper btn-sidebar">
+                        <button class="btn btn-default btn-md searchBtn" (click)="resetGraph()">Reset</button>
+                    </div>
+                    <div class="searchBtnWrapper btn-sidebar">
+                        <button class="btn btn-default btn-md searchBtn" (click)="hitSearchGraph()">Apply</button>
+                    </div>
+
+                </div>
+                <div class="btn-container d-flex justify-content-around">
+                    <span>Show deleted data</span>
+                    <app-toggle-switch (toggleEvent)="NodeLimitToggleHandler($event)"></app-toggle-switch>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="searchBtnWrapper btn-sidebar">
+            <button class="btn btn-default btn-md searchBtn" (click)="noderelationSearchGraph()">Apply Both</button>
+        </div> -->
+    </div>
+
+</div>

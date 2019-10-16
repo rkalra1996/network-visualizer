@@ -1,0 +1,31 @@
+<app-global-loader *ngIf="loader"></app-global-loader>
+<app-color-panel *ngIf="!loader"></app-color-panel>
+<div class="wrapper-countlimit" *ngIf="!loader">
+    <div class="selected-count">{{selectedCount}} Elements Found</div>
+    <div class="nodeLimit">
+        <p class="nodelimit-head">Element Limit :</p>
+        <input type="text" [(ngModel)]=nodeLimit (ngModelChange)="limitChange(nodeLimit, popup)" suiPopup popupText="{{errorMessage}}" popupTrigger="manual" #popup="suiPopup" (keyup)="sendLimit($event, nodeLimit)">
+    </div>
+    <div class="float-right-toolbar">
+        <div class="creationToolbar">
+            <app-create-nodes [nodeTypes]="totalTypesArray" 
+            [editData]="editNodeData" [editRelData]="editRelationData" 
+            [hideDelModal]="hideDelModal" (nodeBtnEvent)="nodeEventCapture($event)" 
+            (edgeBtnEvent)="edgeEventCapture($event)" [newNodeCreated]="promptRelationCreateAfterNode"
+            (cleanData)="cleanPropertyBindingData($event)" (restoreEvent)="initRestoreData($event)"
+            [restoredDataResponse]="restoredData"></app-create-nodes>
+        </div>
+        <!-- graph exporter -->
+        <div class="export">
+            <app-graph-exporter></app-graph-exporter>
+        </div>
+    </div>
+</div>
+<div class="graph-container" id="graphViewer">
+</div>
+<ng-template *ngIf="showlimiterror" let-popup #popupTemplate>
+    <div class="header">Rating</div>
+    <div class="content">
+        <sui-rating class="star" (click)="popup.close()"></sui-rating>
+    </div>
+</ng-template>

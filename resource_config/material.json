@@ -1,0 +1,10 @@
+{
+    "DEFAULT_SNACKBAR_CONFIG" : {
+        "duration" : 5000,
+        "verticalPosition": "top",
+        "default_text": "This is a snackbar",
+        "default_class": "bg-black",
+        "default_action": "Okay",
+        "default_direction": "top"
+    }
+}

@@ -1,0 +1,2 @@
+<app-dashboard-sidebar (eventClicked)="childEventClicked($event)" (nodeTypesEvent)="sendTypes($event)" [newNodeCreated]="newNodeCreated" [nodeLimitEnterEvent] = "nodeLimitValue"></app-dashboard-sidebar>
+<app-graph-visualizer (newNodeCreated)="childEventClicked2($event)" [event]="clickedEvent" (nodeLimitEvent)="sendLimitToSidebar($event)" [totalTypesArray]="totalTypesArray"></app-graph-visualizer>

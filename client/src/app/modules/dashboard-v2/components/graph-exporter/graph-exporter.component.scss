@@ -1,0 +1,33 @@
+.export-btn {
+    button {
+        background: #e4e4e4;
+        color: #000;
+        -webkit-box-shadow: -4px 4px 14px -9px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: -4px 4px 14px -9px rgba(0, 0, 0, 0.75);
+        box-shadow: -4px 4px 14px -9px rgba(0, 0, 0, 0.75);
+    }
+    button:active {
+        box-shadow: none;
+        transition: 0.5s;
+    }
+}
+
+.circularBtn {
+    font-size: 1.5rem;
+    width: 40px;
+    border-radius: 50%;
+    height: 40px;
+    border: 0;
+    -webkit-box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+    -moz-box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+    box-shadow: 2px 9px 17px -1px rgba(204, 204, 204, 1);
+}
+
+.circularBtn:active {
+    box-shadow: none;
+    transition: .5s;
+}
+
+.circularBtn:focus {
+    outline: 0;
+}

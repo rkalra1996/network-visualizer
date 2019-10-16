@@ -1,0 +1,102 @@
+.navbar-default {
+    background: #fff;
+    border-width: 0;
+    margin-bottom: 0 !important;
+    height: 102px;
+    -webkit-transition: background-color 0.3s, height 0.3s;
+    transition: background-color 0.3s, height 0.3s;
+    border-bottom: 2px solid #898787;
+}
+
+img {
+    height: 90px;
+    margin-left: 10%;
+}
+
+.st-navbar-mini .navbar-default {
+    background-color: rgba(40, 40, 40, 0.95);
+    height: 60px;
+}
+
+.st-navbar-mini .navbar-default .navbar-brand {
+    padding: 15px 15px;
+}
+
+.st-navbar-mini .navbar-default .navbar-brand img {
+    height: 30px;
+}
+
+.st-navbar-mini .navbar-default .navbar-nav>li.active>a,
+.st-navbar-mini .navbar-default .navbar-nav>li.active a:hover,
+.st-navbar-mini .navbar-default .navbar-nav>li.active a:focus,
+.st-navbar-mini .navbar-default .navbar-nav>li.active a:active {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.navbar-brand {
+    height: auto;
+    -webkit-transition: padding 0.3s;
+    transition: padding 0.3s;
+}
+
+.navbar-brand img {
+    height: 80px;
+    width: 180px;
+    margin-left: -300px;
+    -webkit-transition: height 0.3s;
+    transition: height 0.3s;
+}
+
+.nav>li>a {
+    font-family: "Oswald";
+    font-size: 15px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #565656;
+    -webkit-transition: color 0.3s, background-color 0.3s, padding 0.3s;
+    transition: color 0.3s, background-color 0.3s, padding 0.3s;
+}
+
+.navbar-nav>li>a:hover,
+.navbar-nav>li>a:focus,
+.navbar-nav>li>a:active {
+    color: #4ecdc4;
+    outline-width: 0;
+}
+
+.navbar-nav>li.active>a,
+.navbar-nav>li.active a:hover,
+.navbar-nav>li.active a:focus,
+.navbar-nav>li.active a:active {
+    color: #4ecdc4;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #fff;
+}
+
+.navbar-default .navbar-nav>li.active>a,
+.navbar-default .navbar-nav>li.active a:hover,
+.navbar-default .navbar-nav>li.active a:focus,
+.navbar-default .navbar-nav>li.active a:active {
+    color: #4ecdc4;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus {
+    color: #4ecdc4;
+}
+
+@media (min-width: 768px) {
+    .navbar-nav>li>a {
+        padding-top: 41px;
+        padding-bottom: 41px;
+    }
+    .st-navbar-mini .navbar-default .navbar-nav>li>a {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+}

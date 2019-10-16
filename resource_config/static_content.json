@@ -1,0 +1,46 @@
+{
+    "error": {
+        "server" : {
+            "m001": "Cannot create a relation without a type",
+            "m002": "Cannot update a relation without a type",
+            "m003": "Cannot update a relation which doesn't have a source or target",
+            "m004": "cannot delete a node without specifying an id"
+        },
+        "API": {
+            "relation" : {
+                "update": {
+                    "a001": "API : relation/update | ERROR : Error encountered while reading from database"
+                },
+                "create" : {
+                    "b001" : "API : relation/create | ERROR : Error encountered while reading from database"
+                },
+                "delete" : {
+                    "c001" : "API : relation/delete | ERROR : Error encountered while reading from database"
+                },
+                "read" : {
+                    "d001": "API : relation/read | ERROR : Error encountered while reading from database"
+                }
+            },
+            "node" : {
+                "update" : {
+                    "a001" : ""
+                },
+                "create" : {
+                    "b001": ""
+                },
+                "delete" : {
+                    "c001": "API : node/delete | ERROR : Error encountered while reading from database"
+                },
+                "read" : {
+                    "d001" : ""
+                }
+            },
+            "properties" : {
+                "fetch" : {
+                    "a001": "API : /graph/properties/ | ERROR : Error encountered while reading from database"
+                }
+            }
+        }
+    },
+    "succcess": {}
+}
