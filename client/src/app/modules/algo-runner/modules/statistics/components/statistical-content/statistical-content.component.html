@@ -1,0 +1,21 @@
+<div *ngIf="(data?.description && data?.imageUrl) ;else ComingSoon" class="statisticalDetails">
+    <div class="staticData">
+        <h1>
+            {{data?.title}}
+        </h1>
+        <div class="staticText" [innerHTML]="data?.description"></div>
+    </div>
+    <div class="sampleImg">
+        <h1>
+            Sample Output
+        </h1>
+        <div class="imgContainer">
+            <img [src]="data?.imageUrl" style="height: auto;width:100%">
+        </div>
+    </div>
+</div>
+<ng-template  #ComingSoon>
+        <div class="statisticalDetails">
+                <p>Coming Soon!</p>
+            </div>
+</ng-template>

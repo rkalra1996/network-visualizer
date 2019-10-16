@@ -1,0 +1,5 @@
+<ul *ngIf="data.length" >
+  <li *ngFor="let item of data;let i=index" >
+    <p [ngClass]="{'highlight' : selectedIndex === i || (firstVisit && i === 0)}" (click)="emitData(item,i)">{{i+1}}. {{item}}</p>
+  </li>
+</ul>

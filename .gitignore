@@ -6,4 +6,5 @@ package-lock.json
 /client/package-lock.json
 /.editorconfig
 /logs
+/client/dist
 
