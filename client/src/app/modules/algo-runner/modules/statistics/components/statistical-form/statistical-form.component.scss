@@ -24,9 +24,9 @@
         background-color: #6DB5F4;
         color: white;
         font-weight: bold;
-        cursor: pointer;
+        cursor: pointer !important;
         outline-color: #6DB5F4;
         border-color: #6DB5F4;
-    
+        z-index: 100;
     }
 }

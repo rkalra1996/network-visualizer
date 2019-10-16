@@ -10,14 +10,15 @@
         <div class="form-data-container">
             <div class="main-form-section">
               <!--To display the left section of the section-->
+              <statistics-generic-form (selectedFormDataEvent)="storeSelectedFormData($event)" [formDataSubject]="formDetails$"></statistics-generic-form>
             </div>
             <div class="sub-form-section">
               <ng-container *ngIf="renderDetails?.showPriorityCard">
-                  <statistical-priority-card></statistical-priority-card>
+                  <statistical-priority-card (updatedPriorityEvent)="storeUpdatedPriority($event)"></statistical-priority-card>
               </ng-container>
           </div>
         </div>
         <div class="button-container">
-          <button id="submitInputDataBtn" class="btn btn-primary btn-lg">Run</button>
+          <button id="submitInputDataBtn" class="btn btn-primary btn-lg" (click)="compileAndAnalze()">Run</button>
         </div>
     </div>

@@ -1,3 +1,5 @@
+// tslint:disable: no-string-literal
+
 import { Injectable } from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
 import { IAppState } from 'src/app/modules/redux/store';

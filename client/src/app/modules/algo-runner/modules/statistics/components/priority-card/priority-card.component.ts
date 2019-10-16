@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'statistical-priority-card',
@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PriorityCardComponent implements OnInit {
 
+  @Output() updatedPriorityEvent = new EventEmitter<any>();
+
   constructor() { }
 
   ngOnInit() {
+    this.updatedPriorityEvent.emit('hello priority');
   }
 
 }
