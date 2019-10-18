@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import {ToolbarSharedService} from './../../services/toolbar-shared-service/toolbar-shared.service';
 
 import {CostingModalInputInterface} from './../../interfaces/costing-modal-input';
+import { StatisticalAnalysisResultService } from '../../modules/statistics/services/statistical-analysis-result/statistical-analysis-result.service';
 
 declare var $: any;
 
@@ -17,7 +18,8 @@ export class ToolbarComponent implements OnInit {
 
   private nodeRelDataObject: object = {};
 
-  constructor(private router: Router, private toolbarShrdSrvc: ToolbarSharedService) {
+  constructor(private router: Router, private toolbarShrdSrvc: ToolbarSharedService,
+              public statisticalAnalysisResult: StatisticalAnalysisResultService) {
   }
 
   ngOnInit() {
@@ -50,6 +52,7 @@ export class ToolbarComponent implements OnInit {
    * @description To redirect to the /statistics/home page where statistics workflow will start
    */
   initiateStatistics() {
+    this.statisticalAnalysisResult.renderAnalysisResult(false);
     this.router.navigate(['/statistics', 'home']);
   }
 

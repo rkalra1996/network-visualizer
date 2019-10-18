@@ -5,6 +5,8 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import {InputFormRenderInterface} from './../../interfaces/input-form-render/input-form-render';
 import { StatisticalFormUtilityService } from '../../services/statistical-form-utility/statistical-form-utility.service';
 import { BehaviorSubject } from 'rxjs';
+import { StatisticalAnalysisResultService } from '../../services/statistical-analysis-result/statistical-analysis-result.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -32,7 +34,9 @@ export class StatisticalFormComponent implements OnInit, OnChanges {
   formDetails: InputFormRenderInterface;
   renderDetails: InputFormRenderInterface;
   showInputTemplate: string | boolean = 'loading';
-  constructor(private statiscticalUtilitySrvc: StatisticalFormUtilityService) { }
+  constructor(private statiscticalUtilitySrvc: StatisticalFormUtilityService,
+              public statisticalAnalysisResult: StatisticalAnalysisResultService, public router: Router,
+              public activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
   }
@@ -45,7 +49,7 @@ export class StatisticalFormComponent implements OnInit, OnChanges {
     const formObject = {
       selectedAlgoFormDetails : formDataToUse,
       dropdownData: this.dropdownData
-    }
+    };
     this.formDetails$.next(formObject);
   }
 
@@ -76,6 +80,8 @@ storeUpdatedPriority(event) {
 }
 
 compileAndAnalze() {
+  console.log('compiling and anlyzing result');
+  this.statisticalAnalysisResult.renderAnalysisResult(true);
   this.statiscticalUtilitySrvc.initiateFormRetrieveProcess();
 }
 

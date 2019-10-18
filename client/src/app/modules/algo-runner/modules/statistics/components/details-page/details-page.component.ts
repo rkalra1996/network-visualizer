@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { map } from 'rxjs/operators';
 // tslint:disable-next-line: max-line-length
 import { StatisticSidebarDataService } from 'src/app/modules/algo-runner/services/statistic-sidebar-data-service/statistic-sidebar-data.service';
 import { StatisticalFormUtilityService } from '../../services/statistical-form-utility/statistical-form-utility.service';
+import { StatisticalAnalysisResultService } from '../../services/statistical-analysis-result/statistical-analysis-result.service';
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'algo-runner-details-page',
@@ -13,14 +14,17 @@ import { StatisticalFormUtilityService } from '../../services/statistical-form-u
 export class DetailsPageComponent implements OnInit {
   selectedAlgo: any;
   processedData: object;
+  flag: boolean;
 
   constructor(public activatedRoute: ActivatedRoute, public statisticSideBarData: StatisticSidebarDataService,
-    private statiscticalUtilitySrvc: StatisticalFormUtilityService) { }
+              private statiscticalUtilitySrvc: StatisticalFormUtilityService,
+              public statisticalAnalysisResult: StatisticalAnalysisResultService) { }
 
   ngOnInit() {
     this.activatedRoute.params.pipe(map(p => p.id)).subscribe(data => {
       this.initializeData(data);
     });
+    this.statisticalAnalysisResult.flag$.subscribe(data => this.flag = data);
   }
   /**
    * Initializes data

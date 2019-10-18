@@ -1,5 +1,10 @@
 <algo-runner-statistical-toolbar></algo-runner-statistical-toolbar>
 <hr>
-<algo-runner-statistical-content [data]="selectedAlgo"></algo-runner-statistical-content>
+<div *ngIf="!flag">
+   <algo-runner-statistical-content [data]="selectedAlgo"></algo-runner-statistical-content>
 <hr>
-<algo-runner-statistical-form [selectedAlgorithm]="selectedAlgo" [dropdownData]="processedData"></algo-runner-statistical-form>
+   <algo-runner-statistical-form [selectedAlgorithm]="selectedAlgo" [dropdownData]="processedData"></algo-runner-statistical-form>
+</div>
+<div *ngIf="flag">
+    <statistic-analysis-result></statistic-analysis-result>
+</div>

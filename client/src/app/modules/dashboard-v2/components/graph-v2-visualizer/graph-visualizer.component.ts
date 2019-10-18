@@ -174,6 +174,16 @@ export class GraphVisualizerComponent implements OnInit {
       this.loader = false;
       this.network = new Network(container, this.graphData, this.graphOptions);
 
+      // add data to redux store
+      const dataForAlgoRunner = {
+        completeGraph: this.allGraphData,
+        deletedGraph: this.filteredGraphData,
+        propjectedGraph: this.graphData
+      };
+      const requestBody = this.sharedGraphService.getGraphData() || {};
+      this.updateAlgoRunnerObject(dataForAlgoRunner);
+      this.CoreFilterSrvc.updateAppliedFiltersData({ request: requestBody, data: dataForAlgoRunner });
+
       // activating double click event for editing node or relationship
       console.log('registering double click');
       this.network.on('doubleClick', (event) => {
@@ -289,7 +299,7 @@ export class GraphVisualizerComponent implements OnInit {
         completeGraph: this.allGraphData,
         deletedGraph: this.filteredGraphData,
         propjectedGraph: this.graphData
-      }
+      };
       this.updateAlgoRunnerObject(dataForAlgoRunner);
 
       // update the redux store with this data
