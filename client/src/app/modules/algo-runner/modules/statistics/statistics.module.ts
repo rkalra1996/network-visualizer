@@ -13,16 +13,18 @@ import { AlgoRunnerModule } from '../../algo-runner.module';
 import { RouteButtonComponent } from './components/route-button/route-button.component';
 import { PriorityCardComponent } from './components/priority-card/priority-card.component';
 import { SuiModule } from 'ng2-semantic-ui';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GenericFormComponent } from './components/generic-form/generic-form.component';
+import { GenericDropdownComponent } from './components/generic-dropdown/generic-dropdown.component';
 
 @NgModule({
   declarations: [MainComponent, StatisticSidebarComponent, AlgoListComponent, DetailsPageComponent, StatisticalToolbarComponent, 
-    StatisticalContentComponent, StatisticalFormComponent, RouteButtonComponent, PriorityCardComponent, GenericFormComponent],
+    StatisticalContentComponent, StatisticalFormComponent, RouteButtonComponent, PriorityCardComponent, GenericFormComponent, GenericDropdownComponent],
   imports: [
     CommonModule,
     StatisticsRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     SuiModule,
     AlgoRunnerModule
   ],

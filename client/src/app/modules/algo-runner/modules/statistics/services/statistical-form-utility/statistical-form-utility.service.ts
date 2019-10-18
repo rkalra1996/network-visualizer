@@ -5,6 +5,7 @@ import {NgRedux} from '@angular-redux/store';
 import { IAppState } from 'src/app/modules/redux/store';
 
 import * as _ from 'lodash';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,10 @@ export class StatisticalFormUtilityService {
   RELATION_CATEGORY = 'edges';
   DIRECTION_CATEGORY = 'direction';
   DEFAULT_DIRECTION_VALUES = ['In', 'Out', 'Both'];
+
+  // Form variables to work with generic and priority forms
+  collectGenericFormData = new BehaviorSubject<object|null>(null);
+  collectPriorityFormData = new BehaviorSubject<object|null>(null);
 
   constructor(private redux: NgRedux<IAppState>) { }
 
@@ -160,6 +165,12 @@ export class StatisticalFormUtilityService {
     } else {
       return [];
     }
+  }
+
+  initiateFormRetrieveProcess() {
+    // call a function inside generic form and priority form to send back collective form data to the Run Button
+    this.collectGenericFormData.next({event: 'collect'});
+    this.collectPriorityFormData.next({event: 'collect'});
   }
 
 }

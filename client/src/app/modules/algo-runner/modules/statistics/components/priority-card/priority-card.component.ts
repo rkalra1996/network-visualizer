@@ -12,7 +12,6 @@ export class PriorityCardComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.updatedPriorityEvent.emit('hello priority');
   }
 
 }

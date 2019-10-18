@@ -10,7 +10,7 @@
         <div class="form-data-container">
             <div class="main-form-section">
               <!--To display the left section of the section-->
-              <statistics-generic-form (selectedFormDataEvent)="storeSelectedFormData($event)" [formDataSubject]="formDetails$"></statistics-generic-form>
+              <statistics-generic-form (selectedFormDataEvent)="storeSelectedFormData($event)" [formDataSubject]="formDetails$" (sendFormToParent)="checkForm($event)"></statistics-generic-form>
             </div>
             <div class="sub-form-section">
               <ng-container *ngIf="renderDetails?.showPriorityCard">
@@ -19,6 +19,7 @@
           </div>
         </div>
         <div class="button-container">
-          <button id="submitInputDataBtn" class="btn btn-primary btn-lg" (click)="compileAndAnalze()">Run</button>
+          <button id="submitInputDataBtn" *ngIf="genericFormValid" class="btn btn-primary btn-lg" (click)="compileAndAnalze()" >Run</button>
+          <button id="submitInputDataBtn" *ngIf="!genericFormValid" class="btn btn-primary btn-lg FormError not-allowed">Run</button>        
         </div>
     </div>
