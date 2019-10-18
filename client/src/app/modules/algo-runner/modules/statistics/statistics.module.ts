@@ -15,10 +15,13 @@ import { PriorityCardComponent } from './components/priority-card/priority-card.
 import { SuiModule } from 'ng2-semantic-ui';
 import { FormsModule } from '@angular/forms';
 import { GenericFormComponent } from './components/generic-form/generic-form.component';
+import { AnalysisResultComponent } from './components/analysis-result/analysis-result.component';
+import { InitialGraphComponent } from './components/initial-graph/initial-graph.component';
+import { ResultVisualizerComponent } from './components/result-visualizer/result-visualizer.component';
 
 @NgModule({
   declarations: [MainComponent, StatisticSidebarComponent, AlgoListComponent, DetailsPageComponent, StatisticalToolbarComponent, 
-    StatisticalContentComponent, StatisticalFormComponent, RouteButtonComponent, PriorityCardComponent, GenericFormComponent],
+    StatisticalContentComponent, StatisticalFormComponent, RouteButtonComponent, PriorityCardComponent, GenericFormComponent, AnalysisResultComponent, InitialGraphComponent, ResultVisualizerComponent],
   imports: [
     CommonModule,
     StatisticsRoutingModule,
