@@ -1,0 +1,18 @@
+<div class="dropdown-container" [formGroup]="formgroup">
+  <div class="dropdown-label">
+    <h4 class="label">{{data?.label}}</h4>
+  </div>
+  <div class="dropdown-value">
+      <sui-select class="selection" [ngClass]="{'error': !isValid}"
+      [formControlName]="data.label"
+      (ngModelChange)="emitSelectedValue($event, data.label)"
+      [options]="data.value"
+      [isSearchable]="true"
+      [isDisabled]="false"
+      #dropdownSelect>
+<sui-select-option *ngFor="let option of dropdownSelect.filteredOptions"
+                 [value]="option">
+</sui-select-option>
+</sui-select>
+  </div>
+</div>

@@ -16,15 +16,24 @@
     }
 }
 
+.FormError {
+    background-color: lightgrey !important;
+    outline-color: lightgrey !important;
+    border-color: lightgrey !important;
+}
+
+.not-allowed {cursor: not-allowed !important;}
+
 .button-container {
     text-align: center;
+
     #submitInputDataBtn {
         width: 120px;
         height: 80%;
         background-color: #6DB5F4;
         color: white;
         font-weight: bold;
-        cursor: pointer !important;
+        cursor: pointer;
         outline-color: #6DB5F4;
         border-color: #6DB5F4;
         z-index: 100;

@@ -1,0 +1,17 @@
+.dropdown-container {
+    width: 100%;
+    display: flex;
+    margin: 10px;
+    .dropdown-label, .dropdown-value {
+        flex: 1;
+    }
+}
+
+.dropdown-label {
+    max-width: 300px;
+    text-align: left;
+    .label {
+        height: 100%;
+        line-height: 1.7;
+    }
+}
