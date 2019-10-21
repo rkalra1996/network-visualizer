@@ -505,9 +505,11 @@ function createAttributeSubQuery(nodeToUse, nodeName = 'node') {
 }
 
 
-function generateSubQueryFromNodes(dataObj, nodeName, relationName, nodeName2) {
+function generateSubQueryFromNodes(dataObj, nodeName, relationName, nodeName2,flagForRelationshipQuery) {
     let nodeSubQuery;
     let attributeSubQueriesArray = [];
+    let newVar = "filteredData";
+    let newquery = ``;
     // create a seperate string for node types since type is different from node properties
     let typeArray = [];
         if (dataObj.hasOwnProperty('nodes') && dataObj.nodes.length > 0) {
@@ -516,7 +518,7 @@ function generateSubQueryFromNodes(dataObj, nodeName, relationName, nodeName2) {
                     typeArray.push(nodeAttributeObject.value);
                 } else {
                     // a general subQuery for Attributes which is not Type
-                    let attributeSubQuery = createAttributeSubQuery(nodeAttributeObject, nodeName2);
+                    let attributeSubQuery = createAttributeSubQuery(nodeAttributeObject, nodeName);
                     attributeSubQueriesArray.push(attributeSubQuery);
                 }
             });
@@ -534,28 +536,40 @@ function generateSubQueryFromNodes(dataObj, nodeName, relationName, nodeName2) {
 
             // create a proper query based on the whether node type is provided or not
             let subQueryWithType = ''
-            let postSubQueryWithType;
-            if (!!nodeTypeSubQuery) {
-                subQueryWithType = `where labels(${nodeName2}) IN ${nodeTypeSubQuery}`;
+            let postSubQueryWithType = '';
+            let joinedSubQueryForAttributes = attributeSubQueriesArray.join(' AND ');
+
+            if ((!!nodeTypeSubQuery && flagForRelationshipQuery) || (!!nodeTypeSubQuery && !flagForRelationshipQuery && joinedSubQueryForAttributes !== '') ) {
+                subQueryWithType = `where labels(${nodeName}) IN ${nodeTypeSubQuery}`;
                 postSubQueryWithType = 'AND';
-            }
-            else {
+            } else if(!!nodeTypeSubQuery && !flagForRelationshipQuery){
+                subQueryWithType = `where labels(${nodeName}) IN ${nodeTypeSubQuery}`;
+                
+            } else {
                 subQueryWithType = ''
                 postSubQueryWithType = 'WHERE';
             }   
             
             
-            let joinedSubQueryForAttributes = attributeSubQueriesArray.join(' AND ');
 
+            if(flagForRelationshipQuery){
+            newquery = `WITH ${nodeName} as ${newVar} OPTIONAL MATCH (${newVar})-[${relationName}]-(${nodeName2})`;
+            }
             // add the properties if user has selected atleast one
-            if (!!joinedSubQueryForAttributes) {
+           /*  if (!!joinedSubQueryForAttributes) {
                 nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) ${subQueryWithType} ${postSubQueryWithType} ${joinedSubQueryForAttributes}`;
-            } else {
+            */
+           
+            if (!!joinedSubQueryForAttributes && flagForRelationshipQuery) {
+                nodeSubQuery = `match (${nodeName}) ${subQueryWithType} ${postSubQueryWithType} ${joinedSubQueryForAttributes} ${newquery}`;
+           } else if(!flagForRelationshipQuery){
+            nodeSubQuery = `match (${nodeName})-[${relationName}]-(${nodeName2}) ${subQueryWithType} ${postSubQueryWithType} ${joinedSubQueryForAttributes}`
+           } else {
                 // when no attributes are selected, only type is selected
-                nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) ${subQueryWithType}`;
+                nodeSubQuery = `match (${nodeName})  ${subQueryWithType} ${newquery}`;
             }
         } else {
-            nodeSubQuery = `match (${nodeName} {Name:"Societal Platform Team"})-[${relationName}]-(${nodeName2}) `
+            nodeSubQuery = `match (${nodeName})-[${relationName}]-(${nodeName2}) `
         }
 
         return nodeSubQuery;
@@ -587,19 +601,30 @@ function runQueryWithTypesV2(dataObj) {
         let nodeName = 'n';
         let nodeName2 = 'q';
         let relationName = 'r';
-
-        let nodeSubQuery = generateSubQueryFromNodes(dataObj, nodeName, relationName, nodeName2);
-        // STEP 2
+        let nodeName3 ='filteredData';
+                // STEP 1
         // create a subQuery for the relationship
         let relationSubQuery = generateSubQueryFromRelations(dataObj, relationName);
-
+       
+        let nodeSubQuery;
+        // STEP-2 subquery for node
+        if(relationSubQuery === ''){
+        nodeSubQuery = generateSubQueryFromNodes(dataObj, nodeName, relationName, nodeName2,true);
+        } else {
+              nodeSubQuery = generateSubQueryFromNodes(dataObj, nodeName, relationName, nodeName2,false);
+       
+        }
         // STEP 3
         // join both the above subQueries
         let finalQuery = nodeSubQuery + relationSubQuery;
         // STEP 4
         // add the limit phrase at the end
         let limit = getLimit(dataObj.limit);
-        finalQuery = finalQuery + ` return ${nodeName}, ${relationName}, ${nodeName2} LIMIT ${limit};`;
+        if(relationSubQuery === ''){
+        finalQuery = finalQuery + ` return ${nodeName3}, ${relationName}, ${nodeName2} LIMIT ${limit};`;
+        } else {
+            finalQuery = finalQuery + `return ${nodeName}, ${relationName}, ${nodeName2} LIMIT ${limit};`;
+        }
         return finalQuery;
     }
     else {
