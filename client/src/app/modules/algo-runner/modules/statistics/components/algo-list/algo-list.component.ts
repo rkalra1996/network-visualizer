@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { StatisticalAnalysisResultService } from '../../services/statistical-analysis-result/statistical-analysis-result.service';
 
 @Component({
   selector: 'app-algo-list',
@@ -10,7 +11,7 @@ export class AlgoListComponent implements OnInit {
 @Input() firstVisit: boolean;
 @Output() clicked = new EventEmitter();
   selectedIndex: any;
-  constructor() { }
+  constructor(public statisticalAnalysisResult: StatisticalAnalysisResultService) { }
 
   ngOnInit() {
     console.log('List of algos', this.data);
@@ -18,6 +19,7 @@ export class AlgoListComponent implements OnInit {
 
   // Emitting the name of algo selected
   emitData(data, index) {
+    this.statisticalAnalysisResult.renderAnalysisResult(false);
     this.firstVisit = false;
     this.selectedIndex = index;
     this.clicked.emit(data);

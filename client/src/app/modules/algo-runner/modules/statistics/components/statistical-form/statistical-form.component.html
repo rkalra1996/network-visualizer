@@ -1,3 +1,25 @@
-<p>
-  statistical-form works!
-</p>
+<ng-container *ngIf="showInputTemplate === 'loading'">
+  <div class="loadingTemplate">
+    <h3>Loading...!!!</h3>
+  </div>
+</ng-container>
+
+<!--Template will be visible if form data is present for it-->
+    <div *ngIf="showInputTemplate === true" class="form-input-container">
+        <h3 class="form-name">Input Data</h3>
+        <div class="form-data-container">
+            <div class="main-form-section">
+              <!--To display the left section of the section-->
+              <statistics-generic-form (selectedFormDataEvent)="storeSelectedFormData($event)" [formDataSubject]="formDetails$" (sendFormToParent)="checkForm($event)"></statistics-generic-form>
+            </div>
+            <div class="sub-form-section">
+              <ng-container *ngIf="renderDetails?.showPriorityCard">
+                  <statistical-priority-card (updatedPriorityEvent)="storeUpdatedPriority($event)"></statistical-priority-card>
+              </ng-container>
+          </div>
+        </div>
+        <div class="button-container">
+          <button id="submitInputDataBtn" *ngIf="genericFormValid" class="btn btn-primary btn-lg" (click)="compileAndAnalze()" >Run</button>
+          <button id="submitInputDataBtn" *ngIf="!genericFormValid" class="btn btn-primary btn-lg FormError not-allowed">Run</button>        
+        </div>
+    </div>
